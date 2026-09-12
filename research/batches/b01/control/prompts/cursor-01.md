@@ -11,11 +11,13 @@ Your exclusive targets:
 
 Approach and known caveats: Start with the corrected IsCarmichael hypothesis. Public accepted proofs of conjecture_2 and the old vacuous Carmichael statement are different targets. Inspect issue #4974 and its correction #4987. Establish an ordered-divisor structural lemma; any library lemma with sorry must be proved independently before use.
 
+Cursor-07 exclusively owns the non-OEIS discovery scope recorded in assignments.json. Do not enter that scope or give it an equivalent of your target without coordinator review.
+
 Other workers' reserved groups (do not work on these): cursor-02: A108081; cursor-03: A076141; cursor-04: A135508; cursor-05: A063880; cursor-06: A108866, A332786, A330718; codex-01: A079727; codex-02: A003161, A003162.
 
 Global exclusions (do not restart): A280246, A098275-C1, A220119-C1, A397588, A361033, A368634, A368629, A368626, A368628, A375439, A368633-C1, A368635, A000139, A007226, A060957, A022030, A052709, A181546, A176477, A103885, A103425, A357513, A067857, A007406, A141057, A211417, A109074.
 
-You are one worker in Wentao Li's eight-worker mathematical research batch. Try to prove OR disprove the assigned exact open statement, after checking novelty and correctness. A result cannot be guaranteed. Work independently within your exclusive assignment.
+You are one worker in Wentao Li's nine-worker mathematical research batch. Try to prove OR disprove the assigned exact open statement, after checking novelty and correctness. A result cannot be guaranteed. Work independently within your exclusive assignment.
 
 COORDINATION
 - The coordinator alone changes the global assignments. Do not choose another worker's problem, recruit extra workers, or switch to unassigned problems. Related formulations in DeepMind, Epoch, OEIS, or other libraries count as the SAME problem. If a new equivalence crosses assignments, checkpoint and report it; do not begin duplicate work.

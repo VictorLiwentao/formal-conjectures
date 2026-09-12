@@ -225,6 +225,24 @@
         }
       ],
       "notes": "These closely related sums belong to one owner. Start A003161; transfer to A003162 only with a proved integrality/normalization bridge. The full exponent 3k may require substantial p-adic machinery. Read existing public partial work and verify the original attribution against live OEIS; the local source attribution may differ."
+    },
+    {
+      "worker_id": "cursor-07",
+      "title": "Non-OEIS discovery and proof worker",
+      "platform": "Cursor Cloud",
+      "requested_model": "Grok 4.6 Extra (select in UI if available; no substitution)",
+      "branch": "codex/b01-cursor-07",
+      "status": "reserved_not_started",
+      "novelty_status": "discovery_scope_not_screened",
+      "reserved_sequence_groups": [],
+      "reserved_source_prefixes": [
+        "FormalConjectures/WrittenOnTheWallII/",
+        "FormalConjectures/Mathoverflow/",
+        "FormalConjectures/GreensOpenProblems/",
+        "FormalConjectures/ErdosProblems/"
+      ],
+      "targets": [],
+      "notes": "Exclusive non-OEIS discovery scope. Build and record a screened queue before proof work. No specific conjecture in this scope is certified open or tractable. Exclude mathematical equivalents of every assigned or excluded OEIS problem. Keep queue under this worker folder; do not edit global assignments."
     }
   ],
   "excluded": {
