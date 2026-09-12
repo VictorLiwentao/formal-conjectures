@@ -4,14 +4,16 @@
   "actual_branch": "cursor/b01-cursor-01-8a28",
   "baseline_commit": "238f78bdd5701ae4c97a0d70d4e22e2d45770d7a",
   "source_commit": "a2f4a1bb12a28e04a969da78feefac7d1ce49565",
-  "current_status": "researching",
+  "current_status": "candidate_proof",
   "novelty_status": "no_public_formal_proof_found_informal_argument_in_issue_5447",
-  "last_updated_utc": "2026-09-12T23:18:31Z",
+  "last_updated_utc": "2026-09-12T23:32:49Z",
   "proof_declarations": [
-    "OeisA237271.observation_carmichael"
+    "OeisA237271.Cursor01.observation_carmichael",
+    "OeisA237271.Cursor01.a_ge_three_of_odd_composite"
   ],
   "unresolved_gaps": [
-    "Lean proof of observation_carmichael not yet kernel-checked in this worker tree"
+    "Self-review cannot set independently_verified; a fresh reviewer must audit the candidate",
+    "Frozen FormalConjectures/OEIS/237271.lean is unchanged and still has sorry"
   ],
-  "next_step": "Compile A237271.lean and complete axiom/type audit"
+  "next_step": "Independent reviewer kernel-checks A237271.lean and the exact-type example against the frozen declaration"
 }
