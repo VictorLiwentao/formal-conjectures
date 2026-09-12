@@ -1,0 +1,46 @@
+{
+  "recorded_at_utc": "2026-09-12T23:13:53.844245+00:00",
+  "platform": "Cursor Cloud browser UI",
+  "environment_selection": "VictorLiwentao/formal-conjectures",
+  "model": "Cursor Grok 4.6 Extra High",
+  "starting_branch": "codex/b01-coordination",
+  "starting_commit": "238f78bdd5701ae4c97a0d70d4e22e2d45770d7a",
+  "note": "All seven launch pages verified. Startup or research state is a snapshot, not a completed result. Worker output branch names will be recorded from later reports. No recurring monitor was created.",
+  "agents": [
+    {
+      "worker_id": "cursor-01",
+      "agent_url": "https://cursor.com/agents/bc-d869c776-ad57-4a3d-9e94-9c0f83308a28",
+      "launch_verified": true
+    },
+    {
+      "worker_id": "cursor-02",
+      "agent_url": "https://cursor.com/agents/bc-a355afc5-9f46-4bc6-861e-4bfe455f13c0",
+      "launch_verified": true
+    },
+    {
+      "worker_id": "cursor-03",
+      "agent_url": "https://cursor.com/agents/bc-763d4240-9103-421d-a777-fde27a4491b3",
+      "launch_verified": true
+    },
+    {
+      "worker_id": "cursor-04",
+      "agent_url": "https://cursor.com/agents/bc-a0152c56-6609-4ec3-aa7f-7934ea8f770d",
+      "launch_verified": true
+    },
+    {
+      "worker_id": "cursor-05",
+      "agent_url": "https://cursor.com/agents/bc-9a31de2a-22ad-4f85-b8b0-c5eae877cb88",
+      "launch_verified": true
+    },
+    {
+      "worker_id": "cursor-06",
+      "agent_url": "https://cursor.com/agents/bc-c701d4c6-5791-456d-bec8-130a051cefe4",
+      "launch_verified": true
+    },
+    {
+      "worker_id": "cursor-07",
+      "agent_url": "https://cursor.com/agents/bc-c4e9245b-94f8-4ba9-a87c-6eb5b962ca94",
+      "launch_verified": true
+    }
+  ]
+}
