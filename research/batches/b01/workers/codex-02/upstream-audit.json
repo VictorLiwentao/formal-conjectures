@@ -1,0 +1,48 @@
+{
+  "checked_utc": "2026-09-12T23:17:52.683543+00:00",
+  "results": [
+    {
+      "key": "current-3161",
+      "url": "https://raw.githubusercontent.com/google-deepmind/formal-conjectures/HEAD/FormalConjectures/OEIS/3161.lean",
+      "sha256": "f788b7b7a5521da686d27b5ad681777fc5872a9fdeede757b7132b12f92f1e3b"
+    },
+    {
+      "key": "current-3162",
+      "url": "https://raw.githubusercontent.com/google-deepmind/formal-conjectures/HEAD/FormalConjectures/OEIS/3162.lean",
+      "sha256": "d48c25e1c828306b1ff93c401fc968769a7d26e5b3bfc20d91a0d20de5d24bd6"
+    },
+    {
+      "key": "search-A003161",
+      "url": "https://api.github.com/search/issues?q=repo%3Agoogle-deepmind/formal-conjectures%20%22A003161%22",
+      "total": 0,
+      "items": []
+    },
+    {
+      "key": "search-A003162",
+      "url": "https://api.github.com/search/issues?q=repo%3Agoogle-deepmind/formal-conjectures%20%22A003162%22",
+      "total": 2,
+      "items": [
+        {
+          "url": "https://github.com/google-deepmind/formal-conjectures/pull/5449",
+          "title": "docs(FormalConjectures): cross-references, a duplicate declaration, and copy fixes"
+        },
+        {
+          "url": "https://github.com/google-deepmind/formal-conjectures/pull/5016",
+          "title": "Add more conjectures from AutoOeis to formal-conjectures"
+        }
+      ]
+    },
+    {
+      "key": "search-OeisA3161",
+      "url": "https://api.github.com/search/issues?q=repo%3Agoogle-deepmind/formal-conjectures%20%22OeisA3161%22",
+      "total": 0,
+      "items": []
+    },
+    {
+      "key": "search-OeisA3162",
+      "url": "https://api.github.com/search/issues?q=repo%3Agoogle-deepmind/formal-conjectures%20%22OeisA3162%22",
+      "total": 0,
+      "items": []
+    }
+  ]
+}

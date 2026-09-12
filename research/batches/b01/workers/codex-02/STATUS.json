@@ -1,0 +1,34 @@
+{
+  "worker_id": "codex-02",
+  "target_id": [
+    "A003161",
+    "A003162"
+  ],
+  "actual_branch": "codex/b01-codex-02",
+  "baseline_commit": "a2f4a1bb12a28e04a969da78feefac7d1ce49565",
+  "seed_commit": "238f78bdd5701ae4c97a0d70d4e22e2d45770d7a",
+  "current_status": "prior_solution_found",
+  "novelty_status": "published_theorem_reduction_found",
+  "last_updated_utc": "2026-09-12T23:33:22.149559+00:00",
+  "proof_declarations": [
+    {
+      "name": "B01Codex02.raw_transfer",
+      "kind": "conditional_transfer",
+      "verification": "compiled_from_source; allowed_axioms_only"
+    },
+    {
+      "name": "B01Codex02.normalized_transfer",
+      "kind": "conditional_transfer",
+      "verification": "compiled_from_source; allowed_axioms_only"
+    }
+  ],
+  "unresolved_gaps": [
+    "No complete Lean formalization of the published arithmetic and binomial identity inputs.",
+    "Fresh independent review has not been performed."
+  ],
+  "next_step": "Coordinator: independently review the published-theorem reduction and retire both targets from new-result research; full Lean formalization requires a separate decision.",
+  "independent_review": false,
+  "complete_lean_proof": false,
+  "exact_type_audit": "passed_for_both_complete_frozen_types",
+  "numerical_audit": "499_admissible_triples_passed; finite_evidence_only"
+}

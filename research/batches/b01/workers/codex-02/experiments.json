@@ -1,0 +1,46 @@
+{
+  "identity_range": [
+    1,
+    200
+  ],
+  "tower_cases": 499,
+  "tower_primes": [
+    5,
+    7,
+    11,
+    13,
+    17,
+    19
+  ],
+  "k_range": [
+    1,
+    4
+  ],
+  "n_range": [
+    1,
+    50
+  ],
+  "max_upper_index": 3000,
+  "all_checks_passed": true,
+  "examples": [
+    {
+      "n": 1,
+      "k": 1,
+      "p": 5,
+      "upper": [
+        204876,
+        1626,
+        126,
+        6376
+      ],
+      "lower": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "modulus": 125
+    }
+  ],
+  "warning": "Finite checks only; not a Lean or general proof."
+}

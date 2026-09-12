@@ -1,0 +1,125 @@
+{
+  "checked_utc": "2026-09-12T23:22:28.862398+00:00",
+  "problem_commit": "30d502f684fa2fc2dcfc0a933f3648421ba75e8d",
+  "results_commit": "8669ff224d86543fcc3ce192b2768ce175b734dd",
+  "isolated": [
+    {
+      "name": "oeis_3161_conjecture_1",
+      "url": "https://raw.githubusercontent.com/epoch-research/LeanOpenProblems/30d502f684fa2fc2dcfc0a933f3648421ba75e8d/apn/data/oeis/Isolated/oeis_3161_conjecture_1.lean",
+      "sha256": "e49d5ded32cb616a06cbbdad6f88e114581cbee1d3758fe096c6719448ffb3ac"
+    },
+    {
+      "name": "oeis_3162_supercongruence_conjecture",
+      "url": "https://raw.githubusercontent.com/epoch-research/LeanOpenProblems/30d502f684fa2fc2dcfc0a933f3648421ba75e8d/apn/data/oeis/Isolated/oeis_3162_supercongruence_conjecture.lean",
+      "sha256": "f5b8c991667014a63879415e5c8e8820850b8978e16189d3ef6e0936f787d0fd"
+    }
+  ],
+  "submissions": [
+    {
+      "url": "https://github.com/epoch-research/LeanOpenProblems-results/blob/8669ff224d86543fcc3ce192b2768ce175b734dd/runs/oeis-full-50usd-ant-j0j0g4uzligm1k41/oeis_3161_conjecture_1/scores.json",
+      "score": "I",
+      "failure": "sorryAx"
+    },
+    {
+      "url": "https://github.com/epoch-research/LeanOpenProblems-results/blob/8669ff224d86543fcc3ce192b2768ce175b734dd/runs/oeis-full-50usd-ant-j0j0g4uzligm1k41/oeis_3162_supercongruence_conjecture/scores.json",
+      "score": "I",
+      "failure": "sorryAx"
+    },
+    {
+      "url": "https://github.com/epoch-research/LeanOpenProblems-results/blob/8669ff224d86543fcc3ce192b2768ce175b734dd/runs/oeis-full-50usd-gdm-1s7vwp2si1ap0r6d/oeis_3161_conjecture_1/scores.json",
+      "score": "I",
+      "failure": "definition value mismatch: division changed"
+    },
+    {
+      "url": "https://github.com/epoch-research/LeanOpenProblems-results/blob/8669ff224d86543fcc3ce192b2768ce175b734dd/runs/oeis-full-50usd-gdm-1s7vwp2si1ap0r6d/oeis_3162_supercongruence_conjecture/scores.json",
+      "score": "I",
+      "failure": "kernel rejection: unsafe declaration lcProof"
+    },
+    {
+      "url": "https://github.com/epoch-research/LeanOpenProblems-results/blob/8669ff224d86543fcc3ce192b2768ce175b734dd/runs/oeis-full-50usd-oai-jajpvieznaevpoyg/oeis_3161_conjecture_1/scores.json",
+      "score": "I",
+      "failure": "sorryAx"
+    },
+    {
+      "url": "https://github.com/epoch-research/LeanOpenProblems-results/blob/8669ff224d86543fcc3ce192b2768ce175b734dd/runs/oeis-full-50usd-oai-jajpvieznaevpoyg/oeis_3162_supercongruence_conjecture/scores.json",
+      "score": "I",
+      "failure": "sorryAx"
+    }
+  ],
+  "oeis_run_count": 18,
+  "runs_listing_tree": "90e4f7f0a2c45d82dae9a5803b57528900706607",
+  "run_trees": [
+    {
+      "name": "oeis-full-50usd-ant-j0j0g4uzligm1k41",
+      "sha": "1e8eda14080f0ad035b8fecf37f7e6728a6c4bb0"
+    },
+    {
+      "name": "oeis-full-50usd-gdm-1s7vwp2si1ap0r6d",
+      "sha": "2ca94532cfdf952c13e469ef930b44a3f4c00990"
+    },
+    {
+      "name": "oeis-full-50usd-oai-jajpvieznaevpoyg",
+      "sha": "81434681b59f0186eccbdcd73d750875e660a319"
+    },
+    {
+      "name": "oeis-lite-200usd-ant-me0xxoowyqauyrvj",
+      "sha": "6dfb1957e7a601edc3d50afdb01437c7b2697cc6"
+    },
+    {
+      "name": "oeis-lite-200usd-deep-ant-ewytt1ev01pbycd6",
+      "sha": "55666453b5bba648a1c528cb19e72bbf19854e63"
+    },
+    {
+      "name": "oeis-lite-200usd-deep-gdm-4iym6rmds40h3qk8",
+      "sha": "702c5539f07c57d4e144ff73954a753c45d9d45d"
+    },
+    {
+      "name": "oeis-lite-200usd-deep-oai-fo3ygtloq79bdjph",
+      "sha": "0bfcd4fd808d6467c9aad6b2074578ef51aac369"
+    },
+    {
+      "name": "oeis-lite-200usd-fable-i7s7n9q7v4emgjp7",
+      "sha": "c12be053e02663187a113a83d7ee744201f75436"
+    },
+    {
+      "name": "oeis-lite-200usd-gdm-7x8cgb9c5fw6y5d0",
+      "sha": "d8e3a87af777eaefc66e548fe2c1401246ea658e"
+    },
+    {
+      "name": "oeis-lite-200usd-grok46-j6r2uynasidzofcj",
+      "sha": "2835afdd27facd150565c62fffb898fc106d9fff"
+    },
+    {
+      "name": "oeis-lite-200usd-lit-ant-a1zwt7jqfgg8aao6",
+      "sha": "9add68a4b6fe93ccf2c8b0e5ddcdd739bcf7d6a8"
+    },
+    {
+      "name": "oeis-lite-200usd-lit-gdm-qtmt9vugt4ro74ph",
+      "sha": "cc091b5f84390767bb15e8f32f4ae3572b3f2fb2"
+    },
+    {
+      "name": "oeis-lite-200usd-lit-oai-8djo5ic71i1m57jm",
+      "sha": "9cb3b817968ee26d3fc90a35f48c313e81b16adf"
+    },
+    {
+      "name": "oeis-lite-200usd-oai-sgqyns47klfhaw34",
+      "sha": "5585c892f84fcbb24b8d4e5638ac237c9e356150"
+    },
+    {
+      "name": "oeis-lite-200usd-sol-nk5wh4g0vh3546nm",
+      "sha": "65b24b0ef798a78e4e10859599b50b289f904841"
+    },
+    {
+      "name": "oeis-open-lite-fable51-wm0v421z5ygi8f6b",
+      "sha": "d872c8ab807cb51c3a3bb4e6eac7a932e237de2b"
+    },
+    {
+      "name": "oeis-open-lite-gemini31pro-50xv1587jtk1ud5k",
+      "sha": "917d0df5a302bad481f718d51c4c9f2b6422cd92"
+    },
+    {
+      "name": "oeis-open-lite-gpt6astra-37ly1phzfwj2ech4",
+      "sha": "9fbffcbb0bc6591491a944e5a3e343e5281f6998"
+    }
+  ]
+}
