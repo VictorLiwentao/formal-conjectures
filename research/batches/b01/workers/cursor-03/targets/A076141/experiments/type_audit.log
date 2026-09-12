@@ -1,0 +1,4 @@
+OeisA76141.conjecture : ∀ (n : ℕ), OeisA76141.a n ≤ 1
+theorem OeisA76141.conjecture : ∀ (n : ℕ), OeisA76141.a n ≤ 1 :=
+fun n => sorry
+'OeisA76141.conjecture' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]

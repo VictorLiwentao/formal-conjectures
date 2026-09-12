@@ -1,0 +1,5 @@
+source: https://github.com/KitaKen1/oeis-a076141-binary-word/blob/b4e179767fa3041c43e019b559ee77e6737317aa/lean/OeisA76141FC.lean
+compile: lake env lean /tmp/OeisA76141FC.lean  (this tree, Lean v4.33.1, FormalConjectures.OEIS.76141 olean already built)
+exit_code: 0
+'oeis_a76141_solved' depends on axioms: [propext, Classical.choice, Quot.sound]
+warnings: unused-variable / unnecessarySeqFocus only; no sorryAx

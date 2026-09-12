@@ -1,0 +1,11 @@
+oeis_prefix_len=104
+oeis_prefix_mismatches=[]
+a0=1 a1=1 a2=1 a3=0 a4=1 a5=0 a27=1 a145=1 a29=0
+a_ge2_upto_2e5=[]
+max_a_upto_2e5=1
+a_ge2_upto_1e6=[]
+max_a_upto_1e6=1
+a1000000=0
+a999999=0
+suffix_matches_n_ge2_lt5000=[]
+note: overlapping counter; not a proof

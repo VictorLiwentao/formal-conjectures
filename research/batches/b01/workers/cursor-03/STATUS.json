@@ -1,0 +1,17 @@
+{
+  "worker_id": "cursor-03",
+  "target_id": "A076141",
+  "actual_branch": "cursor/b01-cursor-03-91b3",
+  "baseline_commit": "238f78bdd5701ae4c97a0d70d4e22e2d45770d7a",
+  "source_commit": "a2f4a1bb12a28e04a969da78feefac7d1ce49565",
+  "current_status": "prior_solution_found",
+  "novelty_status": "prior_solution_found",
+  "last_updated_utc": "2026-09-12T23:27:58Z",
+  "proof_declarations": [],
+  "unresolved_gaps": [
+    "Upstream Formal Conjectures still has OeisA76141.conjecture as sorry; google-deepmind/formal-conjectures#5088 is open and unreviewed.",
+    "This worker did not independently author a proof. Self-review cannot set independently_verified.",
+    "OEIS remains an open comment; no OEIS edit was made."
+  ],
+  "next_step": "Stop. Coordinator or an independent reviewer should audit the KitaKen1 artifact and PR 5088. Do not reproduce the public proof as a new batch result."
+}
