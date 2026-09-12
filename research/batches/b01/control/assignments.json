@@ -1,0 +1,259 @@
+{
+  "schema": 1,
+  "batch": "b01",
+  "prepared_date": "2026-09-12",
+  "upstream": "https://github.com/google-deepmind/formal-conjectures",
+  "public_fork": "https://github.com/VictorLiwentao/formal-conjectures",
+  "source_commit": "a2f4a1bb12a28e04a969da78feefac7d1ce49565",
+  "lean_toolchain": "leanprover/lean4:v4.33.1",
+  "research_remote": "https://github.com/VictorLiwentao/formal-conjectures.git",
+  "publication_policy": "User authorized public working branches on VictorLiwentao/formal-conjectures on 2026-09-12. Upstream PRs, OEIS edits and other publication remain unauthorized.",
+  "workers": [
+    {
+      "worker_id": "cursor-01",
+      "title": "Carmichael divisor blocks",
+      "platform": "Cursor Cloud",
+      "requested_model": "Grok 4.6 Extra (select in UI if available; no substitution)",
+      "branch": "codex/b01-cursor-01",
+      "status": "reserved_not_started",
+      "novelty_status": "provisional_requires_fresh_audit",
+      "reserved_sequence_groups": [
+        "A237271"
+      ],
+      "targets": [
+        {
+          "id": "A237271",
+          "source_file": "FormalConjectures/OEIS/237271.lean",
+          "source_sha256": "4f5f9875d35bc3f009af89444945296942a5967d1f8af20a4a102460227da11b",
+          "declarations": [
+            "OeisA237271.observation_carmichael"
+          ],
+          "source_url": "https://github.com/google-deepmind/formal-conjectures/blob/a2f4a1bb12a28e04a969da78feefac7d1ce49565/FormalConjectures/OEIS/237271.lean",
+          "oeis_url": "https://oeis.org/A237271"
+        }
+      ],
+      "notes": "Start with the corrected IsCarmichael hypothesis. Public accepted proofs of conjecture_2 and the old vacuous Carmichael statement are different targets. Inspect issue #4974 and its correction #4987. Establish an ordered-divisor structural lemma; any library lemma with sorry must be proved independently before use."
+    },
+    {
+      "worker_id": "cursor-02",
+      "title": "Recursive word enumeration",
+      "platform": "Cursor Cloud",
+      "requested_model": "Grok 4.6 Extra (select in UI if available; no substitution)",
+      "branch": "codex/b01-cursor-02",
+      "status": "reserved_not_started",
+      "novelty_status": "provisional_requires_fresh_audit",
+      "reserved_sequence_groups": [
+        "A108081"
+      ],
+      "targets": [
+        {
+          "id": "A108081",
+          "source_file": "FormalConjectures/OEIS/108081.lean",
+          "source_sha256": "b03761724c1052d613a676584301d6ad1f3d20aff62aa421525ef8b6b611a54d",
+          "declarations": [
+            "OeisA108081.count_words_in_x_is_a_shifted"
+          ],
+          "source_url": "https://github.com/google-deepmind/formal-conjectures/blob/a2f4a1bb12a28e04a969da78feefac7d1ce49565/FormalConjectures/OEIS/108081.lean",
+          "oeis_url": "https://oeis.org/A108081"
+        }
+      ],
+      "notes": "Audit the constructors and indexing: Lean uses a(n-1), consistent with the small examples despite an OEIS prose offset discrepancy. Look for a canonical decomposition or generating-function recurrence. Public c5-k4 work already counted lengths 13 and 14; do not repeat those as novelty."
+    },
+    {
+      "worker_id": "cursor-03",
+      "title": "Binary substring multiplicity",
+      "platform": "Cursor Cloud",
+      "requested_model": "Grok 4.6 Extra (select in UI if available; no substitution)",
+      "branch": "codex/b01-cursor-03",
+      "status": "reserved_not_started",
+      "novelty_status": "provisional_requires_fresh_audit",
+      "reserved_sequence_groups": [
+        "A076141"
+      ],
+      "targets": [
+        {
+          "id": "A076141",
+          "source_file": "FormalConjectures/OEIS/76141.lean",
+          "source_sha256": "7954f35f38ed7da506eefc949c1d401e99625a70406561413198c467e63d4c78",
+          "declarations": [
+            "OeisA76141.conjecture"
+          ],
+          "source_url": "https://github.com/google-deepmind/formal-conjectures/blob/a2f4a1bb12a28e04a969da78feefac7d1ce49565/FormalConjectures/OEIS/76141.lean",
+          "oeis_url": "https://oeis.org/A076141"
+        }
+      ],
+      "notes": "Audit overlapping occurrences, leading zeros and the representation of zero. Derive constraints from two assumed occurrences in n squared. Three checked Epoch runs were rejected; this is neither a proof of openness nor evidence that the problem is easy."
+    },
+    {
+      "worker_id": "cursor-04",
+      "title": "LCM recurrence at primes",
+      "platform": "Cursor Cloud",
+      "requested_model": "Grok 4.6 Extra (select in UI if available; no substitution)",
+      "branch": "codex/b01-cursor-04",
+      "status": "reserved_not_started",
+      "novelty_status": "provisional_requires_fresh_audit",
+      "reserved_sequence_groups": [
+        "A135508"
+      ],
+      "targets": [
+        {
+          "id": "A135508",
+          "source_file": "FormalConjectures/OEIS/135508.lean",
+          "source_sha256": "3814549cee8601c96c59b923d7ece1c4b26a59b0fd134f49a93cbbc38e914b0b",
+          "declarations": [
+            "OeisA135508.conjecture"
+          ],
+          "source_url": "https://github.com/google-deepmind/formal-conjectures/blob/a2f4a1bb12a28e04a969da78feefac7d1ce49565/FormalConjectures/OEIS/135508.lean",
+          "oeis_url": "https://oeis.org/A135508"
+        }
+      ],
+      "notes": "Inspect the linked Markus Schepke 2009 thesis before novelty clearance. Eighteen checked Epoch attempts were rejected. Search for an invariant of the recurrence and prime-divisibility structure; limit unproductive brute force."
+    },
+    {
+      "worker_id": "cursor-05",
+      "title": "Ordinary and unitary divisor sums",
+      "platform": "Cursor Cloud",
+      "requested_model": "Grok 4.6 Extra (select in UI if available; no substitution)",
+      "branch": "codex/b01-cursor-05",
+      "status": "reserved_not_started",
+      "novelty_status": "provisional_requires_fresh_audit",
+      "reserved_sequence_groups": [
+        "A063880"
+      ],
+      "targets": [
+        {
+          "id": "A063880",
+          "source_file": "FormalConjectures/OEIS/63880.lean",
+          "source_sha256": "b50d00e13735613cbe37bd3a25c19130874e8f036ca2a0e3c1aceb177a33c683",
+          "declarations": [
+            "OeisA63880.mod_216_of_a",
+            "OeisA63880.unique_primitive_108"
+          ],
+          "source_url": "https://github.com/google-deepmind/formal-conjectures/blob/a2f4a1bb12a28e04a969da78feefac7d1ce49565/FormalConjectures/OEIS/63880.lean",
+          "oeis_url": "https://oeis.org/A063880"
+        }
+      ],
+      "notes": "Begin with mod_216_of_a; unique_primitive_108 is a stronger secondary target. The primitive decomposition is already known and must not be claimed as new. Public c5-k4 work already searched powerful cores extensively; pursue local valuations or structural constraints instead of repeating that search."
+    },
+    {
+      "worker_id": "cursor-06",
+      "title": "A rational-sum primality criterion",
+      "platform": "Cursor Cloud",
+      "requested_model": "Grok 4.6 Extra (select in UI if available; no substitution)",
+      "branch": "codex/b01-cursor-06",
+      "status": "reserved_not_started",
+      "novelty_status": "provisional_requires_fresh_audit",
+      "reserved_sequence_groups": [
+        "A108866",
+        "A332786",
+        "A330718"
+      ],
+      "targets": [
+        {
+          "id": "A108866",
+          "source_file": "FormalConjectures/OEIS/108866.lean",
+          "source_sha256": "afa95297bd177a882fb72b03f32f1da68ecae58d9126981567562462b73266f8",
+          "declarations": [
+            "OeisA108866.conjecture"
+          ],
+          "source_url": "https://github.com/google-deepmind/formal-conjectures/blob/a2f4a1bb12a28e04a969da78feefac7d1ce49565/FormalConjectures/OEIS/108866.lean",
+          "oeis_url": "https://oeis.org/A108866"
+        }
+      ],
+      "notes": "Audit the reduced rational numerator exactly. Separate the prime direction from the composite converse; check possible pseudoprime obstructions. The iff target may be difficult. Consult prior c5-k4 computation before selecting a new deterministic counterexample search. Related sequence IDs are reserved to you for literature/equivalence checks, not automatically approved new targets."
+    },
+    {
+      "worker_id": "codex-01",
+      "title": "Central-binomial cube congruences",
+      "platform": "Codex local",
+      "requested_model": "gpt-6-astra, xhigh",
+      "branch": "codex/b01-codex-01",
+      "status": "reserved_not_started",
+      "novelty_status": "provisional_requires_fresh_audit",
+      "reserved_sequence_groups": [
+        "A079727"
+      ],
+      "targets": [
+        {
+          "id": "A079727",
+          "source_file": "FormalConjectures/OEIS/79727.lean",
+          "source_sha256": "5731cb2c5f91fe20862071d6d7f3331d164277c2107a38d53bbad359a43029c3",
+          "declarations": [
+            "OeisA79727.conjecture1",
+            "OeisA79727.conjecture2",
+            "OeisA79727.conjecture3",
+            "OeisA79727.conjecture4"
+          ],
+          "source_url": "https://github.com/google-deepmind/formal-conjectures/blob/a2f4a1bb12a28e04a969da78feefac7d1ce49565/FormalConjectures/OEIS/79727.lean",
+          "oeis_url": "https://oeis.org/A079727"
+        }
+      ],
+      "notes": "Begin with conjecture1 or conjecture2; conjecture4 next, conjecture3 is a stretch. All four belong to you. Subtract the older already-proved a(p-1) mod p squared result and Zhi-Hong Sun Theorem 3.2 from the novelty claim. Check the finite-set product and subtraction syntax carefully in conjecture4."
+    },
+    {
+      "worker_id": "codex-02",
+      "title": "Paired ballot-binomial supercongruences",
+      "platform": "Codex local",
+      "requested_model": "gpt-6-astra, xhigh",
+      "branch": "codex/b01-codex-02",
+      "status": "reserved_not_started",
+      "novelty_status": "provisional_requires_fresh_audit",
+      "reserved_sequence_groups": [
+        "A003161",
+        "A003162"
+      ],
+      "targets": [
+        {
+          "id": "A003161",
+          "source_file": "FormalConjectures/OEIS/3161.lean",
+          "source_sha256": "f788b7b7a5521da686d27b5ad681777fc5872a9fdeede757b7132b12f92f1e3b",
+          "declarations": [
+            "OeisA3161.conjecture"
+          ],
+          "source_url": "https://github.com/google-deepmind/formal-conjectures/blob/a2f4a1bb12a28e04a969da78feefac7d1ce49565/FormalConjectures/OEIS/3161.lean",
+          "oeis_url": "https://oeis.org/A003161"
+        },
+        {
+          "id": "A003162",
+          "source_file": "FormalConjectures/OEIS/3162.lean",
+          "source_sha256": "d48c25e1c828306b1ff93c401fc968769a7d26e5b3bfc20d91a0d20de5d24bd6",
+          "declarations": [
+            "OeisA3162.conjecture"
+          ],
+          "source_url": "https://github.com/google-deepmind/formal-conjectures/blob/a2f4a1bb12a28e04a969da78feefac7d1ce49565/FormalConjectures/OEIS/3162.lean",
+          "oeis_url": "https://oeis.org/A003162"
+        }
+      ],
+      "notes": "These closely related sums belong to one owner. Start A003161; transfer to A003162 only with a proved integrality/normalization bridge. The full exponent 3k may require substantial p-adic machinery. Read existing public partial work and verify the original attribution against live OEIS; the local source attribution may differ."
+    }
+  ],
+  "excluded": {
+    "A280246": "Prior user parity result",
+    "A098275-C1": "Prior user divisibility result; OEIS draft conflict reported",
+    "A220119-C1": "Prior user divisibility result",
+    "A397588": "Prior public proof discovered",
+    "A361033": "Prior user success; novelty audit provisional",
+    "A368634": "Prior user success; novelty audit provisional",
+    "A368629": "Prior user success; novelty audit provisional",
+    "A368626": "Prior user success; novelty audit provisional",
+    "A368628": "Prior user success; novelty audit provisional",
+    "A375439": "Prior user success; novelty audit provisional",
+    "A368633-C1": "Older Catalan result subsumes result",
+    "A368635": "Prior general theorem subsumes result",
+    "A000139": "Previous Lean attempt failed; deprioritize",
+    "A007226": "Previous Lean attempt failed; deprioritize",
+    "A060957": "Local exact disproof with independent review exists; no fresh solve assignment. Publication/novelty are separate.",
+    "A022030": "Accepted public Epoch results located.",
+    "A052709": "Live OEIS cites an exact public proof in arXiv:2608.11941.",
+    "A181546": "Public proof and accepted Epoch result located.",
+    "A176477": "Accepted public result with integrality/parity development; exclude pending exact mapping review.",
+    "A103885": "Accepted Epoch results located.",
+    "A103425": "Formal statement permits a zero-sequence loophole.",
+    "A357513": "Live OEIS cites a July 2026 Lean proof.",
+    "A067857": "Accepted Epoch result located.",
+    "A007406": "Accepted Epoch result located.",
+    "A141057": "Accepted Epoch result located.",
+    "A211417": "Accepted Epoch result located.",
+    "A109074": "Likely covered by classical alternating-sign-matrix enumeration; exclude pending novelty review."
+  }
+}
