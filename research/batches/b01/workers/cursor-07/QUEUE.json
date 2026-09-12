@@ -1,0 +1,57 @@
+{
+  "schema": 1,
+  "worker_id": "cursor-07",
+  "baseline_commit": "a2f4a1bb12a28e04a969da78feefac7d1ce49565",
+  "updated_utc": "2026-09-12T23:35:00Z",
+  "active": [
+    {
+      "id": "WOWII19",
+      "declaration": "WrittenOnTheWallII.GraphConjecture19.conjecture19",
+      "source_path": "FormalConjectures/WrittenOnTheWallII/GraphConjecture19.lean",
+      "source_sha256": "988304aa723937c890c38cee4f32435751356fc29ebc8656604b3ca100ca1222",
+      "original_source_url": "http://cms.uhd.edu/faculty/delavinae/research/wowII/all.html",
+      "status_check": "Official WOWII all.html still marks 19 as O (local dump 2026-09-12). Follows from #13 when avg ecc ≤ diam−1. Remaining case is nearly self-centered graphs.",
+      "equivalence_group": "WOWII-b-lower-bounds",
+      "why_tractable": "Finite connected graphs; invariants computable; only self-centered graphs can beat #13.",
+      "main_risk": "May be a short corollary of proved #13 and #16; proving those from the literature is out of scope. A genuine counterexample would have to violate the published #16 bound as well."
+    },
+    {
+      "id": "WOWII61",
+      "declaration": "WrittenOnTheWallII.GraphConjecture61.conjecture61",
+      "source_path": "FormalConjectures/WrittenOnTheWallII/GraphConjecture61.lean",
+      "source_sha256": "54620e7b70a9a98eaaf7ce10154f533046b9f6d36fa276c8923c1a7301a7e091",
+      "original_source_url": "http://cms.uhd.edu/faculty/delavinae/research/wowII/all.html",
+      "status_check": "Official WOWII all.html marks 61 as O. No public Lean counterexample repo found on 2026-09-12.",
+      "equivalence_group": "WOWII-forest-residue",
+      "why_tractable": "Need residue close to the induced-forest number and diameter ≥ 4. Residue and forest number are computable on small n.",
+      "main_risk": "residue ≤ α ≤ f is classical, so a counterexample needs a large diameter gap rather than a small-n random graph."
+    },
+    {
+      "id": "WOWII133",
+      "declaration": "WrittenOnTheWallII.GraphConjecture133.conjecture133",
+      "source_path": "FormalConjectures/WrittenOnTheWallII/GraphConjecture133.lean",
+      "source_sha256": "05c03eefa92f75236bd3f1e9caa6411816fc0b88b5a739f341f6fa87d5db2cc5",
+      "original_source_url": "http://cms.uhd.edu/faculty/delavinae/research/wowII/all.html",
+      "status_check": "Official WOWII all.html marks 133 as O. Lean path is largest induced path order, matching the WOWII path number.",
+      "equivalence_group": "WOWII-path-number",
+      "why_tractable": "If G has a 4-cycle then a geodesic from a centre already gives path ≥ rad+1, so the inequality holds. Only C4-free graphs remain.",
+      "main_risk": "C4-free diameter-2 graphs of large degree (Moore / polarity) may be the only dangerous class and may still have long induced paths."
+    }
+  ],
+  "standby": [
+    {
+      "id": "WOWII40",
+      "declaration": "WrittenOnTheWallII.GraphConjecture40.conjecture40",
+      "source_path": "FormalConjectures/WrittenOnTheWallII/GraphConjecture40.lean",
+      "source_sha256": "840655f277f615381a3086785a43d607422d5c8ba8e1d510419a669db64ee0d4",
+      "note": "DeLaVina notes f ≥ b/2+1, so the p=1 case is easy. Need large path cover. Stars give equality, not a counterexample."
+    },
+    {
+      "id": "WOWII100",
+      "declaration": "WrittenOnTheWallII.GraphConjecture100.conjecture100",
+      "source_path": "FormalConjectures/WrittenOnTheWallII/GraphConjecture100.lean",
+      "source_sha256": "c250eaab0db34a93db18908282591d292cf67c9f17c2dd79f6059ee57f83e87c",
+      "note": "Lean uses degreeL2Norm of the complement. WOWII 49's path-on-38 counterexample confirms that length(·) in these entries is the complement length. The no-overline HTML reading is a loophole, not the intended statement."
+    }
+  ]
+}
