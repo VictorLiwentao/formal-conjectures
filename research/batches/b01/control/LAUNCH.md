@@ -1,6 +1,6 @@
 # Start the nine agents later
 
-Nothing launches automatically from the repository files. You do not need to paste the long prompts: after choosing the correct starting branch, paste a short instruction that tells the agent to read its prompt file.
+Nothing launches automatically from the repository files. Markdown instructions alone do not activate Cursor goal mode. Use /goal and verify the visible Goal active bar; a queued or submitted command is not yet confirmation. You do not need to paste the long prompts: after choosing the correct starting branch, paste a short instruction that tells the agent to read its prompt file.
 
 ## Cursor: seven separate Cloud agents
 
@@ -9,7 +9,7 @@ Use VictorLiwentao/formal-conjectures and starting branch codex/b01-coordination
 For Cursor 1 paste:
 
 ```text
-You are cursor-01. Read research/batches/b01/control/prompts/cursor-01.md and research/batches/b01/control/assignments.json, then execute your assignment. Work on your own branch. If either file is missing, stop and report the wrong starting branch.
+/goal You are cursor-01. Read research/batches/b01/control/prompts/cursor-01.md and research/batches/b01/control/assignments.json, then execute your assignment. Work on your own branch. If either file is missing, stop and report the wrong starting branch.
 ```
 
 Repeat in six new Cloud agents, replacing BOTH occurrences of cursor-01 with cursor-02, cursor-03, cursor-04, cursor-05, cursor-06, and cursor-07 respectively. The last one is the non-OEIS worker. Do not send all seven IDs to a single agent and assume that launches seven agents.
@@ -33,3 +33,9 @@ The current connection can read GitHub branches, but no authenticated Cursor API
 Preassigned ownership remains useful with either API or browser control. Send the coordinator the launched agent URLs/branch names and Codex task names to collect reports on demand. No background monitor or automatic rerun has been scheduled.
 
 Sources: https://cursor.com/docs/cloud-agent and https://cursor.com/docs/cloud-agent/api/endpoints
+
+## Goal-mode verification
+
+For an existing Cursor worker, use the /goal slash command in its follow-up composer, keep its original assignment and eight-hour total research budget, and submit the follow-up (a running agent may first queue it). Verify that the UI shows **Goal active** above the composer. A create-goal tool event is additional confirmation. Keep the same agent and branch. The requested eight-hour deadline is an agent instruction, not a newly configured hard platform spending cap. Goal mode does not guarantee a mathematical resolution or uninterrupted provider availability.
+
+Official source: https://cursor.com/changelog/08-19-26

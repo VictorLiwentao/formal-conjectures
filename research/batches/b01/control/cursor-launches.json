@@ -42,5 +42,20 @@
       "agent_url": "https://cursor.com/agents/bc-c4e9245b-94f8-4ba9-a87c-6eb5b962ca94",
       "launch_verified": true
     }
-  ]
+  ],
+  "goal_mode_update": {
+    "checked_at_utc": "2026-09-12T23:25:12.446866+00:00",
+    "method": "Cursor /goal slash command on existing agents",
+    "active_ui_verified": [
+      "cursor-01",
+      "cursor-02",
+      "cursor-03",
+      "cursor-04",
+      "cursor-05",
+      "cursor-06",
+      "cursor-07"
+    ],
+    "awaiting_confirmation": [],
+    "deadline_policy": "Eight total research hours from original kickoff, requested in goal text; not a new hard platform spending cap."
+  }
 }
