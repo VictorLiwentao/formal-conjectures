@@ -34,4 +34,5 @@ lake env lean -DwarningAsError=true research/batches/b01/workers/cursor-01/targe
 python3 research/batches/b01/control/check_assignments.py --repo . --worker cursor-01 --against 238f78bdd5701ae4c97a0d70d4e22e2d45770d7a
 ```
 
-Final commit SHA is recorded after the commit that contains this file.
+Final proof commit: `5c6472e6ebc61681a8b0df5b2066caddc82b0b6e`.
+This HANDOFF file may sit one commit later on the same branch.
