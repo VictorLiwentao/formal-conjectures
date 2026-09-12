@@ -1,0 +1,66 @@
+{
+  "automation_id": "maintain-seven-cursor-math-workers",
+  "interval_minutes": 15,
+  "target_cursor_slots": 7,
+  "updated_at_utc": "2026-09-12T23:43:19.647053+00:00",
+  "accept_known_informal_proofs_for_new_lean_formalization": true,
+  "note": "Initialized from verified launch/goal records. Live status must be reconciled on each heartbeat.",
+  "slots": [
+    {
+      "slot": "cursor-01",
+      "run_id": "cursor-01",
+      "agent_url": "https://cursor.com/agents/bc-d869c776-ad57-4a3d-9e94-9c0f83308a28",
+      "state": "launched_goal_previously_verified",
+      "actual_branch": null,
+      "replacements": []
+    },
+    {
+      "slot": "cursor-02",
+      "run_id": "cursor-02",
+      "agent_url": "https://cursor.com/agents/bc-a355afc5-9f46-4bc6-861e-4bfe455f13c0",
+      "state": "launched_goal_previously_verified",
+      "actual_branch": null,
+      "replacements": []
+    },
+    {
+      "slot": "cursor-03",
+      "run_id": "cursor-03",
+      "agent_url": "https://cursor.com/agents/bc-763d4240-9103-421d-a777-fde27a4491b3",
+      "state": "launched_goal_previously_verified",
+      "actual_branch": null,
+      "replacements": []
+    },
+    {
+      "slot": "cursor-04",
+      "run_id": "cursor-04",
+      "agent_url": "https://cursor.com/agents/bc-a0152c56-6609-4ec3-aa7f-7934ea8f770d",
+      "state": "launched_goal_previously_verified",
+      "actual_branch": null,
+      "replacements": []
+    },
+    {
+      "slot": "cursor-05",
+      "run_id": "cursor-05",
+      "agent_url": "https://cursor.com/agents/bc-9a31de2a-22ad-4f85-b8b0-c5eae877cb88",
+      "state": "launched_goal_previously_verified",
+      "actual_branch": null,
+      "replacements": []
+    },
+    {
+      "slot": "cursor-06",
+      "run_id": "cursor-06",
+      "agent_url": "https://cursor.com/agents/bc-c701d4c6-5791-456d-bec8-130a051cefe4",
+      "state": "launched_goal_previously_verified",
+      "actual_branch": null,
+      "replacements": []
+    },
+    {
+      "slot": "cursor-07",
+      "run_id": "cursor-07",
+      "agent_url": "https://cursor.com/agents/bc-c4e9245b-94f8-4ba9-a87c-6eb5b962ca94",
+      "state": "launched_goal_previously_verified",
+      "actual_branch": null,
+      "replacements": []
+    }
+  ]
+}

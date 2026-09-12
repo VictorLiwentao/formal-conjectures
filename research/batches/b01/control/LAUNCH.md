@@ -30,7 +30,7 @@ Continue your existing assignment from STATUS.json, QUEUE.json if present, and H
 
 The current connection can read GitHub branches, but no authenticated Cursor API connection is configured here. Cursor offers an API for launching agents, reading status, sending subsequent runs and canceling runs. A user API key can enable a future local controller; put it in a local secret store/environment rather than chat or Git. Browser UI control is another possible route if the user signs in and authorizes the actions. Neither route is configured or activated by this document.
 
-Preassigned ownership remains useful with either API or browser control. Send the coordinator the launched agent URLs/branch names and Codex task names to collect reports on demand. No background monitor or automatic rerun has been scheduled.
+Preassigned ownership remains useful with either API or browser control. Send the coordinator the launched agent URLs/branch names and Codex task names to collect reports on demand. A 15-minute supervision heartbeat has now been scheduled; see SUPERVISION.md for replacement and acceptance rules.
 
 Sources: https://cursor.com/docs/cloud-agent and https://cursor.com/docs/cloud-agent/api/endpoints
 
