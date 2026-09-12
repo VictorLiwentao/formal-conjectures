@@ -1,0 +1,17 @@
+{
+  "worker_id": "cursor-01",
+  "target_id": "A237271",
+  "actual_branch": "cursor/b01-cursor-01-8a28",
+  "baseline_commit": "238f78bdd5701ae4c97a0d70d4e22e2d45770d7a",
+  "source_commit": "a2f4a1bb12a28e04a969da78feefac7d1ce49565",
+  "current_status": "researching",
+  "novelty_status": "no_public_formal_proof_found_informal_argument_in_issue_5447",
+  "last_updated_utc": "2026-09-12T23:18:31Z",
+  "proof_declarations": [
+    "OeisA237271.observation_carmichael"
+  ],
+  "unresolved_gaps": [
+    "Lean proof of observation_carmichael not yet kernel-checked in this worker tree"
+  ],
+  "next_step": "Compile A237271.lean and complete axiom/type audit"
+}
