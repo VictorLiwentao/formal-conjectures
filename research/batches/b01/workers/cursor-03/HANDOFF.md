@@ -11,7 +11,7 @@
 - Public prior proof: https://github.com/KitaKen1/oeis-a076141-binary-word/blob/b4e179767fa3041c43e019b559ee77e6737317aa/lean/OeisA76141FC.lean
 - Upstream marker PR (open, unreviewed): https://github.com/google-deepmind/formal-conjectures/pull/5088
 
-Final commit SHA of this worker branch is recorded after the commit that contains this file (see the git log on the branch). Reproduction:
+Final commit SHA: `91ee3819157eb806a97195c135181f0b61a2f3e1` (this handoff file may sit on a later follow-up commit on the same branch). Reproduction:
 
 ```sh
 git checkout cursor/b01-cursor-03-91b3
