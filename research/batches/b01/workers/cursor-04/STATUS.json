@@ -11,7 +11,7 @@
   "novelty_status": "no_exact_public_solution_found_in_checked_sources",
   "statement_audit": "matches_intended_mceachen_statement",
   "oeis_editability": "unknown",
-  "last_updated_utc": "2026-09-13T08:05:00Z",
+  "last_updated_utc": "2026-09-13T09:00:00Z",
   "session_kickoff_utc": "2026-09-12T23:12:00Z",
   "session_hard_stop_utc": "2026-09-13T07:12:00Z",
   "proof_declarations": [
@@ -313,18 +313,35 @@
     "OeisA135508.remaining_p_ge_two_hundred_ninety_three",
     "OeisA135508.conjecture_of_minFac_two_hundred_ninety_three",
     "OeisA135508.remaining_prime_from_two_hundred_eighty_two_le_two_hundred_ninety_three",
-    "OeisA135508.conjecture_of_minFac_le_two_hundred_ninety_three_or_twin"
+    "OeisA135508.conjecture_of_minFac_le_two_hundred_ninety_three_or_twin",
+    "OeisA135508.a_eq_self_iff_gcd_gt_one",
+    "OeisA135508.not_first_entry_of_gcd_eq_self",
+    "OeisA135508.not_q_dvd_x_k_one_pred",
+    "OeisA135508.not_first_entry_k_one_of_mod_two",
+    "OeisA135508.minFac_lt_of_composite_lt_sq",
+    "OeisA135508.gcd_gt_one_of_minFac_dvd_x",
+    "OeisA135508.gcd_gt_one_of_minFac_dvd_shift",
+    "OeisA135508.first_entry_at_shift_iff_gcd_eq_one",
+    "OeisA135508.first_entry_k_one_iff_coprime",
+    "OeisA135508.not_dvd_gcd_pred_of_eq_self",
+    "OeisA135508.gcd_lt_q_of_dvd_pred",
+    "OeisA135508.gcd_k_one_lt",
+    "OeisA135508.three_hundred_ninety_seven_dvd_x_2777",
+    "OeisA135508.conjecture_of_minFac_three_hundred_ninety_seven",
+    "OeisA135508.four_hundred_one_dvd_x_2003",
+    "OeisA135508.conjecture_of_minFac_four_hundred_one",
+    "OeisA135508.conjecture_of_minFac_le_four_hundred_one_or_twin"
   ],
   "unresolved_gaps": [
     "Frozen OeisA135508.conjecture is still sorry.",
-    "Remaining class: primes p ≡ 1 (mod 3) with p-2 composite, lpf(p-2) ≥ 307, and that least factor not a larger twin and not among the explicit family 389. The next non-twin leftover least factor is 307.",
+    "Remaining class: primes p ≡ 1 (mod 3) with p-2 composite, lpf(p-2) ≥ 409, and that least factor not a larger twin. The next non-twin leftover least factor is 409.",
     "conjecture_of_square_window reduces the frozen type to q | x(q(q+2)-1) for every prime q ≥ 5. That hypothesis is not proved.",
     "conjecture_of_C1 is Cloitre Cor. 6.6 as an implication from C1. C1 is not proved.",
     "conjecture_of_exists_factor_injector is the remaining sufficient arithmetic condition. Existence of an in-window injector is not proved.",
     "exists_prime_index_injector proves an unbounded prime injector via Dirichlet; it does not prove r ≤ q(q+2)-1.",
     "Remaining Type A (p-2 < lpf^3) is semiprime. McEachen then needs a prime injector of q or of the cofactor. Both 7r-2 (lpf ≡ 2 mod 3) and 5r-2 (lpf ≡ 1 mod 3) are packaged; primality is not proved.",
-    "Type B remaining numbers satisfy lpf^3 + 2 ≤ p. After the lpf ≤ 293 family, leftover Type B needs a non-twin least factor ≡ 2 (mod 3) at least 311, hence p ≥ 311^3 + 2. Existence of an injector with k ≤ lpf^2 is not proved.",
-    "An elementary Chebyshev product bound using Mathlib θ(x) ≤ (log 4)x does not close the leftover window at q ≥ 307.",
+    "Type B remaining numbers satisfy lpf^3 + 2 ≤ p. After the lpf ≤ 401 family, leftover Type B needs a non-twin least factor ≡ 2 (mod 3) at least 419, hence p ≥ 419^3 + 2. Existence of an injector with k ≤ lpf^2 is not proved.",
+    "An elementary Chebyshev product bound using Mathlib θ(x) ≤ (log 4)x does not close the leftover window at q ≥ 409.",
     "First-order Bonferroni/Mertens is not a ∀q proof (bonferroni.py). Some small q have sum |A_p| < |A|, but 157, 191, 197, 1009, 5003 do not.",
     "type_a_gaps.py: leftover p<5000000, lpf≥157: 14783 primes, 0 Type A cofactor failures, 0 McEachen-window gaps. Not a proof.",
     "The unique Lean Type B leftover p<5000000 with lpf≥157 is 167^2*179+2=4992133, already covered by 167 and 179. Not a proof of ∀p.",
@@ -332,8 +349,8 @@
     "Need a prime r = kq-2 with r ≤ q(q+2)-1. For q ≡ 2 (mod 3) the candidates are k ≡ 5 (mod 6).",
     "Dirichlet, Linnik L=5, and the usual GRH bound do not give r ≤ q(q+2)-1. Finite injector checks are not a proof.",
     "Cloitre C1 and Cor. 6.6 are not an unconditional solution.",
-    "exists_first_entry_index and the 30/210 stock package entered small primes. Leftover least factors remain coprime to 210."
+    "exists_first_entry_index, the g-1 criterion, k=1 blockage for q ≡ 2 (mod 3), and the 30/210 stock package entered small primes. Leftover least factors remain coprime to 210. a_eq_self_iff_gcd_gt_one does not inject leftover q ≥ 409."
   ],
-  "next_step": "Frozen type still unproved. Compiled first-entry of 293 (k=11) lifts the leftover cutoff to lpf ≥ 307. The g(kq-2) index identity and 210-stock coprimality do not inject leftover factors. Remaining work is an unconditional first-entry bound q | x(q(q+2)-1) for leftover q ≥ 307, or a Lean-checkable counterexample. Complementary Type A injectors and Type B k≤q^2 still need a prime in an AP. Extending minFac does not finish ∀p. Do not claim completion.",
-  "handoff_research_commit": "aa1531bd"
+  "next_step": "Frozen type still unproved. Compiled first-entry of 397 (k=7) and 401 (k=5) lifts the leftover cutoff to lpf ≥ 409. The McEachen invariant gcd(x(p-3),p-2)>1, the g-1 criterion, k=1 blockage for q ≡ 2 (mod 3), and fully smooth composite blocking do not inject leftover factors. Remaining work is an unconditional first-entry bound q | x(q(q+2)-1) for leftover q ≥ 409, or a Lean-checkable counterexample. Complementary Type A injectors and Type B k≤q^2 still need a prime in an AP. Extending minFac does not finish ∀p. Do not claim completion.",
+  "handoff_research_commit": "PENDING_RESEARCH_COMMIT"
 }

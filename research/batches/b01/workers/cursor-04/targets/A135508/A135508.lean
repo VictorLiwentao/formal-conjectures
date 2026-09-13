@@ -67,13 +67,18 @@ least factor is a larger twin, first-entry of `277` and `281`, remaining
 McEachen when `lpf(p-2) ≤ 281` or that least factor is a larger twin,
 first-entry of `293`, remaining McEachen when `lpf(p-2) ≤ 293` or that
 least factor is a larger twin, first-entry of leftover least factors
-`307` through `383`, remaining McEachen when `lpf(p-2) ≤ 389` or that
+`307` through `401`, remaining McEachen when `lpf(p-2) ≤ 401` or that
 least factor is a larger twin, the Euclid first-entry criterion, the
 index identity `n+1 = g(kq-2)`, the shift criterion `q ∣ g-1` at
-`kq-2`, the `30` and `210` stock lower bounds,
-and that the frozen statement follows from first-entry of every prime
-`q ≥ 5` by the square-window index `q(q+2)-1`. Existence of a window
-injector for every leftover least factor is not proved.
+`kq-2`, that a shift with `g < q` first-enters if and only if `g = 1`,
+that the coprime `k = 1` index is `q-2`, that primes `≡ 2 (mod 3)`
+never first-enter at that primitive index, that McEachen at `p ≥ 5`
+is equivalent to `gcd(x(p-3), p-2) > 1`, that a composite below `q²`
+has least factor `< q`, that a fully smooth composite shift does not
+inject `q ≠ 3`, the `30` and `210` stock lower
+bounds, and that the frozen statement follows from first-entry of every
+prime `q ≥ 5` by the square-window index `q(q+2)-1`. Existence of a
+window injector for every leftover least factor is not proved.
 -/
 
 namespace OeisA135508
@@ -224,6 +229,14 @@ lemma exists_first_entry_index {q n : ℕ} (hn : 0 < n) (h : q ∣ a n + 2) :
     ∃ k, n + 1 = Nat.gcd (x n) (n + 1) * (q * k - 2) :=
   ⟨(a n + 2) / q, succ_eq_gcd_mul_kq_sub_two hn (Nat.mul_div_cancel' h).symm⟩
 
+/-- If `a` divides `b` and `b + c`, then `a` divides `c`. -/
+lemma dvd_right_of_dvd_add {a b c : ℕ} (hb : a ∣ b) (h : a ∣ b + c) : a ∣ c := by
+  rw [Nat.dvd_iff_mod_eq_zero] at hb h ⊢
+  have hmod : (b % a + c % a) % a = 0 := by
+    rwa [← Nat.add_mod]
+  rw [hb, Nat.zero_add, Nat.mod_mod] at hmod
+  exact hmod
+
 /-- An odd prime dividing `2m` divides `m`. -/
 lemma odd_prime_dvd_two_mul {q m : ℕ} (hq : q.Prime) (h2 : 2 < q)
     (h : q ∣ 2 * m) : q ∣ m :=
@@ -237,12 +250,12 @@ lemma add_two_gcd_eq_of_kq_sub_two {n k q : ℕ}
     n + 1 + 2 * Nat.gcd (x n) (n + 1) =
       k * q + 2 * (Nat.gcd (x n) (n + 1) - 1) := by
   set g := Nat.gcd (x n) (n + 1)
+  have hgs : g - 1 + 1 = g := Nat.sub_add_cancel hg
   have h2g : 2 * g = 2 * (g - 1) + 2 := by
-    have hg1 : g = g - 1 + 1 := (Nat.sub_add_cancel hg).symm
-    calc
-      2 * g = 2 * (g - 1 + 1) := by rw [hg1]
-      _ = 2 * (g - 1) + 2 * 1 := Nat.mul_add 2 _ _
-      _ = 2 * (g - 1) + 2 := by rw [Nat.mul_one]
+    have hL : 2 * (g - 1 + 1) = 2 * g := congrArg (fun t => 2 * t) hgs
+    have hR : 2 * (g - 1 + 1) = 2 * (g - 1) + 2 := by
+      rw [Nat.mul_add, Nat.mul_one]
+    exact hL.symm.trans hR
   calc
     n + 1 + 2 * g = (k * q - 2) + 2 * g := by rw [h]
     _ = (k * q - 2) + (2 * (g - 1) + 2) := by rw [h2g]
@@ -295,7 +308,7 @@ lemma first_entry_iff_dvd_gcd_pred {q k : ℕ}
         q ∣ k * q + 2 * (Nat.gcd (x (k * q - 3)) (k * q - 2) - 1) := by
       simpa [hsucc] using hadd1
     have hqk : q ∣ k * q := Nat.dvd_mul_left q k
-    exact odd_prime_dvd_two_mul hq h2 ((Nat.dvd_add_iff_right hqk).mp hadd2)
+    exact odd_prime_dvd_two_mul hq h2 (dvd_right_of_dvd_add hqk hadd2)
   · intro hgpred
     have hqk : q ∣ k * q := Nat.dvd_mul_left q k
     have htwo :
@@ -303,7 +316,7 @@ lemma first_entry_iff_dvd_gcd_pred {q k : ℕ}
       dvd_mul_of_dvd_right hgpred 2
     have hadd :
         q ∣ k * q + 2 * (Nat.gcd (x (k * q - 3)) (k * q - 2) - 1) :=
-      (Nat.dvd_add_iff_right hqk).mpr htwo
+      Nat.dvd_add hqk htwo
     have hadd1 :
         q ∣ k * q +
           2 * (Nat.gcd (x (k * q - 3)) (k * q - 3 + 1) - 1) := by
@@ -311,7 +324,8 @@ lemma first_entry_iff_dvd_gcd_pred {q k : ℕ}
     have hadd' :
         q ∣ k * q - 3 + 1 +
           2 * Nat.gcd (x (k * q - 3)) (k * q - 3 + 1) := by
-      rwa [← hrep]
+      rw [hrep]
+      exact hadd1
     have : q ∣ x (k * q - 3 + 1) :=
       (first_entry_iff_dvd_add hq hpos hx).mpr hadd'
     rwa [hsucc] at this
@@ -344,6 +358,87 @@ lemma q_dvd_x_of_gcd_eq_one_at_shift {q k : ℕ}
   (first_entry_iff_dvd_gcd_pred hq h2 hpos hx).2 (by
     rw [hg]
     exact dvd_zero q)
+
+/-- A divisor of `q-2` is strictly less than `q`. -/
+lemma gcd_lt_q_of_dvd_pred {q g : ℕ} (h2 : 2 < q) (hd : g ∣ q - 2) : g < q :=
+  lt_of_le_of_lt (Nat.le_of_dvd (Nat.sub_pos_of_lt h2) hd)
+    (Nat.sub_lt (lt_trans (by decide : 0 < 2) h2) (by decide : 0 < 2))
+
+/-- At the coprime-shape index `q-2`, the gcd is `< q`. -/
+lemma gcd_k_one_lt {q : ℕ} (h2 : 2 < q) :
+    Nat.gcd (x (q - 3)) (q - 2) < q :=
+  gcd_lt_q_of_dvd_pred h2 (Nat.gcd_dvd_right _ _)
+
+/-- If `g < q` at a shift, first-entry of an odd prime `q` is equivalent
+to the coprime case `g = 1`. -/
+lemma first_entry_at_shift_iff_gcd_eq_one {q k : ℕ}
+    (hq : q.Prime) (h2 : 2 < q) (hpos : 0 < k * q - 3)
+    (hx : ¬ q ∣ x (k * q - 3))
+    (hglt : Nat.gcd (x (k * q - 3)) (k * q - 2) < q) :
+    q ∣ x (k * q - 2) ↔
+      Nat.gcd (x (k * q - 3)) (k * q - 2) = 1 := by
+  have h3lt : 3 < k * q := by
+    have : 0 < k * q - 3 := hpos
+    omega
+  have hg1 : 1 ≤ Nat.gcd (x (k * q - 3)) (k * q - 2) :=
+    Nat.succ_le_of_lt (Nat.gcd_pos_of_pos_right _
+      (Nat.sub_pos_of_lt (lt_trans (by decide : 2 < 3) h3lt)))
+  constructor
+  · intro hd
+    exact eq_one_of_prime_dvd_pred hq hg1 hglt
+      ((first_entry_iff_dvd_gcd_pred hq h2 hpos hx).1 hd)
+  · intro hg
+    exact q_dvd_x_of_gcd_eq_one_at_shift hq h2 hpos hx hg
+
+/-- At `k = 1`, first-entry of an odd prime `q ≥ 5` is equivalent to
+`gcd(x(q-3), q-2) = 1`. That coprime condition fails whenever an entered
+prime divides `q-2`, in particular if `q ≡ 2 (mod 3)` so that `3 ∣ q-2`. -/
+lemma first_entry_k_one_iff_coprime {q : ℕ} (hq : q.Prime) (h5 : 5 ≤ q)
+    (hx : ¬ q ∣ x (q - 3)) :
+    q ∣ x (q - 2) ↔ Nat.gcd (x (q - 3)) (q - 2) = 1 := by
+  have h2 : 2 < q := lt_of_lt_of_le (by decide : 2 < 5) h5
+  have hpos : 0 < q - 3 :=
+    Nat.sub_pos_of_lt (lt_of_lt_of_le (by decide : 3 < 5) h5)
+  have hmul : 1 * q = q := Nat.one_mul q
+  have hpos1 : 0 < 1 * q - 3 := hmul.symm ▸ hpos
+  have hx1 : ¬ q ∣ x (1 * q - 3) := by
+    rwa [hmul]
+  have hglt : Nat.gcd (x (1 * q - 3)) (1 * q - 2) < q := by
+    rw [hmul]
+    exact gcd_k_one_lt h2
+  have hiff := first_entry_at_shift_iff_gcd_eq_one (k := 1) hq h2 hpos1 hx1 hglt
+  rwa [hmul] at hiff
+
+/-- If the gcd at a shift is the whole index `kq-2`, then `q ∣ g-1`
+would force `q ∣ 3`. This blocks first-entry of leftover `q > 3` at a
+completely smooth composite shift. -/
+lemma not_dvd_gcd_pred_of_eq_self {q k : ℕ} (hq : q.Prime) (_h2 : 2 < q)
+    (h3 : q ≠ 3) (h3le : 3 ≤ k * q)
+    (hg : Nat.gcd (x (k * q - 3)) (k * q - 2) = k * q - 2) :
+    ¬ q ∣ Nat.gcd (x (k * q - 3)) (k * q - 2) - 1 := by
+  intro h
+  have hsub : q ∣ k * q - 3 := by
+    have : k * q - 2 - 1 = k * q - 3 := (Nat.sub_sub (k * q) 2 1).symm
+    rwa [hg, this] at h
+  have hadd : k * q - 3 + 3 = k * q := Nat.sub_add_cancel h3le
+  have hqk : q ∣ k * q := Nat.dvd_mul_left q k
+  have hqk' : q ∣ k * q - 3 + 3 := hadd.symm ▸ hqk
+  have h3d : q ∣ 3 := dvd_right_of_dvd_add hsub hqk'
+  exact h3 ((Nat.prime_dvd_prime_iff_eq hq Nat.prime_three).1 h3d)
+
+/-- A fully smooth composite shift does not first-enter an odd prime `q ≠ 3`. -/
+lemma not_first_entry_of_gcd_eq_self {q k : ℕ}
+    (hq : q.Prime) (h2 : 2 < q) (h3 : q ≠ 3) (hpos : 0 < k * q - 3)
+    (hx : ¬ q ∣ x (k * q - 3))
+    (hg : Nat.gcd (x (k * q - 3)) (k * q - 2) = k * q - 2) :
+    ¬ q ∣ x (k * q - 2) := by
+  have h3lt : 3 < k * q := by
+    have : 0 < k * q - 3 := hpos
+    omega
+  have h3le : 3 ≤ k * q := Nat.le_of_lt h3lt
+  intro hd
+  exact not_dvd_gcd_pred_of_eq_self hq h2 h3 h3le hg
+    ((first_entry_iff_dvd_gcd_pred hq h2 hpos hx).1 hd)
 
 lemma x_dvd_of_le {m n : ℕ} (hm : 0 < m) (h : m ≤ n) : x m ∣ x n := by
   obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le h
@@ -615,6 +710,37 @@ lemma a_eq_self_of_gcd_gt_one {p : ℕ} (hp : p.Prime) (hp5 : 5 ≤ p)
   rcases a_eq_one_or_self hp with h | h
   · exact (hnot ((a_eq_one_iff_dvd hp).1 h)).elim
   · exact h
+
+/-- McEachen at a prime `p ≥ 5` is equivalent to `gcd(x(p-3), p-2) > 1`.
+The coprime case forces `a(p-3) = p-2`, hence `p ∣ x(p-1)` and `a(p-1) = 1`. -/
+lemma a_eq_self_iff_gcd_gt_one {p : ℕ} (hp : p.Prime) (hp5 : 5 ≤ p) :
+    a (p - 1) = p ↔ 1 < Nat.gcd (x (p - 3)) (p - 2) := by
+  constructor
+  · intro ha
+    have hn : 0 < p - 3 :=
+      Nat.sub_pos_of_lt (lt_of_lt_of_le (by decide : 3 < 5) hp5)
+    have hsum : p - 3 + 1 = p - 2 := by
+      have hpos : 0 < p - 2 :=
+        Nat.sub_pos_of_lt (lt_of_lt_of_le (by decide : 2 < 5) hp5)
+      omega
+    have hp1 : 1 < p := lt_of_lt_of_le (by decide : 1 < 5) hp5
+    have hneq : a (p - 1) ≠ 1 := fun h1 =>
+      Nat.ne_of_gt hp1 (h1.symm.trans ha)
+    have hnot : ¬ p ∣ x (p - 1) := fun hd =>
+      hneq ((a_eq_one_iff_dvd hp).2 hd)
+    have hnea : a (p - 3) ≠ p - 2 := fun h =>
+      hnot ((dvd_x_pred_iff_a hp hp5).2 h)
+    have hpos : 0 < Nat.gcd (x (p - 3)) (p - 2) :=
+      Nat.gcd_pos_of_pos_right _
+        (Nat.sub_pos_of_lt (lt_of_lt_of_le (by decide : 2 < 5) hp5))
+    by_cases hg : Nat.gcd (x (p - 3)) (p - 2) = 1
+    · have haeq : a (p - 3) = p - 2 := by
+        have h := a_eq hn
+        rw [h, hsum, hg, Nat.div_one]
+      exact (hnea haeq).elim
+    · exact lt_of_le_of_ne (Nat.succ_le_of_lt hpos) (Ne.symm hg)
+  · intro hg
+    exact a_eq_self_of_gcd_gt_one hp hp5 hg
 
 /-- McEachen if `p-2` shares a factor `2,3,5` with the entered 30-stock.
 This packages the `2,3,5` families; leftover leftover primes have
@@ -1863,6 +1989,28 @@ lemma not_q_dvd_x_self {q : ℕ} (hq : q.Prime) (hmod : q % 3 = 2) (h7 : 7 ≤ q
     ¬ q ∣ x q :=
   not_q_dvd_x_le hq hmod h7 (by omega : 0 < q) le_rfl
 
+/-- A prime `q ≡ 2 (mod 3)` does not divide `x(q-3)`. This is the
+predecessor of the primitive `k = 1` index. -/
+lemma not_q_dvd_x_k_one_pred {q : ℕ} (hq : q.Prime) (hmod : q % 3 = 2)
+    (h7 : 7 ≤ q) : ¬ q ∣ x (q - 3) :=
+  not_q_dvd_x_le hq hmod h7
+    (Nat.sub_pos_of_lt (lt_of_lt_of_le (by decide : 3 < 7) h7))
+    (Nat.sub_le q 3)
+
+/-- The primitive index `q-2` is never a first-entry of a prime
+`q ≡ 2 (mod 3)`, because `3 ∣ q-2` and `3` has already entered. -/
+lemma not_first_entry_k_one_of_mod_two {q : ℕ}
+    (hq : q.Prime) (h7 : 7 ≤ q) (hmod : q % 3 = 2) :
+    ¬ q ∣ x (q - 2) := by
+  have hx : ¬ q ∣ x (q - 3) := not_q_dvd_x_k_one_pred hq hmod h7
+  have hiff :=
+    first_entry_k_one_iff_coprime hq (le_trans (by decide : 5 ≤ 7) h7) hx
+  intro hd
+  have hg : Nat.gcd (x (q - 3)) (q - 2) = 1 := hiff.1 hd
+  have hgt : 1 < Nat.gcd (x (q - 3)) (q - 2) :=
+    three_dvd_gcd h7 (three_dvd_of_mod (le_trans (by decide : 2 ≤ 7) h7) hmod)
+  exact Nat.ne_of_gt hgt hg
+
 /-- Specialization: a prime `5q-2` injects `q` at index `5q-2`. -/
 lemma q_dvd_x_of_five_prime_injector {q : ℕ} (hmodq : q % 3 = 2)
     (hpr : (5 * q - 2).Prime) (h7 : 7 ≤ 5 * q - 2) :
@@ -2759,6 +2907,32 @@ theorem conjecture_of_three_hundred_eighty_three_dvd {p : ℕ} (hp : p.Prime)
   conjecture_of_factor_dvd_x hp (le_trans (by decide : 5 ≤ 1916) hp1916)
     (by decide : 1 < 383) h383
     (three_hundred_eighty_three_dvd_x (Nat.sub_le_sub_right hp1916 3))
+
+lemma three_hundred_ninety_seven_dvd_x_2777 : 397 ∣ x 2777 :=
+  q_dvd_x_of_prime_index (k := 7) (q := 397)
+    (by norm_num) (by decide) (by decide)
+
+lemma three_hundred_ninety_seven_dvd_x {n : ℕ} (hn : 2777 ≤ n) : 397 ∣ x n :=
+  three_hundred_ninety_seven_dvd_x_2777.trans (x_dvd_of_le (by decide : 0 < 2777) hn)
+
+theorem conjecture_of_three_hundred_ninety_seven_dvd {p : ℕ} (hp : p.Prime)
+    (hp2780 : 2780 ≤ p) (h397 : 397 ∣ p - 2) : a (p - 1) = p :=
+  conjecture_of_factor_dvd_x hp (le_trans (by decide : 5 ≤ 2780) hp2780)
+    (by decide : 1 < 397) h397
+    (three_hundred_ninety_seven_dvd_x (Nat.sub_le_sub_right hp2780 3))
+
+lemma four_hundred_one_dvd_x_2003 : 401 ∣ x 2003 :=
+  q_dvd_x_of_prime_index (k := 5) (q := 401)
+    (by norm_num) (by decide) (by decide)
+
+lemma four_hundred_one_dvd_x {n : ℕ} (hn : 2003 ≤ n) : 401 ∣ x n :=
+  four_hundred_one_dvd_x_2003.trans (x_dvd_of_le (by decide : 0 < 2003) hn)
+
+theorem conjecture_of_four_hundred_one_dvd {p : ℕ} (hp : p.Prime)
+    (hp2006 : 2006 ≤ p) (h401 : 401 ∣ p - 2) : a (p - 1) = p :=
+  conjecture_of_factor_dvd_x hp (le_trans (by decide : 5 ≤ 2006) hp2006)
+    (by decide : 1 < 401) h401
+    (four_hundred_one_dvd_x (Nat.sub_le_sub_right hp2006 3))
 
 lemma remaining_minFac_ge_five {p : ℕ} (hp : p.Prime) (hp7 : 7 ≤ p)
     (hmod : p % 3 = 1) : 5 ≤ Nat.minFac (p - 2) := by
@@ -4374,6 +4548,48 @@ theorem conjecture_of_minFac_three_hundred_eighty_three {p : ℕ}
     (remaining_p_ge_three_hundred_eighty_three hp hp7 hmod hcomp h383)
     (h383 ▸ Nat.minFac_dvd (p - 2))
 
+lemma remaining_p_ge_three_hundred_ninety_seven {p : ℕ}
+    (hp : p.Prime) (hp7 : 7 ≤ p) (hmod : p % 3 = 1)
+    (hcomp : ¬ (p - 2).Prime)
+    (h397 : Nat.minFac (p - 2) = 397) : 2780 ≤ p := by
+  have hbound := remaining_minFac_mul_add_two_le hp hp7 hmod hcomp
+  rw [h397] at hbound
+  have h2le : 2 ≤ p := le_trans (by decide : 2 ≤ 7) hp7
+  have hnum : 397 * (397 + 2) + 2 = 158405 := by decide
+  have : 397 * (397 + 2) + 2 ≤ p - 2 + 2 := Nat.add_le_add_right hbound 2
+  rw [hnum, Nat.sub_add_cancel h2le] at this
+  exact le_trans (by decide : 2780 ≤ 158405) this
+
+/-- Remaining McEachen if `lpf(p-2) = 397`. The injector is `k = 7`. -/
+theorem conjecture_of_minFac_three_hundred_ninety_seven {p : ℕ}
+    (hp : p.Prime) (hp7 : 7 ≤ p) (hmod : p % 3 = 1)
+    (hcomp : ¬ (p - 2).Prime)
+    (h397 : Nat.minFac (p - 2) = 397) : a (p - 1) = p :=
+  conjecture_of_three_hundred_ninety_seven_dvd hp
+    (remaining_p_ge_three_hundred_ninety_seven hp hp7 hmod hcomp h397)
+    (h397 ▸ Nat.minFac_dvd (p - 2))
+
+lemma remaining_p_ge_four_hundred_one {p : ℕ}
+    (hp : p.Prime) (hp7 : 7 ≤ p) (hmod : p % 3 = 1)
+    (hcomp : ¬ (p - 2).Prime)
+    (h401 : Nat.minFac (p - 2) = 401) : 2006 ≤ p := by
+  have hbound := remaining_minFac_mul_add_two_le hp hp7 hmod hcomp
+  rw [h401] at hbound
+  have h2le : 2 ≤ p := le_trans (by decide : 2 ≤ 7) hp7
+  have hnum : 401 * (401 + 2) + 2 = 161605 := by decide
+  have : 401 * (401 + 2) + 2 ≤ p - 2 + 2 := Nat.add_le_add_right hbound 2
+  rw [hnum, Nat.sub_add_cancel h2le] at this
+  exact le_trans (by decide : 2006 ≤ 161605) this
+
+/-- Remaining McEachen if `lpf(p-2) = 401`. The injector is `k = 5`. -/
+theorem conjecture_of_minFac_four_hundred_one {p : ℕ}
+    (hp : p.Prime) (hp7 : 7 ≤ p) (hmod : p % 3 = 1)
+    (hcomp : ¬ (p - 2).Prime)
+    (h401 : Nat.minFac (p - 2) = 401) : a (p - 1) = p :=
+  conjecture_of_four_hundred_one_dvd hp
+    (remaining_p_ge_four_hundred_one hp hp7 hmod hcomp h401)
+    (h401 ▸ Nat.minFac_dvd (p - 2))
+
 /-- Remaining McEachen if `5·lpf(p-2)-2` is prime. For `lpf ≡ 2 (mod 3)`
 this is the first remaining injector and always fits in the square window.
 If `lpf ≡ 1 (mod 3)` then `3 ∣ 5q-2`, so the hypothesis fails. -/
@@ -4775,6 +4991,40 @@ lemma prime_of_no_prime_dvd_lt {n q : ℕ} (hn1 : 1 < n) (hnq : n < q * q)
     have hlt : n.minFac * n.minFac < q * q := lt_of_le_of_lt hmul hnq
     exact Nat.mul_self_lt_mul_self_iff.mp hlt
   exact h n.minFac hminp hminlt (Nat.minFac_dvd n)
+
+/-- The converse bound: a composite below `q²` has least prime factor `< q`. -/
+lemma minFac_lt_of_composite_lt_sq {n q : ℕ} (hn1 : 1 < n) (hcomp : ¬ n.Prime)
+    (hnq : n < q * q) : n.minFac < q := by
+  have hpos : 0 < n := Nat.zero_lt_of_lt hn1
+  have hsq : n.minFac ^ 2 ≤ n := Nat.minFac_sq_le_self hpos hcomp
+  have hmul : n.minFac * n.minFac ≤ n := by rwa [pow_two] at hsq
+  have hlt : n.minFac * n.minFac < q * q := lt_of_le_of_lt hmul hnq
+  exact Nat.mul_self_lt_mul_self_iff.mp hlt
+
+/-- If the least prime factor of `n` already divides `x(n-1)`, then
+`gcd(x(n-1), n) > 1`. -/
+lemma gcd_gt_one_of_minFac_dvd_x {n : ℕ} (hgt : 1 < n)
+    (hx : Nat.minFac n ∣ x (n - 1)) :
+    1 < Nat.gcd (x (n - 1)) n := by
+  have hd : Nat.minFac n ∣ n := Nat.minFac_dvd _
+  have hg : Nat.minFac n ∣ Nat.gcd (x (n - 1)) n := Nat.dvd_gcd hx hd
+  have hpos : 0 < Nat.gcd (x (n - 1)) n :=
+    Nat.gcd_pos_of_pos_right _ (lt_trans (by decide : 0 < 1) hgt)
+  have hminp : n.minFac.Prime := Nat.minFac_prime (ne_of_gt hgt)
+  have h2 : 2 ≤ n.minFac := hminp.two_le
+  have : n.minFac ≤ Nat.gcd (x (n - 1)) n := Nat.le_of_dvd hpos hg
+  exact lt_of_lt_of_le (lt_of_lt_of_le (by decide : 1 < 2) h2) this
+
+/-- Specialization: if the least factor of a shift `kq-2` already
+divides `x` at the predecessor, then the shift is not coprime. -/
+lemma gcd_gt_one_of_minFac_dvd_shift {k q : ℕ}
+    (hgt : 1 < k * q - 2)
+    (hx : Nat.minFac (k * q - 2) ∣ x (k * q - 3)) :
+    1 < Nat.gcd (x (k * q - 3)) (k * q - 2) := by
+  have hsub : k * q - 2 - 1 = k * q - 3 := (Nat.sub_sub (k * q) 2 1).symm
+  have hx' : Nat.minFac (k * q - 2) ∣ x (k * q - 2 - 1) := by
+    rwa [hsub]
+  simpa [hsub] using gcd_gt_one_of_minFac_dvd_x hgt hx'
 
 /-- A prime injector in the square window, packaged as an existential. -/
 lemma q_dvd_x_square_window_of_exists {q : ℕ}
@@ -5952,6 +6202,28 @@ lemma remaining_prime_from_three_hundred_eighty_four_le_three_hundred_eighty_nin
   · exact ((by norm_num : ¬ Nat.Prime 388) hq).elim
   · rfl
 
+lemma remaining_prime_from_three_hundred_ninety_le_three_hundred_ninety_seven
+    {q : ℕ} (hq : q.Prime) (hlo : 390 ≤ q) (hhi : q ≤ 397)
+    (_hnotwin : ¬ (q - 2).Prime) : q = 397 := by
+  interval_cases q
+  · exact ((by norm_num : ¬ Nat.Prime 390) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 391) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 392) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 393) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 394) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 395) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 396) hq).elim
+  · rfl
+
+lemma remaining_prime_from_three_hundred_ninety_eight_le_four_hundred_one
+    {q : ℕ} (hq : q.Prime) (hlo : 398 ≤ q) (hhi : q ≤ 401)
+    (_hnotwin : ¬ (q - 2).Prime) : q = 401 := by
+  interval_cases q
+  · exact ((by norm_num : ¬ Nat.Prime 398) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 399) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 400) hq).elim
+  · rfl
+
 /-- Remaining McEachen if `lpf(p-2) ≤ 389` or that least factor is a larger twin.
 After this cutoff the leftover least factor is at least `397`. -/
 theorem conjecture_of_minFac_le_three_hundred_eighty_nine_or_twin {p : ℕ}
@@ -6073,6 +6345,47 @@ theorem conjecture_of_minFac_le_three_hundred_eighty_nine_or_twin {p : ℕ}
                                     hpr h384 h389 ht
                                 exact conjecture_of_minFac_three_hundred_eighty_nine
                                   hp hp7 hmod hcomp heq
+  · by_cases h13 : 13 ≤ Nat.minFac (p - 2)
+    · exact conjecture_of_larger_twin_dvd hp (five_le_of_seven_le hp7) hcomp
+        hpr h13 htwin hd
+    · have h12 : Nat.minFac (p - 2) ≤ 12 := Nat.lt_succ_iff.mp (lt_of_not_ge h13)
+      exact conjecture_of_minFac_le_twenty_nine hp hp7 hmod hcomp
+        (le_trans h12 (by decide : 12 ≤ 29))
+
+/-- Remaining McEachen if `lpf(p-2) ≤ 401` or that least factor is a larger twin.
+After this cutoff the leftover least factor is at least `409`. -/
+theorem conjecture_of_minFac_le_four_hundred_one_or_twin {p : ℕ}
+    (hp : p.Prime) (hp7 : 7 ≤ p) (hmod : p % 3 = 1)
+    (hcomp : ¬ (p - 2).Prime)
+    (h : Nat.minFac (p - 2) ≤ 401 ∨ (Nat.minFac (p - 2) - 2).Prime) :
+    a (p - 1) = p := by
+  have hpr : (Nat.minFac (p - 2)).Prime :=
+    Nat.minFac_prime (ne_of_gt (remaining_p_sub_two_gt_one hp7))
+  have hd : Nat.minFac (p - 2) ∣ p - 2 := Nat.minFac_dvd _
+  rcases h with h401 | htwin
+  · by_cases h389 : Nat.minFac (p - 2) ≤ 389
+    · exact conjecture_of_minFac_le_three_hundred_eighty_nine_or_twin hp hp7
+        hmod hcomp (Or.inl h389)
+    · by_cases ht : (Nat.minFac (p - 2) - 2).Prime
+      · have h13 : 13 ≤ Nat.minFac (p - 2) :=
+          le_trans (by decide : 13 ≤ 390)
+            (Nat.succ_le_of_lt (lt_of_not_ge h389))
+        exact conjecture_of_larger_twin_dvd hp (five_le_of_seven_le hp7)
+          hcomp hpr h13 ht hd
+      · have h390 : 390 ≤ Nat.minFac (p - 2) :=
+          Nat.succ_le_of_lt (lt_of_not_ge h389)
+        by_cases h397 : Nat.minFac (p - 2) ≤ 397
+        · have heq :=
+            remaining_prime_from_three_hundred_ninety_le_three_hundred_ninety_seven
+              hpr h390 h397 ht
+          exact conjecture_of_minFac_three_hundred_ninety_seven hp hp7
+            hmod hcomp heq
+        · have h398 : 398 ≤ Nat.minFac (p - 2) :=
+            Nat.succ_le_of_lt (lt_of_not_ge h397)
+          have heq :=
+            remaining_prime_from_three_hundred_ninety_eight_le_four_hundred_one
+              hpr h398 h401 ht
+          exact conjecture_of_minFac_four_hundred_one hp hp7 hmod hcomp heq
   · by_cases h13 : 13 ≤ Nat.minFac (p - 2)
     · exact conjecture_of_larger_twin_dvd hp (five_le_of_seven_le hp7) hcomp
         hpr h13 htwin hd
@@ -6774,6 +7087,8 @@ lemma v2_x_two_four_pow_pred (k : ℕ) :
 #print axioms v2_x_ge_two
 #print axioms not_q_dvd_x_le
 #print axioms not_q_dvd_x_self
+#print axioms not_q_dvd_x_k_one_pred
+#print axioms not_first_entry_k_one_of_mod_two
 #print axioms not_prime_kq_sub_two_of_even
 #print axioms not_prime_kq_sub_two_of_k_mod_one
 #print axioms odd_k_mod_three_two_iff
@@ -6842,6 +7157,9 @@ lemma v2_x_two_four_pow_pred (k : ℕ) :
 #print axioms conjecture_of_C1
 #print axioms larger_twin_dvd_square_window
 #print axioms prime_of_no_prime_dvd_lt
+#print axioms minFac_lt_of_composite_lt_sq
+#print axioms gcd_gt_one_of_minFac_dvd_x
+#print axioms gcd_gt_one_of_minFac_dvd_shift
 #print axioms q_dvd_x_square_window_of_exists
 #print axioms q_dvd_x_window_of_no_small_factor
 #print axioms conjecture_of_cofactor_seven
@@ -7089,6 +7407,7 @@ lemma v2_x_two_four_pow_pred (k : ℕ) :
 #print axioms remaining_prime_from_two_hundred_eighty_two_le_two_hundred_ninety_three
 #print axioms conjecture_of_minFac_le_two_hundred_ninety_three_or_twin
 
+#print axioms dvd_right_of_dvd_add
 #print axioms odd_prime_dvd_two_mul
 #print axioms add_two_gcd_eq_of_kq_sub_two
 #print axioms succ_pred_kq_sub_two
@@ -7125,5 +7444,23 @@ lemma v2_x_two_four_pow_pred (k : ℕ) :
 #print axioms remaining_prime_from_two_hundred_ninety_four_le_three_hundred_seven
 #print axioms remaining_prime_from_three_hundred_eighty_four_le_three_hundred_eighty_nine
 #print axioms conjecture_of_minFac_le_three_hundred_eighty_nine_or_twin
+#print axioms gcd_lt_q_of_dvd_pred
+#print axioms gcd_k_one_lt
+#print axioms first_entry_at_shift_iff_gcd_eq_one
+#print axioms first_entry_k_one_iff_coprime
+#print axioms not_dvd_gcd_pred_of_eq_self
+#print axioms not_first_entry_of_gcd_eq_self
+#print axioms a_eq_self_iff_gcd_gt_one
+#print axioms three_hundred_ninety_seven_dvd_x_2777
+#print axioms conjecture_of_three_hundred_ninety_seven_dvd
+#print axioms remaining_p_ge_three_hundred_ninety_seven
+#print axioms conjecture_of_minFac_three_hundred_ninety_seven
+#print axioms four_hundred_one_dvd_x_2003
+#print axioms conjecture_of_four_hundred_one_dvd
+#print axioms remaining_p_ge_four_hundred_one
+#print axioms conjecture_of_minFac_four_hundred_one
+#print axioms remaining_prime_from_three_hundred_ninety_le_three_hundred_ninety_seven
+#print axioms remaining_prime_from_three_hundred_ninety_eight_le_four_hundred_one
+#print axioms conjecture_of_minFac_le_four_hundred_one_or_twin
 
 end OeisA135508
