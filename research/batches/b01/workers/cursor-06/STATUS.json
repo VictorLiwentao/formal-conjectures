@@ -7,7 +7,7 @@
   "source_sha256": "afa95297bd177a882fb72b03f32f1da68ecae58d9126981567562462b73266f8",
   "current_status": "partial",
   "novelty_status": "no_public_exact_solution_in_checked_sources",
-  "last_updated_utc": "2026-09-13T05:45:00Z",
+  "last_updated_utc": "2026-09-13T05:30:00Z",
   "proof_declarations": [
     "OeisA108866.not_n_sq_dvd_num_of_even",
     "OeisA108866.n_sq_dvd_num_of_prime",
@@ -44,6 +44,7 @@
     "OeisA108866.not_n_sq_dvd_num_of_twenty_nine_pow",
     "OeisA108866.not_n_sq_dvd_num_of_thirty_one_pow",
     "OeisA108866.inv_pair_zmod",
+    "OeisA108866.harmonic_pred_eq_zero_zmod",
     "OeisA108866.choose_pred_eq_one_sub_harmonic_zmod",
     "OeisA108866.not_pow_dvd_oddInnerNum_iff",
     "OeisA108866.conjecture_of_odd_composite_converse"
