@@ -91,7 +91,18 @@ Leading-binomial product lemmas for the remaining `p^e` case (`p≥5`, `e≥2`) 
 `choose_pow_pred_eq_prod_Icc`, `prod_mul_pow_pred_eq_choose_pred`,
 `choose_pow_pred_eq_mul_rest`. They give
 `C(p^e-1, a p^{e-1}-1) = C(p-1, a-1) * (rest product)` exactly.
-The `p^2` congruence and leading-unit valuation are not yet kernel-checked.
+
+Kernel-checked rest-product congruence, same axioms, `#print axioms` on 2026-09-13:
+
+```
+'OeisA108866.eq_or_two_le_padicValRat_choose_sub'
+'OeisA108866.eq_or_two_le_padicValRat_leading_sub'
+'OeisA108866.padicValRat_leading_eq_of_lt'
+```
+
+Compile log: `/opt/cursor/artifacts/a108866_lean_wfail_leading.log`, exit 0, no `sorryAx`.
+Either `C=C0` or `v_p(C-C0)≥2`. If `v_p(U0)<2` then `v_p(U)=v_p(U0)`.
+Evaluating `v_p(U0)` is not yet kernel-checked.
 The file still does not prove the frozen iff.
 
 Kernel-checked exact evaluations `n=9,25,27,49` and packaging lemmas remain in the same file, same axioms.

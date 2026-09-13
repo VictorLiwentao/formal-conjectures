@@ -100,8 +100,22 @@ Product lemmas for the remaining prime-power case: for `1 ≤ a ≤ p`,
 `C(p^e-1, a p^{e-1}-1) = C(p-1, a-1)` times the product of
 `(p^e-j)/j` over those `j ≤ a p^{e-1}-1` not divisible by `p^{e-1}`.
 On multiples `j = b p^{e-1}` the ratio is exactly `(p-b)/b`.
-The rest product is `1 + O(p^2)` experimentally (`v(C-C0)≥4`).
-That congruence is not yet kernel-checked.
+
+`eq_or_two_le_padicValRat_rest_prod_sub_one`: that rest product is `1`
+or else `v_p(rest-1)≥2`. Combined with `v_p(C(p-1,a-1))=0`, this gives
+`eq_or_two_le_padicValRat_choose_sub`: either the binomials are equal,
+or `v_p(C-C0)≥2`. Kernel-checked; axioms
+`propext`, `Classical.choice`, `Quot.sound`. This is not the frozen iff.
+
+`eq_or_two_le_padicValRat_leading_sub` / `padicValRat_leading_eq_of_lt`:
+the odd leading sums `U` and `U0` therefore agree whenever
+`v_p(U0)<2`. The remaining gap for `p^e` is `v_p(U0)=1`
+(empirically except `p=7`, where `v=2`).
+
+First-order expansion `C(p-1,a-1)=∏(1-p/b)` for odd `a`, and
+`C(p-1,a-1) ≡ 1 - p H_{a-1}` with valuation gap at least 2
+(`eq_or_two_le_padicValRat_choose_pred_sub_harmonic`), is kernel-checked
+but not yet used to evaluate `v(U0)`.
 
 ## Odd composite converse
 
@@ -119,6 +133,8 @@ Kernel-checked fragments of the converse:
 - exact `n=9, 25, 27, 49`
 - all powers `n=3^e` for `e≥2` (`v_3(T(3^e))=2-e`)
 - all `n=3 p^e` for primes `p≥5` and `e≥1` (`v_p(T(3 p^e))=-e`)
+- `p^e` leading binomials: `C ≡ C0` with valuation gap at least 2,
+  so `v_p(U)=v_p(U0)` whenever `v_p(U0)<2`
 
 Remaining odd composites include prime powers `p^e` for `p≥5` and products
 where `L(m/p^e)=0` for every eligible prime (for example `n=1027=13·79`),
