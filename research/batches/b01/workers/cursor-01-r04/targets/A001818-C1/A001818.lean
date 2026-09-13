@@ -4073,6 +4073,159 @@ lemma sum_cayleyWeight_hamiltonian_eq_of_eqOn_compl {α : Type*} [Fintype α] [D
   simpa [listingPerm] using
     sum_cayleyWeight_listings_eq_of_eqOn_compl x x' p hx hx' h hcard
 
+lemma exists_natCast_notMem (s : Finset ℂ) : ∃ n : ℕ, (n : ℂ) ∉ s := by
+  let t : Finset ℕ :=
+    s.preimage (fun n : ℕ => (n : ℂ)) (Nat.cast_injective.injOn)
+  obtain ⟨n, hn⟩ := Infinite.exists_notMem_finset t
+  exact ⟨n, fun hmem => hn (Finset.mem_preimage.mpr hmem)⟩
+
+lemma exists_fin_off (s : Finset ℂ) :
+    ∀ n : ℕ, ∃ f : Fin n → ℂ, Function.Injective f ∧ ∀ i, f i ∉ s
+  | 0 => ⟨fun i => i.elim0, fun i j _ => i.elim0, fun i => i.elim0⟩
+  | n + 1 => by
+    obtain ⟨f, hf, hfs⟩ := exists_fin_off s n
+    obtain ⟨m, hm⟩ := exists_natCast_notMem (s ∪ (Finset.univ.image f : Finset ℂ))
+    refine ⟨Fin.cons (m : ℂ) f, ?_, ?_⟩
+    · refine (Fin.cons_injective_iff).2 ⟨?_, hf⟩
+      intro ⟨i, hi⟩
+      have hmi : (m : ℂ) = f i := hi.symm
+      have hmem : (m : ℂ) ∈ s ∪ Finset.univ.image f :=
+        mem_union.2 (Or.inr (mem_image.2 ⟨i, mem_univ _, hmi.symm⟩))
+      exact hm hmem
+    · intro i
+      refine Fin.cases ?_ (fun j => hfs j) i
+      intro hmem
+      exact hm (mem_union.2 (Or.inl hmem))
+
+lemma exists_injective_off {α : Type*} [Fintype α] (s : Finset ℂ) :
+    ∃ u : α → ℂ, Function.Injective u ∧ ∀ a, u a ∉ s := by
+  obtain ⟨f, hf, hfs⟩ := exists_fin_off s (Fintype.card α)
+  let e := Fintype.equivFin α
+  exact ⟨fun a => f (e a), hf.comp e.injective, fun a => hfs (e a)⟩
+
+lemma injective_update {α : Type*} [DecidableEq α] (x : α → ℂ) (p : α) (z : ℂ)
+    (hx : Function.Injective x) (hz : ∀ q, q ≠ p → z ≠ x q) :
+    Function.Injective (Function.update x p z) := by
+  intro a b hab
+  by_cases hap : a = p
+  · by_cases hbp : b = p
+    · exact hap.trans hbp.symm
+    · have : z = x b := by
+        rw [hap, Function.update_self, Function.update_of_ne hbp] at hab
+        exact hab
+      exact (hz b hbp this).elim
+  · by_cases hbp : b = p
+    · have : x a = z := by
+        rw [hbp, Function.update_of_ne hap, Function.update_self] at hab
+        exact hab
+      exact (hz a hap this.symm).elim
+    · have : x a = x b := by
+        rw [Function.update_of_ne hap, Function.update_of_ne hbp] at hab
+        exact hab
+      exact hx this
+
+open scoped Classical in
+lemma sum_cayleyWeight_hamiltonian_eq_update {α : Type*} [Fintype α] [DecidableEq α]
+    (x : α → ℂ) (p : α) (z : ℂ)
+    (hx : Function.Injective x) (hz : ∀ q, q ≠ p → z ≠ x q)
+    (hα : 3 ≤ Fintype.card α) :
+    ∑ σ : {σ : Perm α // σ.IsCycle ∧ σ.support = univ}, cayleyWeight x σ.1 =
+      ∑ σ : {σ : Perm α // σ.IsCycle ∧ σ.support = univ},
+        cayleyWeight (Function.update x p z) σ.1 := by
+  have hcard : 2 ≤ Fintype.card {q : α // q ≠ p} := by
+    rw [card_subtype_ne]
+    omega
+  exact sum_cayleyWeight_hamiltonian_eq_of_eqOn_compl x (Function.update x p z) p hx
+    (injective_update x p z hx hz)
+    (fun q hq => (Function.update_of_ne hq z x).symm) hcard
+
+noncomputable def updateOn {α : Type*} [DecidableEq α] (x u : α → ℂ) : List α → α → ℂ
+  | [] => x
+  | a :: L => Function.update (updateOn x u L) a (u a)
+
+lemma updateOn_apply {α : Type*} [DecidableEq α] (x u : α → ℂ) :
+    ∀ {L : List α}, L.Nodup → ∀ a,
+      updateOn x u L a = if a ∈ L then u a else x a
+  | [], _, a => by simp [updateOn]
+  | b :: L, hnd, a => by
+    have hL : L.Nodup := (List.nodup_cons.mp hnd).2
+    simp only [updateOn, List.mem_cons]
+    by_cases ha : a = b
+    · subst ha
+      simp [Function.update_self]
+    · rw [Function.update_of_ne ha, updateOn_apply (L := L) x u hL a]
+      simp [ha]
+
+lemma injective_updateOn {α : Type*} [DecidableEq α] (x u : α → ℂ) {L : List α}
+    (hx : Function.Injective x) (hu : Function.Injective u)
+    (hdis : ∀ a q, u a ≠ x q) (hnd : L.Nodup) :
+    Function.Injective (updateOn x u L) := by
+  intro a b hab
+  have hab' :
+      (if a ∈ L then u a else x a) = if b ∈ L then u b else x b := by
+    simpa [updateOn_apply x u hnd] using hab
+  by_cases ha : a ∈ L
+  · by_cases hb : b ∈ L
+    · simp [ha, hb] at hab'
+      exact hu hab'
+    · simp [ha, hb] at hab'
+      exact (hdis a b hab').elim
+  · by_cases hb : b ∈ L
+    · simp [ha, hb] at hab'
+      exact (hdis b a hab'.symm).elim
+    · simp [ha, hb] at hab'
+      exact hx hab'
+
+open scoped Classical in
+lemma sum_cayleyWeight_hamiltonian_eq_updateOn {α : Type*} [Fintype α] [DecidableEq α]
+    (x u : α → ℂ) {L : List α}
+    (hx : Function.Injective x) (hu : Function.Injective u)
+    (hdis : ∀ a q, u a ≠ x q) (hα : 3 ≤ Fintype.card α) (hnd : L.Nodup) :
+    ∑ σ : {σ : Perm α // σ.IsCycle ∧ σ.support = univ}, cayleyWeight x σ.1 =
+      ∑ σ : {σ : Perm α // σ.IsCycle ∧ σ.support = univ},
+        cayleyWeight (updateOn x u L) σ.1 := by
+  induction L with
+  | nil => simp [updateOn]
+  | cons a L ih =>
+    have hL : L.Nodup := (List.nodup_cons.mp hnd).2
+    have ha : a ∉ L := (List.nodup_cons.mp hnd).1
+    rw [ih hL, updateOn]
+    refine sum_cayleyWeight_hamiltonian_eq_update (updateOn x u L) a (u a)
+      (injective_updateOn x u hx hu hdis hL) ?_ hα
+    intro q hq
+    have hcur : updateOn x u L q = if q ∈ L then u q else x q :=
+      updateOn_apply x u hL q
+    rw [hcur]
+    split_ifs with hqL
+    · exact hu.ne (ne_of_mem_of_not_mem hqL ha).symm
+    · exact hdis a q
+
+lemma updateOn_eq_of_forall_mem {α : Type*} [DecidableEq α] (x u : α → ℂ)
+    {L : List α} (hnd : L.Nodup) (hL : ∀ a, a ∈ L) : updateOn x u L = u := by
+  ext a
+  simp [updateOn_apply x u hnd, hL a]
+
+open scoped Classical in
+lemma sum_cayleyWeight_hamiltonian_eq_of_injective {α : Type*} [Fintype α] [DecidableEq α]
+    (x x' : α → ℂ) (hx : Function.Injective x) (hx' : Function.Injective x')
+    (hα : 3 ≤ Fintype.card α) :
+    ∑ σ : {σ : Perm α // σ.IsCycle ∧ σ.support = univ}, cayleyWeight x σ.1 =
+      ∑ σ : {σ : Perm α // σ.IsCycle ∧ σ.support = univ}, cayleyWeight x' σ.1 := by
+  obtain ⟨u, hu, hus⟩ :=
+    exists_injective_off (α := α)
+      ((univ : Finset α).image x ∪ (univ : Finset α).image x')
+  have hdisx : ∀ a q, u a ≠ x q := fun a q h =>
+    hus a (mem_union.2 (Or.inl (mem_image.2 ⟨q, mem_univ _, h.symm⟩)))
+  have hdisx' : ∀ a q, u a ≠ x' q := fun a q h =>
+    hus a (mem_union.2 (Or.inr (mem_image.2 ⟨q, mem_univ _, h.symm⟩)))
+  let L := (univ : Finset α).toList
+  have hnd : L.Nodup := Finset.nodup_toList _
+  have hmem : ∀ a, a ∈ L := fun a => Finset.mem_toList.2 (mem_univ a)
+  have hxu := sum_cayleyWeight_hamiltonian_eq_updateOn x u hx hu hdisx hα hnd
+  have hx'u := sum_cayleyWeight_hamiltonian_eq_updateOn x' u hx' hu hdisx' hα hnd
+  rw [hxu, hx'u, updateOn_eq_of_forall_mem (L := L) x u hnd hmem,
+    updateOn_eq_of_forall_mem (L := L) x' u hnd hmem]
+
 #check (OeisA1818.conjecture1 :
     ∀ (n : ℕ), 1 ≤ n → ∀ (ζ : ℂ), IsPrimitiveRoot ζ (2 * n) →
       (sunMatrix n ζ).permanent = (a n : ℂ))
@@ -4177,5 +4330,11 @@ lemma sum_cayleyWeight_hamiltonian_eq_of_eqOn_compl {α : Type*} [Fintype α] [D
 #print axioms sum_cayleyWeight_listings_eq_of_eqOn_compl
 #print axioms sum_cayleyWeight_hamiltonian_eq_listings
 #print axioms sum_cayleyWeight_hamiltonian_eq_of_eqOn_compl
+#print axioms exists_natCast_notMem
+#print axioms exists_injective_off
+#print axioms injective_update
+#print axioms sum_cayleyWeight_hamiltonian_eq_update
+#print axioms sum_cayleyWeight_hamiltonian_eq_updateOn
+#print axioms sum_cayleyWeight_hamiltonian_eq_of_injective
 
 end A001818C1
