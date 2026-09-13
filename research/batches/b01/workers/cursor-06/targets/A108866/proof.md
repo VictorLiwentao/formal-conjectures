@@ -49,9 +49,9 @@ Argument: Mathlib `ZMod.cast_descFactorial` gives `C(p-1,i) ≡ (-1)^i (mod p)` 
 
 `not_dvd_den_ratExpression_of_lt`: if `n < q` then `q` does not divide `T(n).den`.
 
-`padicValRat_ratExpression_mul_eq_neg_one`: if `p < q` are primes and `q` does not divide `T(p).num`, then `v_q(T(pq)) = -1`.
+`padicValRat_ratExpression_mul_eq_neg_one`: if `1 < m < q` with `q` prime and `q` does not divide `T(m).num`, then `v_q(T(mq)) = -1`.
 
-`not_n_sq_dvd_num_of_mul_odd_primes`: the same hypotheses give the converse at `n = pq`. Kernel-checked; axioms `propext`, `Classical.choice`, `Quot.sound`. This is not the frozen iff.
+`not_n_sq_dvd_num_of_mul_odd_primes`: the same hypotheses give the converse at `n = mq`. Kernel-checked; axioms `propext`, `Classical.choice`, `Quot.sound`. This is not the frozen iff.
 
 ## Odd composite converse
 
@@ -59,7 +59,7 @@ Not finished. c5-k4 found no counterexample for `n ≤ 4000`. The binomial ident
 
 A sufficient criterion is `v_p(oddInnerNum n) ≤ v_p(oddDenom n)` for some odd prime `p | n`.
 
-For `n = pq` with primes `p < q` and `q ∤ T(p).num`, the identity `q T(pq) - T(p)` has `q`-adic valuation at least `1`, `v_q(T(p)) = 0`, and ultrametric comparison gives `v_q(T(pq)) = -1 < 2 = 2 v_q(pq)`. Deterministic `p`-adic experiments (`experiments/padic_converse.py`) give:
+For `n = mq` with prime `q`, `1 < m < q`, and `q ∤ T(m).num`, the identity `q T(mq) - T(m)` has `q`-adic valuation at least `1`, `v_q(T(m)) = 0`, and ultrametric comparison gives `v_q(T(mq)) = -1 < 2 = 2 v_q(mq)`. Deterministic `p`-adic experiments (`experiments/padic_converse.py`) give:
 
 - `v_p(T(p^2)) ∈ {0,1,2}` for primes `p ≤ 61`, always `< 4`. For `11 ≤ p ≤ 61` this valuation is `1`.
 - For square-free `n = pq ≤ 200`, `v_q(T(n)) = -1` except when `T(p) ≡ 0 (mod q)`, where it is `0`; both are `< 2`.

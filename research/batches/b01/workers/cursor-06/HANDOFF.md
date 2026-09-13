@@ -31,7 +31,7 @@ Partial. Kernel-checked so far:
 - converse criteria `not_n_sq_dvd_num_of_odd_inner_lt`, `not_n_sq_dvd_num_of_inner_le_denom`
 - Fermat split `q_mul_ratExpression_sub_eq_fermat_add`
 - `not_dvd_den_ratExpression_of_lt`
-- `padicValRat_ratExpression_mul_eq_neg_one` and `not_n_sq_dvd_num_of_mul_odd_primes` (`n=pq`, primes `p<q`, `q ∤ T(p).num`)
+- `padicValRat_ratExpression_mul_eq_neg_one` and `not_n_sq_dvd_num_of_mul_odd_primes` (`n=mq`, prime `q`, `1<m<q`, `q ∤ T(m).num`)
 - reduction `conjecture_of_odd_composite_converse`
 
 Axioms `{propext, Classical.choice, Quot.sound}` on the printed theorems. Full odd converse open. No PR. No OEIS edit. Not the frozen iff.

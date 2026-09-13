@@ -44,7 +44,7 @@ Kernel-checked square-free fragment, axioms `{propext, Classical.choice, Quot.so
 'OeisA108866.not_n_sq_dvd_num_of_mul_odd_primes'
 ```
 
-These cover `n = pq` for primes `p < q` with `q ∤ T(p).num` only. The file still does not prove the frozen iff.
+These cover `n = mq` for a prime `q` with `1 < m < q` and `q ∤ T(m).num` only. The file still does not prove the frozen iff.
 
 Exact type of the prime-direction theorem, from `#print OeisA108866.n_sq_dvd_num_of_prime`:
 
