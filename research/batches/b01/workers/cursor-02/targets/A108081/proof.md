@@ -62,8 +62,15 @@ Proved:
 - Therefore `L(s ++ [1]) ++ v` is I for every `PWord s` and every I-word `v` (`PWord.concat_one_append_rIrreducible`). Combined with unique `P × I` enumeration, `|I_n| ≥ ∑_{k=1}^{n-1} C_{k-1}|I_{n-k}| + ∑_{k=2}^{n-1} C_{k-1}|I_{n-k}|` for `n ≥ 2` (`ncard_iN_ge_sum_catalan_iN_add_pConcatOne`). This is the Callan/A081696 first-return lower bound: `q(1)=1` and `q(k)=2 C_{k-1}` for `k≥2`.
 - If `s` is a `PWord` ending in `1` with penultimate at most `1`, then `dropLast s` is a `PWord` and `s = dropLast s ++ [1]` (`PWord.eq_concat_one_of_getLast_eq_one_of_penultimate_le_one`). So the extra first-return factors used above are exactly the last-`1` one-zero words with penultimate `≤ 1`.
 - List identity: if `s` ends in `1`, then `L(s) ++ [0] = [0] ++ R((-1) :: map(·-2) dropLast s)`. So the length-1 right parse of `L(s) ++ [0]` exists exactly when `(-1) :: map(·-2) dropLast s` is Xia (`isRightParse_l_append_zero_cons_zero`). This holds for many, but not all, last-`1` penultimate-`≥ 2` `PWord`s.
-- First-factor-`[0]` obstruction: `L([0] ++ R(v)) ++ [0] = v ++ [-1, 0]`. If `v` has a right parse `a ++ R(b)`, then `v ++ [-1, 0] = a ++ R([-1, -2] ++ b)` with `[-1, -2] ++ b` Xia. Every start-with-`0` unique-zero word of length at least 2 has such a parse, so `L([0] ++ R(v)) ++ [0]` is not I whenever `|v| ≥ 2` (`RightWord.cons_zero_r_l_append_zero_not_rIrreducible`). These are exactly the RightWords whose shortest remainder has length at least 2 and whose left factor is `[0]`.
+- First-factor-`[0]` obstruction: `L([0] ++ R(v)) ++ [0] = v ++ [-1, 0]`. If `v` has a right parse `a ++ R(b)`, then `v ++ [-1, 0] = a ++ R([-1, -2] ++ b)` with `[-1, -2] ++ b` Xia. Every start-with-`0` unique-zero word of length at least 2 has such a parse, so `L([0] ++ R(v)) ++ [0]` is not I whenever `|v| ≥ 2` (`RightWord.cons_zero_r_l_append_zero_not_rIrreducible`).
+- The same lift works when the left factor is `[0] ++ R(t)` rather than `[0]`: `L(([0] ++ R(t)) ++ R(v)) ++ [0]` has right parse `(a, [-1, -2] ++ L(t) ++ b)` whenever `v = a ++ R(b)`. Hence every RightWord whose shortest left factor is of the form `[0] ++ R(t)` (including `(0,1)`) is excluded from I-gluing of `L(p) ++ [0]` as soon as the remainder has length at least 2.
 - If the shortest remainder `v` of a RightWord has penultimate `≤ 1` and `(-1) :: map(·-2) u ++ [0]` is Xia, then `L(u ++ R(v)) ++ [0]` has right parse `(v.dropLast, (-1) :: map(·-2) u ++ [0])`. The extra Xia hypothesis is proved when `u` itself has the form `[0] ++ R(t)`, and when `u = [0]`.
+- General right-parse lift (`isRightParse_l_append_r_append`): if `v = a ++ R(b)` and `u, rem` are Xia, then `L(u ++ R(v)) ++ rem` has right parse `(a, L(L(u) ++ rem) ++ b)`.
+- Converse for last-`1` unique-zero words with penultimate at least `2` (`PWord.l_append_not_rIrreducible_of_penultimate_ge_two`): such a `p` has shortest right remainder of length at least `2` starting at `0`, hence a further right parse, so `L(p) ++ rem` is never I for any Xia remainder.
+- Therefore the good first-return factors of I-words are exactly LeftWords (last `0`) and last-`1` penultimate-`≤ 1` unique-zero words, i.e. `s ++ [1]` for `PWord s`. Combined with unique `P × I` enumeration, `goodPairs n = leftIPairs n ∪ pConcatOneIPairs n`, so
+  `|I_n| = ∑_{k=1}^{n-1} C_{k-1}|I_{n-k}| + ∑_{k=2}^{n-1} C_{k-1}|I_{n-k}|` for `n ≥ 2` (`ncard_iN_eq_sum_catalan_iN_add_pConcatOne`). This is the Callan/A081696 first-return recurrence.
+
+## Experimental decomposition (not a proof)
 
 ## Experimental decomposition (not a proof)
 
@@ -85,19 +92,14 @@ Facts checked in that range, and **not** claimed for all `n`:
 7. Free-magma constructors are not injective from `n = 4`.
 8. `L(Left) ++ b` Xia with `b` a prefix of some Xia word implies `b` Xia, through `n = 8` (`experiments/left_prefix_any_xia.py`). This is now a theorem.
 9. The set of `p ∈ P_k` with `L(p) ++ v` I is independent of the I-remainder `v` and has size `q(k)` (`q(1)=1`, `q(k)=2 C_{k-1}` for `k≥2`) through `n = 8`. Not a theorem.
-10. Through `k = 6` (`experiments/gword_dropLast.py`, `gword_penultimate.py`), `G_k = Left_k ∪ { s ++ [1] | s ∈ P_{k-1} } = { p ∈ P_k | last = 0 ∨ penultimate ≤ 1 }`. Glue of this `G_k` to every I-remainder is now a theorem, as is `|image(++[1] : P_{k-1} → P_k)| = C_{k-1}`. Equality `|I_n| = ∑ q(k)|I_{n-k}|` still needs the converse: every shortest left `PWord` factor of an I-word lies in this `G_k`. Through length 7 (`experiments/rightword_bad_remainder.py`), a RightWord of length at least 2 is last-`1` with penultimate `≥ 2` exactly when its shortest remainder has length at least 2. The first-factor-`[0]` subcase is now a theorem. The remaining gap is longer left factors and head-`-1` `PWord`s.
+10. Through `k = 6` (`experiments/gword_dropLast.py`, `gword_penultimate.py`), `G_k = Left_k ∪ { s ++ [1] | s ∈ P_{k-1} } = { p ∈ P_k | last = 0 ∨ penultimate ≤ 1 }`. Glue of this `G_k` to every I-remainder is a theorem, as is `|image(++[1] : P_{k-1} → P_k)| = C_{k-1}`. The converse that every shortest left `PWord` factor of an I-word lies in this `G_k` is now a theorem, so `|I_n| = ∑ q(k)|I_{n-k}|` is proved. The remaining gap is the convolution with `H`.
 11. Through length 8, `0 :: w` Xia and `w` starting at `-1` or `0` implies `w` Xia (`experiments/cons_zero_converse.py`). This is now a theorem for every first letter `≤ 0`. The forward map `w ↦ 0 :: w` still requires first letter `-1`.
 
 Public c5-k4 already checked `|X_n| = a(n-1)` through `n = 14`. Those counts are not novelty and are not a proof.
 
 ## Remaining gaps for an exact proof
 
-An exact proof can be assembled from three Xia-specific statements plus one generating-function identity:
-
-1. `|I_n| = A081696(n-1)` (Wilf irreducible composition pairs of `n-1`, or the D-finite recurrence for that sequence).
-2. Algebraic identity `I(x) H(x) = x G(x)` with `G` the OEIS gf of `a`. This does not mention Xia words and can be proved independently.
-
-The unique I×Y rebuild and `|Y_n| = H_{n-1}` are proved. I-words contain the Catalan-many LeftWords, are closed under `L(Left) ++ ·` and under `L(s ++ [1]) ++ ·` for every `PWord s`, and have a unique shortest left `PWord` factor with I remainder. The Callan/A081696 lower bound `|I_n| ≥ ∑ q(k)|I_{n-k}|` is proved. The first-factor-`[0]` RightWords with remainder length at least 2 are now excluded from I-gluing of `L(p) ++ [0]`. Equality still needs the rest of the converse (longer left factors, head-`-1` `PWord`s), then matching A081696 initials, then the convolution with `H`. The length-3 count and the finite convolution check do not close the conjecture.
+The unique I×Y rebuild, `|Y_n| = H_{n-1}`, and the Callan recurrence for `|I_n|` are proved. Identifying the I-recurrence with A081696 initials is then a purely numerical match of `I_1 = 1` (already proved) with A081696(`0`) = 1; the sequences then coincide. The remaining gap is the generating-function identity `∑_{k=1}^n |I_k| H(n-k) = a(n-1)`, equivalently Barry’s product `H(x) F(x)` versus Lean’s Fibonacci-binomial `a`. That identity does not mention Xia words. The length-3 count and the finite convolution check do not close the conjecture.
 
 ## Approaches that failed or stalled
 

@@ -9,6 +9,8 @@ Final commit SHA: `58f3ded8b21dbf04146a6a2591b52dd88c60ce02`.
 
 ## Reproduction
 
+## Reproduction
+
 ```bash
 sha256sum FormalConjectures/OEIS/108081.lean
 # b03761724c1052d613a676584301d6ad1f3d20aff62aa421525ef8b6b611a54d
@@ -29,4 +31,4 @@ LEAN_NUM_THREADS=2 lake --wfail env lean research/batches/b01/workers/cursor-02/
 
 `partial`. No public exact proof/disproof found. Finite counts through `n=14` are already public (c5-k4) and are not a resolution. Statement uses `a(n-1)`, matching Xia’s listed cardinalities `1,2,7`, not the OEIS prose `a(n+1)`.
 
-Lean now proves `|Right_n| = C_{n-1}`, `|P_n| = C_n`, `|Y_n| = H_{n-1}`, unique I×Y rebuild `|X_n| = ∑_k |I_k| H_{n-k}`, unique shortest left `PWord` factor of I-words, `|Left_n| = C_{n-1}`, `|Z_n| = H_{n-1}`, `C_{n-1} ≤ |I_n| ≤ H_{n-1}`, prefix cancellation for `L(Left)` and for `L(s ++ [1])` with last-`1` `PWord` `s`, closure `L(Left)++I ⊆ I` and `L(s ++ [1]) ++ I ⊆ I` for every `PWord s`, `|I_n| ≥ ∑_{k=1}^{n-1} C_{k-1}|I_{n-k}| + ∑_{k=2}^{n-1} C_{k-1}|I_{n-k}|`, Xia `dropLast` for endings `01` and `11`, last-`1` penultimate-`≤1` `PWord`s are exactly `s ++ [1]`, the cons-zero converse when the second letter is `≤ 0`, and that `L([0] ++ R(v)) ++ [0]` is not I whenever `v` is a RightWord of length at least 2. Identifying `|I_n|` with A081696 and the convolution with `a(n-1)` remain open: the converse that every good first-return factor has last `0` or penultimate `≤ 1` is proved only in the first-factor-`[0]` RightWord case.
+Lean now proves `|Right_n| = C_{n-1}`, `|P_n| = C_n`, `|Y_n| = H_{n-1}`, unique I×Y rebuild `|X_n| = ∑_k |I_k| H_{n-k}`, unique shortest left `PWord` factor of I-words, `|Left_n| = C_{n-1}`, `|Z_n| = H_{n-1}`, `C_{n-1} ≤ |I_n| ≤ H_{n-1}`, prefix cancellation for `L(Left)` and for `L(s ++ [1])` with last-`1` `PWord` `s`, closure `L(Left)++I ⊆ I` and `L(s ++ [1]) ++ I ⊆ I` for every `PWord s`, the Callan lower bound, and the matching converse: last-`1` unique-zero words with penultimate at least `2` never glue to an I-word. Hence `|I_n|` equals the Callan recurrence `q(1)=1`, `q(k)=2 C_{k-1}` for `k≥2`. The remaining gap is the algebraic identity `∑_k |I_k| H(n-k) = a(n-1)`.

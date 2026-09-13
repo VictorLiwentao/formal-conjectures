@@ -6,7 +6,7 @@
   "coordination_commit": "238f78bdd5701ae4c97a0d70d4e22e2d45770d7a",
   "current_status": "partial",
   "novelty_status": "provisional_no_public_solution_found",
-  "last_updated_utc": "2026-09-13T06:10:00Z",
+  "last_updated_utc": "2026-09-13T06:36:00Z",
   "kickoff_utc": "2026-09-12T23:10:00Z",
   "session_limit_utc": "2026-09-13T07:10:00Z",
   "proof_declarations": [
@@ -54,16 +54,20 @@
     "OeisA108081.l_cons_zero_r_append_zero",
     "OeisA108081.isRightParse_l_cons_zero_r_append_zero",
     "OeisA108081.RightWord.cons_zero_r_l_append_zero_not_rIrreducible",
+    "OeisA108081.RightWord.cons_zero_r_append_r_l_append_zero_not_rIrreducible",
     "OeisA108081.RightWord.neg_one_map_sub_two_append_zero_of_cons_zero_r",
+    "OeisA108081.isRightParse_l_append_r_append",
+    "OeisA108081.XWord.l_append_r_append_not_rIrreducible",
+    "OeisA108081.PWord.l_append_not_rIrreducible_of_penultimate_ge_two",
+    "OeisA108081.goodPairs_eq_left_union_pConcatOne",
+    "OeisA108081.ncard_iN_eq_sum_catalan_iN_add_pConcatOne",
     "OeisA108081.isRightParse_l_append_r_append_zero_of_penultimate_le_one",
     "OeisA108081.isRightParse_l_cons_zero_r_append_zero_of_penultimate_le_one"
   ],
   "unresolved_gaps": [
     "The quantified identity |X_n| = a(n-1) is not proved.",
-    "|X_n| = ∑_k |I_k| H_{n-k} is proved. C_{n-1} ≤ |I_n| ≤ H_{n-1}. Glue of Left and of every PWord s++[1] to every I-remainder is proved, giving |I_n| ≥ ∑ q(k)|I_{n-k}| with q(1)=1 and q(k)=2 C_{k-1} for k≥2. Equality |I_n| = A081696(n-1) is not proved.",
-    "The converse is open except the first-factor-[0] RightWord case: L([0]++R(v))++[0] is not I when |v|≥2. Remaining: RightWords with left factor length ≥2 and head--1 PWords.",
-    "Paul Barry's gf is H(x)F(x); that algebraic identity is unproved from Lean's Fibonacci-binomial a.",
+    "|X_n| = ∑_k |I_k| H_{n-k} is proved. |I_n| equals the Callan recurrence q(1)=1, q(k)=2 C_{k-1} (k≥2) with |I_1|=1. The remaining gap is ∑_k |I_k| H(n-k) = a(n-1) against Lean's Fibonacci-binomial a.",
     "Partial lemmas and n<=8 (or public n<=14) counts are not a resolution."
   ],
-  "next_step": "Prove L(u ++ R(v))++[0] has a right parse for every RightWord left factor u of length ≥2 with remainder |v|≥2, then head--1 PWords, then match A081696 and convolve with H."
+  "next_step": "Prove the generating-function / Fibonacci-binomial identity ∑_{k=1}^n |I_k| H(n-k) = a(n-1)."
 }

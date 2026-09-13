@@ -57,7 +57,7 @@ Guard: PASS (worker path only). Source SHA-256 matches.
 
 ## Lean axioms
 
-`lake --wfail env lean` on `A108081.lean` succeeded on 2026-09-13 06:10Z.
+`lake --wfail env lean` on `A108081.lean` succeeded on 2026-09-13 06:36Z.
 
 ```
 #print axioms ncard_xN_one
@@ -186,11 +186,25 @@ Guard: PASS (worker path only). Source SHA-256 matches.
 -- [propext, Classical.choice, Quot.sound]
 #print axioms RightWord.cons_zero_r_l_append_zero_not_rIrreducible
 -- [propext, Classical.choice, Quot.sound]
+#print axioms isRightParse_l_append_r_append_zero_of_cons_zero_r
+-- [propext, Quot.sound]
+#print axioms RightWord.cons_zero_r_append_r_l_append_zero_not_rIrreducible
+-- [propext, Classical.choice, Quot.sound]
 #print axioms RightWord.neg_one_map_sub_two_append_zero_of_cons_zero_r
 -- [propext, Quot.sound]
 #print axioms isRightParse_l_append_r_append_zero_of_penultimate_le_one
 -- [propext, Classical.choice, Quot.sound]
 #print axioms isRightParse_l_cons_zero_r_append_zero_of_penultimate_le_one
+-- [propext, Classical.choice, Quot.sound]
+#print axioms isRightParse_l_append_r_append
+-- [propext, Quot.sound]
+#print axioms XWord.l_append_r_append_not_rIrreducible
+-- [propext, Classical.choice, Quot.sound]
+#print axioms PWord.l_append_not_rIrreducible_of_penultimate_ge_two
+-- [propext, Classical.choice, Quot.sound]
+#print axioms goodPairs_eq_left_union_pConcatOne
+-- [propext, Classical.choice, Quot.sound]
+#print axioms ncard_iN_eq_sum_catalan_iN_add_pConcatOne
 -- [propext, Classical.choice, Quot.sound]
 #print axioms xN_finite
 -- [propext, Classical.choice, Quot.sound]
