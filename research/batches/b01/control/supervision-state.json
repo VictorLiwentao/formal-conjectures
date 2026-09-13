@@ -2,15 +2,15 @@
   "automation_id": "maintain-seven-cursor-math-workers",
   "interval_minutes": 15,
   "target_cursor_slots": 7,
-  "updated_at_utc": "2026-09-13T02:05:19.716496+00:00",
+  "updated_at_utc": "2026-09-13T02:09:32.432952+00:00",
   "accept_known_informal_proofs_for_new_lean_formalization": true,
-  "note": "Six OEIS workers active; non-OEIS completed WOWII101 audited and retired. Green66 known-bound replacement reserved, launch pending.",
+  "note": "WOWII101 independently verified and replaced by active Green66 known-bound worker. A109074 has a new stopped candidate under independent audit; other five OEIS goals active. No audit shortcut to keep turnover high.",
   "slots": [
     {
       "slot": "cursor-01",
       "run_id": "cursor-01-r02",
       "agent_url": "https://cursor.com/agents/bc-25b34f4b-3076-4e2d-93c5-d2bd6b630918",
-      "state": "researching",
+      "state": "audit_pending",
       "actual_branch": "cursor/b01-cursor-01-r02-0918",
       "replacements": [
         {
@@ -19,8 +19,8 @@
           "launched_at_utc": "2026-09-13T00:14:28.257975+00:00"
         }
       ],
-      "last_checked_at_utc": "2026-09-13T01:42:33.986276+00:00",
-      "progress_note": "Goal active with Stop control; A109074 odd-prime block/count and interval lemmas under compile repair; remaining admissions explicitly acknowledged. No exact result.",
+      "last_checked_at_utc": "2026-09-13T02:09:32.432952+00:00",
+      "progress_note": "A109074 exact candidate5e40973b stopped with deadline timer cancelled and no Goal active. Independent audit and OEIS successor screening running; no replacement yet.",
       "history": [
         {
           "run_id": "cursor-01",
@@ -35,7 +35,7 @@
       "starting_commit": "1107856a264a066e316c3cba7b5339be475f6304",
       "launch_verified_at_utc": "2026-09-13T00:14:28.257975+00:00",
       "goal_command_submitted": true,
-      "goal_active_verified": true,
+      "goal_active_verified": false,
       "goal_verified_at_utc": "2026-09-13T01:42:33.986276+00:00",
       "environment_build": "bld-20260912-716b23c3-d124-4da8-ab69-743e1fb16843",
       "model": "Cursor Grok 4.6 Extra High"
@@ -125,20 +125,25 @@
     {
       "slot": "cursor-07",
       "run_id": "cursor-07-r03",
-      "agent_url": null,
-      "state": "reserved_for_replacement",
+      "agent_url": "https://cursor.com/agents/bc-be46998d-e41e-4257-9875-c9644cc7ceef",
+      "state": "researching",
       "actual_branch": null,
       "replacements": [
         {
           "run_id": "cursor-07-r02",
           "agent_url": "https://cursor.com/agents/bc-bfb4a7ed-1a88-4b50-8844-80eadcee05fb",
           "launched_at_utc": "2026-09-13T01:22:48.830413+00:00"
+        },
+        {
+          "run_id": "cursor-07-r03",
+          "agent_url": "https://cursor.com/agents/bc-be46998d-e41e-4257-9875-c9644cc7ceef",
+          "launched_at_utc": "2026-09-13T02:07:39.445788+00:00"
         }
       ],
-      "last_checked_at_utc": "2026-09-13T02:01:48.603795+00:00",
-      "progress_note": "WOWII101 independently verified; old worker stopped without goal/timers. Distinct Green66 known uniform-C quarter-power variant reserved and prompt ready; launch pending.",
-      "goal_active_verified": false,
-      "goal_verified_at_utc": null,
+      "last_checked_at_utc": "2026-09-13T02:08:10.965771+00:00",
+      "progress_note": "Green66 known-bound replacement Environment ready and Goal active verified, kickoff02:07:46Z. Exact source/novelty audit beginning. One launch only.",
+      "goal_active_verified": true,
+      "goal_verified_at_utc": "2026-09-13T02:08:10.965771+00:00",
       "history": [
         {
           "run_id": "cursor-07",
@@ -158,8 +163,8 @@
         }
       ],
       "predecessor": "cursor-07-r02",
-      "starting_commit": "dc6f750f34db0ca579f76bc358082157072f2083",
-      "launch_verified_at_utc": "2026-09-13T01:22:48.830413+00:00",
+      "starting_commit": "486f35dcee50c2c32b98f946726adbd20f6a5fbf",
+      "launch_verified_at_utc": "2026-09-13T02:07:39.445788+00:00",
       "goal_command_submitted": true,
       "model": "Cursor Grok 4.6 Extra High",
       "environment_build": "bld-20260912-716b23c3-d124-4da8-ab69-743e1fb16843"
