@@ -602,6 +602,101 @@ lemma ninety_one_sigma_eq_hundred_usigma_of_val_three_two {m : ℕ} (hm : m ≠ 
     exact hmul
   simpa [hpow] using this
 
+lemma usigma_eleven_pow_two : usigma (11 ^ 2) = 122 := by
+  simpa using usigma_prime_pow (by decide : Nat.Prime 11) (by decide : 0 < 2)
+
+lemma sigma_eleven_pow_two : σ 1 (11 ^ 2) = 133 := by
+  rw [sigma_prime_pow_div (by decide : Nat.Prime 11)]
+  norm_num
+
+lemma twelve_thousand_sigma_eq_of_val_eleven_two {t : ℕ} (ht : t ≠ 0)
+    (h : 91 * σ 1 t = 100 * usigma t) (h11 : padicValNat 11 t = 2) :
+    12103 * σ 1 (ordCompl[11] t) = 12200 * usigma (ordCompl[11] t) := by
+  have hp11 : Nat.Prime 11 := by decide
+  have hv : t.factorization 11 = 2 := by
+    rw [Nat.factorization_def t hp11, h11]
+  have hpow : 11 ^ t.factorization 11 = 121 := by
+    rw [hv]
+    decide
+  have hc : Coprime 121 (t / 121) := by
+    have : Coprime (11 ^ t.factorization 11) (t / 11 ^ t.factorization 11) :=
+      (Nat.coprime_ordCompl hp11 ht).pow_left (t.factorization 11)
+    simpa [hpow] using this
+  have hdecomp : 121 * (t / 121) = t := by
+    have := Nat.ordProj_mul_ordCompl_eq_self t 11
+    simpa [hpow] using this
+  have hmul : 91 * σ 1 121 * σ 1 (t / 121) = 100 * usigma 121 * usigma (t / 121) := by
+    have := h
+    rw [← hdecomp, sigma_mul_of_coprime hc, usigma_mul hc] at this
+    convert this using 1 <;> ring
+  have h121 : (121 : ℕ) = 11 ^ 2 := by decide
+  rw [h121, sigma_eleven_pow_two, usigma_eleven_pow_two] at hmul
+  have : 12103 * σ 1 (t / 121) = 12200 * usigma (t / 121) := by
+    rw [show (12103 : ℕ) = 91 * 133 by decide, show (12200 : ℕ) = 100 * 122 by decide]
+    exact hmul
+  simpa [hpow] using this
+
+lemma not_squarefree_ordCompl_of_val_eleven_two {t : ℕ} (ht : t ≠ 0)
+    (h : 91 * σ 1 t = 100 * usigma t) (h11 : padicValNat 11 t = 2) :
+    ¬ Squarefree (ordCompl[11] t) := by
+  intro hs
+  have hpos : 0 < ordCompl[11] t := Nat.ordCompl_pos 11 ht
+  have heq := twelve_thousand_sigma_eq_of_val_eleven_two ht h h11
+  have hσu := (sigma_eq_usigma_iff_squarefree hpos).mpr hs
+  rw [hσu] at heq
+  have hpos' : 0 < usigma (ordCompl[11] t) := by
+    have : ordCompl[11] t ≠ 0 := hpos.ne'
+    have : usigma (ordCompl[11] t) = σ 1 (ordCompl[11] t) := hσu.symm
+    have : 0 < σ 1 (ordCompl[11] t) := sigma_pos_iff.mpr hpos
+    omega
+  have : 12103 = 12200 := Nat.eq_of_mul_eq_mul_right hpos' heq
+  contradiction
+
+lemma twelve_two_usigma_lt_sigma_thirteen_pow {k : ℕ} (hk : 2 ≤ k) :
+    12200 * usigma (13 ^ k) < 12103 * σ 1 (13 ^ k) := by
+  have hk0 : 0 < k := by omega
+  have hp13 : Nat.Prime 13 := by decide
+  have hu : usigma (13 ^ k) = 1 + 13 ^ k := usigma_prime_pow hp13 hk0
+  have hσ : σ 1 (13 ^ k) = (13 ^ (k + 1) - 1) / 12 := sigma_prime_pow_div hp13
+  have hdiv : 12 ∣ 13 ^ (k + 1) - 1 := sub_one_dvd_pow_sub_one (p := 13)
+  have h169 : 169 ≤ 13 ^ k := by
+    have : 13 ^ 2 = 169 := by decide
+    exact this ▸ Nat.pow_le_pow_right (by decide : 1 ≤ 13) hk
+  have hsucc : 13 ^ (k + 1) = 13 * 13 ^ k := by rw [pow_succ']
+  have hmain : 146400 * (1 + 13 ^ k) < 12103 * (13 ^ (k + 1) - 1) := by
+    rw [hsucc]
+    have : 158503 < 10939 * 13 ^ k := by nlinarith
+    have : 146400 + 146400 * 13 ^ k + 12103 < 157339 * 13 ^ k := by nlinarith
+    have : 146400 + 146400 * 13 ^ k < 157339 * 13 ^ k - 12103 := by omega
+    convert this using 1
+    · ring
+    · omega
+  rw [hu, hσ]
+  have hN : 12103 * ((13 ^ (k + 1) - 1) / 12) = 12103 * (13 ^ (k + 1) - 1) / 12 :=
+    (Nat.mul_div_assoc 12103 hdiv).symm
+  rw [hN]
+  have h12N : 12 ∣ 12103 * (13 ^ (k + 1) - 1) := hdiv.mul_left 12103
+  have hcancel : 12 * (12103 * (13 ^ (k + 1) - 1) / 12) = 12103 * (13 ^ (k + 1) - 1) :=
+    Nat.mul_div_cancel' h12N
+  refine Nat.lt_of_mul_lt_mul_left (a := 12) ?_
+  rw [hcancel]
+  convert hmain using 1
+  ring
+
+lemma padicValNat_thirteen_lt_two_of_val_eleven_two {t : ℕ} (ht : t ≠ 0)
+    (h : 91 * σ 1 t = 100 * usigma t) (h11 : padicValNat 11 t = 2) :
+    padicValNat 13 (ordCompl[11] t) < 2 := by
+  have hr := twelve_thousand_sigma_eq_of_val_eleven_two ht h h11
+  have hr0 : ordCompl[11] t ≠ 0 := (Nat.ordCompl_pos 11 ht).ne'
+  by_contra! hk
+  have hp13 : Nat.Prime 13 := by decide
+  have hproj : ordProj[13] (ordCompl[11] t) = 13 ^ padicValNat 13 (ordCompl[11] t) := by
+    simp [Nat.factorization_def (ordCompl[11] t) hp13]
+  have hle := mul_sigma_ordProj_le hp13 hr0 hr
+  rw [hproj] at hle
+  have hover := twelve_two_usigma_lt_sigma_thirteen_pow hk
+  omega
+
 lemma coprime_eight_of_odd {m : ℕ} (h : Odd m) : Coprime 8 m :=
   (coprime_pow_left_iff (n := 3) (by decide : 0 < 3) 2 m).mpr h.coprime_two_left
 
@@ -659,6 +754,55 @@ lemma padicValNat_three_lt_two_of_A_eight_mul {m : ℕ} (hm : Odd m) (hA : A (8 
   rw [hproj] at hle
   have hover := six_usigma_lt_five_sigma_three_pow hk
   omega
+
+lemma usigma_five_pow_two : usigma (5 ^ 2) = 26 := by
+  simpa using usigma_prime_pow Nat.prime_five (by decide : 0 < 2)
+
+lemma sigma_five_pow_two : σ 1 (5 ^ 2) = 31 := by
+  rw [sigma_prime_pow_div Nat.prime_five]
+  norm_num
+
+lemma one_fifty_five_sigma_eq_of_val_five_two {m : ℕ} (hm : m ≠ 0)
+    (h : 5 * σ 1 m = 6 * usigma m) (h5 : padicValNat 5 m = 2) :
+    155 * σ 1 (ordCompl[5] m) = 156 * usigma (ordCompl[5] m) := by
+  have hv : m.factorization 5 = 2 := by
+    rw [Nat.factorization_def m Nat.prime_five, h5]
+  have hpow : 5 ^ m.factorization 5 = 25 := by
+    rw [hv]
+    decide
+  have hc : Coprime 25 (m / 25) := by
+    have : Coprime (5 ^ m.factorization 5) (m / 5 ^ m.factorization 5) :=
+      (Nat.coprime_ordCompl Nat.prime_five hm).pow_left (m.factorization 5)
+    simpa [hpow] using this
+  have hdecomp : 25 * (m / 25) = m := by
+    have := Nat.ordProj_mul_ordCompl_eq_self m 5
+    simpa [hpow] using this
+  have hmul : 5 * σ 1 25 * σ 1 (m / 25) = 6 * usigma 25 * usigma (m / 25) := by
+    have := h
+    rw [← hdecomp, sigma_mul_of_coprime hc, usigma_mul hc] at this
+    convert this using 1 <;> ring
+  have h25 : (25 : ℕ) = 5 ^ 2 := by decide
+  rw [h25, sigma_five_pow_two, usigma_five_pow_two] at hmul
+  have : 155 * σ 1 (m / 25) = 156 * usigma (m / 25) := by
+    rw [show (155 : ℕ) = 5 * 31 by decide, show (156 : ℕ) = 6 * 26 by decide]
+    exact hmul
+  simpa [hpow] using this
+
+lemma not_squarefree_ordCompl_of_eight_mul_val_five_two {m : ℕ} (hm : Odd m)
+    (hA : A (8 * m)) (h5 : padicValNat 5 m = 2) :
+    ¬ Squarefree (ordCompl[5] m) := by
+  have hm0 : m ≠ 0 := Nat.pos_iff_ne_zero.mp hm.pos
+  have h := five_sigma_eq_six_usigma_of_A_eight_mul hm hA
+  intro hs
+  have hpos : 0 < ordCompl[5] m := Nat.ordCompl_pos 5 hm0
+  have heq := one_fifty_five_sigma_eq_of_val_five_two hm0 h h5
+  have hσu := (sigma_eq_usigma_iff_squarefree hpos).mpr hs
+  rw [hσu] at heq
+  have hpos' : 0 < usigma (ordCompl[5] m) := by
+    rw [← hσu]
+    exact sigma_pos_iff.mpr hpos
+  have : 155 = 156 := Nat.eq_of_mul_eq_mul_right hpos' heq
+  contradiction
 
 end Unitary
 

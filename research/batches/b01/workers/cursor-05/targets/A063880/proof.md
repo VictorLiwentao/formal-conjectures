@@ -27,8 +27,8 @@ In `A063880.lean`, compiled with `lake env lean -DwarningAsError=true`:
 - If also `padicValNat 3 m = 3`, then `σ` and `usigma` agree on the 3-free part of `m`.
 - `σ 1 n = usigma n` iff `n` is squarefree, for `n > 0`. Combined with the previous item, `v₃(m) = 3` on leftover `10/7` forces the 3-free part of `m` to be squarefree.
 - CRT plus the two valuations is recorded as `mod_216_of_A_of_valuations`: if `A n`, `v₂(n) = 2`, and `v₃(n) ≥ 3`, then `n % 216 = 108`. This is not yet the frozen theorem, because those valuations are not forced.
-- If leftover `10/7` has `v₃ = 2`, the 3-free part `t` satisfies `91 σ(t) = 100 usigma(t)`. On that equation, `v₅(t) < 2`, `v₇(t) < 2`, and `v₁₁(t) < 3`.
-- If `8m` is in `A` with `m` odd (so `v₂ = 3`), then `5 σ(m) = 6 usigma(m)` and `v₃(m) < 2`. In particular `9` cannot divide the odd part of a term with `v₂ = 3`.
+- If leftover `10/7` has `v₃ = 2`, the 3-free part `t` satisfies `91 σ(t) = 100 usigma(t)`. On that equation, `v₅(t) < 2`, `v₇(t) < 2`, and `v₁₁(t) < 3`. If also `v₁₁(t) = 2`, the 11-free part is not squarefree, and `v₁₃` of that part is `< 2`.
+- If `8m` is in `A` with `m` odd (so `v₂ = 3`), then `5 σ(m) = 6 usigma(m)` and `v₃(m) < 2`. In particular `9` cannot divide the odd part of a term with `v₂ = 3`. If also `v₅(m) = 2`, the 5-free part is not squarefree.
 
 These lemmas are infrastructure and partial case analysis. They do not decide the open statements.
 
