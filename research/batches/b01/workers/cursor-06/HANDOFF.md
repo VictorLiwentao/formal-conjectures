@@ -16,9 +16,10 @@ LEAN_NUM_THREADS=2 lake --wfail build 'FormalConjectures.OEIS.«108866»'
 LEAN_NUM_THREADS=2 lake env lean -DwarningAsError=true research/batches/b01/workers/cursor-06/targets/A108866/A108866.lean
 python3 research/batches/b01/workers/cursor-06/targets/A108866/experiments/scan_beyond_c5k4.py
 python3 research/batches/b01/workers/cursor-06/targets/A108866/experiments/padic_converse.py
+python3 research/batches/b01/workers/cursor-06/targets/A108866/experiments/remaining_odd.py
 ```
 
-Final math commit SHA: `876b864f06ca1e4922ea4dcd8a7ce164c1f232ee`.
+Final math commit SHA: `b25acccb64ffdbec3d9d281b9df3e395df5385ac`.
 
 ## Status
 
@@ -38,6 +39,9 @@ Partial. Kernel-checked so far:
 - truncated harmonic `padicValRat_ratExpression_eq_neg_pow_of_trunc` and `not_n_sq_dvd_num_of_trunc` (`p^e ≤ m < p^{e+1}`, `p ∤ m`, `L(m/p^e) ≠ 0` in `𝔽_p`)
 - `Nat.log` form `padicValRat_ratExpression_eq_neg_log_of_trunc` and `not_n_sq_dvd_num_of_log`
 - `L(2) ≠ 0` form `padicValRat_ratExpression_eq_neg_one_of_two_mul` and `not_n_sq_dvd_num_of_two_mul`
+- packaging `not_n_sq_dvd_num_of_prime_factor`
+- `p T(p^2)-T(p)>0` and `padicValRat_ratExpression_sq_eq_min_sub_one`
+- exact converse at `n=9,25,27,49`
 - reduction `conjecture_of_odd_composite_converse`
 
 Axioms `{propext, Classical.choice, Quot.sound}` on the printed theorems. Full odd converse open. No PR. No OEIS edit. Not the frozen iff.
