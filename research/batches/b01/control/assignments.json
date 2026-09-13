@@ -212,7 +212,7 @@
       "platform": "Cursor Cloud",
       "requested_model": "Cursor Grok 4.6 Extra High",
       "branch": "codex/b01-cursor-07-r03",
-      "status": "researching_goal_active",
+      "status": "audit_pending",
       "novelty_status": "known_mathematics_formalization_candidate",
       "reserved_sequence_groups": [
         "Green66-trivial-bound",
@@ -246,7 +246,7 @@
       "platform": "Cursor Cloud",
       "requested_model": "Cursor Grok 4.6 Extra High",
       "branch": "codex/b01-cursor-01-r03",
-      "status": "reserved_for_replacement",
+      "status": "researching_goal_active",
       "novelty_status": "elementary_corollary_formalization_candidate_requires_audit",
       "reserved_sequence_groups": [
         "A051903-C2",

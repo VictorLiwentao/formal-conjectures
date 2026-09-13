@@ -2,25 +2,30 @@
   "automation_id": "maintain-seven-cursor-math-workers",
   "interval_minutes": 15,
   "target_cursor_slots": 7,
-  "updated_at_utc": "2026-09-13T02:20:17.275868+00:00",
+  "updated_at_utc": "2026-09-13T02:23:05.042739+00:00",
   "accept_known_informal_proofs_for_new_lean_formalization": true,
-  "note": "WOWII101 and A109074 independently verified. Green66 replacement active; A051903-C2 replacement reserved. Five original OEIS workers continue.",
+  "note": "A109074 and WOWII101 independently verified and replacements launched. Six research goals active. Green66 replacement already produced an unverified exact candidate; cursor07 slot held audit_pending, independent audit next heartbeat before replacement.",
   "slots": [
     {
       "slot": "cursor-01",
       "run_id": "cursor-01-r03",
-      "agent_url": null,
-      "state": "reserved_for_replacement",
+      "agent_url": "https://cursor.com/agents/bc-086084d4-c701-4b95-8414-97eb6d9d2609",
+      "state": "researching",
       "actual_branch": null,
       "replacements": [
         {
           "run_id": "cursor-01-r02",
           "agent_url": "https://cursor.com/agents/bc-25b34f4b-3076-4e2d-93c5-d2bd6b630918",
           "launched_at_utc": "2026-09-13T00:14:28.257975+00:00"
+        },
+        {
+          "run_id": "cursor-01-r03",
+          "agent_url": "https://cursor.com/agents/bc-086084d4-c701-4b95-8414-97eb6d9d2609",
+          "launched_at_utc": "2026-09-13T02:21:46.023650+00:00"
         }
       ],
-      "last_checked_at_utc": "2026-09-13T02:20:17.275868+00:00",
-      "progress_note": "A109074 passed independent exact-type/axiom/compile audit; documentation correction014dd479 leaves proof unchanged. Predecessor stopped with no goal/timers. A051903-C2 reserved and screened, awaiting one launch.",
+      "last_checked_at_utc": "2026-09-13T02:23:05.042739+00:00",
+      "progress_note": "A051903-C2 replacement Environment ready, Used create-goal and actual Goal active verified. Single launch, own8-hour clock.",
       "history": [
         {
           "run_id": "cursor-01",
@@ -40,11 +45,11 @@
         }
       ],
       "predecessor": "cursor-01-r02",
-      "starting_commit": null,
-      "launch_verified_at_utc": null,
-      "goal_command_submitted": false,
-      "goal_active_verified": false,
-      "goal_verified_at_utc": null,
+      "starting_commit": "1ee796fa5606a0027266111e53f9b6c5d11d62a6",
+      "launch_verified_at_utc": "2026-09-13T02:21:46.023650+00:00",
+      "goal_command_submitted": true,
+      "goal_active_verified": true,
+      "goal_verified_at_utc": "2026-09-13T02:23:05.042739+00:00",
       "environment_build": "bld-20260912-716b23c3-d124-4da8-ab69-743e1fb16843",
       "model": "Cursor Grok 4.6 Extra High"
     },
@@ -55,10 +60,10 @@
       "state": "researching",
       "actual_branch": "cursor/b01-cursor-02-13c0",
       "replacements": [],
-      "last_checked_at_utc": "2026-09-13T01:42:33.986276+00:00",
-      "progress_note": "Goal active with Stop control; A108081 recursive-word experiments and structural work continue. Remote branch advanced to ea92b01d; exact identity unresolved.",
+      "last_checked_at_utc": "2026-09-13T02:09:32.432952+00:00",
+      "progress_note": "Goal active this heartbeat; A108081 recursive-word/Catalan peeling work; remote13cb4c8b, full identity unresolved.",
       "goal_active_verified": true,
-      "goal_verified_at_utc": "2026-09-13T01:42:33.986276+00:00"
+      "goal_verified_at_utc": "2026-09-13T02:09:32.432952+00:00"
     },
     {
       "slot": "cursor-03",
@@ -73,8 +78,8 @@
           "launched_at_utc": "2026-09-13T00:12:48.331188+00:00"
         }
       ],
-      "last_checked_at_utc": "2026-09-13T01:42:33.986276+00:00",
-      "progress_note": "Goal active with Stop control; A069004 long certificate compilation continues, wait advanced from count-block signal to final fails marker. No exact certificate/axiom completion reported.",
+      "last_checked_at_utc": "2026-09-13T02:09:32.432952+00:00",
+      "progress_note": "Goal active this heartbeat; A069004 all284 Pratt certificate chunks compiled, remaining serial Count blocks then exact glue/axiom verification pending. Remote e461c4e1.",
       "history": [
         {
           "run_id": "cursor-03",
@@ -90,7 +95,7 @@
       "launch_verified_at_utc": "2026-09-13T00:12:48.331188+00:00",
       "goal_command_submitted": true,
       "goal_active_verified": true,
-      "goal_verified_at_utc": "2026-09-13T01:42:33.986276+00:00",
+      "goal_verified_at_utc": "2026-09-13T02:09:32.432952+00:00",
       "environment_build": "bld-20260912-716b23c3-d124-4da8-ab69-743e1fb16843",
       "model": "Cursor Grok 4.6 Extra High"
     },
@@ -101,10 +106,10 @@
       "state": "researching",
       "actual_branch": "cursor/a135508-lcm-primes-770d",
       "replacements": [],
-      "last_checked_at_utc": "2026-09-13T01:42:33.986276+00:00",
-      "progress_note": "Goal active with Stop control; 01:38Z pushed partial checkpoint e88b3323 covers additional factor families, remaining least-prime-factor >=67 non-twin class unresolved. Full McEachen theorem not claimed.",
+      "last_checked_at_utc": "2026-09-13T02:09:32.432952+00:00",
+      "progress_note": "Goal active this heartbeat; A135508 additional prime injector lemmas, exact full statement still unresolved.",
       "goal_active_verified": true,
-      "goal_verified_at_utc": "2026-09-13T01:42:33.986276+00:00"
+      "goal_verified_at_utc": "2026-09-13T02:09:32.432952+00:00"
     },
     {
       "slot": "cursor-05",
@@ -113,10 +118,10 @@
       "state": "researching",
       "actual_branch": "cursor/b01-cursor-05-cb88",
       "replacements": [],
-      "last_checked_at_utc": "2026-09-13T01:42:33.986276+00:00",
-      "progress_note": "Goal active with Stop control; A063880 additional three-prime families and product bounds, fresh 01:40Z checkpoint and further Lean edits. Full statements unresolved.",
+      "last_checked_at_utc": "2026-09-13T02:09:32.432952+00:00",
+      "progress_note": "Goal active this heartbeat; A063880 further three-prime product bounds, full statements unresolved. Remote dc121ac6.",
       "goal_active_verified": true,
-      "goal_verified_at_utc": "2026-09-13T01:42:33.986276+00:00"
+      "goal_verified_at_utc": "2026-09-13T02:09:32.432952+00:00"
     },
     {
       "slot": "cursor-06",
@@ -125,17 +130,17 @@
       "state": "researching",
       "actual_branch": "cursor/b01-cursor-06-a108866-efe4",
       "replacements": [],
-      "last_checked_at_utc": "2026-09-13T01:42:33.986276+00:00",
-      "progress_note": "Goal active with Stop control and automatic continuation visible; 01:38Z checkpoint 0973a11e reports prime direction/even converse and a conditional odd-composite family. Remaining odd-composite cases explicitly unresolved.",
+      "last_checked_at_utc": "2026-09-13T02:09:32.432952+00:00",
+      "progress_note": "Goal active this heartbeat; A108866 LTE and odd-composite converse work, full exact criterion unresolved.",
       "goal_active_verified": true,
-      "goal_verified_at_utc": "2026-09-13T01:42:33.986276+00:00"
+      "goal_verified_at_utc": "2026-09-13T02:09:32.432952+00:00"
     },
     {
       "slot": "cursor-07",
       "run_id": "cursor-07-r03",
       "agent_url": "https://cursor.com/agents/bc-be46998d-e41e-4257-9875-c9644cc7ceef",
-      "state": "researching",
-      "actual_branch": null,
+      "state": "audit_pending",
+      "actual_branch": "cursor/b01-cursor-07-r03-ceef",
       "replacements": [
         {
           "run_id": "cursor-07-r02",
@@ -148,9 +153,9 @@
           "launched_at_utc": "2026-09-13T02:07:39.445788+00:00"
         }
       ],
-      "last_checked_at_utc": "2026-09-13T02:08:10.965771+00:00",
-      "progress_note": "Green66 known-bound replacement Environment ready and Goal active verified, kickoff02:07:46Z. Exact source/novelty audit beginning. One launch only.",
-      "goal_active_verified": true,
+      "last_checked_at_utc": "2026-09-13T02:22:33.025606+00:00",
+      "progress_note": "New exact Green66 known-bound candidate reported at85c399a1 (proof f4d1e768), worker stopped with goal/timers cancelled. Independent source/type/axiom/compile audit is NEXT heartbeat priority before any replacement. Not yet accepted.",
+      "goal_active_verified": false,
       "goal_verified_at_utc": "2026-09-13T02:08:10.965771+00:00",
       "history": [
         {
@@ -179,11 +184,12 @@
     }
   ],
   "last_heartbeat": {
-    "scheduled_at_utc": "2026-09-13T01:39:18.563Z",
-    "completed_at_utc": "2026-09-13T01:42:33.986276+00:00",
-    "occupied_slots": 7,
-    "replacements": 0,
+    "scheduled_at_utc": "2026-09-13T01:57:48.815Z",
+    "completed_at_utc": "2026-09-13T02:23:05.042739+00:00",
+    "occupied_slots": 6,
+    "audit_pending_slots": 1,
+    "replacements": 2,
     "resumes": 0,
-    "notifications": 0
+    "notifications": 1
   }
 }

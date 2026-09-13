@@ -98,6 +98,17 @@
       "checked_at_utc": "2026-09-13T02:08:10.965771+00:00",
       "environment_build": "bld-20260912-716b23c3-d124-4da8-ab69-743e1fb16843",
       "model": "Cursor Grok 4.6 Extra High"
+    },
+    {
+      "worker_id": "cursor-01-r03",
+      "slot": "cursor-01",
+      "agent_url": "https://cursor.com/agents/bc-086084d4-c701-4b95-8414-97eb6d9d2609",
+      "starting_commit": "1ee796fa5606a0027266111e53f9b6c5d11d62a6",
+      "launch_verified": true,
+      "goal_active_verified": true,
+      "checked_at_utc": "2026-09-13T02:23:05.042739+00:00",
+      "model": "Cursor Grok 4.6 Extra High",
+      "environment_build": "bld-20260912-716b23c3-d124-4da8-ab69-743e1fb16843"
     }
   ]
 }
