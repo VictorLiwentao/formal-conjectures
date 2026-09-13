@@ -92,6 +92,8 @@ Guard: PASS (worker path only). Source SHA-256 matches.
 -- [propext, Classical.choice, Quot.sound]
 #print axioms sum_H_mul_catalan_succ
 -- [propext, Classical.choice, Quot.sound]
+#print axioms ncard_xN_eq_sum_iN_H
+-- [propext, Classical.choice, Quot.sound]
 #print axioms xN_finite
 -- [propext, Classical.choice, Quot.sound]
 ```

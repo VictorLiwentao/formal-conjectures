@@ -2581,6 +2581,274 @@ lemma exists_right_parse_append_YWord_tail {c y : Word} (hc : XWord c)
     have hu_ne := hu.ne_nil
     simp [tail_append_of_ne_nil hu_ne]
 
+lemma length_append_tail {c y : Word} (hy : y ≠ []) :
+    (c ++ y.tail).length = c.length + y.length - 1 := by
+  have hpos : 1 ≤ y.length := Nat.succ_le_of_lt (List.length_pos_of_ne_nil hy)
+  simp [length_tail]
+  omega
+
+lemma glueIY_of_step {c y0 v : Word} (hy0 : YWord y0) :
+    c ++ (y0 ++ r v).tail = (c ++ y0.tail) ++ r v := by
+  have : (y0 ++ r v).tail = y0.tail ++ r v :=
+    tail_append_of_ne_nil hy0.ne_nil
+  rw [this, append_assoc]
+
+lemma isRightParse_glueIY_step {c y0 v : Word} (hc : XWord c)
+    (hy0 : YWord y0) (hv : XWord v) :
+    IsRightParse (c ++ (y0 ++ r v).tail) (c ++ y0.tail) v :=
+  ⟨XWord.append_YWord_tail hc hy0, hv, glueIY_of_step hy0⟩
+
+lemma le_length_of_isRightParse_glueIY_step {c y0 p u v : Word}
+    (hc : XWord c) (hy0 : YWord y0) (hp : PWord p)
+    (h : IsRightParse (c ++ (y0 ++ r p).tail) u v) :
+    p.length ≤ v.length := by
+  have h' : IsRightParse ((c ++ y0.tail) ++ r p) u v := by
+    simpa [glueIY_of_step hy0] using h
+  exact PWord.le_length_of_isRightParse_append_r
+    (XWord.append_YWord_tail hc hy0) hp h'
+
+lemma YWord.eq_base_iff_length_one {w : Word} (hw : YWord w) :
+    w.length = 1 ↔ w = [0] := by
+  constructor
+  · exact YWord.eq_base_of_length_one hw
+  · intro h
+    simp [h]
+
+lemma RIrreducible.not_isRightParse {w u v : Word} (h : RIrreducible w) :
+    ¬ IsRightParse w u v :=
+  h.2 u v
+
+lemma xword_exists_rIrreducible_yword :
+    ∀ n w, w.length = n → XWord w →
+      ∃ c y, RIrreducible c ∧ YWord y ∧ w = c ++ y.tail := by
+  intro n
+  induction n using Nat.strong_induction_on with
+  | h n ih =>
+    intro w hlen hw
+    by_cases hparse : ∃ u v, IsRightParse w u v
+    · obtain ⟨u, v, hp, hmin⟩ := exists_shortest_right_parse hparse
+      have hvP : PWord v := XWord.of_isRightParse_shortest hp hmin
+      have hulen : u.length < n := by
+        have := hp.length_add
+        have := hp.pos_right
+        omega
+      obtain ⟨c, y0, hc, hy0, hu⟩ := ih u.length hulen u rfl hp.1
+      refine ⟨c, y0 ++ r v, hc, YWord.step hy0 hvP.1, ?_⟩
+      rw [glueIY_of_step hy0, ← hu]
+      exact hp.2.2
+    · refine ⟨w, [0], ⟨hw, fun u v h => hparse ⟨u, v, h⟩⟩, YWord.base, ?_⟩
+      simp
+
+lemma eq_of_rIrreducible_yword :
+    ∀ n c y c' y', (c ++ y.tail).length = n →
+      RIrreducible c → YWord y → RIrreducible c' → YWord y' →
+      c ++ y.tail = c' ++ y'.tail → c = c' ∧ y = y' := by
+  intro n
+  induction n using Nat.strong_induction_on with
+  | h n ih =>
+    intro c y c' y' hlen hc hy hc' hy' heq
+    have hyne := hy.ne_nil
+    have hy'ne := hy'.ne_nil
+    have hy1 : 1 ≤ y.length := hy.xWord.length_ge_one
+    have hy1' : 1 ≤ y'.length := hy'.xWord.length_ge_one
+    by_cases hy2 : 2 ≤ y.length
+    · have hy2' : 2 ≤ y'.length := by
+        by_contra hlt
+        have hy'len : y'.length = 1 := by omega
+        have hy'0 : y' = [0] := YWord.eq_base_of_length_one hy' hy'len
+        have hw : c ++ y.tail = c' := by
+          simpa [hy'0] using heq
+        obtain ⟨u, v, hp⟩ :=
+          exists_right_parse_append_YWord_tail hc.xWord hy hy2
+        have hp' : IsRightParse c' u v := by
+          simpa [hw] using hp
+        exact hc'.not_isRightParse hp'
+      obtain ⟨y0, p, hpY, hvP, hminY⟩ :=
+        YWord.shortest_remainder_is_pword hy hy2
+      have hy0Y : YWord y0 := YWord.shortest_left_is_yword hy hpY hminY
+      have hyeq : y = y0 ++ r p := hpY.2.2
+      have hparse :
+          IsRightParse (c ++ y.tail) (c ++ y0.tail) p := by
+        rw [hyeq]
+        exact isRightParse_glueIY_step hc.xWord hy0Y hvP.1
+      have hmin :
+          ∀ u2 v2, IsRightParse (c ++ y.tail) u2 v2 →
+            p.length ≤ v2.length := by
+        intro u2 v2 hp2
+        have hp2' : IsRightParse (c ++ (y0 ++ r p).tail) u2 v2 := by
+          simpa [hyeq] using hp2
+        exact le_length_of_isRightParse_glueIY_step hc.xWord hy0Y hvP hp2'
+      obtain ⟨y0', p', hpY', hvP', hminY'⟩ :=
+        YWord.shortest_remainder_is_pword hy' hy2'
+      have hy0Y' : YWord y0' :=
+        YWord.shortest_left_is_yword hy' hpY' hminY'
+      have hyeq' : y' = y0' ++ r p' := hpY'.2.2
+      have hparse' :
+          IsRightParse (c ++ y.tail) (c' ++ y0'.tail) p' := by
+        rw [heq, hyeq']
+        exact isRightParse_glueIY_step hc'.xWord hy0Y' hvP'.1
+      have hmin' :
+          ∀ u2 v2, IsRightParse (c ++ y.tail) u2 v2 →
+            p'.length ≤ v2.length := by
+        intro u2 v2 hp2
+        have hp2' : IsRightParse (c' ++ (y0' ++ r p').tail) u2 v2 := by
+          rw [← hyeq', ← heq]
+          exact hp2
+        exact le_length_of_isRightParse_glueIY_step hc'.xWord hy0Y' hvP' hp2'
+      obtain ⟨hu, hv⟩ :=
+        shortest_right_parse_unique hparse hparse' hmin hmin'
+      have hlenu : (c ++ y0.tail).length < n := by
+        have hsum := hparse.length_add
+        have := hpY.pos_right
+        omega
+      obtain ⟨hc0, hy00⟩ :=
+        ih (c ++ y0.tail).length hlenu c y0 c' y0' rfl hc hy0Y hc' hy0Y' hu
+      subst hc0
+      subst hy00
+      subst hv
+      exact ⟨rfl, hyeq.trans hyeq'.symm⟩
+    · have hylen : y.length = 1 := by omega
+      have hy0 : y = [0] := YWord.eq_base_of_length_one hy hylen
+      have hy2' : ¬ 2 ≤ y'.length := by
+        intro hy2'
+        obtain ⟨u, v, hp⟩ :=
+          exists_right_parse_append_YWord_tail hc'.xWord hy' hy2'
+        have hp' : IsRightParse c u v := by
+          simpa [hy0, heq.symm] using hp
+        exact hc.not_isRightParse hp'
+      have hy'len : y'.length = 1 := by omega
+      have hy'0 : y' = [0] := YWord.eq_base_of_length_one hy' hy'len
+      subst hy0
+      subst hy'0
+      simp at heq
+      exact ⟨heq, rfl⟩
+
+def iN (n : ℕ) : Set Word :=
+  {w | RIrreducible w ∧ w.length = n}
+
+lemma iN_subset_xN (n : ℕ) : iN n ⊆ xN n :=
+  fun _ hw => ⟨hw.1.xWord, hw.2⟩
+
+lemma iN_finite (n : ℕ) : (iN n).Finite :=
+  (xN_finite n).subset (iN_subset_xN n)
+
+noncomputable def iNFinset (n : ℕ) : Finset Word :=
+  (iN_finite n).toFinset
+
+lemma mem_iNFinset {n : ℕ} {w : Word} :
+    w ∈ iNFinset n ↔ w ∈ iN n :=
+  Set.Finite.mem_toFinset (iN_finite n)
+
+lemma ncard_iN_eq_card (n : ℕ) :
+    (iN n).ncard = (iNFinset n).card :=
+  Set.ncard_eq_toFinset_card _ (iN_finite n)
+
+noncomputable def xNFinset (n : ℕ) : Finset Word :=
+  (xN_finite n).toFinset
+
+lemma mem_xNFinset {n : ℕ} {w : Word} :
+    w ∈ xNFinset n ↔ w ∈ xN n :=
+  Set.Finite.mem_toFinset (xN_finite n)
+
+lemma ncard_xN_eq_card (n : ℕ) :
+    (xN n).ncard = (xNFinset n).card :=
+  Set.ncard_eq_toFinset_card _ (xN_finite n)
+
+lemma disjoint_iNFinset_product {i j k l : ℕ} (hij : i ≠ j) :
+    Disjoint (iNFinset i ×ˢ yNFinset k) (iNFinset j ×ˢ yNFinset l) := by
+  refine Finset.disjoint_iff_ne.mpr ?_
+  intro p hp q hq hpeq
+  have hi : p.1.length = i := (mem_iNFinset.mp (Finset.mem_product.mp hp).1).2
+  have hj : q.1.length = j := (mem_iNFinset.mp (Finset.mem_product.mp hq).1).2
+  have : p.1.length = q.1.length := congrArg List.length (congrArg Prod.fst hpeq)
+  omega
+
+noncomputable def iyPairs (n : ℕ) : Finset (Word × Word) :=
+  (Finset.Icc 1 n).biUnion fun k =>
+    iNFinset k ×ˢ yNFinset (n + 1 - k)
+
+lemma mem_iyPairs {n : ℕ} {p : Word × Word} :
+    p ∈ iyPairs n ↔
+      ∃ k ∈ Finset.Icc 1 n, p.1 ∈ iN k ∧ p.2 ∈ yN (n + 1 - k) := by
+  simp [iyPairs, Finset.mem_biUnion, Finset.mem_product, mem_iNFinset, mem_yNFinset]
+
+lemma card_iyPairs (n : ℕ) :
+    (iyPairs n).card =
+      ∑ k ∈ Finset.Icc 1 n,
+        (iNFinset k).card * (yNFinset (n + 1 - k)).card := by
+  have hdisj : (Finset.Icc 1 n : Set ℕ).PairwiseDisjoint
+      (fun k => iNFinset k ×ˢ yNFinset (n + 1 - k)) := by
+    intro i _ j _ hij
+    exact disjoint_iNFinset_product hij
+  rw [iyPairs, Finset.card_biUnion hdisj]
+  simp [Finset.card_product]
+
+lemma injOn_glueIY_iyPairs (n : ℕ) :
+    Set.InjOn (fun p : Word × Word => p.1 ++ p.2.tail) (iyPairs n) := by
+  intro p hp q hq heq
+  obtain ⟨k, _, hc, hy⟩ := mem_iyPairs.mp hp
+  obtain ⟨k', _, hc', hy'⟩ := mem_iyPairs.mp hq
+  obtain ⟨h1, h2⟩ :=
+    eq_of_rIrreducible_yword (p.1 ++ p.2.tail).length
+      p.1 p.2 q.1 q.2 rfl hc.1 hy.1 hc'.1 hy'.1 heq
+  exact Prod.ext h1 h2
+
+lemma image_iyPairs (n : ℕ) (hn : 1 ≤ n) :
+    (iyPairs n).image (fun p => p.1 ++ p.2.tail) = xNFinset n := by
+  ext w
+  constructor
+  · intro hw
+    obtain ⟨p, hp, rfl⟩ := Finset.mem_image.mp hw
+    obtain ⟨k, hk, hc, hy⟩ := mem_iyPairs.mp hp
+    have hwX : XWord (p.1 ++ p.2.tail) :=
+      XWord.append_YWord_tail hc.1.xWord hy.1
+    have hlen : (p.1 ++ p.2.tail).length = n := by
+      have hk1 := Finset.mem_Icc.mp hk
+      rw [length_append_tail hy.1.ne_nil, hc.2, hy.2]
+      omega
+    exact mem_xNFinset.mpr ⟨hwX, hlen⟩
+  · intro hw
+    have hw' := mem_xNFinset.mp hw
+    have hlenw : w.length = n := hw'.2
+    obtain ⟨c, y, hc, hy, heq⟩ :=
+      xword_exists_rIrreducible_yword n w hlenw hw'.1
+    have hsum : c.length + y.length - 1 = n := by
+      rw [← hlenw, heq, length_append_tail hy.ne_nil]
+    have hcpos := hc.xWord.length_pos
+    have hypos := hy.xWord.length_pos
+    have hk : c.length ∈ Finset.Icc 1 n := by
+      simp [Finset.mem_Icc]
+      omega
+    have huN : c ∈ iN c.length := ⟨hc, rfl⟩
+    have hyN : y ∈ yN (n + 1 - c.length) := ⟨hy, by omega⟩
+    refine Finset.mem_image.mpr ⟨(c, y), ?_, heq.symm⟩
+    exact mem_iyPairs.mpr ⟨c.length, hk, huN, hyN⟩
+
+lemma ncard_xN_eq_sum_iN_yN (n : ℕ) (hn : 1 ≤ n) :
+    (xN n).ncard =
+      ∑ k ∈ Finset.Icc 1 n, (iN k).ncard * (yN (n + 1 - k)).ncard := by
+  have himg := image_iyPairs n hn
+  have hinj := injOn_glueIY_iyPairs n
+  have hcard : (xNFinset n).card = (iyPairs n).card := by
+    rw [← himg, Finset.card_image_of_injOn hinj]
+  rw [ncard_xN_eq_card, hcard, card_iyPairs]
+  simp [ncard_iN_eq_card, ncard_yN_eq_card]
+
+lemma ncard_xN_eq_sum_iN_H (n : ℕ) (hn : 1 ≤ n) :
+    (xN n).ncard =
+      ∑ k ∈ Finset.Icc 1 n, (iN k).ncard * H (n - k) := by
+  rw [ncard_xN_eq_sum_iN_yN n hn]
+  refine Finset.sum_congr rfl ?_
+  intro k hk
+  have hk1 : 1 ≤ k := (Finset.mem_Icc.mp hk).1
+  have hkle : k ≤ n := (Finset.mem_Icc.mp hk).2
+  have hy : (yN (n + 1 - k)).ncard = H (n - k) := by
+    have hpos : 1 ≤ n + 1 - k := by omega
+    have hH := ncard_yN_eq_H_of_pos hpos
+    have hidx : n + 1 - k - 1 = n - k := by omega
+    simpa [hidx] using hH
+  rw [hy]
+
 #print axioms ncard_xN_one
 #print axioms ncard_xN_two
 #print axioms ncard_xN_three
@@ -2615,6 +2883,9 @@ lemma exists_right_parse_append_YWord_tail {c y : Word} (hc : XWord c)
 #print axioms ncard_yN_one
 #print axioms ncard_yN_eq_H
 #print axioms sum_H_mul_catalan_succ
+#print axioms xword_exists_rIrreducible_yword
+#print axioms eq_of_rIrreducible_yword
+#print axioms ncard_xN_eq_sum_iN_H
 #print axioms PWord.take_idxOf_concat_zero
 #print axioms PWord.cons_zero_drop_succ_idxOf
 #print axioms PWord.take_idxOf_concat_zero_append_drop

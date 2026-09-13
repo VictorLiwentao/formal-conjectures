@@ -29,4 +29,4 @@ LEAN_NUM_THREADS=2 lake --wfail env lean research/batches/b01/workers/cursor-02/
 
 `partial`. No public exact proof/disproof found. Finite counts through `n=14` are already public (c5-k4) and are not a resolution. Statement uses `a(n-1)`, matching Xia’s listed cardinalities `1,2,7`, not the OEIS prose `a(n+1)`.
 
-Lean now proves `|Right_n| = C_{n-1}`, `|P_n| = C_n`, and `|Y_n| = H_{n-1}`. The I×Y rebuild bijection, `|I_n|`, and the quantified Xia identity remain open.
+Lean now proves `|Right_n| = C_{n-1}`, `|P_n| = C_n`, `|Y_n| = H_{n-1}`, and the unique I×Y rebuild `|X_n| = ∑_k |I_k| H_{n-k}`. Identifying `|I_n|` and the convolution with `a(n-1)` remain open.
