@@ -142,6 +142,18 @@ The same unfolding of `oddInnerNum p` by `sum_range_succ` and
 `2 H_{p-1} = -p ∑ k^{-2}` and that inverse-square sum is `0` in
 `𝔽_p`, hence a multiple of `p` in `ZMod (p^2)`.
 
+`two_le_padicValRat_harmonic_pred`: the same identity, after
+clearing denominators by `(p-1)!`, gives `v_p(H_{p-1})≥2` in `ℚ`.
+
+`inv_sq_pair_zmod`: in `ZMod (p^2)`,
+`k^{-2}+(p-k)^{-2}=2k^{-2}+2p k^{-3}`. Summing over a half-range
+of pairs yields `inv_sq_sum_eq_two_half_add_p`.
+
+`padicValRat_oddLeadingSum0_seven`: unfolding `oddInnerNum 7=1693440`
+gives `v_7(U0)=2`. This is the exceptional leading valuation at `p=7`.
+The rest inner-sum layer still has individual bound `4-2e`, so
+`v(U0)=2` is not yet enough for the unique-min argument at `n=7^e`.
+
 `choose_pred_eq_one_sub_harmonic_zmod`: for odd `a ≤ p`,
 `C(p-1,a-1) ≡ 1 - p H_{a-1}` exactly in `ZMod (p^2)`, because the
 product `∏(1-p/b)` truncates after the linear term. Therefore

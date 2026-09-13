@@ -144,6 +144,17 @@ Kernel-checked `p^e` converse for `p ∈ {11,13,17,19,23,29,31}` by unfolding `o
 ```
 
 Compile log: `/opt/cursor/artifacts/a108866_lean_wfail_wolstenholme.log`, exit 0, no `sorryAx`.
+
+Kernel-checked square pairing, rational Wolstenholme, and `v_7(U0)=2`, same axioms, `#print axioms` on 2026-09-13:
+
+```
+'OeisA108866.inv_sq_pair_zmod'
+'OeisA108866.two_le_padicValRat_harmonic_pred'
+'OeisA108866.inv_sq_sum_eq_two_half_add_p'
+'OeisA108866.padicValRat_oddLeadingSum0_seven'
+```
+
+Compile log: `/opt/cursor/artifacts/a108866_lean_wfail_pairing4.log`, exit 0, no `sorryAx`.
 This is not the frozen iff.
 
 Kernel-checked exact evaluations `n=9,25,27,49` and packaging lemmas remain in the same file, same axioms.
