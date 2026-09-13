@@ -190,7 +190,7 @@ theorem OeisA108866.not_n_sq_dvd_num_of_even : ∀ {n : ℕ},
 
 The file does not import or use `OeisA108866.conjecture` as a proof.
 
-Kernel-checked coefficient, cube, and Fermat-lift lemmas, same axioms, `#print axioms` on 2026-09-13, compile log `/opt/cursor/artifacts/a108866_lean_wfail_fermat3.log`, exit 0, no `sorryAx`:
+Kernel-checked coefficient, cube, Fermat-lift, and Glaisher-setup lemmas, same axioms, `#print axioms` on 2026-09-13, compile log `/opt/cursor/artifacts/a108866_lean_wfail_glaisher7.log`, exit 0, no `sorryAx`:
 
 ```
 'OeisA108866.cast_eq_zero_iff_mul_p'
@@ -204,6 +204,12 @@ Kernel-checked coefficient, cube, and Fermat-lift lemmas, same axioms, `#print a
 'OeisA108866.pow_pred_eq_one_add_mul_p'
 'OeisA108866.inv_one_add_mul_p'
 'OeisA108866.inv_sq_eq_pow_mul_one_sub'
+'OeisA108866.pow_pred_sub_one_eq_p_mul_val_div'
+'OeisA108866.pow_pred_eq_one_add_p_mul_val_div'
+'OeisA108866.inv_sq_eq_pow_sub_p'
+'OeisA108866.inv_sq_sum_eq_pow_sub_p'
+'OeisA108866.cast_pow_sub_three_eq_inv_sq'
+'OeisA108866.pow_sub_three_sum_eq_mul_p'
 ```
 
 This is not the frozen iff.

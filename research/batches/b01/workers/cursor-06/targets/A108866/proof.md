@@ -186,7 +186,11 @@ to that coefficient being nonzero in `𝔽_p`.
 `cast_pow_pred_eq_one` / `pow_pred_eq_one_add_mul_p`: Fermat
 lifts to `k^{p-1} = 1 + p c` in `ZMod (p^2)`. Then
 `inv_one_add_mul_p` and `inv_sq_eq_pow_mul_one_sub` give
-`k^{-2} = k^{p-3}(1 - p c)`.
+`k^{-2} = k^{p-3}(1 - p c)`. The canonical Fermat quotient
+`((k^{p-1}-1).val / p)` makes this a uniform identity, and
+summing yields `inv_sq_sum_eq_pow_sub_p`. The power sum
+`∑ k^{p-3}` vanishes in `𝔽_p`, so it is a multiple of `p`
+in `ZMod (p^2)`.
 
 An unverified Python scan `experiments/combo_coeff_fp.py` finds
 the `𝔽_p` coefficient congruent to `-(7/24) B_{p-3}` for primes
