@@ -21,7 +21,7 @@
   "novelty_status": "known_mathematics_formalization",
   "mathematical_novelty": "known_mathematics_She_Sun_Xia_2022_Thm1_3_ii",
   "formalization_novelty": "no_prior_exact_public_lean_found_in_checked_sources_audit_incomplete_until_stop",
-  "last_updated_utc": "2026-09-13T07:35:00Z",
+  "last_updated_utc": "2026-09-13T07:24:22Z",
   "proof_declarations": [
     "A001818C1.conjecture1_of_one",
     "A001818C1.zpow_sub_ne_one",
@@ -123,12 +123,21 @@
     "A001818C1.cayleyWeight_permCongr",
     "A001818C1.sum_cayleyWeight_hamiltonian_permCongr",
     "A001818C1.sum_cayleyWeight_hamiltonian_eq_of_card_eq",
-    "A001818C1.sum_cayleyWeight_hamiltonian_subtype_eq_fin"
+    "A001818C1.sum_cayleyWeight_hamiltonian_subtype_eq_fin",
+    "A001818C1.support_ofSubtype_eq",
+    "A001818C1.cayleyWeight_ofSubtype_finset",
+    "A001818C1.cycleSupportEquiv",
+    "A001818C1.sum_cayleyWeight_cycles_support",
+    "A001818C1.hamiltonianCayleySum_eq_cayleyHamConst",
+    "A001818C1.hamiltonianCayleySum_subtype_eq_cayleyHamConst",
+    "A001818C1.card_powersetCard_mem",
+    "A001818C1.sum_cayleyWeight_even_cycles_through",
+    "A001818C1.cayleyHamConst_one"
   ],
   "unresolved_gaps": [
-    "General n>=1 C1 identity still open. Have per(M-J)=a n, Sigma1/Sigma2, and Lemma 2.3: Hamiltonian Cayley sums depend only on cardinality for injective assignments on types of card at least 3. Need Sigma3 via binomial counting of even cycles through a point, then (3.9)/(4.8)/Thm 1.1."
+    "General n>=1 C1 identity still open. Have per(M-J)=a n, Sigma1/Sigma2, Lemma 2.3, and paper (3.5) for k>=2: 2k-cycles through a point sum to binom(N-1, 2k-1) s_k, with s_1 = -1. Need Sigma3, binomial identity (3.9), recurrence (4.8), and Thm 1.1."
   ],
-  "next_step": "Count even Hamiltonian cycles through a distinguished point as binom(N-1, 2k-1) times the cardinality constant, then obtain Sigma3 and recurrence (4.8).",
+  "next_step": "Obtain Sigma3 from (3.5) plus complementary even permutations, prove (3.9) via vanishing of the sign-matrix permanent, then recurrence (4.8).",
   "self_review": "not a candidate yet; cannot set independently_verified",
   "excluded_from_this_worker": [
     "OeisA1818.conjecture2",

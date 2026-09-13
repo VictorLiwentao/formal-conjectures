@@ -4360,6 +4360,283 @@ lemma sum_cayleyWeight_hamiltonian_subtype_eq_fin {α : Type*} [Fintype α] [Dec
   exact sum_cayleyWeight_hamiltonian_eq_of_card_eq
     (fun a : {a // a ∈ s} => x a.1) y hx' hy hα hcard
 
+/-- Sum of Cayley weights of Hamiltonian cycles. Independent of the injective
+assignment when the type has cardinality at least 3. -/
+noncomputable def hamiltonianCayleySum {α : Type*} [Fintype α] [DecidableEq α]
+    (x : α → ℂ) : ℂ :=
+  open scoped Classical in
+  ∑ σ : {σ : Perm α // σ.IsCycle ∧ σ.support = univ}, cayleyWeight x σ.1
+
+/-- Paper `s_k`: Hamiltonian Cayley sum on `2k` letters. For `k = 1` this is
+`-1`. For `k ≥ 2` Lemma 2.3 makes it independent of the injective assignment. -/
+noncomputable def cayleyHamConst (k : ℕ) : ℂ :=
+  hamiltonianCayleySum (fun i : Fin (2 * k) => (i.val : ℂ))
+
+lemma injective_natCast_fin (m : ℕ) :
+    Function.Injective (fun i : Fin m => (i.val : ℂ)) :=
+  Nat.cast_injective.comp Fin.val_injective
+
+lemma support_ofSubtype_eq {α : Type*} [Fintype α] [DecidableEq α] {s : Finset α}
+    {u : Perm {a // a ∈ s}} (h : u.support = univ) :
+    (Equiv.Perm.ofSubtype u).support = s := by
+  ext x
+  simp only [Equiv.Perm.mem_support]
+  constructor
+  · intro hne
+    by_contra hxs
+    exact hne (Equiv.Perm.ofSubtype_apply_of_not_mem u hxs)
+  · intro hx
+    rw [Equiv.Perm.ofSubtype_apply_of_mem u hx]
+    intro hf
+    have hmem : (⟨x, hx⟩ : {a // a ∈ s}) ∈ u.support := by
+      rw [h]
+      exact mem_univ _
+    exact Equiv.Perm.mem_support.mp hmem (Subtype.ext hf)
+
+lemma cayleyWeight_ofSubtype_finset {α : Type*} [Fintype α] [DecidableEq α]
+    {s : Finset α} (x : α → ℂ) (u : Perm {a // a ∈ s}) :
+    cayleyWeight x (Equiv.Perm.ofSubtype u) =
+      cayleyWeight (fun a : {a // a ∈ s} => x a.1) u := by
+  unfold cayleyWeight
+  refine prod_bij (fun y hy => ⟨y, support_ofSubtype_subset u hy⟩) ?_ ?_ ?_ ?_
+  · intro y hy
+    have hne : Equiv.Perm.ofSubtype u y ≠ y := Equiv.Perm.mem_support.mp hy
+    have hy' : y ∈ s := support_ofSubtype_subset u hy
+    rw [Equiv.Perm.ofSubtype_apply_of_mem u hy'] at hne
+    exact Equiv.Perm.mem_support.mpr fun hf => hne (congrArg Subtype.val hf)
+  · intro y1 _ y2 _ h
+    exact Subtype.ext_iff.mp h
+  · intro q hq
+    have hne : u q ≠ q := Equiv.Perm.mem_support.mp hq
+    refine ⟨q.1, ?_, Subtype.ext rfl⟩
+    refine Equiv.Perm.mem_support.mpr ?_
+    rw [Equiv.Perm.ofSubtype_apply_coe]
+    exact fun hx => hne (Subtype.ext hx)
+  · intro y hy
+    have hy' : y ∈ s := support_ofSubtype_subset u hy
+    simp [Equiv.Perm.ofSubtype_apply_of_mem u hy']
+
+lemma subtypePerm_ofSubtype {α : Type*} [Fintype α] [DecidableEq α] {s : Finset α}
+    (u : Perm {a // a ∈ s}) :
+    (Equiv.Perm.ofSubtype u).subtypePerm
+      (fun x => (mem_of_support_subset (support_ofSubtype_subset u) x).symm) = u := by
+  ext q
+  rw [Equiv.Perm.subtypePerm_apply]
+  exact Equiv.Perm.ofSubtype_apply_coe u q
+
+lemma isCycle_subtypePerm_of_support_eq {α : Type*} [Fintype α] [DecidableEq α]
+    {s : Finset α} {σ : Perm α} (hσ : σ.IsCycle) (hs : σ.support = s)
+    (h2 : 2 ≤ s.card) :
+    (σ.subtypePerm fun x =>
+      (mem_of_support_subset (s := s)
+        (show σ.support ⊆ s from hs.symm ▸ Subset.rfl) x).symm).IsCycle := by
+  subst hs
+  exact isCycle_subtypePerm_of_support hσ h2
+
+lemma support_subtypePerm_eq_univ {α : Type*} [Fintype α] [DecidableEq α]
+    {s : Finset α} {σ : Perm α} (hs : σ.support = s) :
+    (σ.subtypePerm fun x =>
+      (mem_of_support_subset (s := s)
+        (show σ.support ⊆ s from hs.symm ▸ Subset.rfl) x).symm).support = univ := by
+  rw [Equiv.Perm.support_subtypePerm]
+  ext q
+  simp only [mem_filter, mem_univ, true_and, iff_true]
+  exact Equiv.Perm.mem_support.mp (hs ▸ q.2)
+
+noncomputable def cycleSupportEquiv {α : Type*} [Fintype α] [DecidableEq α]
+    (s : Finset α) (hs : 2 ≤ s.card) :
+    {u : Perm {a // a ∈ s} // u.IsCycle ∧ u.support = univ} ≃
+      {σ : Perm α // σ.IsCycle ∧ σ.support = s} where
+  toFun u :=
+    ⟨Equiv.Perm.ofSubtype u.1, ofSubtype_isCycle u.2.1, support_ofSubtype_eq u.2.2⟩
+  invFun σ :=
+    ⟨σ.1.subtypePerm fun x =>
+      (mem_of_support_subset (s := s)
+        (show σ.1.support ⊆ s from σ.2.2.symm ▸ Subset.rfl) x).symm,
+      isCycle_subtypePerm_of_support_eq σ.2.1 σ.2.2 hs,
+      support_subtypePerm_eq_univ σ.2.2⟩
+  left_inv u := by
+    apply Subtype.ext
+    ext q
+    rw [Equiv.Perm.subtypePerm_apply]
+    exact Equiv.Perm.ofSubtype_apply_coe u.1 q
+  right_inv σ :=
+    Subtype.ext (ofSubtype_subtypePerm_of_support_subset
+      (show σ.1.support ⊆ s from σ.2.2.symm ▸ Subset.rfl))
+
+open scoped Classical in
+lemma sum_hamiltonian_eq_sum_ite {α : Type*} [Fintype α] [DecidableEq α]
+    (x : α → ℂ) :
+    hamiltonianCayleySum x =
+      ∑ σ : Perm α, if σ.IsCycle ∧ σ.support = univ then cayleyWeight x σ else 0 := by
+  unfold hamiltonianCayleySum
+  rw [← sum_subtype (p := fun σ : Perm α => σ.IsCycle ∧ σ.support = univ)
+      (univ.filter (fun σ : Perm α => σ.IsCycle ∧ σ.support = univ))
+      (fun σ => by simp) (fun σ => cayleyWeight x σ),
+    sum_filter]
+
+open scoped Classical in
+lemma sum_cayleyWeight_cycles_support {α : Type*} [Fintype α] [DecidableEq α]
+    (x : α → ℂ) (s : Finset α) (hs : 2 ≤ s.card) :
+    (∑ σ : Perm α, if σ.IsCycle ∧ σ.support = s then cayleyWeight x σ else 0) =
+      hamiltonianCayleySum (fun a : {a // a ∈ s} => x a.1) := by
+  rw [← sum_filter,
+    sum_subtype (p := fun σ : Perm α => σ.IsCycle ∧ σ.support = s)
+      (univ.filter (fun σ : Perm α => σ.IsCycle ∧ σ.support = s))
+      (fun σ => by simp) (fun σ => cayleyWeight x σ),
+    hamiltonianCayleySum,
+    ← Equiv.sum_comp (cycleSupportEquiv s hs) (fun σ => cayleyWeight x σ.1)]
+  refine Fintype.sum_congr _ _ fun u => ?_
+  exact cayleyWeight_ofSubtype_finset x u.1
+
+open scoped Classical in
+lemma hamiltonianCayleySum_eq_cayleyHamConst {α : Type*} [Fintype α] [DecidableEq α]
+    (x : α → ℂ) (hx : Function.Injective x) {k : ℕ}
+    (hα : 3 ≤ Fintype.card α) (hcard : Fintype.card α = 2 * k) :
+    hamiltonianCayleySum x = cayleyHamConst k := by
+  have hy : Function.Injective (fun i : Fin (2 * k) => (i.val : ℂ)) :=
+    injective_natCast_fin (2 * k)
+  have h3 : 3 ≤ Fintype.card (Fin (2 * k)) := by
+    simpa [Fintype.card_fin, hcard] using hα
+  simpa [hamiltonianCayleySum, cayleyHamConst] using
+    sum_cayleyWeight_hamiltonian_eq_of_card_eq x
+      (fun i : Fin (2 * k) => (i.val : ℂ)) hx hy hα (by simp [hcard])
+
+open scoped Classical in
+lemma hamiltonianCayleySum_subtype_eq_cayleyHamConst {α : Type*}
+    [Fintype α] [DecidableEq α] (s : Finset α) (x : α → ℂ)
+    (hx : Function.Injective x) {k : ℕ}
+    (hs : 3 ≤ s.card) (hcard : s.card = 2 * k) :
+    hamiltonianCayleySum (fun a : {a // a ∈ s} => x a.1) = cayleyHamConst k := by
+  have hx' : Function.Injective (fun a : {a // a ∈ s} => x a.1) :=
+    hx.comp Subtype.val_injective
+  have hα : 3 ≤ Fintype.card {a // a ∈ s} := by
+    simpa [Fintype.card_coe] using hs
+  have hcard' : Fintype.card {a // a ∈ s} = 2 * k := by
+    simpa [Fintype.card_coe] using hcard
+  exact hamiltonianCayleySum_eq_cayleyHamConst _ hx' hα hcard'
+
+lemma card_powersetCard_mem {α : Type*} [Fintype α] [DecidableEq α]
+    (p : α) (n : ℕ) (hn : 1 ≤ n) :
+    #((univ.powersetCard n).filter ({p} ⊆ ·)) =
+      (Fintype.card α - 1).choose (n - 1) := by
+  have hst : ({p} : Finset α) ⊆ univ := by simp
+  have hsn : #({p} : Finset α) ≤ n := by simp [hn]
+  simpa [card_singleton, card_univ] using
+    card_filter_powersetCard_subset ({p} : Finset α) univ n hst hsn
+
+lemma sum_ite_eq_support {α : Type*} [Fintype α] [DecidableEq α]
+    (σ : Perm α) (f : Finset α → ℂ) :
+    (∑ s : Finset α, if s = σ.support then f s else 0) = f σ.support := by
+  rw [sum_ite_eq' (s := univ), if_pos (mem_univ _)]
+
+open scoped Classical in
+/-- Paper (3.5) for `k ≥ 2`: the sum of Cayley weights of `2k`-cycles through `p`
+equals `\binom{N-1}{2k-1} s_k`. -/
+lemma sum_cayleyWeight_even_cycles_through {α : Type*} [Fintype α] [DecidableEq α]
+    (x : α → ℂ) (hx : Function.Injective x) (p : α) {k : ℕ}
+    (hk : 2 ≤ k) :
+    (∑ σ : Perm α,
+        if σ.IsCycle ∧ p ∈ σ.support ∧ σ.support.card = 2 * k then
+          cayleyWeight x σ else 0) =
+      ((Fintype.card α - 1).choose (2 * k - 1) : ℂ) * cayleyHamConst k := by
+  have hsplit :
+      (∑ σ : Perm α,
+          if σ.IsCycle ∧ p ∈ σ.support ∧ σ.support.card = 2 * k then
+            cayleyWeight x σ else 0) =
+        ∑ s : Finset α, ∑ σ : Perm α,
+          if σ.IsCycle ∧ σ.support = s ∧ p ∈ s ∧ s.card = 2 * k then
+            cayleyWeight x σ else 0 := by
+    rw [sum_comm]
+    refine Fintype.sum_congr _ _ fun σ => ?_
+    trans ∑ s : Finset α,
+        if s = σ.support then
+          (if σ.IsCycle ∧ p ∈ σ.support ∧ s.card = 2 * k then cayleyWeight x σ else 0)
+        else 0
+    · exact (sum_ite_eq_support σ fun s =>
+        if σ.IsCycle ∧ p ∈ σ.support ∧ s.card = 2 * k then cayleyWeight x σ else 0).symm
+    · refine Fintype.sum_congr _ _ fun s => ?_
+      by_cases hsσ : s = σ.support
+      · subst hsσ
+        simp
+      · have hne : ¬ (σ.IsCycle ∧ σ.support = s ∧ p ∈ s ∧ s.card = 2 * k) :=
+          fun h => hsσ h.2.1.symm
+        simp [hsσ, hne]
+  rw [hsplit]
+  have hfiber :
+      (∑ s : Finset α, ∑ σ : Perm α,
+          if σ.IsCycle ∧ σ.support = s ∧ p ∈ s ∧ s.card = 2 * k then
+            cayleyWeight x σ else 0) =
+        ∑ s : Finset α,
+          if p ∈ s ∧ s.card = 2 * k then
+            hamiltonianCayleySum (fun a : {a // a ∈ s} => x a.1)
+          else 0 := by
+    refine Fintype.sum_congr _ _ fun s => ?_
+    by_cases hps : p ∈ s ∧ s.card = 2 * k
+    · have hs2 : 2 ≤ s.card := by omega
+      have hsum := sum_cayleyWeight_cycles_support x s hs2
+      have hterm : ∀ σ : Perm α,
+          (if σ.IsCycle ∧ σ.support = s ∧ p ∈ s ∧ s.card = 2 * k then
+              cayleyWeight x σ else 0) =
+            if σ.IsCycle ∧ σ.support = s then cayleyWeight x σ else 0 := by
+        intro σ
+        simp [hps]
+      simp_rw [hterm, hsum, if_pos hps]
+    · simp only [if_neg hps]
+      refine Fintype.sum_eq_zero _ fun σ => ?_
+      have hterm : ¬ (σ.IsCycle ∧ σ.support = s ∧ p ∈ s ∧ s.card = 2 * k) :=
+        fun h => hps ⟨h.2.2.1, h.2.2.2⟩
+      simp [hterm]
+  rw [hfiber]
+  have hconst :
+      (∑ s : Finset α,
+          if p ∈ s ∧ s.card = 2 * k then
+            hamiltonianCayleySum (fun a : {a // a ∈ s} => x a.1)
+          else 0) =
+        ∑ s : Finset α,
+          if p ∈ s ∧ s.card = 2 * k then cayleyHamConst k else 0 := by
+    refine Fintype.sum_congr _ _ fun s => ?_
+    by_cases hps : p ∈ s ∧ s.card = 2 * k
+    · have hs3 : 3 ≤ s.card := by omega
+      rw [if_pos hps, if_pos hps,
+        hamiltonianCayleySum_subtype_eq_cayleyHamConst s x hx hs3 hps.2]
+    · simp [hps]
+  rw [hconst]
+  have hfinal :
+      (∑ s : Finset α, if p ∈ s ∧ s.card = 2 * k then cayleyHamConst k else 0) =
+        ((Fintype.card α - 1).choose (2 * k - 1) : ℂ) * cayleyHamConst k := by
+    rw [← sum_filter (fun s : Finset α => p ∈ s ∧ s.card = 2 * k),
+      sum_const, nsmul_eq_mul]
+    have hfeq :
+        (univ : Finset (Finset α)).filter (fun s => p ∈ s ∧ s.card = 2 * k) =
+          (univ.powersetCard (2 * k)).filter ({p} ⊆ ·) := by
+      ext s
+      simp [mem_powersetCard, singleton_subset_iff, and_comm]
+    have hn : 1 ≤ 2 * k := by omega
+    have hcard := card_powersetCard_mem p (2 * k) hn
+    rw [hfeq, hcard]
+  exact hfinal
+
+open scoped Classical in
+lemma cayleyHamConst_one : cayleyHamConst 1 = -1 := by
+  have hfin : hamiltonianCayleySum (fun i : Fin (2 * 1) => (i.val : ℂ)) =
+      hamiltonianCayleySum (fun i : Fin 2 => (i.val : ℂ)) := rfl
+  rw [cayleyHamConst, hfin, sum_hamiltonian_eq_sum_ite]
+  rw [show (univ : Finset (Perm (Fin 2))) = {1, Equiv.swap 0 1} from
+    univ_perm_fin_two]
+  rw [sum_insert (by simp [one_ne_swap_fin_two]), sum_singleton]
+  have h1 : ¬ ((1 : Perm (Fin 2)).IsCycle ∧ (1 : Perm (Fin 2)).support = univ) :=
+    fun h => h.1.ne_one rfl
+  have hsw : (Equiv.swap (0 : Fin 2) 1).IsCycle ∧
+      (Equiv.swap (0 : Fin 2) 1).support = univ := by
+    refine ⟨Equiv.Perm.isCycle_swap Fin.zero_ne_one, ?_⟩
+    rw [Equiv.Perm.support_swap Fin.zero_ne_one]
+    ext i
+    simp
+    fin_cases i <;> simp
+  rw [if_neg h1, if_pos hsw, cayleyWeight_swap_sq _ Fin.zero_ne_one]
+  norm_num
+
 #check (OeisA1818.conjecture1 :
     ∀ (n : ℕ), 1 ≤ n → ∀ (ζ : ℂ), IsPrimitiveRoot ζ (2 * n) →
       (sunMatrix n ζ).permanent = (a n : ℂ))
@@ -4475,5 +4752,14 @@ lemma sum_cayleyWeight_hamiltonian_subtype_eq_fin {α : Type*} [Fintype α] [Dec
 #print axioms sum_cayleyWeight_hamiltonian_permCongr
 #print axioms sum_cayleyWeight_hamiltonian_eq_of_card_eq
 #print axioms sum_cayleyWeight_hamiltonian_subtype_eq_fin
+#print axioms support_ofSubtype_eq
+#print axioms cayleyWeight_ofSubtype_finset
+#print axioms cycleSupportEquiv
+#print axioms sum_cayleyWeight_cycles_support
+#print axioms hamiltonianCayleySum_eq_cayleyHamConst
+#print axioms hamiltonianCayleySum_subtype_eq_cayleyHamConst
+#print axioms card_powersetCard_mem
+#print axioms sum_cayleyWeight_even_cycles_through
+#print axioms cayleyHamConst_one
 
 end A001818C1

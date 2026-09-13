@@ -39,7 +39,9 @@ Paper Σ1/Σ2: even-cycle Cayley sums split by the cycle of a distinguished poin
 
 Rotate-class insertion: after clearing the skipped edge, the weight of `p :: L.rotate k` equals `-cayleyPathWeight(L.rotate k)` minus a telescoping term in `x p`. Summing over rotations cancels the telescope (`sum_cayleyWeight_cons_rotate`). Path weights ignore `p`, so the Hamiltonian listing sum through `p` is unchanged if `x` is altered only at `p`. Parking through unused complex values therefore makes the Hamiltonian sum depend only on the type, for injective assignments on a type of cardinality at least 3 (`sum_cayleyWeight_hamiltonian_eq_of_injective`). Conjugation by a type equivalence preserves Cayley weights, so the sum depends only on cardinality (`sum_cayleyWeight_hamiltonian_eq_of_card_eq`), including on subtypes (`sum_cayleyWeight_hamiltonian_subtype_eq_fin`).
 
-Still needed: binomial counting of even cycles through a point (paper (3.5)), then Σ3, recurrence (4.8) / Theorem 1.1 matching formula, then `per M = per(M-J)`.
+Paper (3.5) for `k ≥ 2`: cycles of support `T` match Hamiltonian cycles on the subtype (`cycleSupportEquiv`, `sum_cayleyWeight_cycles_support`). Those sums equal the cardinality constant `s_k` (`cayleyHamConst`). Counting subsets `T ∋ p` of size `2k` gives `\binom{N-1}{2k-1}` (`card_powersetCard_mem`). Therefore the `2k`-cycle sum through `p` is `\binom{N-1}{2k-1} s_k` (`sum_cayleyWeight_even_cycles_through`). Direct two-letter evaluation gives `s_1 = -1`.
+
+Still needed: Σ3 (including complementary even permutations on the complement of a long even cycle through `p`), identity (3.9), recurrence (4.8) / Theorem 1.1 matching formula, then `per M = per(M-J)`.
 
 ## Attribution
 
