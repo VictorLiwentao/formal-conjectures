@@ -10389,21 +10389,397 @@ lemma not_five_sigma_of_three_sq_primes_seven_thirty_seven_of_val_seven_eq_three
         (lt_of_lt_of_le (by decide : (0 : ℕ) < 2) hk37)
         ((Nat.zero_lt_succ 1).trans_le hkr)).ne heq
 
+lemma prime_ge_five_hundred_one_ge_five_hundred_three {p : ℕ} (hp : p.Prime)
+    (h : 501 ≤ p) : 503 ≤ p := by
+  have hmem : p = 501 ∨ p = 502 ∨ 503 ≤ p := by omega
+  rcases hmem with rfl | rfl | h503
+  · exact False.elim (not_prime_of_eq_mul (rfl : 501 = 3 * 167)
+      (by decide : (3 : ℕ) ≠ 1) (by decide : (167 : ℕ) ≠ 1) hp)
+  · exact False.elim (not_prime_of_eq_mul (rfl : 502 = 2 * 251)
+      (by decide : (2 : ℕ) ≠ 1) (by decide : (251 : ℕ) ≠ 1) hp)
+  · exact h503
+
+lemma prime_ge_seven_hundred_eighty_nine_ge_seven_ninety_seven {p : ℕ}
+    (hp : p.Prime) (h : 789 ≤ p) : 797 ≤ p := by
+  have hmem : p = 789 ∨ p = 790 ∨ p = 791 ∨ p = 792 ∨ p = 793 ∨ p = 794 ∨
+      p = 795 ∨ p = 796 ∨ 797 ≤ p := by omega
+  rcases hmem with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | h797
+  · exact False.elim (not_prime_of_eq_mul (rfl : 789 = 3 * 263)
+      (by decide : (3 : ℕ) ≠ 1) (by decide : (263 : ℕ) ≠ 1) hp)
+  · exact False.elim (not_prime_of_eq_mul (rfl : 790 = 2 * 395)
+      (by decide : (2 : ℕ) ≠ 1) (by decide : (395 : ℕ) ≠ 1) hp)
+  · exact False.elim (not_prime_of_eq_mul (rfl : 791 = 7 * 113)
+      (by decide : (7 : ℕ) ≠ 1) (by decide : (113 : ℕ) ≠ 1) hp)
+  · exact False.elim (not_prime_of_eq_mul (rfl : 792 = 2 * 396)
+      (by decide : (2 : ℕ) ≠ 1) (by decide : (396 : ℕ) ≠ 1) hp)
+  · exact False.elim (not_prime_of_eq_mul (rfl : 793 = 13 * 61)
+      (by decide : (13 : ℕ) ≠ 1) (by decide : (61 : ℕ) ≠ 1) hp)
+  · exact False.elim (not_prime_of_eq_mul (rfl : 794 = 2 * 397)
+      (by decide : (2 : ℕ) ≠ 1) (by decide : (397 : ℕ) ≠ 1) hp)
+  · exact False.elim (not_prime_of_eq_mul (rfl : 795 = 3 * 265)
+      (by decide : (3 : ℕ) ≠ 1) (by decide : (265 : ℕ) ≠ 1) hp)
+  · exact False.elim (not_prime_of_eq_mul (rfl : 796 = 2 * 398)
+      (by decide : (2 : ℕ) ≠ 1) (by decide : (398 : ℕ) ≠ 1) hp)
+  · exact h797
+
+lemma prime_ge_seven_hundred_ninety_eight_ge_eight_hundred_nine {p : ℕ}
+    (hp : p.Prime) (h : 798 ≤ p) : 809 ≤ p := by
+  have hmem : p = 798 ∨ p = 799 ∨ p = 800 ∨ p = 801 ∨ p = 802 ∨ p = 803 ∨
+      p = 804 ∨ p = 805 ∨ p = 806 ∨ p = 807 ∨ p = 808 ∨ 809 ≤ p := by omega
+  rcases hmem with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl |
+      rfl | h809
+  · exact False.elim (not_prime_of_eq_mul (rfl : 798 = 2 * 399)
+      (by decide : (2 : ℕ) ≠ 1) (by decide : (399 : ℕ) ≠ 1) hp)
+  · exact False.elim (not_prime_of_eq_mul (rfl : 799 = 17 * 47)
+      (by decide : (17 : ℕ) ≠ 1) (by decide : (47 : ℕ) ≠ 1) hp)
+  · exact False.elim (not_prime_of_eq_mul (rfl : 800 = 2 * 400)
+      (by decide : (2 : ℕ) ≠ 1) (by decide : (400 : ℕ) ≠ 1) hp)
+  · exact False.elim (not_prime_of_eq_mul (rfl : 801 = 3 * 267)
+      (by decide : (3 : ℕ) ≠ 1) (by decide : (267 : ℕ) ≠ 1) hp)
+  · exact False.elim (not_prime_of_eq_mul (rfl : 802 = 2 * 401)
+      (by decide : (2 : ℕ) ≠ 1) (by decide : (401 : ℕ) ≠ 1) hp)
+  · exact False.elim (not_prime_of_eq_mul (rfl : 803 = 11 * 73)
+      (by decide : (11 : ℕ) ≠ 1) (by decide : (73 : ℕ) ≠ 1) hp)
+  · exact False.elim (not_prime_of_eq_mul (rfl : 804 = 2 * 402)
+      (by decide : (2 : ℕ) ≠ 1) (by decide : (402 : ℕ) ≠ 1) hp)
+  · exact False.elim (not_prime_of_eq_mul (rfl : 805 = 5 * 161)
+      (by decide : (5 : ℕ) ≠ 1) (by decide : (161 : ℕ) ≠ 1) hp)
+  · exact False.elim (not_prime_of_eq_mul (rfl : 806 = 2 * 403)
+      (by decide : (2 : ℕ) ≠ 1) (by decide : (403 : ℕ) ≠ 1) hp)
+  · exact False.elim (not_prime_of_eq_mul (rfl : 807 = 3 * 269)
+      (by decide : (3 : ℕ) ≠ 1) (by decide : (269 : ℕ) ≠ 1) hp)
+  · exact False.elim (not_prime_of_eq_mul (rfl : 808 = 2 * 404)
+      (by decide : (2 : ℕ) ≠ 1) (by decide : (404 : ℕ) ≠ 1) hp)
+  · exact h809
+
+lemma prime_seven_ninety_seven : Nat.Prime 797 := by norm_num
+
+lemma usigma_thirty_seven_pow_four : usigma (37 ^ 4) = 1874162 := by
+  rw [usigma_prime_pow (by decide : Nat.Prime 37) (by decide : 0 < 4)]
+  decide
+
+lemma sigma_thirty_seven_pow_four : σ 1 (37 ^ 4) = 1926221 := by
+  rw [sigma_prime_pow_div (by decide : Nat.Prime 37)]
+  norm_num
+
+lemma seven_fourth_thirty_seven_sq_r_sq_overshoot_six_five {r : ℕ}
+    (hr : r.Prime) (h211 : 211 ≤ r) (h500 : r ≤ 500) :
+    6 * usigma (7 ^ 4) * usigma (37 ^ 2) * usigma (r ^ 2) <
+      5 * σ 1 (7 ^ 4) * σ 1 (37 ^ 2) * σ 1 (r ^ 2) := by
+  rw [usigma_seven_pow_four, sigma_seven_pow_four,
+    sigma_thirty_seven_pow_two, usigma_thirty_seven_pow_two,
+    sigma_prime_pow_two hr, usigma_prime_pow hr (by decide : 0 < 2)]
+  have hsq : r ^ 2 ≤ 500 * r := by
+    rw [pow_two]
+    exact Nat.mul_le_mul_right r h500
+  have hleft : 39405 * (1 + r ^ 2) < 19705035 * r := by
+    have h1 : 39405 * (1 + r ^ 2) ≤ 39405 * (1 + 500 * r) :=
+      Nat.mul_le_mul_left 39405 (Nat.add_le_add_left hsq 1)
+    have h2 : 39405 * (1 + 500 * r) = 39405 + 19702500 * r := by
+      have : 39405 * 500 = 19702500 := by decide
+      ring
+    have h3 : 39405 + 19702500 * r < 19705035 * r := by
+      have : 39405 < 2535 * r :=
+        lt_of_lt_of_le (by decide : 39405 < 534885)
+          (Nat.mul_le_mul_left 2535 h211)
+      omega
+    calc
+      39405 * (1 + r ^ 2) ≤ 39405 * (1 + 500 * r) := h1
+      _ = 39405 + 19702500 * r := h2
+      _ < 19705035 * r := h3
+  have hL : 6 * 2402 * 1370 * (1 + r ^ 2) = 19744440 * (1 + r ^ 2) := by ring
+  have hR : 5 * 2801 * 1407 * (1 + r + r ^ 2) = 19705035 * (1 + r + r ^ 2) :=
+    by ring
+  have hmain : 19744440 * (1 + r ^ 2) < 19705035 * (1 + r + r ^ 2) := by
+    have h1 : 19744440 * (1 + r ^ 2) =
+        19705035 * (1 + r ^ 2) + 39405 * (1 + r ^ 2) := by ring
+    have h2 : 19705035 * (1 + r + r ^ 2) =
+        19705035 * (1 + r ^ 2) + 19705035 * r := by ring
+    rw [h1, h2]
+    exact Nat.add_lt_add_left hleft _
+  rw [hL, hR]
+  exact hmain
+
+lemma seven_fourth_thirty_seven_r_sq_pow_ge_two_overshoot_six_five
+    {r a b c : ℕ} (hr : r.Prime) (h211 : 211 ≤ r) (h500 : r ≤ 500)
+    (ha : 4 ≤ a) (hb : 2 ≤ b) (hc : 2 ≤ c) :
+    6 * usigma (7 ^ a) * usigma (37 ^ b) * usigma (r ^ c) <
+      5 * σ 1 (7 ^ a) * σ 1 (37 ^ b) * σ 1 (r ^ c) :=
+  six_five_overshoot_mono_three (by decide : Nat.Prime 7)
+    (by decide : Nat.Prime 37) hr
+    (by decide : 0 < 4) (by decide : 0 < 2) (by decide : 0 < 2)
+    ha hb hc (seven_fourth_thirty_seven_sq_r_sq_overshoot_six_five hr h211 h500)
+
+lemma five_mul_seven_fourth_thirty_seven_sq_cap {r : ℕ} (hr : 503 ≤ r) :
+    5 * r * 2801 * 1407 ≤ 6 * (r - 1) * 2402 * 1370 := by
+  have hdiff : 19744440 ≤ 39405 * r := by
+    have hmul : 39405 * 503 ≤ 39405 * r := Nat.mul_le_mul_left 39405 hr
+    have hnum : 39405 * 503 = 19820715 := by decide
+    omega
+  have hL : 5 * r * 2801 * 1407 = 19705035 * r := by ring
+  have hR : 6 * (r - 1) * 2402 * 1370 = 19744440 * (r - 1) := by ring
+  have hmain : 19705035 * r ≤ 19744440 * (r - 1) := by
+    have heq : 19705035 * r + 39405 * r = 19744440 * r := by ring
+    have hsub : 19705035 * r = 19744440 * r - 39405 * r :=
+      (Nat.sub_eq_of_eq_add heq.symm).symm
+    have hle : 19744440 * r - 39405 * r ≤ 19744440 * r - 19744440 :=
+      Nat.sub_le_sub_left hdiff _
+    have hrw : 19744440 * r - 19744440 = 19744440 * (r - 1) := by
+      simpa using (Nat.mul_sub_left_distrib 19744440 r 1).symm
+    calc
+      19705035 * r = 19744440 * r - 39405 * r := hsub
+      _ ≤ 19744440 * r - 19744440 := hle
+      _ = 19744440 * (r - 1) := hrw
+  rw [hL, hR]
+  exact hmain
+
+lemma five_sigma_lt_six_usigma_seven_fourth_thirty_seven_sq_large {r k : ℕ}
+    (hr : r.Prime) (hr503 : 503 ≤ r) (hk : 0 < k) :
+    5 * σ 1 (7 ^ 4) * σ 1 (37 ^ 2) * σ 1 (r ^ k) <
+      6 * usigma (7 ^ 4) * usigma (37 ^ 2) * usigma (r ^ k) := by
+  rw [sigma_seven_pow_four, usigma_seven_pow_four,
+    sigma_thirty_seven_pow_two, usigma_thirty_seven_pow_two]
+  have hcp := sigma_lt_cap_usigma hr hk
+  have hthis := six_five_of_cap_times_const (A := r - 1) (B := r)
+    (X := σ 1 (r ^ k)) (Y := usigma (r ^ k)) (S := 2402 * 1370)
+    (T := 2801 * 1407) hcp (by
+      have hL : 5 * r * (2801 * 1407) = 5 * r * 2801 * 1407 := by ring
+      have hR : 6 * (r - 1) * (2402 * 1370) = 6 * (r - 1) * 2402 * 1370 :=
+        by ring
+      rw [hL, hR]
+      exact five_mul_seven_fourth_thirty_seven_sq_cap hr503)
+    (by decide : 0 < 2801 * 1407)
+  convert hthis using 1 <;> ring
+
+lemma seven_fourth_thirty_seven_cube_r_sq_overshoot_six_five {r : ℕ}
+    (hr : r.Prime) (h211 : 211 ≤ r) (h788 : r ≤ 788) :
+    6 * usigma (7 ^ 4) * usigma (37 ^ 3) * usigma (r ^ 2) <
+      5 * σ 1 (7 ^ 4) * σ 1 (37 ^ 3) * σ 1 (r ^ 2) := by
+  rw [usigma_seven_pow_four, sigma_seven_pow_four,
+    sigma_thirty_seven_pow_three, usigma_thirty_seven_pow_three,
+    sigma_prime_pow_two hr, usigma_prime_pow hr (by decide : 0 < 2)]
+  have hsq : r ^ 2 ≤ 788 * r := by
+    rw [pow_two]
+    exact Nat.mul_le_mul_right r h788
+  have hleft : 925148 * (1 + r ^ 2) < 729100300 * r := by
+    have h1 : 925148 * (1 + r ^ 2) ≤ 925148 * (1 + 788 * r) :=
+      Nat.mul_le_mul_left 925148 (Nat.add_le_add_left hsq 1)
+    have h2 : 925148 * (1 + 788 * r) = 925148 + 729016624 * r := by
+      have : 925148 * 788 = 729016624 := by decide
+      ring
+    have h3 : 925148 + 729016624 * r < 729100300 * r := by
+      have : 925148 < 83676 * r :=
+        lt_of_lt_of_le (by decide : 925148 < 17655636)
+          (Nat.mul_le_mul_left 83676 h211)
+      omega
+    calc
+      925148 * (1 + r ^ 2) ≤ 925148 * (1 + 788 * r) := h1
+      _ = 925148 + 729016624 * r := h2
+      _ < 729100300 * r := h3
+  have hL : 6 * 2402 * 50654 * (1 + r ^ 2) = 730025448 * (1 + r ^ 2) :=
+    by ring
+  have hR : 5 * 2801 * 52060 * (1 + r + r ^ 2) = 729100300 * (1 + r + r ^ 2) :=
+    by ring
+  have hmain : 730025448 * (1 + r ^ 2) < 729100300 * (1 + r + r ^ 2) := by
+    have h1 : 730025448 * (1 + r ^ 2) =
+        729100300 * (1 + r ^ 2) + 925148 * (1 + r ^ 2) := by ring
+    have h2 : 729100300 * (1 + r + r ^ 2) =
+        729100300 * (1 + r ^ 2) + 729100300 * r := by ring
+    rw [h1, h2]
+    exact Nat.add_lt_add_left hleft _
+  rw [hL, hR]
+  exact hmain
+
+lemma seven_fourth_thirty_seven_cube_r_pow_ge_two_overshoot_six_five
+    {r a b c : ℕ} (hr : r.Prime) (h211 : 211 ≤ r) (h788 : r ≤ 788)
+    (ha : 4 ≤ a) (hb : 3 ≤ b) (hc : 2 ≤ c) :
+    6 * usigma (7 ^ a) * usigma (37 ^ b) * usigma (r ^ c) <
+      5 * σ 1 (7 ^ a) * σ 1 (37 ^ b) * σ 1 (r ^ c) :=
+  six_five_overshoot_mono_three (by decide : Nat.Prime 7)
+    (by decide : Nat.Prime 37) hr
+    (by decide : 0 < 4) (by decide : 0 < 3) (by decide : 0 < 2)
+    ha hb hc (seven_fourth_thirty_seven_cube_r_sq_overshoot_six_five hr h211 h788)
+
+lemma five_mul_seven_fourth_thirty_seven_cube_cap {r : ℕ} (hr : 797 ≤ r) :
+    5 * r * 2801 * 52060 ≤ 6 * (r - 1) * 2402 * 50654 := by
+  have hdiff : 730025448 ≤ 925148 * r := by
+    have hmul : 925148 * 797 ≤ 925148 * r := Nat.mul_le_mul_left 925148 hr
+    have hnum : 925148 * 797 = 737342956 := by decide
+    omega
+  have hL : 5 * r * 2801 * 52060 = 729100300 * r := by ring
+  have hR : 6 * (r - 1) * 2402 * 50654 = 730025448 * (r - 1) := by ring
+  have hmain : 729100300 * r ≤ 730025448 * (r - 1) := by
+    have heq : 729100300 * r + 925148 * r = 730025448 * r := by ring
+    have hsub : 729100300 * r = 730025448 * r - 925148 * r :=
+      (Nat.sub_eq_of_eq_add heq.symm).symm
+    have hle : 730025448 * r - 925148 * r ≤ 730025448 * r - 730025448 :=
+      Nat.sub_le_sub_left hdiff _
+    have hrw : 730025448 * r - 730025448 = 730025448 * (r - 1) := by
+      simpa using (Nat.mul_sub_left_distrib 730025448 r 1).symm
+    calc
+      729100300 * r = 730025448 * r - 925148 * r := hsub
+      _ ≤ 730025448 * r - 730025448 := hle
+      _ = 730025448 * (r - 1) := hrw
+  rw [hL, hR]
+  exact hmain
+
+lemma five_sigma_lt_six_usigma_seven_fourth_thirty_seven_cube_large {r k : ℕ}
+    (hr : r.Prime) (hr797 : 797 ≤ r) (hk : 0 < k) :
+    5 * σ 1 (7 ^ 4) * σ 1 (37 ^ 3) * σ 1 (r ^ k) <
+      6 * usigma (7 ^ 4) * usigma (37 ^ 3) * usigma (r ^ k) := by
+  rw [sigma_seven_pow_four, usigma_seven_pow_four,
+    sigma_thirty_seven_pow_three, usigma_thirty_seven_pow_three]
+  have hcp := sigma_lt_cap_usigma hr hk
+  have hT : 0 < 2801 * 52060 :=
+    Nat.mul_pos (by decide : 0 < 2801) (by decide : 0 < 52060)
+  have hthis := six_five_of_cap_times_const (A := r - 1) (B := r)
+    (X := σ 1 (r ^ k)) (Y := usigma (r ^ k)) (S := 2402 * 50654)
+    (T := 2801 * 52060) hcp (by
+      have hL : 5 * r * (2801 * 52060) = 5 * r * 2801 * 52060 := by ring
+      have hR : 6 * (r - 1) * (2402 * 50654) = 6 * (r - 1) * 2402 * 50654 :=
+        by ring
+      rw [hL, hR]
+      exact five_mul_seven_fourth_thirty_seven_cube_cap hr797)
+    hT
+  convert hthis using 1 <;> ring
+
+lemma five_mul_seven_fourth_thirty_seven_euler_cap {r : ℕ} (hr : 809 ≤ r) :
+    5 * 37 * r * 2801 ≤ 6 * 36 * (r - 1) * 2402 := by
+  have hdiff : 518832 ≤ 647 * r := by
+    have hmul : 647 * 809 ≤ 647 * r := Nat.mul_le_mul_left 647 hr
+    have hnum : 647 * 809 = 523423 := by decide
+    omega
+  have hL : 5 * 37 * r * 2801 = 518185 * r := by ring
+  have hR : 6 * 36 * (r - 1) * 2402 = 518832 * (r - 1) := by ring
+  have hmain : 518185 * r ≤ 518832 * (r - 1) := by
+    have heq : 518185 * r + 647 * r = 518832 * r := by ring
+    have hsub : 518185 * r = 518832 * r - 647 * r :=
+      (Nat.sub_eq_of_eq_add heq.symm).symm
+    have hle : 518832 * r - 647 * r ≤ 518832 * r - 518832 :=
+      Nat.sub_le_sub_left hdiff _
+    have hrw : 518832 * r - 518832 = 518832 * (r - 1) := by
+      simpa using (Nat.mul_sub_left_distrib 518832 r 1).symm
+    calc
+      518185 * r = 518832 * r - 647 * r := hsub
+      _ ≤ 518832 * r - 518832 := hle
+      _ = 518832 * (r - 1) := hrw
+  rw [hL, hR]
+  exact hmain
+
+lemma five_sigma_lt_six_usigma_seven_fourth_thirty_seven_large {r b c : ℕ}
+    (hr : r.Prime) (hr809 : 809 ≤ r) (hb : 0 < b) (hc : 0 < c) :
+    5 * σ 1 (7 ^ 4) * σ 1 (37 ^ b) * σ 1 (r ^ c) <
+      6 * usigma (7 ^ 4) * usigma (37 ^ b) * usigma (r ^ c) := by
+  rw [sigma_seven_pow_four, usigma_seven_pow_four]
+  have h37 := sigma_lt_cap_usigma (by decide : Nat.Prime 37) hb
+  have hrcap := sigma_lt_cap_usigma hr hc
+  have hu37 : 0 < usigma (37 ^ b) := by
+    rw [usigma_prime_pow (by decide : Nat.Prime 37) hb]
+    exact Nat.add_pos_left (by decide : 0 < 1) _
+  have hthis := six_five_of_two_caps_times_const (A := 36) (B := 37)
+    (X := σ 1 (37 ^ b)) (Y := usigma (37 ^ b)) (C := r - 1) (D := r)
+    (P := σ 1 (r ^ c)) (Q := usigma (r ^ c)) (S := 2402) (T := 2801)
+    h37 hrcap (five_mul_seven_fourth_thirty_seven_euler_cap hr809)
+    (by decide : 0 < 37) hu37 (by decide : 0 < 2801)
+  convert hthis using 1 <;> ring
+
+lemma seven_fourth_thirty_seven_fourth_seven_ninety_seven_sq_overshoot :
+    6 * usigma (7 ^ 4) * usigma (37 ^ 4) * usigma (797 ^ 2) <
+      5 * σ 1 (7 ^ 4) * σ 1 (37 ^ 4) * σ 1 (797 ^ 2) := by
+  rw [usigma_seven_pow_four, sigma_seven_pow_four,
+    usigma_thirty_seven_pow_four, sigma_thirty_seven_pow_four,
+    usigma_prime_pow prime_seven_ninety_seven (by decide : 0 < 2),
+    sigma_prime_pow_two prime_seven_ninety_seven]
+  norm_num
+
+/-- Leftover `6/5` cannot be three squareful primes `7,37,r` with `r ≥ 211`
+and `v₇ = 4` times a squarefree coprime factor. -/
+lemma not_five_sigma_of_three_sq_primes_seven_thirty_seven_of_val_seven_eq_four
+    {m r : ℕ} (hm : m ≠ 0) (hr : r.Prime) (hr211 : 211 ≤ r)
+    (h : 5 * σ 1 m = 6 * usigma m)
+    (hk7 : padicValNat 7 m = 4) (hk37 : 2 ≤ padicValNat 37 m)
+    (hkr : 2 ≤ padicValNat r m)
+    (hs : Squarefree (ordCompl[r] (ordCompl[37] (ordCompl[7] m)))) :
+    False := by
+  have hp7 : Nat.Prime 7 := by decide
+  have hp37 : Nat.Prime 37 := by decide
+  have hpq_ne : (7 : ℕ) ≠ 37 := by decide
+  have hpr_ne : (7 : ℕ) ≠ r :=
+    Nat.ne_of_lt (lt_of_lt_of_le (by decide : 7 < 211) hr211)
+  have hqr_ne : (37 : ℕ) ≠ r :=
+    Nat.ne_of_lt (lt_of_lt_of_le (by decide : 37 < 211) hr211)
+  have heq := five_sigma_eq_six_of_three_squareful hm hp7 hp37 hr hpq_ne hpr_ne
+    hqr_ne h hs
+  have hproj_p : ordProj[7] m = 7 ^ padicValNat 7 m := by
+    simp [Nat.factorization_def m hp7]
+  have hproj_q : ordProj[37] (ordCompl[7] m) =
+      37 ^ padicValNat 37 (ordCompl[7] m) := by
+    simp [Nat.factorization_def (ordCompl[7] m) hp37]
+  have hproj_r : ordProj[r] (ordCompl[37] (ordCompl[7] m)) =
+      r ^ padicValNat r (ordCompl[37] (ordCompl[7] m)) := by
+    simp [Nat.factorization_def (ordCompl[37] (ordCompl[7] m)) hr]
+  rw [hproj_r, padicValNat_ordCompl_of_ne hr hqr_ne,
+    padicValNat_ordCompl_of_ne hr hpr_ne, hproj_q,
+    padicValNat_ordCompl_of_ne hp37 hpq_ne, hproj_p, hk7] at heq
+  rcases le_or_gt r 500 with h500 | h501
+  · have hover := seven_fourth_thirty_seven_r_sq_pow_ge_two_overshoot_six_five
+      hr hr211 h500 (le_refl _) hk37 hkr
+    rw [← heq] at hover
+    exact lt_irrefl _ hover
+  · have hr503 : 503 ≤ r :=
+      prime_ge_five_hundred_one_ge_five_hundred_three hr (Nat.succ_le_of_lt h501)
+    rcases eq_or_lt_of_le hk37 with h37eq | h373
+    · rw [← h37eq] at heq
+      exact (five_sigma_lt_six_usigma_seven_fourth_thirty_seven_sq_large hr
+        hr503 ((Nat.zero_lt_succ 1).trans_le hkr)).ne heq
+    · rcases le_or_gt r 788 with h788 | h789
+      · have hover := seven_fourth_thirty_seven_cube_r_pow_ge_two_overshoot_six_five
+          hr hr211 h788 (le_refl _) (Nat.succ_le_of_lt h373) hkr
+        rw [← heq] at hover
+        exact lt_irrefl _ hover
+      · have hr797 : 797 ≤ r :=
+          prime_ge_seven_hundred_eighty_nine_ge_seven_ninety_seven hr
+            (Nat.succ_le_of_lt h789)
+        rcases le_or_gt r 797 with h797 | h798
+        · have hr797eq : r = 797 := le_antisymm h797 hr797
+          subst r
+          rcases eq_or_lt_of_le (Nat.succ_le_of_lt h373) with h37eq3 | h374
+          · have h37eq : padicValNat 37 m = 3 := h37eq3.symm
+            rw [h37eq] at heq
+            have hlt :=
+              five_sigma_lt_six_usigma_seven_fourth_thirty_seven_cube_large
+                prime_seven_ninety_seven (le_refl _)
+                ((Nat.zero_lt_succ 1).trans_le hkr)
+            exact hlt.ne heq
+          · have hover := six_five_overshoot_mono_three hp7 hp37
+              prime_seven_ninety_seven
+              (by decide : 0 < 4) (by decide : 0 < 4) (by decide : 0 < 2)
+              (le_refl _) (Nat.succ_le_of_lt h374) hkr
+              seven_fourth_thirty_seven_fourth_seven_ninety_seven_sq_overshoot
+            rw [← heq] at hover
+            exact lt_irrefl _ hover
+        · have hr809 : 809 ≤ r :=
+            prime_ge_seven_hundred_ninety_eight_ge_eight_hundred_nine hr
+              (Nat.succ_le_of_lt h798)
+          exact (five_sigma_lt_six_usigma_seven_fourth_thirty_seven_large hr
+            hr809 (lt_of_lt_of_le (by decide : (0 : ℕ) < 2) hk37)
+            ((Nat.zero_lt_succ 1).trans_le hkr)).ne heq
+
 /-- Leftover `6/5` cannot be three squareful primes `7,37,r` with `r ≥ 41`
-when `r ≤ 205` or `v₇ ≤ 3`, times a squarefree coprime factor. -/
+when `r ≤ 205` or `v₇ ≤ 4`, times a squarefree coprime factor. -/
 lemma not_five_sigma_of_three_sq_primes_seven_thirty_seven {m r : ℕ}
     (hm : m ≠ 0) (hr : r.Prime) (hr41 : 41 ≤ r)
     (h : 5 * σ 1 m = 6 * usigma m)
     (hk7 : 2 ≤ padicValNat 7 m) (hk37 : 2 ≤ padicValNat 37 m)
     (hkr : 2 ≤ padicValNat r m)
     (hs : Squarefree (ordCompl[r] (ordCompl[37] (ordCompl[7] m))))
-    (hcase : r ≤ 205 ∨ padicValNat 7 m ≤ 3) : False := by
+    (hcase : r ≤ 205 ∨ padicValNat 7 m ≤ 4) : False := by
   rcases le_or_gt r 205 with h205 | h206
   · exact not_five_sigma_of_three_sq_primes_seven_thirty_seven_of_r_le_two_hundred_five
       hm hr hr41 h205 h hk7 hk37 hkr hs
   · have hr211 : 211 ≤ r :=
       prime_ge_two_hundred_six_ge_two_hundred_eleven hr (Nat.succ_le_of_lt h206)
-    have hk7le : padicValNat 7 m ≤ 3 := by
+    have hk7le : padicValNat 7 m ≤ 4 := by
       rcases hcase with hle | hle
       · exact (lt_irrefl _ (lt_of_le_of_lt hle h206)).elim
       · exact hle
@@ -10411,10 +10787,14 @@ lemma not_five_sigma_of_three_sq_primes_seven_thirty_seven {m r : ℕ}
     · exact not_five_sigma_of_three_sq_primes_seven_thirty_seven_of_val_seven_eq_two
         hm hr (lt_of_lt_of_le (by decide : (43 : ℕ) < 211) hr211).le h h7eq.symm
         hk37 hkr hs
-    · have h7eq3 : padicValNat 7 m = 3 :=
-        le_antisymm hk7le (Nat.succ_le_of_lt h73)
-      exact not_five_sigma_of_three_sq_primes_seven_thirty_seven_of_val_seven_eq_three
-        hm hr hr211 h h7eq3 hk37 hkr hs
+    · have h3le : 3 ≤ padicValNat 7 m := Nat.succ_le_of_lt h73
+      rcases eq_or_lt_of_le h3le with h7eq3 | h74
+      · exact not_five_sigma_of_three_sq_primes_seven_thirty_seven_of_val_seven_eq_three
+          hm hr hr211 h h7eq3.symm hk37 hkr hs
+      · have h7eq4 : padicValNat 7 m = 4 :=
+          le_antisymm hk7le (Nat.succ_le_of_lt h74)
+        exact not_five_sigma_of_three_sq_primes_seven_thirty_seven_of_val_seven_eq_four
+          hm hr hr211 h h7eq4 hk37 hkr hs
 
 end Unitary
 
