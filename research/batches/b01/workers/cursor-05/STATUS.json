@@ -8,14 +8,14 @@
   "source_sha256": "b50d00e13735613cbe37bd3a25c19130874e8f036ca2a0e3c1aceb177a33c683",
   "current_status": "partial",
   "novelty_status": "no_public_solution_found_in_checked_sources",
-  "last_updated_utc": "2026-09-13T03:30:00Z",
+  "last_updated_utc": "2026-09-13T03:35:00Z",
   "proof_declarations": [],
   "unresolved_gaps": [
     "OeisA63880.mod_216_of_a not proved",
     "OeisA63880.unique_primitive_108 not proved",
     "Need independent proofs of sorry helpers if used: powerful_of_isPrimitiveTerm, exists_primitive_of_a",
     "v2=2 leftover 10/7 is closed at omega<=3; remaining are omega>=4 and leftover 100/91",
-    "v2>=3 implies v3<2; leftover 6/5 is closed for omega<=2; leftover 6/5 omega>=3 containing both squareful 5 and 7 overshoots; {11^2,13^2,p^k} is closed for p>=17; {11,13,p} is glued for 17<=p<=43; {11,17,p} is glued for every p>=19; remaining leftover 6/5 omega>=3 families, leftover 34/31, leftover 100/91, and odd leftover 2 remain"
+    "v2>=3 implies v3<2; leftover 6/5 is closed for omega<=2; leftover 6/5 omega>=3 containing both squareful 5 and 7 overshoots; {11^2,13^2,p^k} is closed for p>=17; {11,13,p} is glued for 17<=p<=43 and for p>=149; {11,17,p} is glued for every p>=19; remaining leftover 6/5 omega>=3 families, leftover 34/31, leftover 100/91, and odd leftover 2 remain"
   ],
   "next_step": "Continue leftover 6/5 omega=3 ({11,13,p} raised exponents for p>=47, {7,q,r}, {5,q,r}) and leftover 10/7 omega>=4. Then leftover 100/91 and leftover 2. CRT plus v2=2 and v3>=3 would give mod_216_of_a."
 }

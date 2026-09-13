@@ -6165,6 +6165,85 @@ lemma not_five_sigma_of_three_sq_primes_eleven_seventeen {m p : ℕ}
         exact not_five_sigma_of_three_sq_primes_eleven_seventeen_large hm hp hp41
           h hk11 hk17 hkp hs
 
+lemma five_eleven_thirteen_cap {p : ℕ} (hp : 149 ≤ p) :
+    5 * 11 * 13 * p ≤ 6 * 10 * 12 * (p - 1) := by
+  have hp1 : 1 ≤ p := by omega
+  have hp' : (149 : ℤ) ≤ p := Int.ofNat_le.mpr hp
+  have hL : ((5 * 11 * 13 * p : ℕ) : ℤ) =
+      (5 : ℤ) * 11 * 13 * p := by
+    rw [Nat.cast_mul, Nat.cast_mul, Nat.cast_mul]; rfl
+  have hR : ((6 * 10 * 12 * (p - 1) : ℕ) : ℤ) =
+      (6 : ℤ) * 10 * 12 * ((p : ℤ) - 1) := by
+    rw [Nat.cast_mul, Nat.cast_mul, Nat.cast_mul, Nat.cast_sub hp1]
+    rfl
+  have : (5 : ℤ) * 11 * 13 * p ≤ 6 * 10 * 12 * (p - 1) := by nlinarith
+  exact Nat.cast_le.mp (by rw [hL, hR]; exact this)
+
+/-- `{11, 13, p}` with `p ≥ 149` cannot fill leftover `6/5`. -/
+lemma five_sigma_lt_six_usigma_eleven_thirteen_large {p a b c : ℕ}
+    (hp : p.Prime) (hp149 : 149 ≤ p) (ha : 0 < a) (hb : 0 < b) (hc : 0 < c) :
+    5 * σ 1 (11 ^ a) * σ 1 (13 ^ b) * σ 1 (p ^ c) <
+      6 * usigma (11 ^ a) * usigma (13 ^ b) * usigma (p ^ c) := by
+  have h11 := sigma_lt_cap_usigma (by decide : Nat.Prime 11) ha
+  have h13 := sigma_lt_cap_usigma (by decide : Nat.Prime 13) hb
+  have hpcap := sigma_lt_cap_usigma hp hc
+  have hu11 : 0 < usigma (11 ^ a) := by
+    rw [usigma_prime_pow (by decide : Nat.Prime 11) ha]
+    exact Nat.add_pos_left (by decide : 0 < 1) _
+  have hu13 : 0 < usigma (13 ^ b) := by
+    rw [usigma_prime_pow (by decide : Nat.Prime 13) hb]
+    exact Nat.add_pos_left (by decide : 0 < 1) _
+  have hcap := five_eleven_thirteen_cap hp149
+  have := six_five_of_three_caps (A := 10) (B := 11) (X := σ 1 (11 ^ a))
+    (Y := usigma (11 ^ a)) (C := 12) (D := 13) (P := σ 1 (13 ^ b))
+    (Q := usigma (13 ^ b)) (E := p - 1) (F := p) (R := σ 1 (p ^ c))
+    (S := usigma (p ^ c)) h11 h13 hpcap hcap (by decide : 0 < 11) hu11
+    (by decide : 0 < 13) hu13
+  simpa [mul_assoc] using this
+
+lemma prime_ge_one_forty_four_ge_one_forty_nine {p : ℕ} (hp : p.Prime)
+    (h : 144 ≤ p) : 149 ≤ p := by
+  have hmem : p = 144 ∨ p = 145 ∨ p = 146 ∨ p = 147 ∨ p = 148 ∨ 149 ≤ p :=
+    by omega
+  rcases hmem with rfl | rfl | rfl | rfl | rfl | h149
+  · exact False.elim ((by decide : ¬ Nat.Prime 144) hp)
+  · exact False.elim ((by decide : ¬ Nat.Prime 145) hp)
+  · exact False.elim ((by decide : ¬ Nat.Prime 146) hp)
+  · exact False.elim ((by decide : ¬ Nat.Prime 147) hp)
+  · exact False.elim ((by decide : ¬ Nat.Prime 148) hp)
+  · exact h149
+
+/-- Leftover `6/5` cannot be three squareful primes `11,13,p` with
+`p ≥ 149` times a squarefree coprime factor. -/
+lemma not_five_sigma_of_three_sq_primes_eleven_thirteen_large {m p : ℕ}
+    (hm : m ≠ 0) (hp : p.Prime) (hp149 : 149 ≤ p)
+    (h : 5 * σ 1 m = 6 * usigma m)
+    (hk11 : 2 ≤ padicValNat 11 m) (hk13 : 2 ≤ padicValNat 13 m)
+    (hkp : 2 ≤ padicValNat p m)
+    (hs : Squarefree (ordCompl[p] (ordCompl[13] (ordCompl[11] m)))) : False := by
+  have hp11 : Nat.Prime 11 := by decide
+  have hp13 : Nat.Prime 13 := by decide
+  have hpq_ne : (11 : ℕ) ≠ 13 := by decide
+  have hpr_ne : (11 : ℕ) ≠ p :=
+    Nat.ne_of_lt (lt_of_lt_of_le (by decide : 11 < 149) hp149)
+  have hqr_ne : (13 : ℕ) ≠ p :=
+    Nat.ne_of_lt (lt_of_lt_of_le (by decide : 13 < 149) hp149)
+  have heq := five_sigma_eq_six_of_three_squareful hm hp11 hp13 hp hpq_ne hpr_ne
+    hqr_ne h hs
+  have hproj_p : ordProj[11] m = 11 ^ padicValNat 11 m := by
+    simp [Nat.factorization_def m hp11]
+  have hproj_q : ordProj[13] (ordCompl[11] m) =
+      13 ^ padicValNat 13 (ordCompl[11] m) := by
+    simp [Nat.factorization_def (ordCompl[11] m) hp13]
+  have hproj_r : ordProj[p] (ordCompl[13] (ordCompl[11] m)) =
+      p ^ padicValNat p (ordCompl[13] (ordCompl[11] m)) := by
+    simp [Nat.factorization_def (ordCompl[13] (ordCompl[11] m)) hp]
+  rw [hproj_r, padicValNat_ordCompl_of_ne hp hqr_ne,
+    padicValNat_ordCompl_of_ne hp hpr_ne, hproj_q,
+    padicValNat_ordCompl_of_ne hp13 hpq_ne, hproj_p] at heq
+  exact (five_sigma_lt_six_usigma_eleven_thirteen_large hp hp149
+    (by omega) (by omega) (by omega)).ne heq
+
 end Unitary
 
 section Congruence
