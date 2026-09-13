@@ -8,14 +8,14 @@
   "source_sha256": "b50d00e13735613cbe37bd3a25c19130874e8f036ca2a0e3c1aceb177a33c683",
   "current_status": "partial",
   "novelty_status": "no_public_solution_found_in_checked_sources",
-  "last_updated_utc": "2026-09-13T04:55:00Z",
+  "last_updated_utc": "2026-09-13T05:05:00Z",
   "proof_declarations": [],
   "unresolved_gaps": [
     "OeisA63880.mod_216_of_a not proved",
     "OeisA63880.unique_primitive_108 not proved",
     "Need independent proofs of sorry helpers if used: powerful_of_isPrimitiveTerm, exists_primitive_of_a",
     "v2=2 leftover 10/7 is closed at omega<=3; leftover 10/7 omega=4 with four primes >=7 and last prime >=41 is glued; remaining are omega=4 with last prime <=37 or a factor 5, omega>=5, and leftover 100/91",
-    "v2>=3 implies v3<2; leftover 6/5 is closed for omega<=2; leftover 6/5 omega>=3 containing both squareful 5 and 7 overshoots; {11,13,p} is glued for every p>=17; {11,17,p} is glued for every p>=19; {13,17,p} is glued for every p>=19; {11,19,p} is glued for every p>=23; {5^2,q,r} is glued for 313<=q<r; {7,q,r} is glued for 11<=q<=31 and for 71<=q<r; triples 11<=p<q<r with q>=23 and 13<=p<q<r with q>=19 are glued; remaining leftover 6/5 omega>=3 including {7,q,r} with 37<=q<71 and {5,q,r} with q<313, leftover 34/31, leftover 100/91, and odd leftover 2 remain"
+    "v2>=3 implies v3<2; leftover 6/5 is closed for omega<=2; leftover 6/5 omega>=3 containing both squareful 5 and 7 overshoots; {11,13,p} is glued for every p>=17; {11,17,p} is glued for every p>=19; {13,17,p} is glued for every p>=19; {11,19,p} is glued for every p>=23; {5^2,q,r} is glued for 313<=q<r; {7,q,r} is glued for 11<=q<=31 and for 71<=q<r; {7,37,r} is glued when r<=205 or v7<=3; triples 11<=p<q<r with q>=23 and 13<=p<q<r with q>=19 are glued; remaining leftover 6/5 omega>=3 including {7,37,r} with v7>=4 and r>=211, {7,q,r} with 41<=q<71, and {5,q,r} with q<313, leftover 34/31, leftover 100/91, and odd leftover 2 remain"
   ],
-  "next_step": "Continue leftover 6/5 omega=3 ({7,q,r} with 37<=q<71, {5,q,r} with q<313) and leftover 10/7 omega=4 with last prime <=37 or a factor 5. Then leftover 100/91 and leftover 2. CRT plus v2=2 and v3>=3 would give mod_216_of_a."
+  "next_step": "Continue leftover 6/5 omega=3 ({7,37,r} with v7>=4 and r>=211, {7,q,r} with 41<=q<71, {5,q,r} with q<313) and leftover 10/7 omega=4 with last prime <=37 or a factor 5. Then leftover 100/91 and leftover 2. CRT plus v2=2 and v3>=3 would give mod_216_of_a."
 }
