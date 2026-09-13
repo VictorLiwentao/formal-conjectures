@@ -378,3 +378,16 @@
 'OeisA135508.conjecture_of_minFac_le_two_hundred_eighty_one_or_twin' depends on axioms: [propext,
  Classical.choice,
  Quot.sound]
+'OeisA135508.succ_eq_gcd_mul_kq_sub_two' depends on axioms: [propext, Quot.sound]
+'OeisA135508.exists_first_entry_index' depends on axioms: [propext, Quot.sound]
+'OeisA135508.gcd_two_hundred_ten_eq_one_of_minFac' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.two_hundred_ninety_three_dvd_x_3221' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.conjecture_of_two_hundred_ninety_three_dvd' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.remaining_p_ge_two_hundred_ninety_three' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.conjecture_of_minFac_two_hundred_ninety_three' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.remaining_prime_from_two_hundred_eighty_two_le_two_hundred_ninety_three' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'OeisA135508.conjecture_of_minFac_le_two_hundred_ninety_three_or_twin' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]

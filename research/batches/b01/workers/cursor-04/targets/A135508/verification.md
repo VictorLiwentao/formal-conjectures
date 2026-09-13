@@ -123,9 +123,11 @@ two_hundred_eleven_dvd_x_2741 / conjecture_of_two_hundred_eleven_dvd / remaining
 a_add_two_mul_gcd / thirty_dvd_x / gcd_thirty_dvd_gcd_x : propext, Quot.sound
 dvd_a_add_two_of_dvd_add / q_dvd_x_succ_of_dvd_add / first_entry_iff_dvd_add / conjecture_of_gcd_thirty / two_hundred_ten_dvd_x / gcd_two_hundred_ten_dvd_gcd_x / conjecture_of_gcd_two_hundred_ten : propext, Classical.choice, Quot.sound
 two_hundred_seventy_seven_dvd_x_5261 / conjecture_of_two_hundred_seventy_seven_dvd / remaining_p_ge_two_hundred_seventy_seven / conjecture_of_minFac_two_hundred_seventy_seven / remaining_prime_from_two_hundred_seventy_le_two_hundred_seventy_seven / conjecture_of_minFac_le_two_hundred_seventy_seven_or_twin / two_hundred_eighty_one_dvd_x_3089 / conjecture_of_two_hundred_eighty_one_dvd / remaining_p_ge_two_hundred_eighty_one / conjecture_of_minFac_two_hundred_eighty_one / remaining_prime_from_two_hundred_seventy_eight_le_two_hundred_eighty_one / conjecture_of_minFac_le_two_hundred_eighty_one_or_twin : propext, Classical.choice, Quot.sound (the 278–281 interval lemma depends only on propext)
+succ_eq_gcd_mul_kq_sub_two / exists_first_entry_index : propext, Quot.sound
+gcd_two_hundred_ten_eq_one_of_minFac / two_hundred_ninety_three_dvd_x_3221 / conjecture_of_two_hundred_ninety_three_dvd / remaining_p_ge_two_hundred_ninety_three / conjecture_of_minFac_two_hundred_ninety_three / remaining_prime_from_two_hundred_eighty_two_le_two_hundred_ninety_three / conjecture_of_minFac_le_two_hundred_ninety_three_or_twin : propext, Classical.choice, Quot.sound
 ```
 
-No `sorryAx`, `native_decide`, or `Lean.trustCompiler` on these declarations. `Classical.choice` enters through `Nat.find` in `exists_least_dvd` and through Mathlib `decide` instances. Full log: `experiments/a135508_axioms.log`. Recompiled 2026-09-13T07:50Z.
+No `sorryAx`, `native_decide`, or `Lean.trustCompiler` on these declarations. `Classical.choice` enters through `Nat.find` in `exists_least_dvd` and through Mathlib `decide` instances. Full log: `experiments/a135508_axioms.log`. Recompiled 2026-09-13T08:05Z.
 
 ## Formalization audit (summary)
 

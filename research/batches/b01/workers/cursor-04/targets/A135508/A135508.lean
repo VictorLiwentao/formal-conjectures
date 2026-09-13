@@ -65,7 +65,9 @@ is a larger twin, first-entry of `257`, remaining McEachen when
 `263` and `269`, remaining McEachen when `lpf(p-2) ≤ 269` or that
 least factor is a larger twin, first-entry of `277` and `281`, remaining
 McEachen when `lpf(p-2) ≤ 281` or that least factor is a larger twin,
-the Euclid first-entry criterion, the `30` and `210` stock lower bounds,
+first-entry of `293`, remaining McEachen when `lpf(p-2) ≤ 293` or that
+least factor is a larger twin, the Euclid first-entry criterion and the
+index identity `n+1 = g(kq-2)`, the `30` and `210` stock lower bounds,
 and that the frozen statement follows from first-entry of every prime
 `q ≥ 5` by the square-window index `q(q+2)-1`. Existence of a window
 injector for every leftover least factor is not proved.
@@ -200,6 +202,24 @@ lemma first_entry_iff_dvd_add {q n : ℕ} (hq : q.Prime) (hn : 0 < n)
     q ∣ x (n + 1) ↔ q ∣ n + 1 + 2 * Nat.gcd (x n) (n + 1) :=
   ⟨fun hd => dvd_add_of_first_entry hq hn hx hd,
     fun h => q_dvd_x_succ_of_dvd_add hq hn h (not_dvd_gcd_of_not_dvd_x hx)⟩
+
+/-- If `q` divides `a n + 2`, the first-entry index is `g(kq-2)`.
+The rewrite is local so it does not touch an outer `n+1` goal. -/
+lemma succ_eq_gcd_mul_kq_sub_two {q n k : ℕ} (hn : 0 < n)
+    (h : a n + 2 = q * k) :
+    n + 1 = Nat.gcd (x n) (n + 1) * (q * k - 2) := by
+  have hmul := a_mul_gcd hn
+  have hsub : a n + 2 - 2 = a n := Nat.add_sub_cancel (a n) 2
+  calc
+    n + 1 = a n * Nat.gcd (x n) (n + 1) := hmul.symm
+    _ = Nat.gcd (x n) (n + 1) * a n := Nat.mul_comm _ _
+    _ = Nat.gcd (x n) (n + 1) * (a n + 2 - 2) := by rw [hsub]
+    _ = Nat.gcd (x n) (n + 1) * (q * k - 2) := by rw [h]
+
+/-- First-entry of `q` occurs at index `g(kq-2)` for `k = (a n + 2)/q`. -/
+lemma exists_first_entry_index {q n : ℕ} (hn : 0 < n) (h : q ∣ a n + 2) :
+    ∃ k, n + 1 = Nat.gcd (x n) (n + 1) * (q * k - 2) :=
+  ⟨(a n + 2) / q, succ_eq_gcd_mul_kq_sub_two hn (Nat.mul_div_cancel' h).symm⟩
 
 lemma x_dvd_of_le {m n : ℕ} (hm : 0 < m) (h : m ≤ n) : x m ∣ x n := by
   obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le h
@@ -580,6 +600,36 @@ theorem conjecture_of_gcd_two_hundred_ten {p : ℕ} (hp : p.Prime)
   have hgt : 1 < Nat.gcd (x (p - 3)) (p - 2) :=
     lt_of_lt_of_le h (Nat.le_of_dvd hpos hg)
   exact a_eq_self_of_gcd_gt_one hp hp5 hgt
+
+/-- If `lpf(n) ≥ 11`, then `n` is coprime to the 210-stock. Leftover remaining
+numbers therefore cannot be injected by `2,3,5,7`. -/
+lemma gcd_two_hundred_ten_eq_one_of_minFac {n : ℕ} (_hn : 1 < n)
+    (h : 11 ≤ Nat.minFac n) : Nat.gcd n 210 = 1 := by
+  have nd2 : ¬ 2 ∣ n := fun hd =>
+    Nat.lt_le_asymm (lt_of_lt_of_le (by decide : 2 < 11) h)
+      (Nat.minFac_le_of_dvd (by decide : 1 < 2) hd)
+  have nd3 : ¬ 3 ∣ n := fun hd =>
+    Nat.lt_le_asymm (lt_of_lt_of_le (by decide : 3 < 11) h)
+      (Nat.minFac_le_of_dvd (by decide : 1 < 3) hd)
+  have nd5 : ¬ 5 ∣ n := fun hd =>
+    Nat.lt_le_asymm (lt_of_lt_of_le (by decide : 5 < 11) h)
+      (Nat.minFac_le_of_dvd (by decide : 1 < 5) hd)
+  have nd7 : ¬ 7 ∣ n := fun hd =>
+    Nat.lt_le_asymm (lt_of_lt_of_le (by decide : 7 < 11) h)
+      (Nat.minFac_le_of_dvd (by decide : 1 < 7) hd)
+  have h2 : n.Coprime 2 :=
+    Nat.coprime_comm.mp (Nat.prime_two.coprime_iff_not_dvd.2 nd2)
+  have h3 : n.Coprime 3 :=
+    Nat.coprime_comm.mp (Nat.prime_three.coprime_iff_not_dvd.2 nd3)
+  have h5 : n.Coprime 5 :=
+    Nat.coprime_comm.mp ((by decide : Nat.Prime 5).coprime_iff_not_dvd.2 nd5)
+  have h7 : n.Coprime 7 :=
+    Nat.coprime_comm.mp ((by decide : Nat.Prime 7).coprime_iff_not_dvd.2 nd7)
+  have h210 : (2 * 3 * 5 * 7 : ℕ) = 210 := by decide
+  have hcop : n.Coprime (2 * 3 * 5 * 7) :=
+    ((h2.mul_right h3).mul_right h5).mul_right h7
+  have hcop' : n.Coprime 210 := by rwa [h210] at hcop
+  exact hcop'.gcd_eq_one
 
 lemma seven_dvd_x_square_window : 7 ∣ x (7 * (7 + 2) - 1) :=
   seven_dvd_x (by decide : 47 ≤ 7 * (7 + 2) - 1)
@@ -2417,6 +2467,19 @@ theorem conjecture_of_two_hundred_eighty_one_dvd {p : ℕ} (hp : p.Prime)
     (by decide : 1 < 281) h281
     (two_hundred_eighty_one_dvd_x (Nat.sub_le_sub_right hp3092 3))
 
+lemma two_hundred_ninety_three_dvd_x_3221 : 293 ∣ x 3221 :=
+  q_dvd_x_of_prime_index (k := 11) (q := 293)
+    (by norm_num) (by decide) (by decide)
+
+lemma two_hundred_ninety_three_dvd_x {n : ℕ} (hn : 3221 ≤ n) : 293 ∣ x n :=
+  two_hundred_ninety_three_dvd_x_3221.trans (x_dvd_of_le (by decide : 0 < 3221) hn)
+
+theorem conjecture_of_two_hundred_ninety_three_dvd {p : ℕ} (hp : p.Prime)
+    (hp3224 : 3224 ≤ p) (h293 : 293 ∣ p - 2) : a (p - 1) = p :=
+  conjecture_of_factor_dvd_x hp (le_trans (by decide : 5 ≤ 3224) hp3224)
+    (by decide : 1 < 293) h293
+    (two_hundred_ninety_three_dvd_x (Nat.sub_le_sub_right hp3224 3))
+
 lemma remaining_minFac_ge_five {p : ℕ} (hp : p.Prime) (hp7 : 7 ≤ p)
     (hmod : p % 3 = 1) : 5 ≤ Nat.minFac (p - 2) := by
   have hn : 1 < p - 2 := by omega
@@ -3757,6 +3820,27 @@ theorem conjecture_of_minFac_two_hundred_eighty_one {p : ℕ}
   conjecture_of_two_hundred_eighty_one_dvd hp
     (remaining_p_ge_two_hundred_eighty_one hp hp7 hmod hcomp h281)
     (h281 ▸ Nat.minFac_dvd (p - 2))
+
+lemma remaining_p_ge_two_hundred_ninety_three {p : ℕ}
+    (hp : p.Prime) (hp7 : 7 ≤ p) (hmod : p % 3 = 1)
+    (hcomp : ¬ (p - 2).Prime)
+    (h293 : Nat.minFac (p - 2) = 293) : 3224 ≤ p := by
+  have hbound := remaining_minFac_mul_add_two_le hp hp7 hmod hcomp
+  rw [h293] at hbound
+  have h2le : 2 ≤ p := le_trans (by decide : 2 ≤ 7) hp7
+  have hnum : 293 * (293 + 2) + 2 = 86437 := by decide
+  have : 293 * (293 + 2) + 2 ≤ p - 2 + 2 := Nat.add_le_add_right hbound 2
+  rw [hnum, Nat.sub_add_cancel h2le] at this
+  exact le_trans (by decide : 3224 ≤ 86437) this
+
+/-- Remaining McEachen if `lpf(p-2) = 293`. The injector is `k = 11`. -/
+theorem conjecture_of_minFac_two_hundred_ninety_three {p : ℕ}
+    (hp : p.Prime) (hp7 : 7 ≤ p) (hmod : p % 3 = 1)
+    (hcomp : ¬ (p - 2).Prime)
+    (h293 : Nat.minFac (p - 2) = 293) : a (p - 1) = p :=
+  conjecture_of_two_hundred_ninety_three_dvd hp
+    (remaining_p_ge_two_hundred_ninety_three hp hp7 hmod hcomp h293)
+    (h293 ▸ Nat.minFac_dvd (p - 2))
 
 /-- Remaining McEachen if `5·lpf(p-2)-2` is prime. For `lpf ≡ 2 (mod 3)`
 this is the first remaining injector and always fits in the square window.
@@ -5124,6 +5208,57 @@ theorem conjecture_of_minFac_le_two_hundred_eighty_one_or_twin {p : ℕ}
       exact conjecture_of_minFac_le_twenty_nine hp hp7 hmod hcomp
         (le_trans h12 (by decide : 12 ≤ 29))
 
+lemma remaining_prime_from_two_hundred_eighty_two_le_two_hundred_ninety_three
+    {q : ℕ} (hq : q.Prime) (h282 : 282 ≤ q) (h293 : q ≤ 293)
+    (hnotwin : ¬ (q - 2).Prime) : q = 293 := by
+  interval_cases q
+  · exact ((by norm_num : ¬ Nat.Prime 282) hq).elim
+  · exact (hnotwin (by norm_num : Nat.Prime 281)).elim
+  · exact ((by norm_num : ¬ Nat.Prime 284) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 285) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 286) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 287) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 288) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 289) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 290) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 291) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 292) hq).elim
+  · rfl
+
+/-- Remaining McEachen if `lpf(p-2) ≤ 293` or that least factor is a larger twin.
+After this cutoff the leftover least factor is at least `307`. -/
+theorem conjecture_of_minFac_le_two_hundred_ninety_three_or_twin {p : ℕ}
+    (hp : p.Prime) (hp7 : 7 ≤ p) (hmod : p % 3 = 1)
+    (hcomp : ¬ (p - 2).Prime)
+    (h : Nat.minFac (p - 2) ≤ 293 ∨ (Nat.minFac (p - 2) - 2).Prime) :
+    a (p - 1) = p := by
+  have hpr : (Nat.minFac (p - 2)).Prime :=
+    Nat.minFac_prime (ne_of_gt (remaining_p_sub_two_gt_one hp7))
+  have hd : Nat.minFac (p - 2) ∣ p - 2 := Nat.minFac_dvd _
+  rcases h with h293 | htwin
+  · by_cases h281 : Nat.minFac (p - 2) ≤ 281
+    · exact conjecture_of_minFac_le_two_hundred_eighty_one_or_twin hp hp7
+        hmod hcomp (Or.inl h281)
+    · by_cases ht : (Nat.minFac (p - 2) - 2).Prime
+      · have h13 : 13 ≤ Nat.minFac (p - 2) :=
+          le_trans (by decide : 13 ≤ 282)
+            (Nat.succ_le_of_lt (lt_of_not_ge h281))
+        exact conjecture_of_larger_twin_dvd hp (five_le_of_seven_le hp7)
+          hcomp hpr h13 ht hd
+      · have h282 : 282 ≤ Nat.minFac (p - 2) :=
+          Nat.succ_le_of_lt (lt_of_not_ge h281)
+        have h293eq :=
+          remaining_prime_from_two_hundred_eighty_two_le_two_hundred_ninety_three
+            hpr h282 h293 ht
+        exact conjecture_of_minFac_two_hundred_ninety_three hp hp7 hmod hcomp
+          h293eq
+  · by_cases h13 : 13 ≤ Nat.minFac (p - 2)
+    · exact conjecture_of_larger_twin_dvd hp (five_le_of_seven_le hp7) hcomp
+        hpr h13 htwin hd
+    · have h12 : Nat.minFac (p - 2) ≤ 12 := Nat.lt_succ_iff.mp (lt_of_not_ge h13)
+      exact conjecture_of_minFac_le_twenty_nine hp hp7 hmod hcomp
+        (le_trans h12 (by decide : 12 ≤ 29))
+
 private instance : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
 
 private instance : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
@@ -6122,5 +6257,14 @@ lemma v2_x_two_four_pow_pred (k : ℕ) :
 #print axioms conjecture_of_minFac_two_hundred_eighty_one
 #print axioms remaining_prime_from_two_hundred_seventy_eight_le_two_hundred_eighty_one
 #print axioms conjecture_of_minFac_le_two_hundred_eighty_one_or_twin
+#print axioms succ_eq_gcd_mul_kq_sub_two
+#print axioms exists_first_entry_index
+#print axioms gcd_two_hundred_ten_eq_one_of_minFac
+#print axioms two_hundred_ninety_three_dvd_x_3221
+#print axioms conjecture_of_two_hundred_ninety_three_dvd
+#print axioms remaining_p_ge_two_hundred_ninety_three
+#print axioms conjecture_of_minFac_two_hundred_ninety_three
+#print axioms remaining_prime_from_two_hundred_eighty_two_le_two_hundred_ninety_three
+#print axioms conjecture_of_minFac_le_two_hundred_ninety_three_or_twin
 
 end OeisA135508
