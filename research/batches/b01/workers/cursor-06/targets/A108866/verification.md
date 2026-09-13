@@ -210,6 +210,7 @@ Kernel-checked coefficient, cube, Fermat-lift, and Glaisher-setup lemmas, same a
 'OeisA108866.inv_sq_sum_eq_pow_sub_p'
 'OeisA108866.cast_pow_sub_three_eq_inv_sq'
 'OeisA108866.pow_sub_three_sum_eq_mul_p'
+'OeisA108866.inv_sq_sum_eq_p_mul'
 ```
 
 This is not the frozen iff.

@@ -190,7 +190,8 @@ lifts to `k^{p-1} = 1 + p c` in `ZMod (p^2)`. Then
 `((k^{p-1}-1).val / p)` makes this a uniform identity, and
 summing yields `inv_sq_sum_eq_pow_sub_p`. The power sum
 `∑ k^{p-3}` vanishes in `𝔽_p`, so it is a multiple of `p`
-in `ZMod (p^2)`.
+in `ZMod (p^2)`. `inv_sq_sum_eq_p_mul` therefore writes
+`I = p (σ - ∑ q_k k^{p-3})`.
 
 An unverified Python scan `experiments/combo_coeff_fp.py` finds
 the `𝔽_p` coefficient congruent to `-(7/24) B_{p-3}` for primes

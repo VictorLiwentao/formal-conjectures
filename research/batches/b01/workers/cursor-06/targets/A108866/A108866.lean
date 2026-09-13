@@ -5313,6 +5313,18 @@ lemma pow_sub_three_sum_eq_mul_p {p : ℕ} (hp : p.Prime) (h5 : 5 ≤ p) :
   have : NeZero (p ^ 2) := ⟨pow_ne_zero 2 hp.ne_zero⟩
   exact eq_mul_p_of_cast_eq_zero _ (pow_sub_three_sum_cast_eq_zero hp h5)
 
+lemma inv_sq_sum_eq_p_mul {p : ℕ} (hp : p.Prime) (h5 : 5 ≤ p) :
+    ∃ σ, ∑ i ∈ range (p - 1), (((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹) ^ 2 =
+      (p : ZMod (p ^ 2)) *
+        (σ -
+          ∑ i ∈ range (p - 1),
+            ((((i + 1 : ℕ) : ZMod (p ^ 2)) ^ (p - 1) - 1).val / p : ℕ) *
+              ((i + 1 : ℕ) : ZMod (p ^ 2)) ^ (p - 3)) := by
+  obtain ⟨σ, hσ⟩ := pow_sub_three_sum_eq_mul_p hp h5
+  refine ⟨σ, ?_⟩
+  rw [inv_sq_sum_eq_pow_sub_p hp h5, hσ]
+  ring
+
 lemma inv_sq_even_sum {p : ℕ} (hp : p.Prime) (h5 : 5 ≤ p) :
     ∑ i ∈ range (p / 2), (((2 * (i + 1) : ℕ) : ZMod (p ^ 2))⁻¹) ^ 2 =
       ((2 : ZMod (p ^ 2))⁻¹) ^ 2 *
@@ -6088,6 +6100,7 @@ lemma not_n_sq_dvd_num_of_thirty_one_pow {e : ℕ} (he : 2 ≤ e) :
 #print axioms OeisA108866.inv_sq_sum_eq_pow_sub_p
 #print axioms OeisA108866.cast_pow_sub_three_eq_inv_sq
 #print axioms OeisA108866.pow_sub_three_sum_eq_mul_p
+#print axioms OeisA108866.inv_sq_sum_eq_p_mul
 
 end OeisA108866
 
