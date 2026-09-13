@@ -4886,10 +4886,211 @@ lemma not_five_sigma_eq_six_of_squarefree {m : ℕ} (hm : 0 < m)
   have : 5 = 6 := Nat.eq_of_mul_eq_mul_right (usigma_pos hm.ne') h
   contradiction
 
+/-- `{5^a, 7^b}` with `a,b ≥ 2` already overshoots leftover `6/5`, so any extra
+positive factor still overshoots. This includes every ω≥3 kernel containing
+both `5` and `7` as squareful primes. -/
+lemma five_seven_pow_ge_two_mul_overshoot_six_five {a b n : ℕ}
+    (ha : 2 ≤ a) (hb : 2 ≤ b) (hn : n ≠ 0) :
+    6 * usigma (5 ^ a) * usigma (7 ^ b) * usigma n <
+      5 * σ 1 (5 ^ a) * σ 1 (7 ^ b) * σ 1 n := by
+  have hover := five_seven_pow_ge_two_overshoot_six_five ha hb
+  have h := six_five_overshoot_mul (s := usigma (5 ^ a) * usigma (7 ^ b))
+      (t := σ 1 (5 ^ a) * σ 1 (7 ^ b)) hn (by
+        have hL : 6 * (usigma (5 ^ a) * usigma (7 ^ b)) =
+            6 * usigma (5 ^ a) * usigma (7 ^ b) := by ring
+        have hR : 5 * (σ 1 (5 ^ a) * σ 1 (7 ^ b)) =
+            5 * σ 1 (5 ^ a) * σ 1 (7 ^ b) := by ring
+        rw [hL, hR]
+        exact hover)
+  have hL : 6 * (usigma (5 ^ a) * usigma (7 ^ b)) * usigma n =
+      6 * usigma (5 ^ a) * usigma (7 ^ b) * usigma n := by ring
+  have hR : 5 * (σ 1 (5 ^ a) * σ 1 (7 ^ b)) * σ 1 n =
+      5 * σ 1 (5 ^ a) * σ 1 (7 ^ b) * σ 1 n := by ring
+  rw [← hL, ← hR]
+  exact h
+
+lemma not_five_sigma_eq_six_usigma_five_seven_mul {a b n : ℕ}
+    (ha : 2 ≤ a) (hb : 2 ≤ b) (hn : n ≠ 0) :
+    ¬ 5 * σ 1 (5 ^ a) * σ 1 (7 ^ b) * σ 1 n =
+        6 * usigma (5 ^ a) * usigma (7 ^ b) * usigma n :=
+  (five_seven_pow_ge_two_mul_overshoot_six_five ha hb hn).ne'
+
+lemma usigma_thirteen_pow_two : usigma (13 ^ 2) = 170 := by
+  simpa using usigma_prime_pow (by decide : Nat.Prime 13) (by decide : 0 < 2)
+
+lemma sigma_thirteen_pow_two : σ 1 (13 ^ 2) = 183 := by
+  rw [sigma_prime_pow_two (by decide : Nat.Prime 13)]
+  decide
+
+/-- Raising any of three exponents cannot repair an overshoot of leftover `6/5`. -/
+lemma six_five_overshoot_mono_three {p q r a a' b b' c c' : ℕ}
+    (hp : p.Prime) (hq : q.Prime) (hr : r.Prime)
+    (ha : 0 < a) (hb : 0 < b) (hc : 0 < c)
+    (haa : a ≤ a') (hbb : b ≤ b') (hcc : c ≤ c')
+    (hover : 6 * usigma (p ^ a) * usigma (q ^ b) * usigma (r ^ c) <
+      5 * σ 1 (p ^ a) * σ 1 (q ^ b) * σ 1 (r ^ c)) :
+    6 * usigma (p ^ a') * usigma (q ^ b') * usigma (r ^ c') <
+      5 * σ 1 (p ^ a') * σ 1 (q ^ b') * σ 1 (r ^ c') := by
+  have ha0 : 0 < a' := by omega
+  have hb0 : 0 < b' := by omega
+  have hc0 : 0 < c' := by omega
+  have hp_le := sigma_usigma_ratio_le_of_le hp ha haa
+  have hq_le := sigma_usigma_ratio_le_of_le hq hb hbb
+  have hr_le := sigma_usigma_ratio_le_of_le hr hc hcc
+  have hup' : 0 < usigma (p ^ a') := by
+    rw [usigma_prime_pow hp ha0]
+    exact Nat.add_pos_left (by decide : 0 < 1) _
+  have huq' : 0 < usigma (q ^ b') := by
+    rw [usigma_prime_pow hq hb0]
+    exact Nat.add_pos_left (by decide : 0 < 1) _
+  have hur' : 0 < usigma (r ^ c') := by
+    rw [usigma_prime_pow hr hc0]
+    exact Nat.add_pos_left (by decide : 0 < 1) _
+  have hmul : σ 1 (p ^ a) * σ 1 (q ^ b) * σ 1 (r ^ c) *
+        usigma (p ^ a') * usigma (q ^ b') * usigma (r ^ c') ≤
+      σ 1 (p ^ a') * σ 1 (q ^ b') * σ 1 (r ^ c') *
+        usigma (p ^ a) * usigma (q ^ b) * usigma (r ^ c) := by
+    have h1 : σ 1 (p ^ a) * usigma (p ^ a') *
+          (σ 1 (q ^ b) * usigma (q ^ b') * (σ 1 (r ^ c) * usigma (r ^ c'))) ≤
+        σ 1 (p ^ a') * usigma (p ^ a) *
+          (σ 1 (q ^ b) * usigma (q ^ b') * (σ 1 (r ^ c) * usigma (r ^ c'))) :=
+      Nat.mul_le_mul_right _ hp_le
+    have h2 : σ 1 (p ^ a') * usigma (p ^ a) *
+          (σ 1 (q ^ b) * usigma (q ^ b') * (σ 1 (r ^ c) * usigma (r ^ c'))) ≤
+        σ 1 (p ^ a') * usigma (p ^ a) *
+          (σ 1 (q ^ b') * usigma (q ^ b) * (σ 1 (r ^ c) * usigma (r ^ c'))) :=
+      Nat.mul_le_mul_left _ (Nat.mul_le_mul_right _ hq_le)
+    have h3 : σ 1 (p ^ a') * usigma (p ^ a) *
+          (σ 1 (q ^ b') * usigma (q ^ b) * (σ 1 (r ^ c) * usigma (r ^ c'))) ≤
+        σ 1 (p ^ a') * usigma (p ^ a) *
+          (σ 1 (q ^ b') * usigma (q ^ b) * (σ 1 (r ^ c') * usigma (r ^ c))) :=
+      Nat.mul_le_mul_left _ (Nat.mul_le_mul_left _ hr_le)
+    have h12 := le_trans h1 (by simpa [mul_assoc, mul_left_comm, mul_comm] using h2)
+    have h123 := le_trans h12 (by simpa [mul_assoc, mul_left_comm, mul_comm] using h3)
+    simpa [mul_assoc, mul_left_comm, mul_comm] using h123
+  have h5mul : 5 * σ 1 (p ^ a) * σ 1 (q ^ b) * σ 1 (r ^ c) *
+        usigma (p ^ a') * usigma (q ^ b') * usigma (r ^ c') ≤
+      5 * σ 1 (p ^ a') * σ 1 (q ^ b') * σ 1 (r ^ c') *
+        usigma (p ^ a) * usigma (q ^ b) * usigma (r ^ c) := by
+    simpa [mul_assoc, mul_left_comm, mul_comm] using Nat.mul_le_mul_left 5 hmul
+  have h6 : 6 * usigma (p ^ a) * usigma (q ^ b) * usigma (r ^ c) *
+        usigma (p ^ a') * usigma (q ^ b') * usigma (r ^ c') <
+      5 * σ 1 (p ^ a) * σ 1 (q ^ b) * σ 1 (r ^ c) *
+        usigma (p ^ a') * usigma (q ^ b') * usigma (r ^ c') := by
+    have := Nat.mul_lt_mul_of_pos_right hover (mul_pos hup' (mul_pos huq' hur'))
+    simpa [mul_assoc, mul_left_comm, mul_comm] using this
+  have hchain : 6 * usigma (p ^ a') * usigma (q ^ b') * usigma (r ^ c') *
+        usigma (p ^ a) * usigma (q ^ b) * usigma (r ^ c) <
+      5 * σ 1 (p ^ a') * σ 1 (q ^ b') * σ 1 (r ^ c') *
+        usigma (p ^ a) * usigma (q ^ b) * usigma (r ^ c) :=
+    lt_of_lt_of_le (by simpa [mul_assoc, mul_left_comm, mul_comm] using h6) h5mul
+  exact Nat.lt_of_mul_lt_mul_right
+    (a := usigma (p ^ a) * usigma (q ^ b) * usigma (r ^ c))
+    (by simpa [mul_assoc, mul_left_comm, mul_comm] using hchain)
+
+/-- `ρ(121) ρ(169) ρ(p^2) > 6/5` for `17 ≤ p ≤ 43`. -/
+lemma eleven_thirteen_sq_p_sq_overshoot_six_five {p : ℕ} (hp : p.Prime)
+    (h17 : 17 ≤ p) (h43 : p ≤ 43) :
+    6 * usigma (11 ^ 2) * usigma (13 ^ 2) * usigma (p ^ 2) <
+      5 * σ 1 (11 ^ 2) * σ 1 (13 ^ 2) * σ 1 (p ^ 2) := by
+  rw [usigma_eleven_pow_two, sigma_eleven_pow_two,
+    usigma_thirteen_pow_two, sigma_thirteen_pow_two,
+    usigma_prime_pow hp (by decide : 0 < 2), sigma_prime_pow_two hp]
+  have hsq : p ^ 2 ≤ 43 * p := by
+    rw [pow_two]
+    exact Nat.mul_le_mul_right p h43
+  have hL : ((6 * 122 * 170 * (1 + p ^ 2) : ℕ) : ℤ) =
+      (6 : ℤ) * 122 * 170 * (1 + (p : ℤ) ^ 2) := by push_cast; rfl
+  have hR : ((5 * 133 * 183 * (1 + p + p ^ 2) : ℕ) : ℤ) =
+      (5 : ℤ) * 133 * 183 * (1 + (p : ℤ) + (p : ℤ) ^ 2) := by push_cast; rfl
+  have hint : (6 : ℤ) * 122 * 170 * (1 + p ^ 2) <
+      5 * 133 * 183 * (1 + p + p ^ 2) := by
+    have hp17 : (17 : ℤ) ≤ p := by exact_mod_cast h17
+    have hp43 : (p : ℤ) ≤ 43 := by exact_mod_cast h43
+    have hsq' : (p : ℤ) ^ 2 ≤ 43 * p := by exact_mod_cast hsq
+    nlinarith
+  exact Nat.cast_lt.mp (by rw [hL, hR]; exact hint)
+
+lemma eleven_thirteen_sq_p_pow_ge_two_overshoot_six_five {p a b k : ℕ}
+    (hp : p.Prime) (h17 : 17 ≤ p) (h43 : p ≤ 43)
+    (ha : 2 ≤ a) (hb : 2 ≤ b) (hk : 2 ≤ k) :
+    6 * usigma (11 ^ a) * usigma (13 ^ b) * usigma (p ^ k) <
+      5 * σ 1 (11 ^ a) * σ 1 (13 ^ b) * σ 1 (p ^ k) :=
+  six_five_overshoot_mono_three (by decide : Nat.Prime 11)
+    (by decide : Nat.Prime 13) hp
+    (by decide : 0 < 2) (by decide : 0 < 2) (by decide : 0 < 2)
+    ha hb hk
+    (eleven_thirteen_sq_p_sq_overshoot_six_five hp h17 h43)
+
+/-- `ρ(121) ρ(169) cap(p) < 6/5` for every `p ≥ 47`. -/
+lemma five_mul_eleven_sq_thirteen_sq_cap {p : ℕ} (hp : 47 ≤ p) (hp1 : 1 ≤ p) :
+    5 * p * 133 * 183 ≤ 6 * (p - 1) * 122 * 170 := by
+  have hp' : (47 : ℤ) ≤ p := Int.ofNat_le.mpr hp
+  have hL : ((5 * p * 133 * 183 : ℕ) : ℤ) =
+      (5 : ℤ) * p * 133 * 183 := by
+    rw [Nat.cast_mul, Nat.cast_mul, Nat.cast_mul]; rfl
+  have hR : ((6 * (p - 1) * 122 * 170 : ℕ) : ℤ) =
+      (6 : ℤ) * ((p : ℤ) - 1) * 122 * 170 := by
+    rw [Nat.cast_mul, Nat.cast_mul, Nat.cast_mul, Nat.cast_sub hp1]
+    rfl
+  have : (5 : ℤ) * p * 133 * 183 ≤ 6 * (p - 1) * 122 * 170 := by nlinarith
+  exact Nat.cast_le.mp (by rw [hL, hR]; exact this)
+
+lemma five_sigma_lt_six_usigma_eleven_thirteen_sq_large {p k : ℕ}
+    (hp : p.Prime) (hp47 : 47 ≤ p) (hk : 0 < k) :
+    5 * σ 1 (11 ^ 2) * σ 1 (13 ^ 2) * σ 1 (p ^ k) <
+      6 * usigma (11 ^ 2) * usigma (13 ^ 2) * usigma (p ^ k) := by
+  rw [sigma_eleven_pow_two, usigma_eleven_pow_two,
+    sigma_thirteen_pow_two, usigma_thirteen_pow_two]
+  have hcp := sigma_lt_cap_usigma hp hk
+  have hcap := five_mul_eleven_sq_thirteen_sq_cap hp47 hp.one_le
+  have hthis := six_five_of_cap_times_const (A := p - 1) (B := p)
+    (X := σ 1 (p ^ k)) (Y := usigma (p ^ k)) (S := 122 * 170) (T := 133 * 183)
+    hcp (by
+      have hL : 5 * p * (133 * 183) = 5 * p * 133 * 183 := by ring
+      have hR : 6 * (p - 1) * (122 * 170) = 6 * (p - 1) * 122 * 170 := by ring
+      rw [hL, hR]
+      exact hcap) (by decide : 0 < 133 * 183)
+  have hL : 5 * σ 1 (p ^ k) * (133 * 183) =
+      5 * 133 * 183 * σ 1 (p ^ k) := by ring
+  have hR : 6 * usigma (p ^ k) * (122 * 170) =
+      6 * 122 * 170 * usigma (p ^ k) := by ring
+  rw [← hL, ← hR]
+  exact hthis
+
+lemma prime_ge_forty_four_ge_forty_seven {p : ℕ} (hp : p.Prime)
+    (h : 44 ≤ p) : 47 ≤ p := by
+  have hmem : p = 44 ∨ p = 45 ∨ p = 46 ∨ 47 ≤ p := by omega
+  rcases hmem with rfl | rfl | rfl | h47
+  · exact False.elim ((by decide : ¬ Nat.Prime 44) hp)
+  · exact False.elim ((by decide : ¬ Nat.Prime 45) hp)
+  · exact False.elim ((by decide : ¬ Nat.Prime 46) hp)
+  · exact h47
+
+/-- `{11^2, 13^2, p^k}` cannot fill leftover `6/5` for primes `p ≥ 17` and
+`k ≥ 2`. If also `p ≤ 43`, every exponent triple `a,b,k ≥ 2` overshoots. -/
+lemma not_five_sigma_eq_six_usigma_eleven_thirteen_sq {p k : ℕ}
+    (hp : p.Prime) (hp17 : 17 ≤ p) (hk : 2 ≤ k) :
+    ¬ 5 * σ 1 (11 ^ 2) * σ 1 (13 ^ 2) * σ 1 (p ^ k) =
+        6 * usigma (11 ^ 2) * usigma (13 ^ 2) * usigma (p ^ k) := by
+  intro heq
+  rcases le_or_gt p 43 with h43 | h44
+  · exact (eleven_thirteen_sq_p_pow_ge_two_overshoot_six_five hp hp17 h43
+      (by decide : 2 ≤ 2) (by decide : 2 ≤ 2) hk).ne' heq
+  · have hp47 : 47 ≤ p := prime_ge_forty_four_ge_forty_seven hp (by omega)
+    exact (five_sigma_lt_six_usigma_eleven_thirteen_sq_large hp hp47
+      (by omega)).ne heq
+
+lemma not_five_sigma_eq_six_usigma_eleven_thirteen_small {p a b k : ℕ}
+    (hp : p.Prime) (hp17 : 17 ≤ p) (h43 : p ≤ 43)
+    (ha : 2 ≤ a) (hb : 2 ≤ b) (hk : 2 ≤ k) :
+    ¬ 5 * σ 1 (11 ^ a) * σ 1 (13 ^ b) * σ 1 (p ^ k) =
+        6 * usigma (11 ^ a) * usigma (13 ^ b) * usigma (p ^ k) :=
+  (eleven_thirteen_sq_p_pow_ge_two_overshoot_six_five hp hp17 h43 ha hb hk).ne'
+
 end Unitary
 
 section Congruence
-
 
 /-- The residue `n ≡ 108 (mod 216)` is the Chinese remainder of `n ≡ 4 (mod 8)`
 and `27 ∣ n`. -/

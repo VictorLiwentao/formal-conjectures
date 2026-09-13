@@ -11,8 +11,8 @@ Incomplete research session. No exact proof or disproof. Do not treat this as a 
 - source baseline: `a2f4a1bb12a28e04a969da78feefac7d1ce49565`
 - source SHA-256: `b50d00e13735613cbe37bd3a25c19130874e8f036ca2a0e3c1aceb177a33c683`
 - original kickoff (UTC): 2026-09-12T23:12Z
-- this checkpoint (UTC): 2026-09-13T02:53Z
-- final commit SHA: `baf2eacc632a7576b5c813db091aff24ef094679`
+- this checkpoint (UTC): 2026-09-13T03:00Z
+- final commit SHA: (recorded after commit)
 
 ## Reproduction
 
@@ -26,6 +26,7 @@ python3 research/batches/b01/workers/cursor-05/targets/A063880/experiments/case_
 python3 research/batches/b01/workers/cursor-05/targets/A063880/experiments/omega3_ten_seven.py
 python3 research/batches/b01/workers/cursor-05/targets/A063880/experiments/omega3_five_triples.py
 python3 research/batches/b01/workers/cursor-05/targets/A063880/experiments/omega2_six_five.py
+python3 research/batches/b01/workers/cursor-05/targets/A063880/experiments/omega3_six_five.py
 ```
 
 Do not run a full `lake build`, `lake clean`, or `lake update`.
@@ -39,17 +40,13 @@ Do not run a full `lake build`, `lake clean`, or `lake update`.
 
 ## Proved this checkpoint (infrastructure only)
 
-- Leftover `6/5` is impossible on a squarefree argument.
-- Leftover `6/5` cannot be two squareful primes `p < q` both at least `5` times a squarefree coprime factor (`not_five_sigma_of_two_sq_primes`).
-- `{5^a, q^k}` with `q ≥ 7` and `a,k ≥ 2` cannot fill leftover `6/5`.
-- `{7^a, q^k}` with `q ≥ 11` and `a,k ≥ 2` cannot fill leftover `6/5`.
-- If `8m` is in `A` with `m` odd, the same two-prime obstruction applies (`not_A_of_eight_mul_two_sq_primes`).
-- Combined with the unique-squareful-prime lemma, leftover `6/5` is closed at ω≤2.
-- Previous checkpoint still holds: CRT reduction; leftover `10/7` ω=1 for `p≥5`; ω=2 with two squareful primes `≥5`; ω=3 with all primes `≥7`; leftover `10/7` ω=3-with-5 family-complete including `{5^a,7^b,p}` for `p≥11`; `v₂≥3 ⇒ v₃<2`.
+- `{5^a, 7^b}` with `a,b ≥ 2` overshoots leftover `6/5` after any extra positive factor (`not_five_sigma_eq_six_usigma_five_seven_mul`).
+- `{11^2, 13^2, p^k}` cannot fill leftover `6/5` for `p ≥ 17` and `k ≥ 2`. For `p ≤ 43` every `a,b,k ≥ 2` overshoots.
+- Previous checkpoint still holds: leftover `6/5` closed at ω≤2; leftover `10/7` family-complete including `{5^a,7^b,p}` for `p≥11`; CRT reduction; `v₂≥3 ⇒ v₃<2`.
 
 ## Next step
 
-Glue the leftover `10/7` ω=3-with-`5` family lemmas onto an arbitrary `n` with three squareful primes. Then leftover `6/5` ω≥3, leftover `100/91`, leftover `2`. CRT plus `v₂ = 2` and `v₃ ≥ 3` already implies the congruence. Do not claim Eldar’s decomposition or the `10^18` search as a new resolution. Do not open a PR.
+Glue the leftover `10/7` ω=3-with-`5` family lemmas onto an arbitrary `n`. Continue leftover `6/5` ω=3 families (`{11,13,p}` with a raised 11 or 13 exponent, `{11,17,p}`, `{7,q,r}`, `{5,q,r}`). Then leftover `100/91` and leftover `2`. CRT plus `v₂ = 2` and `v₃ ≥ 3` already implies the congruence. Do not claim Eldar’s decomposition or the `10^18` search as a new resolution. Do not open a PR.
 
 ## Cross-owner notes
 
