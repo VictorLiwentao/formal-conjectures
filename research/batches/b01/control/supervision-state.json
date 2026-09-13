@@ -2,9 +2,9 @@
   "automation_id": "maintain-seven-cursor-math-workers",
   "interval_minutes": 15,
   "target_cursor_slots": 7,
-  "updated_at_utc": "2026-09-13T03:43:03.203822+00:00",
+  "updated_at_utc": "2026-09-13T03:45:54.050354+00:00",
   "accept_known_informal_proofs_for_new_lean_formalization": true,
-  "note": "Five active research goals; A069004 and WOWII20 slots held for independent audits. No duplicate launches; WOWII20 successor being screened pending verification.",
+  "note": "WOWII20 independently verified and retired; WOWII7 replacement has verified active goal. Six active Cursor research goals, with A069004 held for ongoing independent certificate rebuild.",
   "slots": [
     {
       "slot": "cursor-01",
@@ -94,7 +94,7 @@
         }
       ],
       "last_checked_at_utc": "2026-09-13T03:37:17.699102+00:00",
-      "progress_note": "Independent driver PID78813 alive; 48/317 commands passed, C46.lean compiling. Full exact audit pending.",
+      "progress_note": "Independent driver PID78813 alive; 55/317 commands passed, C53.lean compiling. Full exact audit pending.",
       "history": [
         {
           "run_id": "cursor-03",
@@ -156,8 +156,8 @@
     {
       "slot": "cursor-07",
       "run_id": "cursor-07-r05",
-      "agent_url": null,
-      "state": "reserved_not_started",
+      "agent_url": "https://cursor.com/agents/bc-924dc9ab-21b2-40f6-8be2-d2678c16e27b",
+      "state": "researching",
       "actual_branch": null,
       "replacements": [
         {
@@ -174,11 +174,16 @@
           "run_id": "cursor-07-r04",
           "agent_url": "https://cursor.com/agents/bc-c73732d3-698e-44e1-93e8-b6aeb3ef9d2b",
           "launched_at_utc": "2026-09-13T02:52:47.668172+00:00"
+        },
+        {
+          "run_id": "cursor-07-r05",
+          "agent_url": "https://cursor.com/agents/bc-924dc9ab-21b2-40f6-8be2-d2678c16e27b",
+          "launched_at_utc": "2026-09-13T03:44:44.602495+00:00"
         }
       ],
-      "last_checked_at_utc": "2026-09-13T03:37:17.699102+00:00",
-      "progress_note": "WOWII20 independently verified and stopped. WOWII7 reserved and complete prompt prepared; launch pending coordinator seed push.",
-      "goal_active_verified": false,
+      "last_checked_at_utc": "2026-09-13T03:45:54.050354+00:00",
+      "progress_note": "WOWII7 successor launched from027daebf; prepared environment ready, Used create-goal and Goal active verified. Correct source hash and seed acknowledged, beginning literature and graph APIs.",
+      "goal_active_verified": true,
       "history": [
         {
           "run_id": "cursor-07",
@@ -214,17 +219,22 @@
         }
       ],
       "predecessor": "cursor-07-r04",
-      "goal_command_submitted": false,
+      "goal_command_submitted": true,
       "model": "Cursor Grok 4.6 Extra High",
-      "environment_build": "bld-20260912-716b23c3-d124-4da8-ab69-743e1fb16843"
+      "environment_build": "bld-20260912-716b23c3-d124-4da8-ab69-743e1fb16843",
+      "starting_commit": "027daebfe1c7b664055c00cd4add0dd0419515d1",
+      "launch_verified_at_utc": "2026-09-13T03:44:44.602495+00:00",
+      "goal_verified_at_utc": "2026-09-13T03:45:54.050354+00:00",
+      "session_start_utc": "2026-09-13T03:44:44Z",
+      "session_deadline_utc": "2026-09-13T11:44:44Z"
     }
   ],
   "last_heartbeat": {
     "scheduled_at_utc": "2026-09-13T03:30:19.392Z",
-    "completed_at_utc": null,
-    "occupied_slots": 5,
-    "audit_pending_slots": 2,
-    "replacements": 0,
+    "completed_at_utc": "2026-09-13T03:45:54.050354+00:00",
+    "occupied_slots": 6,
+    "audit_pending_slots": 1,
+    "replacements": 1,
     "resumes": 0,
     "notifications": 1
   }
