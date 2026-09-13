@@ -41,7 +41,12 @@ Proved:
 - Concatenation split (`XWord.exists_concat_split`): a Xia word with at least two zeros is `u ++ v` for nonempty Xia `u, v`.
 - The shortest right-parse remainder of any Xia word is a `PWord` (`XWord.of_isRightParse_shortest`). In particular this holds for `YWord`s.
 - A start-with-`0` `PWord` of length at least 2 factors uniquely as `u ++ r v` with both factors start-with-`0` `PWord`s (`PWord.shortest_right_parse_factors`, `PWord.eq_of_step_right`, `PWord.remainder_head_eq_zero`). This is the combinatorial identity `S = x + S^2`.
-- Catalan cardinality (`ncard_rightN_eq_catalan`): `|Right_n| = C_{n-1}` for `n ≥ 1`, matching Mathlib `catalan`. The unique-zero index histogram `|P_n| = C_n` is not yet proved in Lean.
+- Catalan cardinality (`ncard_rightN_eq_catalan`): `|Right_n| = C_{n-1}` for `n ≥ 1`, matching Mathlib `catalan`.
+- Unique-zero count (`ncard_pN_eq_catalan`): `|P_n| = C_n` via the index split `w ↦ (ρ(w.take(idxOf 0) ++ [0]), 0 :: w.drop (idxOf 0 + 1))` onto `Right_{k+1} × Right_{n-k}`.
+- Every `YWord` of length at least 2 has a unique shortest right parse whose remainder is a `PWord` and whose left factor is a `YWord` (`YWord.shortest_left_is_yword`).
+- Y-count (`ncard_yN_eq_H`): `|Y_n| = H_{n-1}` for `n ≥ 1`. The bijection is `Y_n ≅ ⊔_{k=1}^{n-1} Y_k × P_{n-k}` via `u ++ r p`, and the resulting Catalan convolution equals `H`.
+
+## Experimental decomposition (not a proof)
 
 ## Experimental decomposition (not a proof)
 
@@ -68,11 +73,10 @@ Public c5-k4 already checked `|X_n| = a(n-1)` through `n = 14`. Those counts are
 An exact proof can be assembled from three Xia-specific statements plus one generating-function identity:
 
 1. Unique greedy right-core bijection: every Xia word is uniquely `c ++ y.tail` with `c` right-irreducible and `y` a `YWord`.
-2. `|Y_n| = H_{n-1}`, equivalently `|P_k| = C_k`. The unique-zero Catalan split and `|Right_n| = C_{n-1}` are now proved. What remains is `|P_n| = C_n` via the index histogram, and to prove that every first peel of a `YWord` can be an arbitrary `PWord`, not merely some `PWord`.
-3. `|I_n| = A081696(n-1)` (Wilf irreducible composition pairs of `n-1`, or the D-finite recurrence for that sequence).
-4. Algebraic identity `I(x) H(x) = x G(x)` with `G` the OEIS gf of `a`. This does not mention Xia words and can be proved independently.
+2. `|I_n| = A081696(n-1)` (Wilf irreducible composition pairs of `n-1`, or the D-finite recurrence for that sequence).
+3. Algebraic identity `I(x) H(x) = x G(x)` with `G` the OEIS gf of `a`. This does not mention Xia words and can be proved independently.
 
-(1) and `|P_n| = C_n` are not proved in Lean. The length-3 count and the finite convolution check do not close the conjecture.
+`|Y_n| = H_{n-1}` is proved. (1) and `|I_n|` are not. The length-3 count and the finite convolution check do not close the conjecture.
 
 ## Approaches that failed or stalled
 

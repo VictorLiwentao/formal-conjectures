@@ -55,8 +55,9 @@ Checked on 2026-09-12. Live OEIS HTML history/edit pages were Cloudflare-blocked
 - OEIS HTML history and wiki edit UI (Cloudflare or 404 without login).
 - Direct `curl` of `oeis.org/A108081` (Cloudflare). JSON/API succeeded.
 
-- Repeat search, 2026-09-13 01:54Z: OEIS A108081 JSON still revision 39 (2025-01-19). No Xia-word proof added.
+## Repeat search, 2026-09-13
 
+- Repeat search, 2026-09-13 01:54Z: OEIS A108081 JSON still revision 39 (2025-01-19). No Xia-word proof added.
 - OEIS A108081 JSON still revision 39 (2025-01-19). No proof of the Xia word count. Formula list unchanged (Jovovic, Barry, Kotesovec, Manyama).
 - Li-yao Xia’s 2014 repo https://github.com/Lysxia/cfpt enumerates a dual constructor pair `a ++ L(b)` and `R(a) ++ b` (Haskell `exhaust.hs` / `dypro.hs`). Last push 2014-05-07. No proof. The README conjecture `X(n) = ∑ C(2n-i, n+i)` has the same off-by-one as the OEIS prose; Xia’s listed length-1/2/3 cardinalities still match `a(n-1)`.
 - OEIS A081696 (retrieved 2026-09-13, revision 115) is `1,1,3,9,29,97,333,1165,…` with gf `1/(x+sqrt(1-4x))`, matching experimental `|I_n|` as `A081696(n-1)`. The Wilf comment (irreducible composition pairs) is on this sequence. No published bijection with Xia right-irreducible words was found.

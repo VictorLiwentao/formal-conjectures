@@ -5,7 +5,7 @@ Baseline: `a2f4a1bb12a28e04a969da78feefac7d1ce49565`
 Coordination: `238f78bdd5701ae4c97a0d70d4e22e2d45770d7a`
 Kickoff UTC: 2026-09-12T23:10Z. Session budget: eight hours from kickoff (until 2026-09-13T07:10Z). This follow-up does not restart that budget.
 
-Final commit SHA: `ad203177f4fa6bb70c2945882ceb929e0141aa22`.
+Final commit SHA: `695fe0ec9a50f57adc0f59e6ed2a80afe37b96a1`.
 
 ## Reproduction
 
@@ -29,4 +29,4 @@ LEAN_NUM_THREADS=2 lake --wfail env lean research/batches/b01/workers/cursor-02/
 
 `partial`. No public exact proof/disproof found. Finite counts through `n=14` are already public (c5-k4) and are not a resolution. Statement uses `a(n-1)`, matching Xia’s listed cardinalities `1,2,7`, not the OEIS prose `a(n+1)`.
 
-Lean now proves that a Xia word with at least two zeros splits as a concatenation of two Xia words, that the shortest right-parse remainder is always a `PWord`, that start-with-`0` P-words of length at least 2 factor uniquely as `u ++ r v`, and that `|Right_n| = C_{n-1}`. The unique-zero count `|P_n| = C_n` and the quantified Xia identity remain open.
+Lean now proves `|Right_n| = C_{n-1}`, `|P_n| = C_n`, and `|Y_n| = H_{n-1}`. The I×Y rebuild bijection, `|I_n|`, and the quantified Xia identity remain open.
