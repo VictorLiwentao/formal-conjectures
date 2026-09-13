@@ -16,14 +16,14 @@ limitations under the License.
 -/
 import FormalConjectures.WrittenOnTheWallII.GraphConjecture20
 
-open SimpleGraph
-
 /-!
 Exact-type audit against the frozen sorry declaration.
 
 This file imports the sorry source only to `#check` its type. It is not
 a proof of `WrittenOnTheWallII.GraphConjecture20.conjecture20`.
 -/
+
+open SimpleGraph
 
 #check WrittenOnTheWallII.GraphConjecture20.conjecture20
 #print WrittenOnTheWallII.GraphConjecture20.conjecture20

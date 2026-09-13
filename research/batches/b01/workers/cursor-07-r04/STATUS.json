@@ -10,22 +10,26 @@
   "source_sha256": "969908dc9e73fd3ebea73cdf272df476583efbe9745185fd466726c5d4faa2e7",
   "prompt_present": true,
   "prompt_path": "research/batches/b01/control/prompts/cursor-07-r04.md",
-  "current_status": "researching_goal_active",
+  "current_status": "self_audited_candidate_pending_independent_audit",
   "mathematical_novelty": "known_mathematics",
-  "formalization_novelty": "in_progress_no_prior_exact_public_lean_found_in_checked_sources",
+  "formalization_novelty": "no_prior_exact_public_lean_found_in_bounded_search",
   "novelty_status": "known_mathematics_formalization_candidate",
-  "last_updated_utc": "2026-09-13T02:53:13Z",
+  "last_updated_utc": "2026-09-13T03:23:02Z",
   "session_kickoff_utc": "2026-09-13T02:53:13Z",
   "session_limit_hours": 8,
   "session_deadline_utc": "2026-09-13T10:53:13Z",
   "clock_reset_on_followup": false,
-  "proof_declarations": [],
+  "proof_declarations": [
+    "WOWII20.aksWeight",
+    "WOWII20.exists_induced_bipartite_ge_weight",
+    "WOWII20.exists_induced_bipartite_ge_weight'",
+    "WOWII20.sum_aksWeight_ge_two_n_div",
+    "WOWII20.conjecture20"
+  ],
   "proof_file": "research/batches/b01/workers/cursor-07-r04/targets/WOWII20/WOWII20.lean",
   "independently_verified": false,
-  "unresolved_gaps": [
-    "Lean candidate is being written; compile and axiom audit not yet complete."
-  ],
-  "next_step": "Formalize AKS weight induction, Cauchy-Schwarz, and the tree corner; compile with warningAsError.",
+  "unresolved_gaps": [],
+  "next_step": "Coordinator independent audit. Worker stopped after self-audited exact candidate.",
   "environment": {
     "name": "VictorLiwentao/formal-conjectures",
     "lean": "leanprover/lean4:v4.33.1",
@@ -34,5 +38,7 @@
   "publication_policy": "Push only this worker branch to VictorLiwentao/formal-conjectures. No PR.",
   "further_target_work": "WOWII20 only",
   "classification": "known_mathematics_formalization",
-  "allowed_axioms": ["propext", "Classical.choice", "Quot.sound"]
+  "allowed_axioms": ["propext", "Classical.choice", "Quot.sound"],
+  "printed_axioms": ["propext", "Classical.choice", "Quot.sound"],
+  "warning_as_error": true
 }
