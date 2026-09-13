@@ -8,14 +8,14 @@
   "source_sha256": "b50d00e13735613cbe37bd3a25c19130874e8f036ca2a0e3c1aceb177a33c683",
   "current_status": "partial",
   "novelty_status": "no_public_solution_found_in_checked_sources",
-  "last_updated_utc": "2026-09-13T02:35:23Z",
+  "last_updated_utc": "2026-09-13T02:53:18Z",
   "proof_declarations": [],
   "unresolved_gaps": [
     "OeisA63880.mod_216_of_a not proved",
     "OeisA63880.unique_primitive_108 not proved",
     "Need independent proofs of sorry helpers if used: powerful_of_isPrimitiveTerm, exists_primitive_of_a",
-    "v2=2 leftover 10/7: v3>=4 ruled out; v3=3 implies 3-free part squarefree; v3=2 implies leftover 100/91 with v5<2, v7<2, v11<3 and after 11^2 every 13<=p<=113 has vp<2; leftover 10/7 as a single p^k with p>=5 is ruled out; leftover 10/7 with exactly two squareful primes p<q both >=5 is ruled out; leftover 10/7 with three squareful primes all >=7 is ruled out; leftover 10/7 omega=3 with 5 is closed at family-lemma level, including the glued statement not_seven_sigma_eq_ten_usigma_five_seven_prime for every {5^a,7^b,p} with a,b,k>=2 and p>=11; remaining are omega>=4, leftover 100/91, leftover 2, leftover 6/5 with omega>=2",
-    "v2>=3 implies v3<2, so 9 does not divide such n; leftover 6/5 cannot be a single prime power times squarefree (v5<3; 5^2 undershoots); leftover 34/31 and higher 2-powers, leftover 6/5 with omega>=2, and odd leftover 2 remain"
+    "v2=2 leftover 10/7: v3>=4 ruled out; v3=3 implies 3-free part squarefree; v3=2 implies leftover 100/91 with v5<2, v7<2, v11<3 and after 11^2 every 13<=p<=113 has vp<2; leftover 10/7 as a single p^k with p>=5 is ruled out; leftover 10/7 with exactly two squareful primes p<q both >=5 is ruled out; leftover 10/7 with three squareful primes all >=7 is ruled out; leftover 10/7 omega=3 with 5 is closed at family-lemma level, including the glued statement not_seven_sigma_eq_ten_usigma_five_seven_prime for every {5^a,7^b,p} with a,b,k>=2 and p>=11; remaining are omega>=4 and gluing those families onto an arbitrary n",
+    "v2>=3 implies v3<2; leftover 6/5 is closed for omega<=2 (squarefree, unique squareful prime, and two squareful primes >=5); leftover 6/5 with omega>=3, leftover 34/31 and higher 2-powers, leftover 100/91, and odd leftover 2 remain"
   ],
-  "next_step": "Glue leftover 10/7 omega=3-with-5 family lemmas onto an arbitrary n with three squareful primes. Then omega>=4, leftover 100/91, leftover 2, leftover 6/5 omega>=2. CRT plus v2=2 and v3>=3 would give mod_216_of_a."
+  "next_step": "Glue leftover 10/7 omega=3-with-5 family lemmas onto an arbitrary n with three squareful primes. Then leftover 6/5 omega>=3, leftover 100/91, leftover 2. CRT plus v2=2 and v3>=3 would give mod_216_of_a."
 }
