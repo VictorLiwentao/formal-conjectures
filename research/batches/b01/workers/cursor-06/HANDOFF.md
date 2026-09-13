@@ -21,7 +21,7 @@ python3 research/batches/b01/workers/cursor-06/targets/A108866/experiments/prime
 python3 research/batches/b01/workers/cursor-06/targets/A108866/experiments/leading_mod_p2.py
 ```
 
-Final math commit SHA: `5efa6518`.
+Final math commit SHA: `b0711a61`.
 
 ## Status
 
@@ -45,6 +45,7 @@ Partial. Kernel-checked so far:
 - `v_p(H_{p-1})≥2` in `ℚ`: `two_le_padicValRat_harmonic_pred`
 - square pairing `inv_sq_pair_zmod` and half-range split `inv_sq_sum_eq_two_half_add_p`
 - odd inverse-square identity `inv_sq_odd_eq_seven_eight`
+- combo coefficient `odd_combo_eq_p_mul_coeff`
 - `v_7(U0)=2`: `padicValRat_oddLeadingSum0_seven`
 - `v_7(T(49))=2`: `padicValRat_ratExpression_forty_nine`
 - `C(p-1,a-1) ≡ 1 - p H_{a-1}` in `ZMod (p^2)` for odd `a`
