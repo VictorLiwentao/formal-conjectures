@@ -71,17 +71,16 @@ Kernel-checked truncated harmonic criterion, same axioms, `#print axioms` on 202
 
 If `p^e ≤ m < p^{e+1}`, `p ∤ m`, and `L(m/p^e) ≠ 0` in `𝔽_p`, then `v_p(T(m)) = -e`, so the converse holds at `n=mp`. This is not the frozen iff.
 
-Kernel-checked exact prime powers `n=9,25,27,49` and the packaging lemma `not_n_sq_dvd_num_of_prime_factor`, same axioms.
+Kernel-checked powers of 3, same axioms, `#print axioms` on 2026-09-13:
 
 ```
-'OeisA108866.not_n_sq_dvd_num_of_prime_factor'
-'OeisA108866.p_mul_ratExpression_sq_sub_pos'
-'OeisA108866.padicValRat_ratExpression_sq_eq_min_sub_one'
-'OeisA108866.not_n_sq_dvd_num_nine'
-'OeisA108866.not_n_sq_dvd_num_twenty_five'
-'OeisA108866.not_n_sq_dvd_num_twenty_seven'
-'OeisA108866.not_n_sq_dvd_num_forty_nine'
+'OeisA108866.not_n_sq_dvd_num_of_three_pow'
 ```
+
+For `e≥2`, `v_3(T(3^e))=2-e<2e`. This covers `n=9,27,81,...` structurally.
+The file still does not prove the frozen iff.
+
+Kernel-checked exact evaluations `n=9,25,27,49` and packaging lemmas remain in the same file, same axioms.
 
 Exact type of the prime-direction theorem, from `#print OeisA108866.n_sq_dvd_num_of_prime`:
 
@@ -115,4 +114,4 @@ PASS.
 
 ## Experiments
 
-c5-k4 already scanned `n=4..4000` (do not repeat as novelty). Scripts: `experiments/scan_beyond_c5k4.py` and `experiments/padic_converse.py` (p-adic valuations for prime powers, Fermat psp, and `n=pq`; experimental only).
+c5-k4 already scanned `n=4..4000` (do not repeat as novelty). Scripts: `experiments/scan_beyond_c5k4.py`, `experiments/padic_converse.py`, `experiments/remaining_odd.py`, and `experiments/prime_power_leading.py` (leading binomial sum `U` for `T(p^e)`; experimental only).

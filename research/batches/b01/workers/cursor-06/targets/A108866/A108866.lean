@@ -45,7 +45,10 @@ gives the recurrence: if `v_q(T(m)) < 1` then
 `p ≤ m < 2p` and `p ∤ m`, then `v_p(T(m)) = -1`, so the converse
 holds at `n = mp`. If `p^e ≤ m < p^{e+1}`, `p ∤ m`, and the truncated
 sum `L(m / p^e)` is nonzero in `𝔽_p`, then `v_p(T(m)) = -e`.
-The remaining odd-composite cases are not proved here.
+Kummer's theorem gives `v_p(C(p^e-1,k))=0`. For powers of 3 the
+unique odd index of maximal 3-valuation is `3^{e-1}`, so
+`v_3(T(3^e))=2-e<2e`. The remaining odd-composite cases are not
+proved here.
 -/
 
 open Finset
@@ -2413,6 +2416,321 @@ lemma not_n_sq_dvd_num_forty_nine :
   rw [ratExpression_forty_nine_num]
   decide
 
+/- Unique-min valuation for powers of 3. -/
+
+lemma pow_pred_eq_mul_add {p e i : ℕ} (hp0 : 0 < p) (hi : i ≤ e) :
+    p ^ e - 1 = p ^ i * (p ^ (e - i) - 1) + (p ^ i - 1) := by
+  have hpow : p ^ i * p ^ (e - i) = p ^ e := by
+    rw [← pow_add, Nat.add_sub_cancel' hi]
+  have h1i : 1 ≤ p ^ i := Nat.one_le_pow i p hp0
+  have h1ei : 1 ≤ p ^ (e - i) := Nat.one_le_pow (e - i) p hp0
+  have hmul_le : p ^ i ≤ p ^ i * p ^ (e - i) :=
+    Nat.le_mul_of_pos_right _ (Nat.zero_lt_of_lt h1ei)
+  calc
+    p ^ e - 1 = p ^ i * p ^ (e - i) - 1 := by rw [hpow]
+    _ = p ^ i * p ^ (e - i) - p ^ i + (p ^ i - 1) :=
+      (Nat.sub_add_sub_cancel hmul_le h1i).symm
+    _ = p ^ i * (p ^ (e - i) - 1) + (p ^ i - 1) := by rw [← Nat.mul_sub_one]
+
+lemma pow_pred_div_pow {p e i : ℕ} (hp0 : 0 < p) (hi : i ≤ e) :
+    (p ^ e - 1) / p ^ i = p ^ (e - i) - 1 := by
+  have hp0i : 0 < p ^ i := pow_pos hp0 i
+  have hlt : p ^ i - 1 < p ^ i := Nat.sub_lt hp0i (by decide)
+  rw [pow_pred_eq_mul_add hp0 hi, Nat.mul_add_div hp0i, Nat.div_eq_of_lt hlt,
+    add_zero]
+
+lemma add_sub_add_of_le {a b c d : ℕ} (h1 : c ≤ a) (h2 : d ≤ b) :
+    a + b - (c + d) = a - c + (b - d) := by omega
+
+lemma add_mod_pow_pred {p e i k : ℕ} (hp0 : 0 < p) (hi : i ≤ e)
+    (hk : k ≤ p ^ e - 1) :
+    k % p ^ i + (p ^ e - 1 - k) % p ^ i = p ^ i - 1 := by
+  have hp0i : 0 < p ^ i := pow_pos hp0 i
+  have hdecomp := pow_pred_eq_mul_add hp0 hi
+  set qd := k / p ^ i
+  set rm := k % p ^ i
+  have hk' : k = p ^ i * qd + rm := by
+    simpa [qd, rm] using (Nat.div_add_mod k (p ^ i)).symm
+  have hqd : qd ≤ p ^ (e - i) - 1 := by
+    have h := Nat.div_le_div_right (c := p ^ i) hk
+    simpa [qd, pow_pred_div_pow hp0 hi] using h
+  have hrm : rm ≤ p ^ i - 1 := by
+    simpa [rm] using Nat.le_sub_one_of_lt (Nat.mod_lt k hp0i)
+  have hnk : p ^ e - 1 - k =
+      p ^ i * (p ^ (e - i) - 1 - qd) + (p ^ i - 1 - rm) := by
+    have hX : p ^ i * qd ≤ p ^ i * (p ^ (e - i) - 1) :=
+      Nat.mul_le_mul_left _ hqd
+    calc
+      p ^ e - 1 - k =
+          p ^ i * (p ^ (e - i) - 1) + (p ^ i - 1) - (p ^ i * qd + rm) := by
+        rw [hdecomp, hk']
+      _ = p ^ i * (p ^ (e - i) - 1) - p ^ i * qd + (p ^ i - 1 - rm) :=
+        add_sub_add_of_le hX hrm
+      _ = p ^ i * (p ^ (e - i) - 1 - qd) + (p ^ i - 1 - rm) := by
+        rw [← Nat.mul_sub]
+  have hB : p ^ i - 1 - rm < p ^ i :=
+    lt_of_le_of_lt (Nat.sub_le _ _) (Nat.sub_lt hp0i (by decide))
+  rw [hnk, Nat.mul_add_mod_self_left, Nat.mod_eq_of_lt hB]
+  exact Nat.add_sub_of_le hrm
+
+lemma padicValNat_choose_pow_pred {p e k : ℕ} [Fact p.Prime] (he : 0 < e)
+    (hk : k ≤ p ^ e - 1) :
+    padicValNat p ((p ^ e - 1).choose k) = 0 := by
+  have hp := ‹Fact p.Prime›.out
+  have hpe : 2 ≤ p ^ e := hp.two_le.trans (Nat.le_self_pow (Nat.pos_iff_ne_zero.mp he) p)
+  have hne : p ^ e - 1 ≠ 0 := Nat.sub_ne_zero_of_lt (lt_of_lt_of_le (by decide : 1 < 2) hpe)
+  have hnb : Nat.log p (p ^ e - 1) < e :=
+    (Nat.log_lt_iff_lt_pow hp.one_lt hne).2 (Nat.sub_lt (pow_pos hp.pos e) (by decide))
+  rw [padicValNat_choose hk hnb]
+  refine Finset.card_eq_zero.mpr ?_
+  refine Finset.filter_eq_empty_iff.mpr ?_
+  intro i hi hle
+  have hi' := Finset.mem_Ico.mp hi
+  have heq := add_mod_pow_pred hp.pos (Nat.le_of_lt hi'.2) hk
+  have hlt : p ^ i - 1 < p ^ i := Nat.sub_lt (pow_pos hp.pos i) (by decide)
+  exact Nat.not_le_of_gt hlt (heq ▸ hle)
+
+lemma oddInnerSum_eq_sum_filter_odd {n : ℕ} (hn1 : 1 < n) :
+    ∑ i ∈ range (n - 1),
+      (if Odd (i + 1) then ((n - 1).choose i : ℚ) / (i + 1 : ℚ) ^ 2 else 0) =
+    ∑ r ∈ (range n).filter Odd,
+      ((n - 1).choose (r - 1) : ℚ) / (r : ℚ) ^ 2 := by
+  convert sum_reindex_odd (fun r => ((n - 1).choose (r - 1) : ℚ) / (r : ℚ) ^ 2) hn1 using 1
+  refine sum_congr rfl fun i _hi => ?_
+  by_cases hodd : Odd (i + 1)
+  · simp [if_pos hodd, Nat.cast_succ]
+  · simp [if_neg hodd]
+
+lemma padicValRat_choose_div_sq {n p r : ℕ} [Fact p.Prime]
+    (hr0 : 0 < r) (hrle : r ≤ n) :
+    padicValRat p (((n - 1).choose (r - 1) : ℚ) / (r : ℚ) ^ 2) =
+      (padicValNat p ((n - 1).choose (r - 1)) : ℤ) - 2 * padicValNat p r := by
+  have hrne : (r : ℚ) ≠ 0 := Nat.cast_ne_zero.mpr (Nat.pos_iff_ne_zero.mp hr0)
+  have hCle : r - 1 ≤ n - 1 := Nat.sub_le_sub_right hrle 1
+  have hCne : ((n - 1).choose (r - 1) : ℚ) ≠ 0 :=
+    Nat.cast_ne_zero.mpr (Nat.choose_pos hCle).ne'
+  have hpow : (r : ℚ) ^ 2 ≠ 0 := pow_ne_zero _ hrne
+  rw [padicValRat.div hCne hpow, padicValRat.of_nat, padicValRat.pow, padicValRat.of_nat]
+  norm_cast
+
+lemma eq_three_pow_pred_of_odd_dvd {e r : ℕ} (he : 0 < e)
+    (hr : r < 3 ^ e) (hodd : Odd r) (hd : 3 ^ (e - 1) ∣ r) :
+    r = 3 ^ (e - 1) := by
+  have hpos : 0 < 3 ^ (e - 1) := pow_pos (by decide) _
+  have hrpos : 0 < r := Odd.pos hodd
+  have hpow : 3 ^ e = 3 ^ (e - 1) * 3 := by
+    rw [← pow_succ, Nat.sub_add_cancel he]
+  have hdiv : r / 3 ^ (e - 1) < 3 := Nat.div_lt_of_lt_mul (hpow ▸ hr)
+  have hrw : r = r / 3 ^ (e - 1) * 3 ^ (e - 1) := (Nat.div_mul_cancel hd).symm
+  have ha0 : 0 < r / 3 ^ (e - 1) :=
+    Nat.div_pos (Nat.le_of_dvd hrpos hd) hpos
+  have ha : r / 3 ^ (e - 1) = 1 ∨ r / 3 ^ (e - 1) = 2 := by omega
+  rcases ha with ha | ha
+  · rw [hrw, ha, one_mul]
+  · have heven : Even r := by
+      rw [hrw, ha]
+      exact even_two.mul_right _
+    exact (Nat.not_odd_iff_even.2 heven).elim hodd
+
+lemma padicValNat_le_sub_two_of_ne_three_pow {e r : ℕ} [Fact (Nat.Prime 3)]
+    (he : 2 ≤ e) (hr : r < 3 ^ e) (hodd : Odd r) (hne : r ≠ 3 ^ (e - 1)) :
+    padicValNat 3 r ≤ e - 2 := by
+  have he0 : 0 < e := lt_of_lt_of_le (by decide : 0 < 2) he
+  have hrne : r ≠ 0 := Nat.ne_of_gt (Odd.pos hodd)
+  have hnd : ¬ 3 ^ (e - 1) ∣ r := fun hd =>
+    hne (eq_three_pow_pred_of_odd_dvd he0 hr hodd hd)
+  have : ¬ e - 1 ≤ padicValNat 3 r := by
+    intro hle
+    exact hnd ((padicValNat_dvd_iff_le hrne).2 hle)
+  omega
+
+lemma le_padicValRat_sum_of_ne_zero {α : Type*} [DecidableEq α] {q : ℕ} [Fact q.Prime]
+    {s : Finset α} (f : α → ℚ) {n : ℤ}
+    (hf : ∀ i ∈ s, n ≤ padicValRat q (f i)) (hsum : ∑ i ∈ s, f i ≠ 0) :
+    n ≤ padicValRat q (∑ i ∈ s, f i) := by
+  revert hf hsum
+  induction s using Finset.induction_on with
+  | empty =>
+    intro _hf hsum
+    simp at hsum
+  | insert a s ha ih =>
+    intro hf hsum
+    rw [sum_insert ha] at hsum ⊢
+    by_cases hrest : ∑ i ∈ s, f i = 0
+    · simpa [hrest] using hf a (mem_insert_self _ _)
+    · have h2 := ih (fun i hi => hf i (mem_insert_of_mem hi)) hrest
+      exact le_trans (le_min (hf a (mem_insert_self _ _)) h2)
+        (padicValRat.min_le_padicValRat_add (p := q) hsum)
+
+lemma oddChooseTerm_pos {n r : ℕ} (hr0 : 0 < r) (hrle : r ≤ n) :
+    0 < ((n - 1).choose (r - 1) : ℚ) / (r : ℚ) ^ 2 := by
+  have hCle : r - 1 ≤ n - 1 := Nat.sub_le_sub_right hrle 1
+  have hC : (0 : ℚ) < (n - 1).choose (r - 1) := Nat.cast_pos.mpr (Nat.choose_pos hCle)
+  have hr : (0 : ℚ) < r := Nat.cast_pos.mpr hr0
+  exact div_pos hC (pow_pos hr 2)
+
+lemma padicValRat_inner_three_pow {e : ℕ} (he : 2 ≤ e) :
+    padicValRat 3
+      (∑ i ∈ range (3 ^ e - 1),
+        if Odd (i + 1) then ((3 ^ e - 1).choose i : ℚ) / (i + 1 : ℚ) ^ 2 else 0) =
+      - (2 : ℤ) * ((e : ℤ) - 1) := by
+  have : Fact (Nat.Prime 3) := ⟨by decide⟩
+  have he0 : 0 < e := lt_of_lt_of_le (by decide : 0 < 2) he
+  have hn1 : 1 < 3 ^ e := Nat.one_lt_pow (Nat.pos_iff_ne_zero.mp he0) (by decide)
+  have hpowsucc : 3 ^ e = 3 ^ (e - 1) * 3 := by
+    rw [← pow_succ, Nat.sub_add_cancel he0]
+  set n := 3 ^ e
+  set r0 := 3 ^ (e - 1)
+  have hr0pos : 0 < r0 := pow_pos (by decide) _
+  have hr0lt : r0 < n := by
+    rw [show n = r0 * 3 from hpowsucc]
+    exact lt_mul_of_one_lt_right hr0pos (by decide : 1 < 3)
+  have hodd0 : Odd r0 := Odd.pow (n := e - 1) (by decide : Odd 3)
+  have hr0mem : r0 ∈ (range n).filter Odd :=
+    mem_filter.mpr ⟨mem_range.mpr hr0lt, hodd0⟩
+  have hsum := oddInnerSum_eq_sum_filter_odd (n := n) hn1
+  simp [n] at hsum ⊢
+  rw [hsum]
+  have hC0 : padicValNat 3 ((n - 1).choose (r0 - 1)) = 0 := by
+    have hk : r0 - 1 ≤ 3 ^ e - 1 := Nat.sub_le_sub_right (Nat.le_of_lt hr0lt) 1
+    exact padicValNat_choose_pow_pred (p := 3) (e := e) he0 (by simpa [n] using hk)
+  have hr0le : r0 ≤ n := Nat.le_of_lt hr0lt
+  have hterm0 :
+      padicValRat 3 (((n - 1).choose (r0 - 1) : ℚ) / (r0 : ℚ) ^ 2) =
+        - (2 : ℤ) * ((e : ℤ) - 1) := by
+    have hval := padicValRat_choose_div_sq (p := 3) hr0pos hr0le
+    have hvpow : padicValNat 3 r0 = e - 1 := padicValNat.prime_pow (e - 1)
+    rw [hval, hC0, hvpow, Nat.cast_sub (by omega : 1 ≤ e)]
+    ring
+  have hsplit :
+      ∑ r ∈ (range n).filter Odd,
+          ((n - 1).choose (r - 1) : ℚ) / (r : ℚ) ^ 2 =
+        ((n - 1).choose (r0 - 1) : ℚ) / (r0 : ℚ) ^ 2 +
+          ∑ r ∈ ((range n).filter Odd).erase r0,
+            ((n - 1).choose (r - 1) : ℚ) / (r : ℚ) ^ 2 := by
+    rw [← sum_erase_add _ _ hr0mem]
+    abel
+  have h1mem : 1 ∈ ((range n).filter Odd).erase r0 := by
+    have hne1 : (1 : ℕ) ≠ r0 := by
+      intro h
+      have hlt : 1 < 3 ^ (e - 1) :=
+        Nat.one_lt_pow (Nat.pos_iff_ne_zero.mp (Nat.sub_pos_of_lt he)) (by decide)
+      exact hlt.ne' (by simpa [r0] using h.symm)
+    exact mem_erase.mpr ⟨hne1, mem_filter.mpr ⟨mem_range.mpr hn1, by decide⟩⟩
+  have hrest0 :
+      ∑ r ∈ ((range n).filter Odd).erase r0,
+          ((n - 1).choose (r - 1) : ℚ) / (r : ℚ) ^ 2 ≠ 0 := by
+    refine ne_of_gt (sum_pos (fun r hr => ?_) ⟨1, h1mem⟩)
+    have hr' := mem_erase.mp hr
+    have hr'' := mem_filter.mp hr'.2
+    exact oddChooseTerm_pos (Odd.pos hr''.2) (mem_range.mp hr''.1).le
+  have htermne :
+      ((n - 1).choose (r0 - 1) : ℚ) / (r0 : ℚ) ^ 2 ≠ 0 :=
+    ne_of_gt (oddChooseTerm_pos hr0pos hr0le)
+  have hrestval :
+      - (2 : ℤ) * ((e : ℤ) - 2) ≤
+        padicValRat 3
+          (∑ r ∈ ((range n).filter Odd).erase r0,
+            ((n - 1).choose (r - 1) : ℚ) / (r : ℚ) ^ 2) := by
+    refine le_padicValRat_sum_of_ne_zero _ ?_ hrest0
+    intro r hr
+    have hr' := mem_erase.mp hr
+    have hr'' := mem_filter.mp hr'.2
+    have hlt : r < n := mem_range.mp hr''.1
+    have hpos : 0 < r := Odd.pos hr''.2
+    have hvr : padicValNat 3 r ≤ e - 2 :=
+      padicValNat_le_sub_two_of_ne_three_pow he (by simpa [n] using hlt) hr''.2
+        (by simpa [r0] using hr'.1)
+    have hval := padicValRat_choose_div_sq (n := n) (p := 3) hpos hlt.le
+    have hvC : (0 : ℤ) ≤ padicValNat 3 ((n - 1).choose (r - 1)) := Nat.cast_nonneg _
+    have hvrZ : (padicValNat 3 r : ℤ) ≤ (e : ℤ) - 2 := by
+      have h : (padicValNat 3 r : ℤ) ≤ ((e - 2 : ℕ) : ℤ) := Int.ofNat_le.mpr hvr
+      rwa [Nat.cast_sub (by omega : 2 ≤ e)] at h
+    rw [hval]
+    linarith
+  have hlt : padicValRat 3 (((n - 1).choose (r0 - 1) : ℚ) / (r0 : ℚ) ^ 2) <
+      padicValRat 3
+        (∑ r ∈ ((range n).filter Odd).erase r0,
+          ((n - 1).choose (r - 1) : ℚ) / (r : ℚ) ^ 2) := by
+    rw [hterm0]
+    have : - (2 : ℤ) * ((e : ℤ) - 1) < - (2 : ℤ) * ((e : ℤ) - 2) := by
+      have : (2 : ℤ) ≤ e := by exact_mod_cast he
+      linarith
+    exact lt_of_lt_of_le this hrestval
+  have hsum0 :
+      ((n - 1).choose (r0 - 1) : ℚ) / (r0 : ℚ) ^ 2 +
+          ∑ r ∈ ((range n).filter Odd).erase r0,
+            ((n - 1).choose (r - 1) : ℚ) / (r : ℚ) ^ 2 ≠ 0 :=
+    ne_of_gt (add_pos_of_pos_of_nonneg (oddChooseTerm_pos hr0pos hr0le)
+      (sum_nonneg fun r hr => le_of_lt (by
+        have hr' := mem_erase.mp hr
+        have hr'' := mem_filter.mp hr'.2
+        exact oddChooseTerm_pos (Odd.pos hr''.2) (mem_range.mp hr''.1).le)))
+  rw [hsplit, padicValRat.add_eq_of_lt hsum0 htermne hrest0 hlt, hterm0]
+  ring
+
+lemma padicValRat_ratExpression_three_pow {e : ℕ} (he : 2 ≤ e) :
+    padicValRat 3 (ratExpression (3 ^ e)) = 2 - e := by
+  have : Fact (Nat.Prime 3) := ⟨by decide⟩
+  have hn : Odd (3 ^ e) := Odd.pow (n := e) (by decide : Odd 3)
+  have hn1 : 1 < 3 ^ e :=
+    Nat.one_lt_pow (Nat.pos_iff_ne_zero.mp (lt_of_lt_of_le (by decide : 0 < 2) he))
+      (by decide)
+  have hT := ratExpression_eq_two_mul_n_sum_choose_sq hn hn1
+  have hS := padicValRat_inner_three_pow he
+  have hSne :
+      (∑ i ∈ range (3 ^ e - 1),
+          (if Odd (i + 1) then ((3 ^ e - 1).choose i : ℚ) / (i + 1 : ℚ) ^ 2 else 0)) ≠ 0 := by
+    intro h0
+    have : padicValRat 3 (0 : ℚ) = - (2 : ℤ) * ((e : ℤ) - 1) := by simpa [h0] using hS
+    have hneg : - (2 : ℤ) * ((e : ℤ) - 1) < 0 := by
+      have : (2 : ℤ) ≤ e := by exact_mod_cast he
+      linarith
+    have : padicValRat 3 (0 : ℚ) = 0 := by simp
+    linarith
+  have h2ne : (2 : ℚ) ≠ 0 := by norm_num
+  have hnne : ((3 ^ e : ℕ) : ℚ) ≠ 0 :=
+    Nat.cast_ne_zero.mpr (pow_ne_zero e (by decide : (3 : ℕ) ≠ 0))
+  have h2val : padicValRat 3 (2 : ℚ) = 0 := by
+    rw [show (2 : ℚ) = ((2 : ℕ) : ℚ) from rfl, padicValRat.of_nat]
+    exact_mod_cast (padicValNat_primes (by decide : (3 : ℕ) ≠ 2))
+  have hnval : padicValRat 3 ((3 ^ e : ℕ) : ℚ) = e := by
+    rw [padicValRat.of_nat]
+    exact_mod_cast padicValNat.prime_pow (p := 3) e
+  have hprod : ratExpression (3 ^ e) =
+      (2 : ℚ) * (3 ^ e : ℕ) *
+        ∑ i ∈ range (3 ^ e - 1),
+          if Odd (i + 1) then ((3 ^ e - 1).choose i : ℚ) / (i + 1 : ℚ) ^ 2 else 0 := by
+    simpa using hT
+  have hnumne : (2 : ℚ) * (3 ^ e : ℕ) *
+      (∑ i ∈ range (3 ^ e - 1),
+        if Odd (i + 1) then ((3 ^ e - 1).choose i : ℚ) / (i + 1 : ℚ) ^ 2 else 0) ≠ 0 :=
+    mul_ne_zero (mul_ne_zero h2ne hnne) hSne
+  rw [hprod, padicValRat.mul (mul_ne_zero h2ne hnne) hSne, padicValRat.mul h2ne hnne,
+    h2val, hnval, hS]
+  ring
+
+/-- For `e ≥ 2`, `(3^e)^2` does not divide the reduced numerator of `T(3^e)`. -/
+theorem not_n_sq_dvd_num_of_three_pow {e : ℕ} (he : 2 ≤ e) :
+    ¬ (ratExpression (3 ^ e)).num ≡ 0 [ZMOD ((3 ^ e) ^ 2 : ℤ)] := by
+  have hp : Nat.Prime 3 := by decide
+  have : Fact (Nat.Prime 3) := ⟨hp⟩
+  have hn : 3 < 3 ^ e :=
+    Nat.pow_lt_pow_right (by decide : 1 < 3) (lt_of_lt_of_le (by decide : 1 < 2) he)
+  have hn0 : 0 < 3 ^ e := pow_pos (by decide) _
+  have hT : ratExpression (3 ^ e) ≠ 0 :=
+    ne_of_gt (ratExpression_pos (lt_trans (by decide : 1 < 3) hn))
+  have hval : padicValRat 3 (ratExpression (3 ^ e)) = 2 - e :=
+    padicValRat_ratExpression_three_pow he
+  have hvn : padicValNat 3 (3 ^ e) = e := padicValNat.prime_pow e
+  have hlt : padicValRat 3 (ratExpression (3 ^ e)) < 2 * padicValNat 3 (3 ^ e) := by
+    rw [hval, hvn]
+    have : (2 - (e : ℤ)) < 2 * (e : ℤ) := by
+      have : (2 : ℤ) ≤ e := by exact_mod_cast he
+      linarith
+    exact this
+  exact not_n_sq_dvd_num_of_padicVal_lt hp (dvd_pow_self 3 (by omega)) hn0 hT hlt
+
 #print axioms OeisA108866.p_mul_ratExpression_sq_sub_pos
 #print axioms OeisA108866.padicValRat_ratExpression_sq_eq_min_sub_one
 #print axioms OeisA108866.ratExpression_nine
@@ -2423,7 +2741,7 @@ lemma not_n_sq_dvd_num_forty_nine :
 #print axioms OeisA108866.not_n_sq_dvd_num_twenty_seven
 #print axioms OeisA108866.ratExpression_forty_nine
 #print axioms OeisA108866.not_n_sq_dvd_num_forty_nine
+#print axioms OeisA108866.not_n_sq_dvd_num_of_three_pow
 
 end OeisA108866
-
 
