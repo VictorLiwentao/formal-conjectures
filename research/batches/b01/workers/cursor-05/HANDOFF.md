@@ -11,8 +11,8 @@ Incomplete research session. No exact proof or disproof. Do not treat this as a 
 - source baseline: `a2f4a1bb12a28e04a969da78feefac7d1ce49565`
 - source SHA-256: `b50d00e13735613cbe37bd3a25c19130874e8f036ca2a0e3c1aceb177a33c683`
 - original kickoff (UTC): 2026-09-12T23:12Z
-- this checkpoint (UTC): 2026-09-13T02:24Z
-- final commit SHA: `d12867098e26ecbb40b1720f6b69c912a06bd8c1`
+- this checkpoint (UTC): 2026-09-13T02:40Z
+- final commit SHA: pending after this work commit
 
 ## Reproduction
 
@@ -41,12 +41,13 @@ Do not run a full `lake build`, `lake clean`, or `lake update`.
 - `{5,13,19}` cannot fill leftover `10/7`.
 - `{5^a, 7^b}` with `a,b ≥ 3` overshoots leftover `10/7`, and any extra positive factor still overshoots.
 - `{5^2, 7^b, p^k}` with `b≥4`, `p≥23`, `k≥2` cannot fill leftover `10/7`.
-- `{5^4, 7^2, p^k}` with `p≥23`, `k≥2` cannot fill leftover `10/7`.
-- Previous checkpoint still holds: CRT reduction; `A` closed under coprime squarefree factors; leftover `10/7` ω=1 for `p≥5`; ω=2 with two squareful primes `≥5`; ω=3 with all primes `≥7`; `{5,11,13/17/19/23}`, `{5,13,17}`; `{5,7,11/13/17/19}`; `{5^3,7^2,p≥23}` and `{5^2,7^3,p≥23}`; leftover `6/5` unique squareful prime impossible; `v₂≥3 ⇒ v₃<2`.
+- `{5^a, 7^2, p^k}` cannot fill leftover `10/7` for every `a≥4`, `p≥23`, `k≥2`. Combined with earlier `{5^3,7^2,p}` and `{5^2,7^3,p}` rays, every leftover `10/7` triple `{5^a,7^b,p}` with `a,b≥2` and `p≥11` is closed at family-lemma level.
+- Use `norm_num`, not `decide`, to prove `Nat.Prime 397`.
+- Previous checkpoint still holds: CRT reduction; leftover `10/7` ω=1 for `p≥5`; ω=2 with two squareful primes `≥5`; ω=3 with all primes `≥7`; `{5,11,13/17/19/23}`, `{5,13,17}`; leftover `6/5` unique squareful prime impossible; `v₂≥3 ⇒ v₃<2`.
 
 ## Next step
 
-Continue the local-valuation case analysis in Lean. CRT plus `v₂ = 2` and `v₃ ≥ 3` already implies the congruence (`mod_216_of_A_of_valuations`). Remaining: leftover `10/7` mixed `{5^a,7^2,p}` with `a≥5` on primes `p≤397`; ω≥4 not containing `{5^3,7^3}` or `{5,7,11}`; leftover `100/91` with primes `≥ 127`; leftover `2`; leftovers `≤ 6/5` without `9`. Do not claim Eldar’s decomposition or the `10^18` search as a new resolution. Do not open a PR.
+Glue the leftover `10/7` ω=3-with-`5` family lemmas onto an arbitrary `n` with three squareful primes. Then ω≥4, leftover `100/91`, leftover `2`, leftovers `≤ 6/5` without `9`. CRT plus `v₂ = 2` and `v₃ ≥ 3` already implies the congruence. Do not claim Eldar’s decomposition or the `10^18` search as a new resolution. Do not open a PR.
 
 ## Cross-owner notes
 

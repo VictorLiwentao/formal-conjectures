@@ -44,6 +44,7 @@ In `A063880.lean`, compiled with `lake env lean -DwarningAsError=true`:
 - `{5^a, 7^b}` with `a,b ≥ 3` already overshoots leftover `10/7`, so any extra positive factor still overshoots. This includes every ω≥3 kernel containing `5^a 7^b` with both exponents at least 3.
 - `{5^2, 7^b, p^k}` with `b≥4` cannot fill leftover `10/7` for `p≥23` and `k≥2`: squares overshoot on `23≤p≤31`, the prime `p=37` undershoots only at `(b,k)=(4,2)` and `(5,2)` and overshoots from `(4,3)` and `(6,2)`, and `ρ(25) cap(7) cap(p)` kills `p≥41`.
 - `{5^4, 7^2, p^k}` cannot fill leftover `10/7` for `p≥23` and `k≥2`: squares overshoot on `23≤p≤223`, and `ρ(625) ρ(49) cap(p)` kills `p≥227`.
+- `{5^5, 7^2, p^k}` and `{5^6, 7^2, p^k}` are closed the same way, with square/cap splits at `337/347` and `383/389`. For `a≥7`, squares `{5^7,7^2,p^2}` overshoot on `p≤389`, the prime `p=397` undershoots only at `a=7,k=2` and overshoots from `(7,2,3)` and `(8,2,2)`, and `ρ(5^a) ρ(49) cap(p)` kills every `p≥401`.
 - An extra positive factor cannot repair an overshoot of leftover `10/7`. In particular every kernel containing `5^a 7^b 11^c` with `a,b,c≥2` overshoots, including ω≥4 supersets of `{5,7,11}`.
 
 These lemmas are infrastructure and partial case analysis. They do not decide the open statements.
@@ -81,7 +82,7 @@ The script `experiments/omega3_ten_seven.py` searches leftover `10/7` for three 
 - No Lean proof that the only squareful kernel is 108.
 - No independent proof yet of `powerful_of_isPrimitiveTerm` or `exists_primitive_of_a`.
 - Odd kernels (`leftover 2`) and the remaining `v₂ ≥ 3` leftovers (`6/5` without `9`, `34/31`, …) are not ruled out by a complete finite case tree in Lean.
-- Leftover `10/7` without `9` still allows mixed `{5^a,7^2,p}` with `a≥5` on primes `p≤397`, leftover `10/7` ω=4 not containing `{5,7}` with both exponents `≥3` or `{5,7,11}`, leftover `100/91`, leftover `2`, and leftover `6/5` with ω≥2. A deterministic `Fraction` search (`experiments/omega3_ten_seven.py`) found no ω=3 fill with primes `≥ 5`; that search is not a proof. The script `experiments/omega3_five_triples.py` only maps which exponent triples sit above or below leftover `10/7`; it is not a proof.
+- Leftover `10/7` ω=3 with a factor `5` is now closed at the family-lemma level: `{5,11,13/17/19/23}`, `{5,13,17}`, `{5,13,19}`, Euler caps `{5,11,p≥29}`, `{5,13,p≥23}`, `{5,17,p≥19}`, and every `{5^a,7^b,p}` with `a,b≥2` and third prime `p≥11`. These lemmas are not yet glued to an arbitrary `n` with exactly three squareful primes. Remaining leftover `10/7` work is ω≥4, leftover `100/91`, leftover `2`, and leftover `6/5` with ω≥2. A deterministic `Fraction` search (`experiments/omega3_ten_seven.py`) found no ω=3 fill with primes `≥ 5`; that search is not a proof. The script `experiments/omega3_five_triples.py` only maps which exponent triples sit above or below leftover `10/7`; it is not a proof.
 - Leftover `100/91` after `11^2` still allows ω≥2 with primes `≥ 127`. Without `11^2`, the smallest squareful prime may be `≥ 13`.
 
 A claimed completion still requires the exact frozen types, a sorry-free compile, and `#print axioms` in `{propext, Classical.choice, Quot.sound}`.
