@@ -14130,6 +14130,85 @@ lemma not_five_sigma_of_three_sq_primes_seven_forty_one {m r : ℕ}
               not_five_sigma_of_three_sq_primes_seven_forty_one_of_val_seven_ge_seven
                 hm hr hr43 h (Nat.succ_le_of_lt h77) hk41 hkr hs
 
+lemma five_mul_forty_nine_q_r_cap {q r : ℕ} (hq : 43 ≤ q) (hqr : q < r) :
+    5 * q * r * 57 ≤ 6 * (q - 1) * (r - 1) * 50 := by
+  have hq1 : 1 ≤ q := le_trans (by decide : 1 ≤ 43) hq
+  have hr44 : 44 ≤ r := Nat.succ_le_of_lt (lt_of_le_of_lt hq hqr)
+  have hr1 : 1 ≤ r := le_trans (by decide : 1 ≤ 44) hr44
+  have hL : 5 * q * r * 57 = 285 * q * r := by ring
+  have hR : 6 * (q - 1) * (r - 1) * 50 = 300 * (q - 1) * (r - 1) := by ring
+  rw [hL, hR]
+  have hqcast : ((q - 1 : ℕ) : ℤ) = (q : ℤ) - 1 := by
+    rw [Nat.cast_sub hq1, Nat.cast_one]
+  have hrcast : ((r - 1 : ℕ) : ℤ) = (r : ℤ) - 1 := by
+    rw [Nat.cast_sub hr1, Nat.cast_one]
+  have hmain : (285 : ℤ) * q * r ≤ 300 * ((q : ℤ) - 1) * ((r : ℤ) - 1) := by
+    have hq43 : (43 : ℤ) ≤ q := by exact_mod_cast hq
+    have hr44z : (44 : ℤ) ≤ r := by exact_mod_cast hr44
+    nlinarith
+  have hmain' : (285 : ℤ) * q * r ≤ 300 * (q - 1 : ℕ) * (r - 1) := by
+    simpa [hqcast, hrcast] using hmain
+  exact_mod_cast hmain'
+
+lemma five_sigma_lt_six_usigma_seven_sq_q_large {q r b c : ℕ}
+    (hq : q.Prime) (hr : r.Prime) (hq43 : 43 ≤ q) (hqr : q < r)
+    (hb : 0 < b) (hc : 0 < c) :
+    5 * σ 1 (7 ^ 2) * σ 1 (q ^ b) * σ 1 (r ^ c) <
+      6 * usigma (7 ^ 2) * usigma (q ^ b) * usigma (r ^ c) := by
+  have hp7 : Nat.Prime 7 := by decide
+  have hσ7 : σ 1 (7 ^ 2) = 57 := by
+    rw [sigma_prime_pow_two hp7]
+    decide
+  have hu7 : usigma (7 ^ 2) = 50 := by
+    simpa using usigma_prime_pow hp7 (by decide : 0 < 2)
+  rw [hσ7, hu7]
+  have hqcap := sigma_lt_cap_usigma hq hb
+  have hrcap := sigma_lt_cap_usigma hr hc
+  have huq : 0 < usigma (q ^ b) := by
+    rw [usigma_prime_pow hq hb]
+    exact Nat.add_pos_left (by decide : 0 < 1) _
+  have hqpos : 0 < q := lt_of_lt_of_le (by decide : 0 < 43) hq43
+  have hthis := six_five_of_two_caps_times_const (A := q - 1) (B := q)
+    (X := σ 1 (q ^ b)) (Y := usigma (q ^ b)) (C := r - 1) (D := r)
+    (P := σ 1 (r ^ c)) (Q := usigma (r ^ c)) (S := 50) (T := 57)
+    hqcap hrcap (five_mul_forty_nine_q_r_cap hq43 hqr)
+    hqpos huq (by decide : 0 < 57)
+  convert hthis using 1 <;> ring
+
+/-- Leftover `6/5` cannot be three squareful primes `7,q,r` with
+`43 ≤ q < r` and `v₇ = 2` times a squarefree coprime factor. -/
+lemma not_five_sigma_of_three_sq_primes_seven_q_of_val_seven_eq_two
+    {m q r : ℕ} (hm : m ≠ 0) (hq : q.Prime) (hr : r.Prime)
+    (hq43 : 43 ≤ q) (hqr : q < r)
+    (h : 5 * σ 1 m = 6 * usigma m)
+    (hk7 : padicValNat 7 m = 2) (hkq : 2 ≤ padicValNat q m)
+    (hkr : 2 ≤ padicValNat r m)
+    (hs : Squarefree (ordCompl[r] (ordCompl[q] (ordCompl[7] m)))) :
+    False := by
+  have hp7 : Nat.Prime 7 := by decide
+  have hpq_ne : (7 : ℕ) ≠ q :=
+    Nat.ne_of_lt (lt_of_lt_of_le (by decide : 7 < 43) hq43)
+  have hpr_ne : (7 : ℕ) ≠ r :=
+    Nat.ne_of_lt (lt_of_lt_of_le (lt_of_lt_of_le (by decide : 7 < 43) hq43)
+      (Nat.le_of_lt hqr))
+  have hqr_ne : q ≠ r := Nat.ne_of_lt hqr
+  have heq := five_sigma_eq_six_of_three_squareful hm hp7 hq hr hpq_ne hpr_ne
+    hqr_ne h hs
+  have hproj_p : ordProj[7] m = 7 ^ padicValNat 7 m := by
+    simp [Nat.factorization_def m hp7]
+  have hproj_q : ordProj[q] (ordCompl[7] m) =
+      q ^ padicValNat q (ordCompl[7] m) := by
+    simp [Nat.factorization_def (ordCompl[7] m) hq]
+  have hproj_r : ordProj[r] (ordCompl[q] (ordCompl[7] m)) =
+      r ^ padicValNat r (ordCompl[q] (ordCompl[7] m)) := by
+    simp [Nat.factorization_def (ordCompl[q] (ordCompl[7] m)) hr]
+  rw [hproj_r, padicValNat_ordCompl_of_ne hr hqr_ne,
+    padicValNat_ordCompl_of_ne hr hpr_ne, hproj_q,
+    padicValNat_ordCompl_of_ne hq hpq_ne, hproj_p, hk7] at heq
+  exact (five_sigma_lt_six_usigma_seven_sq_q_large hq hr hq43 hqr
+    (lt_of_lt_of_le (by decide : (0 : ℕ) < 2) hkq)
+    (lt_of_lt_of_le (by decide : (0 : ℕ) < 2) hkr)).ne heq
+
 end Unitary
 
 section Congruence
