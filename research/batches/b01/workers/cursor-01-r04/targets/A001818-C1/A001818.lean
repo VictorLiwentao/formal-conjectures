@@ -2904,6 +2904,169 @@ lemma permanent_sunMatrix_eq_sum_no_odd {n : ℕ} (hn : 1 ≤ n) {ζ : ℂ}
   rw [permanent_sunMatrix_eq_sum_cayleyWeight hn hζ]
   exact sum_cayleyWeight_eq_sum_no_odd _
 
+lemma oddLongPoints_eq_empty_iff {α : Type*} [Fintype α] [DecidableEq α] {σ : Perm α} :
+    oddLongPoints σ = ∅ ↔ ∀ c ∈ σ.cycleFactorsFinset, Even c.support.card := by
+  rw [← not_nonempty_iff_eq_empty, oddLongPoints_nonempty_iff]
+  simp only [not_exists, not_and, Nat.not_odd_iff_even]
+
+lemma oddLongPoints_one {α : Type*} [Fintype α] [DecidableEq α] :
+    oddLongPoints (1 : Perm α) = ∅ := by
+  ext a
+  simp [mem_oddLongPoints, Equiv.Perm.cycleOf_one, Equiv.Perm.support_one]
+
+lemma oddLongPoints_swap {α : Type*} [Fintype α] [DecidableEq α]
+    {a b : α} (h : a ≠ b) : oddLongPoints (Equiv.swap a b) = ∅ := by
+  ext x
+  simp only [mem_oddLongPoints]
+  have hodd : ¬ Odd ((Equiv.swap a b).cycleOf x).support.card := by
+    by_cases hx : x = a ∨ x = b
+    · have hxsup : x ∈ (Equiv.swap a b).support := by
+        rw [Equiv.Perm.support_swap h]
+        simpa using hx
+      have : (Equiv.swap a b).cycleOf x = Equiv.swap a b :=
+        Equiv.Perm.IsCycle.cycleOf_eq (Equiv.Perm.isCycle_swap h)
+          (Equiv.Perm.mem_support.mp hxsup)
+      rw [this, Equiv.Perm.support_swap h]
+      have hcard : ({a, b} : Finset α).card = 2 := by
+        rw [card_insert_of_notMem (by simp [h]), card_singleton]
+      simp [hcard]
+    · have hxab : x ≠ a ∧ x ≠ b := by
+        simp only [not_or] at hx
+        exact hx
+      have hfix : Equiv.swap a b x = x := swap_apply_of_ne_of_ne hxab.1 hxab.2
+      have h1 : (Equiv.swap a b).cycleOf x = 1 :=
+        (Equiv.Perm.cycleOf_eq_one_iff _).mpr hfix
+      simp [h1, Equiv.Perm.support_one]
+  simp [hodd]
+
+lemma cayleyWeight_swap {α : Type*} [Fintype α] [DecidableEq α]
+    (x : α → ℂ) {a b : α} (h : a ≠ b) :
+    cayleyWeight x (Equiv.swap a b) =
+      (x a + x b) / (x a - x b) * ((x b + x a) / (x b - x a)) := by
+  unfold cayleyWeight
+  rw [Equiv.Perm.support_swap h, prod_insert (by simp [h]), prod_singleton]
+  simp [swap_apply_left, swap_apply_right]
+
+lemma cayleyWeight_swap_sq {α : Type*} [Fintype α] [DecidableEq α]
+    (x : α → ℂ) {a b : α} (h : a ≠ b) :
+    cayleyWeight x (Equiv.swap a b) = - ((x a + x b) / (x a - x b)) ^ 2 := by
+  rw [cayleyWeight_swap x h, cayleyFactor_swap (x a) (x b)]
+  ring
+
+lemma one_add_cayleyWeight_swap {α : Type*} [Fintype α] [DecidableEq α]
+    (x : α → ℂ) {a b : α} (hab : a ≠ b) (hx : x a ≠ x b) :
+    1 + cayleyWeight x (Equiv.swap a b) =
+      -4 * x a * x b / (x a - x b) ^ 2 := by
+  have hden : x a - x b ≠ 0 := sub_ne_zero.2 hx
+  rw [cayleyWeight_swap_sq x hab]
+  field_simp [hden]
+  ring
+
+lemma cayleyWeight_ofSubtype {α : Type*} [Fintype α] [DecidableEq α]
+    {p : α → Prop} [DecidablePred p] (x : α → ℂ) (u : Perm (Subtype p)) :
+    cayleyWeight x (Equiv.Perm.ofSubtype u) =
+      cayleyWeight (fun q : Subtype p => x q.1) u := by
+  simp only [cayleyWeight, Equiv.Perm.support_ofSubtype]
+  rw [prod_map]
+  refine prod_congr rfl fun q _ => ?_
+  simp [Equiv.Perm.ofSubtype_apply_coe]
+
+/-- Cayley-kernel sum after odd cycles of length at least 3 have cancelled. -/
+noncomputable def cayleySum {α : Type*} [Fintype α] [DecidableEq α] [LinearOrder α]
+    (x : α → ℂ) : ℂ :=
+  ∑ σ : Perm α, if (oddLongPoints σ).Nonempty then 0 else cayleyWeight x σ
+
+lemma permanent_sunMatrix_eq_cayleySum {n : ℕ} (hn : 1 ≤ n) {ζ : ℂ}
+    (hζ : IsPrimitiveRoot ζ (2 * n)) :
+    (sunMatrix n ζ).permanent = cayleySum (fun i : Fin (2 * n) => ζ ^ i.val) :=
+  permanent_sunMatrix_eq_sum_no_odd hn hζ
+
+lemma one_ne_swap_fin_two :
+    (1 : Perm (Fin 2)) ≠ Equiv.swap 0 1 := by
+  intro h
+  have := congr_fun (congr_arg (fun f : Perm (Fin 2) => (f : Fin 2 → Fin 2)) h) 0
+  simp at this
+
+lemma cayleySum_fin_two (x : Fin 2 → ℂ) :
+    cayleySum x = 1 + cayleyWeight x (Equiv.swap (0 : Fin 2) 1) := by
+  unfold cayleySum
+  rw [show (univ : Finset (Perm (Fin 2))) = {1, Equiv.swap 0 1} from
+    univ_perm_fin_two]
+  rw [sum_insert (by simp [one_ne_swap_fin_two]), sum_singleton]
+  have h1 : ¬ (oddLongPoints (1 : Perm (Fin 2))).Nonempty := by
+    simp [oddLongPoints_one]
+  have hs : ¬ (oddLongPoints (Equiv.swap (0 : Fin 2) 1)).Nonempty := by
+    simp [oddLongPoints_swap Fin.zero_ne_one]
+  rw [if_neg h1, if_neg hs, cayleyWeight_one]
+
+lemma cayleySum_fin_two_eq {x : Fin 2 → ℂ} (hx : x 0 ≠ x 1) :
+    cayleySum x = -4 * x 0 * x 1 / (x 0 - x 1) ^ 2 := by
+  rw [cayleySum_fin_two, one_add_cayleyWeight_swap x Fin.zero_ne_one hx]
+
+lemma disjoint_swap_of_fixed {α : Type*} [DecidableEq α] {p q : α} (_hpq : p ≠ q)
+    {τ : Perm α} (hp : τ p = p) (hq : τ q = q) :
+    Equiv.Perm.Disjoint (Equiv.swap p q) τ := by
+  intro x
+  by_cases hxp : x = p
+  · right
+    rw [hxp, hp]
+  · by_cases hxq : x = q
+    · right
+      rw [hxq, hq]
+    · left
+      exact swap_apply_of_ne_of_ne hxp hxq
+
+lemma cycleOf_mul_swap_of_mem {α : Type*} [Fintype α] [DecidableEq α]
+    {p q : α} (hpq : p ≠ q) {τ : Perm α}
+    (hdis : Equiv.Perm.Disjoint (Equiv.swap p q) τ) {x : α}
+    (hx : x = p ∨ x = q) :
+    (Equiv.swap p q * τ).cycleOf x = Equiv.swap p q := by
+  have hsw : (Equiv.swap p q).IsCycle := Equiv.Perm.isCycle_swap hpq
+  have hxsup : x ∈ (Equiv.swap p q).support := by
+    rw [Equiv.Perm.support_swap hpq]
+    simpa using hx
+  have hτx : τ x = x := by
+    have := hdis x
+    have hne : Equiv.swap p q x ≠ x := Equiv.Perm.mem_support.mp hxsup
+    exact this.resolve_left hne
+  have hmem : Equiv.swap p q ∈ (Equiv.swap p q * τ).cycleFactorsFinset := by
+    rw [hdis.cycleFactorsFinset_mul_eq_union, hsw.cycleFactorsFinset_eq_singleton]
+    simp
+  exact (Equiv.Perm.cycle_is_cycleOf hxsup hmem).symm
+
+lemma cycleOf_mul_swap_of_not_mem {α : Type*} [Fintype α] [DecidableEq α]
+    {p q : α} (_hpq : p ≠ q) {τ : Perm α}
+    (hdis : Equiv.Perm.Disjoint (Equiv.swap p q) τ) {x : α}
+    (hx : x ≠ p ∧ x ≠ q) :
+    (Equiv.swap p q * τ).cycleOf x = τ.cycleOf x := by
+  have hswx : Equiv.swap p q x = x := swap_apply_of_ne_of_ne hx.1 hx.2
+  have h1 : (Equiv.swap p q).cycleOf x = 1 :=
+    (Equiv.Perm.cycleOf_eq_one_iff _).mpr hswx
+  rw [Equiv.Perm.Disjoint.cycleOf_mul_distrib hdis x, h1, one_mul]
+
+lemma oddLongPoints_mul_swap {α : Type*} [Fintype α] [DecidableEq α]
+    {p q : α} (hpq : p ≠ q) {τ : Perm α}
+    (hdis : Equiv.Perm.Disjoint (Equiv.swap p q) τ) :
+    oddLongPoints (Equiv.swap p q * τ) = oddLongPoints τ := by
+  ext x
+  simp only [mem_oddLongPoints]
+  by_cases hx : x = p ∨ x = q
+  · rw [cycleOf_mul_swap_of_mem hpq hdis hx, Equiv.Perm.support_swap hpq]
+    have hcard : ({p, q} : Finset α).card = 2 := by
+      rw [card_insert_of_notMem (by simp [hpq]), card_singleton]
+    have hτx : τ x = x := by
+      have hxsup : x ∈ (Equiv.swap p q).support := by
+        rw [Equiv.Perm.support_swap hpq]
+        simpa using hx
+      have hne : Equiv.swap p q x ≠ x := Equiv.Perm.mem_support.mp hxsup
+      exact (hdis x).resolve_left hne
+    have h1 : τ.cycleOf x = 1 := (Equiv.Perm.cycleOf_eq_one_iff τ).mpr hτx
+    simp [hcard, h1, Equiv.Perm.support_one]
+  · have hxab : x ≠ p ∧ x ≠ q := by
+      simp only [not_or] at hx
+      exact hx
+    rw [cycleOf_mul_swap_of_not_mem hpq hdis hxab]
+
 #check (OeisA1818.conjecture1 :
     ∀ (n : ℕ), 1 ≤ n → ∀ (ζ : ℂ), IsPrimitiveRoot ζ (2 * n) →
       (sunMatrix n ζ).permanent = (a n : ℂ))
@@ -2975,5 +3138,9 @@ lemma permanent_sunMatrix_eq_sum_no_odd {n : ℕ} (hn : 1 ≤ n) {ζ : ℂ}
 #print axioms reverseOddCycle_involutive
 #print axioms sum_cayleyWeight_eq_sum_no_odd
 #print axioms permanent_sunMatrix_eq_sum_no_odd
+#print axioms one_add_cayleyWeight_swap
+#print axioms cayleySum_fin_two_eq
+#print axioms cayleyWeight_ofSubtype
+#print axioms oddLongPoints_mul_swap
 
 end A001818C1

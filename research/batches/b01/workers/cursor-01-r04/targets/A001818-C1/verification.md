@@ -68,9 +68,13 @@ which type-checks. The original `a` is used. The admitted `OeisA1818.conjecture1
 'A001818C1.reverseOddCycle_involutive' depends on axioms: [propext, Classical.choice, Quot.sound]
 'A001818C1.sum_cayleyWeight_eq_sum_no_odd' depends on axioms: [propext, Classical.choice, Quot.sound]
 'A001818C1.permanent_sunMatrix_eq_sum_no_odd' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.one_add_cayleyWeight_swap' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.cayleySum_fin_two_eq' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.cayleyWeight_ofSubtype' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.oddLongPoints_mul_swap' depends on axioms: [propext, Classical.choice, Quot.sound]
 ```
 
-No `sorryAx`, `native_decide`, or `Lean.trustCompiler` in those lemmas. The general `n ≥ 1` identity is not yet proved. `per(M-J) = a n` is proved and `per M` equals the Cayley-weight sum over permutations with no odd cycle of length at least 3; `per M = per(M-J)` remains.
+No `sorryAx`, `native_decide`, or `Lean.trustCompiler` in those lemmas. The general `n ≥ 1` identity is not yet proved. `per(M-J) = a n` is proved and `per M` equals the even-cycle Cayley sum; the two-point matching factor is proved; `per M = per(M-J)` remains.
 
 No `sorryAx`, `native_decide`, or `Lean.trustCompiler` in those lemmas. The general `n ≥ 1` identity is not yet proved.
 
