@@ -176,3 +176,11 @@
  Quot.sound]
 'OeisA135508.three_pow_eleven_dvd_x' depends on axioms: [propext, Classical.choice, Quot.sound]
 'OeisA135508.three_pow_twelve_dvd_succ_of_three_dvd_a' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.remaining_minFac_mul_add_eight_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.conjecture_of_minFac_entered_add_eight' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.k_mul_sub_two_le_add_eight' depends on axioms: [propext]
+'OeisA135508.q_dvd_x_add_eight_window_of_k_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.conjecture_of_minFac_k_le_add_eight' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.conjecture_of_minFac_mod_two_overlap_or_k_le_add_eight' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]

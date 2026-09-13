@@ -11,7 +11,7 @@
   "novelty_status": "no_exact_public_solution_found_in_checked_sources",
   "statement_audit": "matches_intended_mceachen_statement",
   "oeis_editability": "unknown",
-  "last_updated_utc": "2026-09-13T04:47:18Z",
+  "last_updated_utc": "2026-09-13T04:54:50Z",
   "session_kickoff_utc": "2026-09-12T23:12:00Z",
   "session_hard_stop_utc": "2026-09-13T07:12:00Z",
   "proof_declarations": [
@@ -149,7 +149,13 @@
     "OeisA135508.nineteen_thousand_six_hundred_eighty_three_dvd_x",
     "OeisA135508.fifty_nine_thousand_forty_nine_dvd_succ_of_three_dvd_a",
     "OeisA135508.three_pow_eleven_dvd_x",
-    "OeisA135508.three_pow_twelve_dvd_succ_of_three_dvd_a"
+    "OeisA135508.three_pow_twelve_dvd_succ_of_three_dvd_a",
+    "OeisA135508.remaining_minFac_mul_add_eight_le",
+    "OeisA135508.conjecture_of_minFac_entered_add_eight",
+    "OeisA135508.k_mul_sub_two_le_add_eight",
+    "OeisA135508.q_dvd_x_add_eight_window_of_k_le",
+    "OeisA135508.conjecture_of_minFac_k_le_add_eight",
+    "OeisA135508.conjecture_of_minFac_mod_two_overlap_or_k_le_add_eight"
   ],
   "unresolved_gaps": [
     "Frozen OeisA135508.conjecture is still sorry.",
@@ -164,6 +170,7 @@
     "conjecture_of_add_two_overlap needs gcd(q+2, p-2)>1. Only 5 of those 466 leftover primes.",
     "If n≥9 and 3∣a n then 2187∣n+1. If n≥10 and 3∣a n then 6561∣n+1. If n≥12 and 3∣a n then 19683∣n+1. If n≥13 and 3∣a n then 59049∣n+1. If n≥14 and 3∣a n then 531441∣n+1. Those are not McEachen.",
     "conjecture_of_minFac_k_le needs a prime injector with k ≤ q+2. Existence is not proved.",
+    "After overlap is excluded, remaining q ≡ 2 (mod 3) satisfy p-2 ≥ q(q+8). First-entry by q(q+8)-1 is enough. An injector k ≤ q+8 is still not proved to exist.",
     "Need a prime r = kq-2 with r ≤ q(q+2)-1. For q ≡ 2 (mod 3) the candidates are k ≡ 5 (mod 6).",
     "Dirichlet, Linnik L=5, and the usual GRH bound do not give r ≤ q(q+2)-1. Finite injector checks are not a proof.",
     "Miller-Rabin to q ≤ 1000000 found no window failures (worst k=257 at q=40973). Not a proof.",

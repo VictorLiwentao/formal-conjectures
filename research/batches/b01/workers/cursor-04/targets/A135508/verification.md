@@ -101,6 +101,8 @@ q_mod_six_five : propext, Quot.sound
 dvd_x_succ_of_dvd_a_add_two : propext, Quot.sound
 not_prime_dvd_x_succ / prime_dvd_a_add_two_of_first_entry / a_12 / a_13 / not_seven_dvd_x_thirteen / nineteen_thousand_six_hundred_eighty_three_dvd_x / fifty_nine_thousand_forty_nine_dvd_succ_of_three_dvd_a / three_pow_eleven_dvd_x / three_pow_twelve_dvd_succ_of_three_dvd_a : propext, Classical.choice, Quot.sound
 a_14 : propext, Quot.sound
+remaining_minFac_mul_add_eight_le / conjecture_of_minFac_entered_add_eight / q_dvd_x_add_eight_window_of_k_le / conjecture_of_minFac_k_le_add_eight / conjecture_of_minFac_mod_two_overlap_or_k_le_add_eight : propext, Classical.choice, Quot.sound
+k_mul_sub_two_le_add_eight : propext
 ```
 
 No `sorryAx`, `native_decide`, or `Lean.trustCompiler` on these declarations. `Classical.choice` enters through `Nat.find` in `exists_least_dvd` and through Mathlib `decide` instances. Full log: `experiments/a135508_axioms.log`. Recompiled 2026-09-13T04:47Z.

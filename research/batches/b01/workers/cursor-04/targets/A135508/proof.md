@@ -95,6 +95,8 @@ The first-entry mechanism is now explicit: `dvd_x_succ_of_dvd_a_add_two`, `not_p
 
 Any injector with `k ≤ q+2` lies in the square window (`k_mul_sub_two_le_square`, `q_dvd_x_square_window_of_k_le`). Remaining McEachen follows if some prime injector of `lpf(p-2)` has `k ≤ q+2` (`conjecture_of_minFac_k_le`). This does not prove existence of such a `k`. For `q ≡ 2 (mod 3)` one has `q ≡ 5 (mod 6)` (`q_mod_six_five`), so `k = q` is an admissible residue; primality of `q²-2` is sufficient (`q_dvd_x_square_window_of_sq_sub_two`) but not necessary. Square-window lemmas for `k = 17,19,23,25,29` are instances of `k ≤ q+2`.
 
+After overlap `q+2 ∣ p-2` is excluded, a remaining least factor `q ≡ 2 (mod 3)` satisfies `p-2 ≥ q(q+8)` (`remaining_minFac_mul_add_eight_le`). First-entry by index `q(q+8)-1` is then enough (`conjecture_of_minFac_entered_add_eight`). An injector with `k ≤ q+8` fills that window (`conjecture_of_minFac_k_le_add_eight`, `conjecture_of_minFac_mod_two_overlap_or_k_le_add_eight`). That extra candidate `k = q+6` does not prove existence.
+
 McEachen also holds if some prime `q ≡ 2 (mod 3)` with `q ≤ p-3` satisfies `gcd(q+2, p-2) > 1` (`conjecture_of_add_two_overlap`, `conjecture_of_remaining_add_two_overlap`). Then a factor of `q+2` already divides `x q` and divides `p-2`. Among leftover primes `p < 200000` this overlap is rare (5 of 466). It is a proper subfamily.
 
 If `r` itself is a prime `≡ 2 (mod 3)`, then `r ≡ -2 (mod q)` and `r ≤ p-3` suffices (`q_dvd_x_of_prime_injector`, `conjecture_of_prime_injector`). For `lpf(p-2)=q` one has `p-2 ≥ q(q+2)` (`remaining_minFac_mul_add_two_le`). The square `p = q^2+2` is never an odd prime for `q > 3`. So a prime
@@ -129,6 +131,7 @@ Proved: `v2(gcd)`, `v2(a n)`, `v2(x(n+1))`, odd-increment stability, dyadic bloc
 - Treating a leftover scan with no McEachen-window gap as a proof. It is a finite check.
 - Treating `conjecture_of_add_two_overlap` as a `∀p` proof. It needs `gcd(q+2, p-2) > 1`.
 - Treating `conjecture_of_minFac_k_le` as a `∀p` proof. It needs a prime injector with `k ≤ q+2`.
+- Treating `conjecture_of_minFac_k_le_add_eight` as a `∀p` proof. It needs a prime injector with `k ≤ q+8` after overlap is excluded.
 - Treating `a 12 = 1`, `a 13 = 7`, `a 14 = 1`, or the 3-adic lifts `59049` and `531441` as remaining McEachen.
 
 ## Status

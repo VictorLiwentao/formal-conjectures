@@ -898,6 +898,69 @@ lemma remaining_minFac_mul_add_two_le {p : ℕ} (hp : p.Prime) (hp7 : 7 ≤ p)
     p_sub_two_mod (le_trans (by decide : 4 ≤ 7) hp7) hmod
   exact minFac_mul_add_two_le hn hcomp hpm hodd
 
+/-- After excluding overlap `q+2 ∣ p-2`, a remaining least factor
+`q ≡ 2 (mod 3)` satisfies `p-2 ≥ q(q+8)`. -/
+lemma remaining_minFac_mul_add_eight_le {p : ℕ} (hp : p.Prime) (hp7 : 7 ≤ p)
+    (hmod : p % 3 = 1) (hcomp : ¬ (p - 2).Prime)
+    (hqmod : Nat.minFac (p - 2) % 3 = 2)
+    (hno : ¬ (Nat.minFac (p - 2) + 2) ∣ p - 2) :
+    Nat.minFac (p - 2) * (Nat.minFac (p - 2) + 8) ≤ p - 2 := by
+  set q := Nat.minFac (p - 2)
+  have hbound := remaining_minFac_mul_add_two_le hp hp7 hmod hcomp
+  have hqpos : 0 < q := Nat.minFac_pos _
+  have hd : q ∣ p - 2 := Nat.minFac_dvd _
+  have hqs : q * ((p - 2) / q) = p - 2 := Nat.mul_div_cancel' hd
+  have hs2 : q + 2 ≤ (p - 2) / q :=
+    (Nat.le_div_iff_mul_le hqpos).2 (by rwa [Nat.mul_comm (q + 2)])
+  have hne : (p - 2) / q ≠ q + 2 := by
+    intro heq
+    have : p - 2 = q * (q + 2) := by rw [← hqs, heq]
+    exact hno (this ▸ dvd_mul_left (q + 2) q)
+  have hoddn : (p - 2) % 2 = 1 := by
+    have hpodd : p % 2 = 1 := by
+      have hcases : p % 2 = 0 ∨ p % 2 = 1 := by omega
+      rcases hcases with h0 | h1
+      · have : 2 ∣ p := Nat.dvd_of_mod_eq_zero h0
+        have : p = 2 :=
+          ((Nat.prime_dvd_prime_iff_eq Nat.prime_two hp).1 this).symm
+        omega
+      · exact h1
+    omega
+  have hqodd : q % 2 = 1 := by
+    have hmul : (q * ((p - 2) / q)) % 2 = 1 := by rwa [hqs]
+    rw [Nat.mul_mod] at hmul
+    have hq2 : q % 2 = 0 ∨ q % 2 = 1 := Nat.mod_two_eq_zero_or_one q
+    rcases hq2 with h0 | h1
+    · rw [h0, Nat.zero_mul, Nat.zero_mod] at hmul
+      exact False.elim ((by decide : ¬ (0 : ℕ) = 1) hmul)
+    · exact h1
+  have hsodd : ((p - 2) / q) % 2 = 1 := by
+    have hmul : (q * ((p - 2) / q)) % 2 = 1 := by rwa [hqs]
+    rw [Nat.mul_mod, hqodd] at hmul
+    have hs2' : ((p - 2) / q) % 2 = 0 ∨ ((p - 2) / q) % 2 = 1 :=
+      Nat.mod_two_eq_zero_or_one _
+    rcases hs2' with h0 | h1
+    · rw [h0, Nat.mul_zero, Nat.zero_mod] at hmul
+      exact False.elim ((by decide : ¬ (0 : ℕ) = 1) hmul)
+    · exact h1
+  have hpm : (p - 2) % 3 = 2 :=
+    p_sub_two_mod (le_trans (by decide : 4 ≤ 7) hp7) hmod
+  have hsmod : ((p - 2) / q) % 3 = 1 := by
+    have hmul : (q * ((p - 2) / q)) % 3 = 2 := by rwa [hqs]
+    rw [Nat.mul_mod, hqmod] at hmul
+    have hs3 : ((p - 2) / q) % 3 < 3 := Nat.mod_lt _ (by decide)
+    interval_cases ((p - 2) / q) % 3
+    · rw [Nat.mul_zero, Nat.zero_mod] at hmul
+      exact False.elim ((by decide : ¬ (0 : ℕ) = 2) hmul)
+    · rfl
+    · have hmul' : ((2 : ℕ) * 2) % 3 = 2 := hmul
+      exact False.elim ((by decide : ¬ (1 : ℕ) = 2) (by
+        have : ((2 : ℕ) * 2) % 3 = 1 := by decide
+        exact this.symm.trans hmul'))
+  have hs : q + 8 ≤ (p - 2) / q := by omega
+  have : q * (q + 8) ≤ q * ((p - 2) / q) := Nat.mul_le_mul_left q hs
+  rwa [hqs] at this
+
 /-- Remaining McEachen reduces to first-entry of `lpf(p-2)` by index `q(q+2)-1`. -/
 theorem conjecture_of_minFac_entered {p : ℕ} (hp : p.Prime) (hp7 : 7 ≤ p)
     (hmod : p % 3 = 1) (hcomp : ¬ (p - 2).Prime)
@@ -922,6 +985,40 @@ theorem conjecture_of_minFac_entered {p : ℕ} (hp : p.Prime) (hp7 : 7 ≤ p)
     Nat.sub_pos_of_lt (lt_of_lt_of_le (by decide : 1 < 8) hmul)
   have hle : Nat.minFac (p - 2) * (Nat.minFac (p - 2) + 2) - 1 ≤ p - 3 := by
     have hsub : Nat.minFac (p - 2) * (Nat.minFac (p - 2) + 2) - 1 ≤ p - 2 - 1 :=
+      Nat.sub_le_sub_right hbound 1
+    have : p - 2 - 1 = p - 3 := Nat.sub_sub p 2 1
+    exact this ▸ hsub
+  exact conjecture_of_factor_dvd_x hp hp5
+    (lt_of_lt_of_le (by decide : 1 < 2) hq2) (Nat.minFac_dvd _)
+    (hin.trans (x_dvd_of_le hpos hle))
+
+/-- Remaining McEachen, after overlap is excluded, reduces to first-entry
+of `lpf(p-2)` by index `q(q+8)-1`. -/
+theorem conjecture_of_minFac_entered_add_eight {p : ℕ} (hp : p.Prime)
+    (hp7 : 7 ≤ p) (hmod : p % 3 = 1) (hcomp : ¬ (p - 2).Prime)
+    (hqmod : Nat.minFac (p - 2) % 3 = 2)
+    (hno : ¬ (Nat.minFac (p - 2) + 2) ∣ p - 2)
+    (hin : Nat.minFac (p - 2) ∣
+      x (Nat.minFac (p - 2) * (Nat.minFac (p - 2) + 8) - 1)) :
+    a (p - 1) = p := by
+  have hbound := remaining_minFac_mul_add_eight_le hp hp7 hmod hcomp hqmod hno
+  have hpr : (Nat.minFac (p - 2)).Prime := by
+    refine Nat.minFac_prime ?_
+    intro h
+    have h2 : 2 ≤ p := le_trans (by decide : 2 ≤ 7) hp7
+    have hp3 : p = 3 := by
+      have hcancel := Nat.sub_add_cancel h2
+      rw [h] at hcancel
+      exact hcancel.symm
+    exact Nat.ne_of_lt (lt_of_lt_of_le (by decide : 3 < 7) hp7) hp3.symm
+  have hq2 : 2 ≤ Nat.minFac (p - 2) := hpr.two_le
+  have hp5 : 5 ≤ p := le_trans (by decide : 5 ≤ 7) hp7
+  have hmul : 2 * 10 ≤ Nat.minFac (p - 2) * (Nat.minFac (p - 2) + 8) :=
+    Nat.mul_le_mul hq2 (Nat.add_le_add_right hq2 8)
+  have hpos : 0 < Nat.minFac (p - 2) * (Nat.minFac (p - 2) + 8) - 1 :=
+    Nat.sub_pos_of_lt (lt_of_lt_of_le (by decide : 1 < 20) hmul)
+  have hle : Nat.minFac (p - 2) * (Nat.minFac (p - 2) + 8) - 1 ≤ p - 3 := by
+    have hsub : Nat.minFac (p - 2) * (Nat.minFac (p - 2) + 8) - 1 ≤ p - 2 - 1 :=
       Nat.sub_le_sub_right hbound 1
     have : p - 2 - 1 = p - 3 := Nat.sub_sub p 2 1
     exact this ▸ hsub
@@ -1974,6 +2071,72 @@ theorem conjecture_of_minFac_k_le {p k : ℕ} (hp : p.Prime) (hp7 : 7 ≤ p)
     a (p - 1) = p :=
   conjecture_of_minFac_prime_index hp hp7 hmod hcomp hpr h7 hrmod
     (k_mul_sub_two_le_square hk)
+
+/-- Any injector index `k ≤ q+8` lies in the enlarged leftover window. -/
+lemma k_mul_sub_two_le_add_eight {q k : ℕ} (hk : k ≤ q + 8) :
+    k * q - 2 ≤ q * (q + 8) - 1 := by
+  have hle1 : k * q ≤ (q + 8) * q := Nat.mul_le_mul_right q hk
+  have hle1' : k * q ≤ q * (q + 8) := by rwa [Nat.mul_comm (q + 8)] at hle1
+  have h1 : k * q - 2 ≤ q * (q + 8) - 2 := Nat.sub_le_sub_right hle1' 2
+  have h2 : q * (q + 8) - 2 ≤ q * (q + 8) - 1 :=
+    Nat.sub_le_sub_left (by decide : 1 ≤ 2) (q * (q + 8))
+  exact h1.trans h2
+
+lemma q_dvd_x_add_eight_window_of_k_le {k q : ℕ}
+    (hpr : (k * q - 2).Prime) (h7 : 7 ≤ k * q - 2)
+    (hmod : (k * q - 2) % 3 = 2) (hk : k ≤ q + 8) :
+    q ∣ x (q * (q + 8) - 1) := by
+  have hx := q_dvd_x_of_prime_index hpr h7 hmod
+  have hpos : 0 < k * q - 2 := lt_of_lt_of_le (by decide : 0 < 7) h7
+  exact hx.trans (x_dvd_of_le hpos (k_mul_sub_two_le_add_eight hk))
+
+/-- Remaining McEachen after overlap is excluded, if some prime injector
+of `lpf(p-2)` has `k ≤ q+8`. Existence of such a `k` is not proved. -/
+theorem conjecture_of_minFac_k_le_add_eight {p k : ℕ} (hp : p.Prime)
+    (hp7 : 7 ≤ p) (hmod : p % 3 = 1) (hcomp : ¬ (p - 2).Prime)
+    (hqmod : Nat.minFac (p - 2) % 3 = 2)
+    (hno : ¬ (Nat.minFac (p - 2) + 2) ∣ p - 2)
+    (hpr : (k * Nat.minFac (p - 2) - 2).Prime)
+    (h7 : 7 ≤ k * Nat.minFac (p - 2) - 2)
+    (hrmod : (k * Nat.minFac (p - 2) - 2) % 3 = 2)
+    (hk : k ≤ Nat.minFac (p - 2) + 8) :
+    a (p - 1) = p :=
+  conjecture_of_minFac_entered_add_eight hp hp7 hmod hcomp hqmod hno
+    (q_dvd_x_add_eight_window_of_k_le hpr h7 hrmod hk)
+
+/-- Remaining McEachen for `lpf ≡ 2 (mod 3)` if either overlap holds or
+some prime injector has `k ≤ q+8`. Existence of such a `k` is not proved. -/
+theorem conjecture_of_minFac_mod_two_overlap_or_k_le_add_eight {p k : ℕ}
+    (hp : p.Prime) (hp7 : 7 ≤ p) (hmod : p % 3 = 1)
+    (hcomp : ¬ (p - 2).Prime)
+    (hqmod : Nat.minFac (p - 2) % 3 = 2)
+    (h7q : 7 ≤ Nat.minFac (p - 2))
+    (hpr : (k * Nat.minFac (p - 2) - 2).Prime)
+    (h7r : 7 ≤ k * Nat.minFac (p - 2) - 2)
+    (hrmod : (k * Nat.minFac (p - 2) - 2) % 3 = 2)
+    (hk : k ≤ Nat.minFac (p - 2) + 8) :
+    a (p - 1) = p := by
+  have hminp : (Nat.minFac (p - 2)).Prime := by
+    refine Nat.minFac_prime ?_
+    intro h
+    have h2 : 2 ≤ p := le_trans (by decide : 2 ≤ 7) hp7
+    have hp3 : p = 3 := by
+      have hcancel := Nat.sub_add_cancel h2
+      rw [h] at hcancel
+      exact hcancel.symm
+    exact Nat.ne_of_lt (lt_of_lt_of_le (by decide : 3 < 7) hp7) hp3.symm
+  by_cases hov : (Nat.minFac (p - 2) + 2) ∣ p - 2
+  · have hg : Nat.gcd (Nat.minFac (p - 2) + 2) (p - 2) =
+        Nat.minFac (p - 2) + 2 :=
+      Nat.dvd_antisymm (Nat.gcd_dvd_left _ _) (Nat.dvd_gcd dvd_rfl hov)
+    have hgt : 1 < Nat.gcd (Nat.minFac (p - 2) + 2) (p - 2) := by
+      rw [hg]
+      exact Nat.lt_of_lt_of_le (by decide : 1 < 9)
+        (Nat.add_le_add_right h7q 2)
+    exact conjecture_of_remaining_add_two_overlap hp hp7 hmod hcomp hminp
+      (Nat.minFac_dvd _) hqmod h7q hgt
+  · exact conjecture_of_minFac_k_le_add_eight hp hp7 hmod hcomp hqmod hov
+      hpr h7r hrmod hk
 
 /-- Remaining McEachen if `5·lpf(p-2)-2` is prime. For `lpf ≡ 2 (mod 3)`
 this is the first remaining injector and always fits in the square window.
@@ -3592,5 +3755,11 @@ lemma v2_x_two_four_pow_pred (k : ℕ) :
 #print axioms fifty_nine_thousand_forty_nine_dvd_succ_of_three_dvd_a
 #print axioms three_pow_eleven_dvd_x
 #print axioms three_pow_twelve_dvd_succ_of_three_dvd_a
+#print axioms remaining_minFac_mul_add_eight_le
+#print axioms conjecture_of_minFac_entered_add_eight
+#print axioms k_mul_sub_two_le_add_eight
+#print axioms q_dvd_x_add_eight_window_of_k_le
+#print axioms conjecture_of_minFac_k_le_add_eight
+#print axioms conjecture_of_minFac_mod_two_overlap_or_k_le_add_eight
 
 end OeisA135508

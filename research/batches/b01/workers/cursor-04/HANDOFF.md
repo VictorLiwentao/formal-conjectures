@@ -56,6 +56,7 @@ python3 research/batches/b01/control/check_assignments.py --repo . --worker curs
 - If `n ≥ 3` and `3 ∣ a n`, then `9 ∣ n+1`. If `n ≥ 6`, then `81 ∣ n+1`. If `n ≥ 7`, then `729 ∣ n+1`. If `n ≥ 9`, then `2187 ∣ n+1`. If `n ≥ 10`, then `6561 ∣ n+1`. If `n ≥ 12`, then `19683 ∣ n+1`. If `n ≥ 13`, then `59049 ∣ n+1`. If `n ≥ 14`, then `531441 ∣ n+1`. Also `a 6 = 7`, `a 7 = 2`, `a 8 = 1`, `a 9 = 1`, `a 11 = 1`, `a 12 = 1`, `a 13 = 7`, `a 14 = 1`, `243 ∣ x n` for `n ≥ 7`, `729 ∣ x n` for `n ≥ 9`, `2187 ∣ x n` for `n ≥ 10`, `6561 ∣ x n` for `n ≥ 12`, `19683 ∣ x n` for `n ≥ 13`, `177147 ∣ x n` for `n ≥ 14`.
 - First-entry: `dvd_x_succ_of_dvd_a_add_two`, `not_prime_dvd_x_succ`, `prime_dvd_a_add_two_of_first_entry`.
 - Square-window packaging: `k_mul_sub_two_le_square`, `q_dvd_x_square_window_of_k_le`, `conjecture_of_minFac_k_le`. Existence of `k ≤ q+2` is not proved.
+- After overlap is excluded, remaining `lpf ≡ 2 (mod 3)` satisfies `p-2 ≥ q(q+8)` (`remaining_minFac_mul_add_eight_le`). Then `k ≤ q+8` suffices (`conjecture_of_minFac_k_le_add_eight`). Existence of such a `k` is not proved.
 - `q_mod_six_five`: remaining `q ≡ 2 (mod 3)` are `≡ 5 (mod 6)`. `q_dvd_x_square_window_of_sq_sub_two` if `q²-2` is prime.
 - Square-window instances `k = 17,19,23,25,29`.
 - `conjecture_of_add_two_overlap` / `conjecture_of_remaining_add_two_overlap`: McEachen if some prime `q ≡ 2 (mod 3)` has `gcd(q+2, p-2) > 1`.
