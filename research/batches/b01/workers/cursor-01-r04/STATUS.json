@@ -21,7 +21,7 @@
   "novelty_status": "known_mathematics_formalization",
   "mathematical_novelty": "known_mathematics_She_Sun_Xia_2022_Thm1_3_ii",
   "formalization_novelty": "no_prior_exact_public_lean_found_in_checked_sources_audit_incomplete_until_stop",
-  "last_updated_utc": "2026-09-13T06:27:00Z",
+  "last_updated_utc": "2026-09-13T07:00:00Z",
   "proof_declarations": [
     "A001818C1.conjecture1_of_one",
     "A001818C1.zpow_sub_ne_one",
@@ -108,12 +108,19 @@
     "A001818C1.cayleySum_eq_sigma1_add_sigma2_add",
     "A001818C1.cayley_triple_identity",
     "A001818C1.cayleyWeight_formPerm",
-    "A001818C1.cayleyWeight_formPerm_cons"
+    "A001818C1.cayleyWeight_formPerm_cons",
+    "A001818C1.path_mul_add_eq_weight_mul_sub_of_length",
+    "A001818C1.cayleyWeight_cons_rotate_eq_neg_path",
+    "A001818C1.sum_cayleyWeight_cons_rotate",
+    "A001818C1.cayleyPathWeight_eq_of_eqOn",
+    "A001818C1.sum_cayleyWeight_listings_eq_of_eqOn_compl",
+    "A001818C1.sum_cayleyWeight_hamiltonian_eq_listings",
+    "A001818C1.sum_cayleyWeight_hamiltonian_eq_of_eqOn_compl"
   ],
   "unresolved_gaps": [
-    "General n>=1 C1 identity still open. Have per(M-J)=a n, odd-cycle cancellation, two-point matching factor, ofSubtype restriction, paper Sigma1 (fix a point) and Sigma2 (transposition through a point). Need Sigma3 / Lemma 2.3 Hamiltonian even-cycle constants, then recurrence (4.8) and matching formula 1.1."
+    "General n>=1 C1 identity still open. Have per(M-J)=a n, odd-cycle cancellation, two-point matching factor, ofSubtype restriction, paper Sigma1/Sigma2, and Lemma 2.3 one-point independence of Hamiltonian Cayley sums. Need the Hamiltonian sum to depend only on cardinality, then Sigma3 / (3.9) / (4.8) / Thm 1.1 matching formula."
   ],
-  "next_step": "Prove She-Sun-Xia Lemma 2.3: Hamiltonian even-cycle Cayley sums are independent of each variable, using cayley_triple_identity (2.4) on listing rotate-classes. Then cancel extra Fix terms against Sigma3 to obtain (4.8).",
+  "next_step": "Upgrade Lemma 2.3 from one-point independence to a cardinality-only constant, then cancel extra Fix terms against Sigma3 to obtain recurrence (4.8).",
   "self_review": "not a candidate yet; cannot set independently_verified",
   "excluded_from_this_worker": [
     "OeisA1818.conjecture2",

@@ -3574,6 +3574,505 @@ lemma cayleySum_eq_sigma1_add_sigma2_add {α : Type*} [Fintype α] [DecidableEq 
           else 0) := by
   rw [cayleySum_split p x, cayleySum_sigma1 p x, cayleySum_sigma2 p x]
 
+lemma add_mul_add_eq (t y z : ℂ) :
+    (t + y) * (t + z) = (t - y) * (t - z) + 2 * t * (y + z) := by
+  ring
+
+lemma cayley_insert_div (t y z : ℂ) (hty : t ≠ y) (htz : t ≠ z) :
+    ((t + z) / (t - z)) * ((y + t) / (y - t)) =
+      -((t + y) * (t + z) / ((t - y) * (t - z))) := by
+  have h1 : t - y ≠ 0 := sub_ne_zero.2 hty
+  have h2 : t - z ≠ 0 := sub_ne_zero.2 htz
+  have h3 : y - t ≠ 0 := sub_ne_zero.2 (Ne.symm hty)
+  field_simp [h1, h2, h3]
+  ring
+
+lemma cayley_insert_one_add (t y z : ℂ) (hty : t ≠ y) (htz : t ≠ z) :
+    (t + y) * (t + z) / ((t - y) * (t - z)) =
+      1 + 2 * t * (y + z) / ((t - y) * (t - z)) := by
+  have h1 : t - y ≠ 0 := sub_ne_zero.2 hty
+  have h2 : t - z ≠ 0 := sub_ne_zero.2 htz
+  field_simp [h1, h2]
+  ring
+
+lemma cayley_insert_eq_neg_one_sub (t y z : ℂ) (hty : t ≠ y) (htz : t ≠ z) :
+    ((t + z) / (t - z)) * ((y + t) / (y - t)) =
+      -1 - 2 * t * (y + z) / ((t - y) * (t - z)) := by
+  rw [cayley_insert_div t y z hty htz, cayley_insert_one_add t y z hty htz]
+  ring
+
+lemma sub_div_inv_sub (t y z : ℂ) (hty : t ≠ y) (htz : t ≠ z) :
+    (y - z) / ((t - y) * (t - z)) = (t - y)⁻¹ - (t - z)⁻¹ := by
+  have h1 : t - y ≠ 0 := sub_ne_zero.2 hty
+  have h2 : t - z ≠ 0 := sub_ne_zero.2 htz
+  field_simp [h1, h2]
+  ring
+
+/-- Consecutive Cayley factors along a path, without the closing edge. -/
+noncomputable def cayleyPathWeight {α : Type*} (x : α → ℂ) (L : List α) : ℂ :=
+  (List.zipWith (fun a b => (x a + x b) / (x a - x b)) L L.tail).prod
+
+lemma cayleyPathWeight_eq_prod_range {α : Type*} (x : α → ℂ) (L : List α) :
+    cayleyPathWeight x L =
+      ∏ i ∈ range (L.length - 1),
+        if h : i + 1 < L.length then
+          (x (L[i]'(Nat.lt_of_succ_lt h)) + x (L[i + 1])) /
+            (x (L[i]'(Nat.lt_of_succ_lt h)) - x (L[i + 1]))
+        else 1 := by
+  induction L with
+  | nil => simp [cayleyPathWeight]
+  | cons a L ih =>
+    cases L with
+    | nil => simp [cayleyPathWeight]
+    | cons b t =>
+      have hsplit :
+          cayleyPathWeight x (a :: b :: t) =
+            (x a + x b) / (x a - x b) * cayleyPathWeight x (b :: t) := by
+        unfold cayleyPathWeight
+        simp [List.tail_cons, List.zipWith_cons_cons, List.prod_cons]
+      have hlen : (a :: b :: t).length - 1 = t.length + 1 := by simp
+      rw [hsplit, hlen, prod_range_succ', ih]
+      have h0 :
+          (if h : (0 : ℕ) + 1 < (a :: b :: t).length then
+              (x ((a :: b :: t)[0]'(Nat.lt_of_succ_lt h)) + x ((a :: b :: t)[0 + 1])) /
+                (x ((a :: b :: t)[0]'(Nat.lt_of_succ_lt h)) - x ((a :: b :: t)[0 + 1]))
+            else 1) =
+            (x a + x b) / (x a - x b) := by
+        simp
+      have htail :
+          (∏ k ∈ range ((b :: t).length - 1),
+              if h : k + 1 < (b :: t).length then
+                (x ((b :: t)[k]'(Nat.lt_of_succ_lt h)) + x ((b :: t)[k + 1])) /
+                  (x ((b :: t)[k]'(Nat.lt_of_succ_lt h)) - x ((b :: t)[k + 1]))
+              else 1) =
+            ∏ k ∈ range t.length,
+              if h : k + 1 + 1 < (a :: b :: t).length then
+                (x ((a :: b :: t)[k + 1]'(Nat.lt_of_succ_lt h)) +
+                    x ((a :: b :: t)[k + 1 + 1])) /
+                  (x ((a :: b :: t)[k + 1]'(Nat.lt_of_succ_lt h)) -
+                    x ((a :: b :: t)[k + 1 + 1]))
+              else 1 := by
+        have hbt : (b :: t).length - 1 = t.length := by simp
+        simp_rw [hbt]
+        refine prod_congr rfl fun k hk => ?_
+        have hk' : k < t.length := mem_range.mp hk
+        have hpos : k + 1 + 1 < (a :: b :: t).length := by simp; omega
+        have hpos' : k + 1 < (b :: t).length := by simp; omega
+        simp only [hpos, hpos', ↓reduceDIte, List.getElem_cons_succ]
+      rw [htail, h0]
+      ring
+
+lemma cayleyWeight_formPerm_eq_path_mul_wrap {α : Type*} [Fintype α] [DecidableEq α]
+    (x : α → ℂ) {L : List α} (hl : L.Nodup) (h2 : 2 ≤ L.length) :
+    cayleyWeight x L.formPerm =
+      cayleyPathWeight x L *
+        ((x (L[L.length - 1]'(by omega)) + x (L[0]'(by omega))) /
+          (x (L[L.length - 1]'(by omega)) - x (L[0]'(by omega)))) := by
+  have hnpos : 0 < L.length := by omega
+  rw [cayleyWeight_formPerm x hl h2]
+  let f : ℕ → ℂ := fun i =>
+    if hi : i < L.length then
+      (x (L[i]) + x (L[(i + 1) % L.length]'(Nat.mod_lt _ hnpos))) /
+        (x (L[i]) - x (L[(i + 1) % L.length]'(Nat.mod_lt _ hnpos)))
+    else 1
+  have hfeq :
+      (∏ i : Fin L.length,
+          (x (L[i.val]) + x (L[(i.val + 1) % L.length]'(Nat.mod_lt _ hnpos))) /
+            (x (L[i.val]) - x (L[(i.val + 1) % L.length]'(Nat.mod_lt _ hnpos)))) =
+        ∏ i : Fin L.length, f i := by
+    refine Fintype.prod_congr _ _ fun i => ?_
+    simp only [f]
+    have hi := i.isLt
+    simp [hi]
+  rw [hfeq, Fin.prod_univ_eq_prod_range]
+  have hprod :
+      (∏ i ∈ range ((L.length - 1) + 1), f i) =
+        (∏ i ∈ range (L.length - 1), f i) * f (L.length - 1) :=
+    prod_range_succ f (L.length - 1)
+  have hlen : (L.length - 1) + 1 = L.length := Nat.succ_pred_eq_of_pos hnpos
+  rw [hlen] at hprod
+  rw [hprod]
+  have hpath : cayleyPathWeight x L = ∏ i ∈ range (L.length - 1), f i := by
+    rw [cayleyPathWeight_eq_prod_range]
+    refine prod_congr rfl fun i hi => ?_
+    have hi' : i < L.length - 1 := mem_range.mp hi
+    have hilt : i + 1 < L.length := by omega
+    have hiL : i < L.length := by omega
+    simp only [f, hiL, ↓reduceDIte]
+    simp [Nat.mod_eq_of_lt hilt, hilt]
+  have hlast : f (L.length - 1) =
+      (x (L[L.length - 1]'(by omega)) + x (L[0]'(by omega))) /
+        (x (L[L.length - 1]'(by omega)) - x (L[0]'(by omega))) := by
+    have hlt : L.length - 1 < L.length := Nat.sub_lt hnpos (by omega)
+    simp only [f, hlt, ↓reduceDIte]
+    have hmod : ((L.length - 1) + 1) % L.length = 0 := by
+      rw [Nat.sub_add_cancel (Nat.succ_le_of_lt hnpos), Nat.mod_self]
+    simp [hmod]
+  rw [hpath, hlast]
+
+lemma cayleyWeight_formPerm_cons_eq_path {α : Type*} [Fintype α] [DecidableEq α]
+    (x : α → ℂ) {p : α} {L : List α}
+    (hL : L.Nodup) (hp : p ∉ L) (h1 : 1 ≤ L.length) :
+    cayleyWeight x (List.formPerm (p :: L)) =
+      cayleyPathWeight x L *
+        ((x p + x (L[0]'(by omega))) / (x p - x (L[0]'(by omega)))) *
+        ((x (L[L.length - 1]'(by omega)) + x p) /
+          (x (L[L.length - 1]'(by omega)) - x p)) := by
+  have hl : (p :: L).Nodup := List.nodup_cons.2 ⟨hp, hL⟩
+  have h2 : 2 ≤ (p :: L).length := by simp; omega
+  have hnpos : 0 < L.length + 1 := by omega
+  rw [cayleyWeight_formPerm x hl h2]
+  simp only [List.length_cons]
+  let f : ℕ → ℂ := fun i =>
+    if hi : i < L.length + 1 then
+      (x ((p :: L)[i]) +
+          x ((p :: L)[(i + 1) % (L.length + 1)]'(Nat.mod_lt _ hnpos))) /
+        (x ((p :: L)[i]) -
+          x ((p :: L)[(i + 1) % (L.length + 1)]'(Nat.mod_lt _ hnpos)))
+    else 1
+  have hfeq :
+      (∏ i : Fin (L.length + 1),
+          (x ((p :: L)[i.val]) +
+              x ((p :: L)[(i.val + 1) % (L.length + 1)]'(Nat.mod_lt _ hnpos))) /
+            (x ((p :: L)[i.val]) -
+              x ((p :: L)[(i.val + 1) % (L.length + 1)]'(Nat.mod_lt _ hnpos)))) =
+        ∏ i : Fin (L.length + 1), f i := by
+    refine Fintype.prod_congr _ _ fun i => ?_
+    simp only [f]
+    have hi := i.isLt
+    simp [hi]
+  rw [hfeq, Fin.prod_univ_eq_prod_range, prod_range_succ']
+  have hmid :
+      (∏ k ∈ range L.length, f (k + 1)) =
+        cayleyPathWeight x L *
+          ((x (L[L.length - 1]'(by omega)) + x p) /
+            (x (L[L.length - 1]'(by omega)) - x p)) := by
+    have hprod :
+        (∏ k ∈ range ((L.length - 1) + 1), f (k + 1)) =
+          (∏ k ∈ range (L.length - 1), f (k + 1)) * f ((L.length - 1) + 1) :=
+      prod_range_succ (fun k => f (k + 1)) (L.length - 1)
+    have hlen : (L.length - 1) + 1 = L.length := by omega
+    rw [hlen] at hprod
+    rw [hprod]
+    have hpath : (∏ k ∈ range (L.length - 1), f (k + 1)) = cayleyPathWeight x L := by
+      rw [cayleyPathWeight_eq_prod_range]
+      refine prod_congr rfl fun k hk => ?_
+      have hk' : k < L.length - 1 := mem_range.mp hk
+      have hk1 : k + 1 < L.length + 1 := by omega
+      have hpos : k + 1 + 1 < L.length + 1 := by omega
+      have hpos' : k + 1 < L.length := by omega
+      simp only [f, hk1, ↓reduceDIte, List.getElem_cons_succ]
+      simp [Nat.mod_eq_of_lt hpos, List.getElem_cons_succ, hpos']
+    have hlast : f L.length =
+        (x (L[L.length - 1]'(by omega)) + x p) /
+          (x (L[L.length - 1]'(by omega)) - x p) := by
+      have hlt : L.length < L.length + 1 := Nat.lt_succ_self _
+      simp only [f, hlt, ↓reduceDIte]
+      have hmod : (L.length + 1) % (L.length + 1) = 0 := Nat.mod_self _
+      simp [hmod, List.getElem_cons_zero]
+      cases L with
+      | nil => simp at h1
+      | cons _ _ => simp
+    rw [hpath, hlast]
+  have h0 : f 0 =
+      (x p + x (L[0]'(by omega))) / (x p - x (L[0]'(by omega))) := by
+    have hlt : (0 : ℕ) < L.length + 1 := by omega
+    simp only [f, hlt, ↓reduceDIte, List.getElem_cons_zero]
+    have hmod : (0 + 1) % (L.length + 1) = 1 := Nat.mod_eq_of_lt (by omega)
+    simp [hmod, List.getElem_cons_succ]
+  rw [hmid, h0]
+  ring
+
+lemma path_mul_add_eq_weight_mul_sub {α : Type*} [Fintype α] [DecidableEq α]
+    (x : α → ℂ) {L : List α} (hl : L.Nodup) (h2 : 2 ≤ L.length)
+    (hx : x (L[L.length - 1]'(by omega)) ≠ x (L[0]'(by omega))) :
+    cayleyPathWeight x L *
+        (x (L[L.length - 1]'(by omega)) + x (L[0]'(by omega))) =
+      cayleyWeight x L.formPerm *
+        (x (L[L.length - 1]'(by omega)) - x (L[0]'(by omega))) := by
+  have hden :
+      x (L[L.length - 1]'(by omega)) - x (L[0]'(by omega)) ≠ 0 :=
+    sub_ne_zero.2 hx
+  rw [cayleyWeight_formPerm_eq_path_mul_wrap x hl h2]
+  field_simp [hden]
+
+lemma cayleyWeight_cons_rotate_eq {α : Type*} [Fintype α] [DecidableEq α]
+    (x : α → ℂ) {p : α} {L : List α} {k : ℕ}
+    (hL : L.Nodup) (hp : p ∉ L) (h2 : 2 ≤ L.length) (hk : k < L.length) :
+    cayleyWeight x (List.formPerm (p :: L.rotate k)) =
+      cayleyPathWeight x (L.rotate k) *
+        ((x p + x (L[k]'(hk))) / (x p - x (L[k]'(hk)))) *
+        ((x ((L.rotate k)[L.length - 1]'(by simp [List.length_rotate]; omega)) + x p) /
+          (x ((L.rotate k)[L.length - 1]'(by simp [List.length_rotate]; omega)) - x p)) := by
+  have hrot : (L.rotate k).Nodup := (List.nodup_rotate).2 hL
+  have hp' : p ∉ L.rotate k := by simpa [List.mem_rotate] using hp
+  have h1' : 1 ≤ (L.rotate k).length := by simp [List.length_rotate]; omega
+  rw [cayleyWeight_formPerm_cons_eq_path (x := x) hrot hp' h1']
+  simp [List.length_rotate, getElem_rotate_zero L hk]
+
+lemma rotate_last_ne_head {α : Type*} {L : List α} {k : ℕ}
+    (hL : L.Nodup) (h2 : 2 ≤ L.length) (_hk : k < L.length) :
+    (L.rotate k)[L.length - 1]'(by simp [List.length_rotate]; omega) ≠
+      (L.rotate k)[0]'(by simp [List.length_rotate]; omega) := by
+  have hrot : (L.rotate k).Nodup := (List.nodup_rotate).2 hL
+  exact (List.Nodup.getElem_inj_iff hrot).not.mpr (by omega)
+
+/-- `path_mul_add_eq_weight_mul_sub` with the last index written as an equal length `n`. -/
+lemma path_mul_add_eq_weight_mul_sub_of_length {α : Type*} [Fintype α] [DecidableEq α]
+    (x : α → ℂ) {M : List α} {n : ℕ} (hl : M.Nodup) (h2 : 2 ≤ M.length)
+    (hn : M.length = n)
+    (hx : x (M[n - 1]'(by omega)) ≠ x (M[0]'(by omega))) :
+    cayleyPathWeight x M * (x (M[n - 1]'(by omega)) + x (M[0]'(by omega))) =
+      cayleyWeight x M.formPerm *
+        (x (M[n - 1]'(by omega)) - x (M[0]'(by omega))) := by
+  subst n
+  exact path_mul_add_eq_weight_mul_sub x hl h2 hx
+
+lemma cayleyWeight_cons_rotate_eq_neg_path {α : Type*} [Fintype α] [DecidableEq α]
+    (x : α → ℂ) {p : α} {L : List α} {k : ℕ}
+    (hL : L.Nodup) (hp : p ∉ L) (h2 : 2 ≤ L.length) (hk : k < L.length)
+    (hx : Function.Injective x) :
+    cayleyWeight x (List.formPerm (p :: L.rotate k)) =
+      - cayleyPathWeight x (L.rotate k) -
+        2 * x p * cayleyWeight x L.formPerm *
+          ((x p - x ((L.rotate k)[L.length - 1]'(by simp [List.length_rotate]; omega)))⁻¹ -
+            (x p - x ((L.rotate k)[0]'(by simp [List.length_rotate]; omega)))⁻¹) := by
+  have hrot : (L.rotate k).Nodup := (List.nodup_rotate).2 hL
+  have hp' : p ∉ L.rotate k := by simpa [List.mem_rotate] using hp
+  have h2' : 2 ≤ (L.rotate k).length := by simpa [List.length_rotate] using h2
+  have hyz := rotate_last_ne_head hL h2 hk
+  have hyx : x ((L.rotate k)[L.length - 1]'(by simp [List.length_rotate]; omega)) ≠ x p :=
+    hx.ne (ne_of_mem_of_not_mem (List.getElem_mem _) hp')
+  have hzx : x ((L.rotate k)[0]'(by simp [List.length_rotate]; omega)) ≠ x p :=
+    hx.ne (ne_of_mem_of_not_mem (List.getElem_mem _) hp')
+  have hA :=
+    path_mul_add_eq_weight_mul_sub_of_length (x := x) hrot h2'
+      (List.length_rotate L k) (hx.ne hyz)
+  have hX : cayleyWeight x (L.rotate k).formPerm = cayleyWeight x L.formPerm := by
+    rw [List.formPerm_rotate L hL k]
+  rw [cayleyWeight_cons_rotate_eq (x := x) hL hp h2 hk, ← getElem_rotate_zero L hk]
+  have hfac := cayley_insert_eq_neg_one_sub (x p)
+    (x ((L.rotate k)[L.length - 1]'(by simp [List.length_rotate]; omega)))
+    (x ((L.rotate k)[0]'(by simp [List.length_rotate]; omega)))
+    hyx.symm hzx.symm
+  rw [mul_assoc, hfac, mul_sub, mul_neg, mul_one]
+  set A := cayleyPathWeight x (L.rotate k)
+  set t := x p
+  set y := x ((L.rotate k)[L.length - 1]'(by simp [List.length_rotate]; omega))
+  set z := x ((L.rotate k)[0]'(by simp [List.length_rotate]; omega))
+  set X := cayleyWeight x L.formPerm
+  refine congrArg (fun w => -A - w) ?_
+  have hAyz : A * (y + z) = X * (y - z) := by
+    rw [← hX]
+    exact hA
+  have hsub := sub_div_inv_sub t y z hyx.symm hzx.symm
+  simp only [div_eq_mul_inv]
+  calc
+    A * (2 * t * (y + z) * ((t - y) * (t - z))⁻¹)
+        = 2 * t * (A * (y + z)) * ((t - y) * (t - z))⁻¹ := by ring
+    _ = 2 * t * (X * (y - z)) * ((t - y) * (t - z))⁻¹ := by rw [hAyz]
+    _ = 2 * t * X * ((y - z) * ((t - y) * (t - z))⁻¹) := by ring
+    _ = 2 * t * X * ((y - z) / ((t - y) * (t - z))) := by simp [div_eq_mul_inv]
+    _ = 2 * t * X * ((t - y)⁻¹ - (t - z)⁻¹) := by rw [hsub]
+
+lemma sum_cayleyWeight_cons_rotate {α : Type*} [Fintype α] [DecidableEq α]
+    (x : α → ℂ) {p : α} {L : List α}
+    (hL : L.Nodup) (hp : p ∉ L) (h2 : 2 ≤ L.length)
+    (hx : Function.Injective x) :
+    ∑ k : Fin L.length, cayleyWeight x (List.formPerm (p :: L.rotate k.val)) =
+      - ∑ k : Fin L.length, cayleyPathWeight x (L.rotate k.val) := by
+  have : NeZero L.length := ⟨by omega⟩
+  let a : Fin L.length := ⟨L.length - 1, by omega⟩
+  let f : Fin L.length → ℂ := fun k => (x p - x (L[k.val]))⁻¹
+  let d : Fin L.length → ℂ := fun k => f (k + a) - f k
+  have hterm : ∀ k : Fin L.length,
+      cayleyWeight x (List.formPerm (p :: L.rotate k.val)) =
+        - cayleyPathWeight x (L.rotate k.val) -
+          2 * x p * cayleyWeight x L.formPerm * d k := by
+    intro k
+    have h := cayleyWeight_cons_rotate_eq_neg_path (x := x) hL hp h2 k.isLt hx
+    have h0 := getElem_rotate_zero L k.isLt
+    have hlast := getElem_rotate_last L h2 k.isLt
+    have hidx : (k + a).val = (k.val + (L.length - 1)) % L.length := by
+      simp [a, Fin.val_add]
+    rw [h0, hlast] at h
+    simpa [d, f, hidx] using h
+  simp_rw [hterm]
+  rw [sum_sub_distrib, sum_neg_distrib]
+  have hconst :
+      (∑ k, (2 : ℂ) * x p * cayleyWeight x L.formPerm * d k) =
+        (2 : ℂ) * x p * cayleyWeight x L.formPerm * ∑ k, d k := by
+    simp [mul_sum, mul_assoc]
+  rw [hconst]
+  have htel : ∑ k, d k = 0 := by
+    simp_rw [d]
+    rw [sum_sub_distrib]
+    have hre :
+        (∑ k : Fin L.length, f (k + a)) = ∑ k : Fin L.length, f k :=
+      Fintype.sum_equiv (Equiv.addRight a) (fun k => f (k + a)) f fun _ => rfl
+    rw [hre, sub_self]
+  rw [htel, mul_zero, sub_zero]
+
+lemma cayleyPathWeight_eq_of_eqOn {α : Type*} (x x' : α → ℂ) {L : List α}
+    (h : ∀ a ∈ L, x a = x' a) :
+    cayleyPathWeight x L = cayleyPathWeight x' L := by
+  rw [cayleyPathWeight_eq_prod_range, cayleyPathWeight_eq_prod_range]
+  refine prod_congr rfl fun i _ => ?_
+  split_ifs with hlt
+  · have hmem0 : L[i]'(Nat.lt_of_succ_lt hlt) ∈ L := List.getElem_mem _
+    have hmem1 : L[i + 1] ∈ L := List.getElem_mem _
+    simp [h _ hmem0, h _ hmem1]
+  · rfl
+
+lemma cayleyPathWeight_rotate_eq_of_eqOn_compl {α : Type*} [DecidableEq α]
+    (x x' : α → ℂ) {p : α} {L : List α} {k : ℕ}
+    (hp : p ∉ L) (h : ∀ q, q ≠ p → x q = x' q) :
+    cayleyPathWeight x (L.rotate k) = cayleyPathWeight x' (L.rotate k) :=
+  cayleyPathWeight_eq_of_eqOn x x' fun a ha =>
+    h a (ne_of_mem_of_not_mem (List.mem_rotate.mp ha) hp)
+
+/-- She–Sun–Xia Lemma 2.3, rotate-class form: the Hamiltonian listing sum
+through `p` does not change if `x` is altered only at `p`. -/
+lemma sum_cayleyWeight_listings_eq_of_eqOn_compl {α : Type*} [Fintype α] [DecidableEq α]
+    (x x' : α → ℂ) (p : α)
+    (hx : Function.Injective x) (hx' : Function.Injective x')
+    (h : ∀ q, q ≠ p → x q = x' q)
+    (hcard : 2 ≤ Fintype.card {q : α // q ≠ p}) :
+    ∑ e : Fin (Fintype.card {q : α // q ≠ p}) ≃ {q : α // q ≠ p},
+        cayleyWeight x (List.formPerm (p :: List.ofFn fun i => (e i).1)) =
+      ∑ e : Fin (Fintype.card {q : α // q ≠ p}) ≃ {q : α // q ≠ p},
+        cayleyWeight x' (List.formPerm (p :: List.ofFn fun i => (e i).1)) := by
+  set m := Fintype.card {q : α // q ≠ p}
+  have : NeZero m := ⟨by omega⟩
+  let Wx : (Fin m ≃ {q : α // q ≠ p}) → ℂ :=
+    fun σ => cayleyWeight x (List.formPerm (p :: List.ofFn fun i : Fin m => (σ i).1))
+  let Wx' : (Fin m ≃ {q : α // q ≠ p}) → ℂ :=
+    fun σ => cayleyWeight x' (List.formPerm (p :: List.ofFn fun i : Fin m => (σ i).1))
+  have hrot :
+      ∀ (e : Fin m ≃ {q : α // q ≠ p}) (k : Fin m),
+        (List.ofFn fun i => (e i).1).rotate k.val =
+          List.ofFn fun i : Fin m => (e (i + k)).1 := fun e k => ofFn_rotate _ k
+  have hWrot :
+      ∀ (e : Fin m ≃ {q : α // q ≠ p}) (k : Fin m),
+        cayleyWeight x
+            (List.formPerm (p :: (List.ofFn fun i => (e i).1).rotate k.val)) =
+          Wx ((Equiv.addRight k).trans e) := by
+    intro e k
+    rw [hrot]
+    rfl
+  have hWrot' :
+      ∀ (e : Fin m ≃ {q : α // q ≠ p}) (k : Fin m),
+        cayleyWeight x'
+            (List.formPerm (p :: (List.ofFn fun i => (e i).1).rotate k.val)) =
+          Wx' ((Equiv.addRight k).trans e) := by
+    intro e k
+    rw [hrot]
+    rfl
+  have hclass :
+      ∀ e : Fin m ≃ {q : α // q ≠ p},
+        ∑ k : Fin m,
+            cayleyWeight x
+              (List.formPerm
+                (p :: (List.ofFn fun i => (e i).1).rotate k.val)) =
+          ∑ k : Fin m,
+            cayleyWeight x'
+              (List.formPerm
+                (p :: (List.ofFn fun i => (e i).1).rotate k.val)) := by
+    intro e
+    let L := List.ofFn fun i => (e i).1
+    have hL : L.Nodup :=
+      List.nodup_ofFn_ofInjective fun i j hij => e.injective (Subtype.ext hij)
+    have hpL : p ∉ L := by
+      intro hmem
+      rw [List.mem_ofFn'] at hmem
+      obtain ⟨i, hi⟩ := hmem
+      exact (e i).2 hi
+    have h2 : 2 ≤ L.length := by
+      simpa [L, List.length_ofFn] using hcard
+    have hxsum := sum_cayleyWeight_cons_rotate (x := x) hL hpL h2 hx
+    have hx'sum := sum_cayleyWeight_cons_rotate (x := x') hL hpL h2 hx'
+    have hlen : L.length = m := List.length_ofFn
+    have hre_x :
+        (∑ k : Fin m,
+            cayleyWeight x (List.formPerm (p :: L.rotate k.val))) =
+          ∑ k : Fin L.length,
+            cayleyWeight x (List.formPerm (p :: L.rotate k.val)) :=
+      Fintype.sum_equiv (finCongr hlen.symm)
+        (fun k : Fin m => cayleyWeight x (List.formPerm (p :: L.rotate k.val)))
+        (fun k : Fin L.length => cayleyWeight x (List.formPerm (p :: L.rotate k.val)))
+        (fun _ => rfl)
+    have hre_x' :
+        (∑ k : Fin m,
+            cayleyWeight x' (List.formPerm (p :: L.rotate k.val))) =
+          ∑ k : Fin L.length,
+            cayleyWeight x' (List.formPerm (p :: L.rotate k.val)) :=
+      Fintype.sum_equiv (finCongr hlen.symm)
+        (fun k : Fin m => cayleyWeight x' (List.formPerm (p :: L.rotate k.val)))
+        (fun k : Fin L.length => cayleyWeight x' (List.formPerm (p :: L.rotate k.val)))
+        (fun _ => rfl)
+    have hpath :
+        (∑ k : Fin L.length, cayleyPathWeight x (L.rotate k.val)) =
+          ∑ k : Fin L.length, cayleyPathWeight x' (L.rotate k.val) :=
+      sum_congr rfl fun k _ =>
+        cayleyPathWeight_rotate_eq_of_eqOn_compl x x' hpL h
+    rw [hre_x, hre_x', hxsum, hx'sum, hpath]
+  have hreindex :
+      ∀ (W : (Fin m ≃ {q : α // q ≠ p}) → ℂ) (k : Fin m),
+        ∑ e, W ((Equiv.addRight k).trans e) = ∑ e, W e := by
+    intro W k
+    let φ :=
+      (Equiv.addRight k).symm.equivCongr (Equiv.refl {q : α // q ≠ p})
+    have hφ : ∀ e, φ e = (Equiv.addRight k).trans e := by
+      intro e
+      ext i
+      dsimp [φ]
+    simp_rw [← hφ]
+    exact Equiv.sum_comp φ W
+  have hdouble :
+      ∑ e, ∑ k : Fin m, Wx ((Equiv.addRight k).trans e) =
+        ∑ e, ∑ k : Fin m, Wx' ((Equiv.addRight k).trans e) := by
+    simp_rw [← hWrot, ← hWrot']
+    exact sum_congr rfl fun e _ => hclass e
+  have hL :
+      (∑ k : Fin m, ∑ e, Wx ((Equiv.addRight k).trans e)) =
+        ∑ k : Fin m, ∑ e, Wx e :=
+    sum_congr rfl fun k _ => hreindex Wx k
+  have hR :
+      (∑ k : Fin m, ∑ e, Wx' ((Equiv.addRight k).trans e)) =
+        ∑ k : Fin m, ∑ e, Wx' e :=
+    sum_congr rfl fun k _ => hreindex Wx' k
+  have hswap (W : (Fin m ≃ {q : α // q ≠ p}) → ℂ) :
+      (∑ e, ∑ k : Fin m, W ((Equiv.addRight k).trans e)) =
+        ∑ k : Fin m, ∑ e, W ((Equiv.addRight k).trans e) :=
+    sum_comm
+  rw [hswap Wx, hswap Wx', hL, hR] at hdouble
+  simp only [sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul] at hdouble
+  have hm0 : (m : ℂ) ≠ 0 := Nat.cast_ne_zero.2 (by omega)
+  exact mul_left_cancel₀ hm0 hdouble
+
+open scoped Classical in
+lemma sum_cayleyWeight_hamiltonian_eq_listings {α : Type*} [Fintype α] [DecidableEq α]
+    (x : α → ℂ) (p : α) (hcard : 2 ≤ Fintype.card {q : α // q ≠ p}) :
+    ∑ σ : {σ : Perm α // σ.IsCycle ∧ σ.support = univ}, cayleyWeight x σ.1 =
+      ∑ e : Fin (Fintype.card {q : α // q ≠ p}) ≃ {q : α // q ≠ p},
+        cayleyWeight x (listingPerm e) := by
+  rw [← Equiv.sum_comp (listingEquiv p hcard) (fun σ => cayleyWeight x σ.1)]
+  dsimp only [listingEquiv]
+  rfl
+
+open scoped Classical in
+lemma sum_cayleyWeight_hamiltonian_eq_of_eqOn_compl {α : Type*} [Fintype α] [DecidableEq α]
+    (x x' : α → ℂ) (p : α)
+    (hx : Function.Injective x) (hx' : Function.Injective x')
+    (h : ∀ q, q ≠ p → x q = x' q)
+    (hcard : 2 ≤ Fintype.card {q : α // q ≠ p}) :
+    ∑ σ : {σ : Perm α // σ.IsCycle ∧ σ.support = univ}, cayleyWeight x σ.1 =
+      ∑ σ : {σ : Perm α // σ.IsCycle ∧ σ.support = univ}, cayleyWeight x' σ.1 := by
+  rw [sum_cayleyWeight_hamiltonian_eq_listings x p hcard,
+    sum_cayleyWeight_hamiltonian_eq_listings x' p hcard]
+  simpa [listingPerm] using
+    sum_cayleyWeight_listings_eq_of_eqOn_compl x x' p hx hx' h hcard
+
 #check (OeisA1818.conjecture1 :
     ∀ (n : ℕ), 1 ≤ n → ∀ (ζ : ℂ), IsPrimitiveRoot ζ (2 * n) →
       (sunMatrix n ζ).permanent = (a n : ℂ))
@@ -3664,5 +4163,19 @@ lemma cayleySum_eq_sigma1_add_sigma2_add {α : Type*} [Fintype α] [DecidableEq 
 #print axioms cayleySum_sigma1
 #print axioms cayleySum_split
 #print axioms cayleySum_eq_sigma1_add_sigma2_add
+
+#print axioms cayleyPathWeight_eq_prod_range
+#print axioms cayleyWeight_formPerm_eq_path_mul_wrap
+#print axioms cayleyWeight_formPerm_cons_eq_path
+#print axioms path_mul_add_eq_weight_mul_sub
+#print axioms cayleyWeight_cons_rotate_eq
+#print axioms path_mul_add_eq_weight_mul_sub_of_length
+#print axioms cayleyWeight_cons_rotate_eq_neg_path
+#print axioms sum_cayleyWeight_cons_rotate
+#print axioms cayleyPathWeight_eq_of_eqOn
+#print axioms cayleyPathWeight_rotate_eq_of_eqOn_compl
+#print axioms sum_cayleyWeight_listings_eq_of_eqOn_compl
+#print axioms sum_cayleyWeight_hamiltonian_eq_listings
+#print axioms sum_cayleyWeight_hamiltonian_eq_of_eqOn_compl
 
 end A001818C1

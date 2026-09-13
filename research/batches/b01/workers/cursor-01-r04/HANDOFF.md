@@ -37,7 +37,9 @@ Two-point evaluation: `1 + cayleyWeight (swap a b) = -4 xa xb / (xa-xb)^2`. On `
 
 Paper Σ1/Σ2: even-cycle Cayley sums split by the cycle of a distinguished point `p`. Permutations fixing `p` match `cayleySumOn ({p}ᶜ)` (`cayleySum_sigma1`). Permutations whose cycle through `p` is a transposition equal `∑_{q ≠ p} cayleyWeight (swap p q) * cayleySumOn ({p,q}ᶜ)` (`cayleySum_sigma2`). The remainder is the sum over cycle length at least 4 (`cayleySum_eq_sigma1_add_sigma2_add`). Algebraic identity (2.4) (`cayley_triple_identity`) and Hamiltonian listing products (`cayleyWeight_formPerm`, `cayleyWeight_formPerm_cons`) are in place for Lemma 2.3.
 
-Still needed: She–Sun–Xia Lemma 2.3 / Σ3, then recurrence (4.8) / Theorem 1.1 matching formula, then `per M = per(M-J)`.
+Rotate-class insertion: after clearing the skipped edge, the weight of `p :: L.rotate k` equals `-cayleyPathWeight(L.rotate k)` minus a telescoping term in `x p`. Summing over rotations cancels the telescope (`sum_cayleyWeight_cons_rotate`). Path weights ignore `p`, so the Hamiltonian listing sum through `p` is unchanged if `x` is altered only at `p` (`sum_cayleyWeight_hamiltonian_eq_of_eqOn_compl`).
+
+Still needed: She–Sun–Xia Lemma 2.3 as a cardinality-only constant, then Σ3, recurrence (4.8) / Theorem 1.1 matching formula, then `per M = per(M-J)`.
 
 ## Attribution
 

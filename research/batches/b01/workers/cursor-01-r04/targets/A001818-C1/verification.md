@@ -87,9 +87,13 @@ which type-checks. The original `a` is used. The admitted `OeisA1818.conjecture1
 'A001818C1.cayleySum_sigma1' depends on axioms: [propext, Classical.choice, Quot.sound]
 'A001818C1.cayleySum_split' depends on axioms: [propext, Classical.choice, Quot.sound]
 'A001818C1.cayleySum_eq_sigma1_add_sigma2_add' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.cayleyWeight_cons_rotate_eq_neg_path' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.sum_cayleyWeight_cons_rotate' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.sum_cayleyWeight_listings_eq_of_eqOn_compl' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.sum_cayleyWeight_hamiltonian_eq_of_eqOn_compl' depends on axioms: [propext, Classical.choice, Quot.sound]
 ```
 
-No `sorryAx`, `native_decide`, or `Lean.trustCompiler` in those lemmas. The general `n ≥ 1` identity is not yet proved. `per(M-J) = a n` is proved and `per M` equals the even-cycle Cayley sum. Paper Σ1 and Σ2 at a distinguished point are proved. Lemma 2.3 / Σ3 and recurrence (4.8) remain, so `per M = per(M-J)` remains.
+No `sorryAx`, `native_decide`, or `Lean.trustCompiler` in those lemmas. The general `n ≥ 1` identity is not yet proved. `per(M-J) = a n` is proved and `per M` equals the even-cycle Cayley sum. Paper Σ1 and Σ2 at a distinguished point are proved. Hamiltonian Cayley sums are independent of one distinguished value. The cardinality-only constant, Σ3, and recurrence (4.8) remain, so `per M = per(M-J)` remains.
 
 ## Boundary
 

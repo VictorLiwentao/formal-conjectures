@@ -68,4 +68,5 @@ Do not import or use `OeisA1818.conjecture1` (`sorry`). Use original `a`. Prove 
 - Paper Σ2: permutations with `d(τ)=2` at a distinguished point `p` are `swap p q` times a permutation of the complement. Their Cayley sum is `∑_{q ≠ p} f((p q)) S(omit p,q)` (`cayleySum_sigma2`).
 - Paper Σ1: permutations fixing `p` match the even-cycle sum on `{p}ᶜ` (`cayleySum_sigma1`). Together with the length-`≥ 4` remainder this decomposes `cayleySum` (`cayleySum_eq_sigma1_add_sigma2_add`).
 - Identity (2.4) (`cayley_triple_identity`) and Hamiltonian listing products (`cayleyWeight_formPerm`, `cayleyWeight_formPerm_cons`) are the algebraic input for Lemma 2.3.
-- Still needed: Lemma 2.3 (Hamiltonian even-cycle sums constant), then recurrence (4.8) / matching formula Theorem 1.1, then She–Sun–Xia 1.3(i).
+- Rotate-class insertion: `cayleyWeight (p :: L.rotate k)` equals `-cayleyPathWeight(L.rotate k)` minus a term `2 xp f(L) ((xp-y)^{-1}-(xp-z)^{-1})`. The inverse difference telescopes over rotations (`sum_cayleyWeight_cons_rotate`). Therefore the Hamiltonian listing sum through `p` is independent of `x p` (`sum_cayleyWeight_hamiltonian_eq_of_eqOn_compl`).
+- Still needed: Lemma 2.3 as a constant depending only on cardinality, then recurrence (4.8) / matching formula Theorem 1.1, then She–Sun–Xia 1.3(i).
