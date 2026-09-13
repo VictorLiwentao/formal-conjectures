@@ -21,7 +21,7 @@ python3 research/batches/b01/workers/cursor-06/targets/A108866/experiments/prime
 python3 research/batches/b01/workers/cursor-06/targets/A108866/experiments/leading_mod_p2.py
 ```
 
-Final math commit SHA: `96b33c1a`.
+Final math commit SHA: `23b5200b`.
 
 ## Status
 
@@ -37,6 +37,10 @@ Partial. Kernel-checked so far:
 - rest product `C ≡ C0` with valuation gap at least 2
 - `v_p(U0)≥1` and `v_p(U)=v_p(U0)` if `v_p(U0)<2`
 - converse at `n=p^e` if `v_p(U0)=1`: `not_n_sq_dvd_num_of_prime_pow_of_leading`
+- `v_p(U0)=1` if `p^2` does not divide `oddInnerNum p`
+- all `n=5^e` for `e≥2`: `not_n_sq_dvd_num_of_five_pow`
+- `C(p-1,a-1) ≡ 1 - p H_{a-1}` in `ZMod (p^2)` for odd `a`
+- `¬ p^2 ∣ oddInnerNum p` iff the odd unit sum is nonzero in `ZMod (p^2)`
 - reduction `conjecture_of_odd_composite_converse`
 
 Axioms `{propext, Classical.choice, Quot.sound}` on the printed theorems. Full odd converse open. No PR. No OEIS edit. Not the frozen iff.
