@@ -1285,6 +1285,79 @@ lemma sum_cycleEdgeWeight_ncycles {α : Type*} [Fintype α] [DecidableEq α]
   simp only [sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul] at hdouble
   have hm0 : (m : ℂ) ≠ 0 := Nat.cast_ne_zero.2 (by omega)
   exact (mul_eq_zero.mp hdouble).resolve_left hm0
+
+lemma zeta_pow_sub {N : ℕ} [NeZero N] {ζ : ℂ} (hζ : IsPrimitiveRoot ζ N)
+    (i j : Fin N) :
+    ζ ^ j.val - ζ ^ i.val =
+      - (ζ ^ i.val) * (1 - ζ ^ (j.val - i.val : ℤ)) := by
+  have hz := zeta_ne_zero hζ
+  have hi : ζ ^ i.val ≠ 0 := pow_ne_zero _ hz
+  have hdiv : ζ ^ j.val / ζ ^ i.val = ζ ^ (j.val - i.val : ℤ) := by
+    rw [← zpow_natCast, ← zpow_natCast, ← zpow_sub₀ hz]
+  have hsplit : ζ ^ j.val - ζ ^ i.val = ζ ^ i.val * (ζ ^ j.val / ζ ^ i.val - 1) := by
+    field_simp [hi]
+  rw [hsplit, hdiv]
+  ring
+
+lemma cycleEdgeWeight_zeta {N : ℕ} [NeZero N] {ζ : ℂ} (hζ : IsPrimitiveRoot ζ N)
+    (σ : Perm (Fin N)) :
+    cycleEdgeWeight (fun i => ζ ^ i.val) σ =
+      (∏ i ∈ σ.support, (-ζ ^ i.val)⁻¹) *
+        ∏ i ∈ σ.support, (1 - ζ ^ ((σ i).val - i.val : ℤ))⁻¹ := by
+  unfold cycleEdgeWeight
+  have hterm : ∀ i ∈ σ.support,
+      (ζ ^ (σ i).val - ζ ^ i.val)⁻¹ =
+        (-ζ ^ i.val)⁻¹ * (1 - ζ ^ ((σ i).val - i.val : ℤ))⁻¹ := by
+    intro i hi
+    have hij : σ i ≠ i := Equiv.Perm.mem_support.mp hi
+    have hζi : ζ ^ i.val ≠ 0 := pow_ne_zero _ (zeta_ne_zero hζ)
+    have hne : 1 - ζ ^ ((σ i).val - i.val : ℤ) ≠ 0 := denom_ne_zero hζ hij
+    rw [zeta_pow_sub hζ]
+    field_simp [hζi, hne]
+  simp_rw [← prod_mul_distrib]
+  refine prod_congr rfl hterm
+
+lemma card_subtype_ne {α : Type*} [Fintype α] [DecidableEq α] (p : α) :
+    Fintype.card {q : α // q ≠ p} = Fintype.card α - 1 := by
+  rw [Fintype.card_subtype, Finset.filter_ne', card_erase_of_mem (mem_univ p), card_univ]
+
+lemma listing_nodup {α : Type*} [Fintype α] [DecidableEq α] {p : α}
+    (e : Fin (Fintype.card {q : α // q ≠ p}) ≃ {q : α // q ≠ p}) :
+    (p :: List.ofFn fun i => (e i).1).Nodup := by
+  refine List.nodup_cons.2 ⟨?_, List.nodup_ofFn_ofInjective fun i j hij =>
+    e.injective (Subtype.ext hij)⟩
+  intro hmem
+  rw [List.mem_ofFn'] at hmem
+  obtain ⟨i, hi⟩ := hmem
+  exact (e i).2 hi
+
+lemma listing_isCycle {α : Type*} [Fintype α] [DecidableEq α] {p : α}
+    (e : Fin (Fintype.card {q : α // q ≠ p}) ≃ {q : α // q ≠ p})
+    (hcard : 2 ≤ Fintype.card {q : α // q ≠ p}) :
+    (List.formPerm (p :: List.ofFn fun i => (e i).1)).IsCycle := by
+  refine List.isCycle_formPerm (listing_nodup e) ?_
+  simpa [List.length_cons, List.length_ofFn] using
+    (Nat.le_add_right_of_le hcard : 2 ≤ Fintype.card {q : α // q ≠ p} + 1)
+
+lemma listing_support_univ {α : Type*} [Fintype α] [DecidableEq α] {p : α}
+    (e : Fin (Fintype.card {q : α // q ≠ p}) ≃ {q : α // q ≠ p})
+    (hcard : 2 ≤ Fintype.card {q : α // q ≠ p}) :
+    (List.formPerm (p :: List.ofFn fun i => (e i).1)).support = (univ : Finset α) := by
+  have hne : ∀ a : α, p :: List.ofFn (fun i => (e i).1) ≠ [a] := by
+    intro a h
+    have hlen := congr_arg List.length h
+    simp only [List.length_cons, List.length_ofFn, List.length_nil] at hlen
+    omega
+  rw [List.support_formPerm_of_nodup _ (listing_nodup e) hne, List.toFinset_cons]
+  ext q
+  simp only [mem_insert, List.mem_toFinset, mem_univ, iff_true]
+  by_cases hqp : q = p
+  · exact Or.inl hqp
+  · refine Or.inr ?_
+    rw [List.mem_ofFn']
+    refine ⟨e.symm ⟨q, hqp⟩, ?_⟩
+    simp
+
 #check (OeisA1818.conjecture1 :
     ∀ (n : ℕ), 1 ≤ n → ∀ (ζ : ℂ), IsPrimitiveRoot ζ (2 * n) →
       (sunMatrix n ζ).permanent = (a n : ℂ))
@@ -1310,5 +1383,9 @@ lemma sum_cycleEdgeWeight_ncycles {α : Type*} [Fintype α] [DecidableEq α]
 #print axioms sum_cycleEdgeWeight_cons_rotate
 #print axioms ofFn_rotate
 #print axioms sum_cycleEdgeWeight_ncycles
+#print axioms zeta_pow_sub
+#print axioms cycleEdgeWeight_zeta
+#print axioms listing_isCycle
+#print axioms listing_support_univ
 
 end A001818C1
