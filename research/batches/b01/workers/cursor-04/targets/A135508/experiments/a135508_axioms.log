@@ -333,3 +333,20 @@
 'OeisA135508.conjecture_of_minFac_le_two_hundred_fifty_seven_or_twin' depends on axioms: [propext,
  Classical.choice,
  Quot.sound]
+'OeisA135508.two_hundred_sixty_three_dvd_x_6047' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.conjecture_of_two_hundred_sixty_three_dvd' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.remaining_p_ge_two_hundred_sixty_three' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.conjecture_of_minFac_two_hundred_sixty_three' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.remaining_prime_from_two_hundred_fifty_eight_le_two_hundred_sixty_three' depends on axioms: [propext]
+'OeisA135508.conjecture_of_minFac_le_two_hundred_sixty_three_or_twin' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'OeisA135508.a_add_two_eq' depends on axioms: [propext, Quot.sound]
+'OeisA135508.two_hundred_sixty_nine_dvd_x_2957' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.conjecture_of_two_hundred_sixty_nine_dvd' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.remaining_p_ge_two_hundred_sixty_nine' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.conjecture_of_minFac_two_hundred_sixty_nine' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.remaining_prime_from_two_hundred_sixty_four_le_two_hundred_sixty_nine' depends on axioms: [propext]
+'OeisA135508.conjecture_of_minFac_le_two_hundred_sixty_nine_or_twin' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
