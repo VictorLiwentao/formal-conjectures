@@ -109,8 +109,22 @@ or `v_p(C-C0)≥2`. Kernel-checked; axioms
 
 `eq_or_two_le_padicValRat_leading_sub` / `padicValRat_leading_eq_of_lt`:
 the odd leading sums `U` and `U0` therefore agree whenever
-`v_p(U0)<2`. The remaining gap for `p^e` is `v_p(U0)=1`
+`v_p(U0)<2`.
+
+`one_le_padicValRat_oddLeadingSum0`: `v_p(U0)≥1` because `T(p)=2p U0`
+and `v_p(T(p))≥2`.
+
+`padicValRat_inner_prime_pow_of_leading`: if `v_p(U)=1` then the inner
+sum at `n=p^e` has valuation `3-2e`, since the rest layer is at least
+`4-2e`. Then `v_p(T(p^e))=3-e<2e`.
+
+`not_n_sq_dvd_num_of_prime_pow_of_leading`: the converse at `n=p^e`
+for `p≥5` and `e≥2` if `v_p(U0)=1`. Kernel-checked; axioms
+`propext`, `Classical.choice`, `Quot.sound`. This is not the frozen iff.
+The remaining gap for prime powers is `v_p(U0)=1` exactly
 (empirically except `p=7`, where `v=2`).
+
+## Odd composite converse
 
 First-order expansion `C(p-1,a-1)=∏(1-p/b)` for odd `a`, and
 `C(p-1,a-1) ≡ 1 - p H_{a-1}` with valuation gap at least 2
@@ -135,6 +149,7 @@ Kernel-checked fragments of the converse:
 - all `n=3 p^e` for primes `p≥5` and `e≥1` (`v_p(T(3 p^e))=-e`)
 - `p^e` leading binomials: `C ≡ C0` with valuation gap at least 2,
   so `v_p(U)=v_p(U0)` whenever `v_p(U0)<2`
+- converse at `n=p^e` whenever `v_p(U0)=1`
 
 Remaining odd composites include prime powers `p^e` for `p≥5` and products
 where `L(m/p^e)=0` for every eligible prime (for example `n=1027=13·79`),

@@ -102,7 +102,17 @@ Kernel-checked rest-product congruence, same axioms, `#print axioms` on 2026-09-
 
 Compile log: `/opt/cursor/artifacts/a108866_lean_wfail_leading.log`, exit 0, no `sorryAx`.
 Either `C=C0` or `v_p(C-C0)≥2`. If `v_p(U0)<2` then `v_p(U)=v_p(U0)`.
-Evaluating `v_p(U0)` is not yet kernel-checked.
+
+Kernel-checked prime-power converse under `v_p(U0)=1`, same axioms, `#print axioms` on 2026-09-13:
+
+```
+'OeisA108866.one_le_padicValRat_oddLeadingSum0'
+'OeisA108866.padicValRat_inner_prime_pow_of_leading'
+'OeisA108866.not_n_sq_dvd_num_of_prime_pow_of_leading'
+```
+
+Compile log: `/opt/cursor/artifacts/a108866_lean_wfail_layer.log`, exit 0, no `sorryAx`.
+If `v_p(U0)=1` then `v_p(T(p^e))=3-e<2e`. Evaluating `v_p(U0)=1` exactly is not yet kernel-checked.
 The file still does not prove the frozen iff.
 
 Kernel-checked exact evaluations `n=9,25,27,49` and packaging lemmas remain in the same file, same axioms.

@@ -21,7 +21,7 @@ python3 research/batches/b01/workers/cursor-06/targets/A108866/experiments/prime
 python3 research/batches/b01/workers/cursor-06/targets/A108866/experiments/leading_mod_p2.py
 ```
 
-Final math commit SHA: `ed012571`.
+Final math commit SHA: `96b33c1a`.
 
 ## Status
 
@@ -32,11 +32,11 @@ Partial. Kernel-checked so far:
 - prime direction `n_sq_dvd_num_of_prime`
 - truncated harmonic `L ≠ 0` criterion
 - exact converse at `n=9,25,27,49`
-- powers of 3: `not_n_sq_dvd_num_of_three_pow` (`v_3(T(3^e))=2-e` for `e≥2`)
-- `n=3 p^e` for primes `p≥5`: `not_n_sq_dvd_num_of_three_mul_pow` (`v_p(T(3 p^e))=-e`)
-- leading binomial product `choose_pow_pred_eq_mul_rest`
-- rest product `1` or `v≥2`: `eq_or_two_le_padicValRat_choose_sub`
-- leading sums `U ≡ U0` at valuation `< 2`: `padicValRat_leading_eq_of_lt`
+- powers of 3: `not_n_sq_dvd_num_of_three_pow`
+- `n=3 p^e` for primes `p≥5`: `not_n_sq_dvd_num_of_three_mul_pow`
+- rest product `C ≡ C0` with valuation gap at least 2
+- `v_p(U0)≥1` and `v_p(U)=v_p(U0)` if `v_p(U0)<2`
+- converse at `n=p^e` if `v_p(U0)=1`: `not_n_sq_dvd_num_of_prime_pow_of_leading`
 - reduction `conjecture_of_odd_composite_converse`
 
 Axioms `{propext, Classical.choice, Quot.sound}` on the printed theorems. Full odd converse open. No PR. No OEIS edit. Not the frozen iff.
