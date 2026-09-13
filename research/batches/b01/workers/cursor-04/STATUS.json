@@ -326,5 +326,5 @@
     "first_entry_iff_dvd_add and the 30/210 stock package entered small primes. Leftover least factors remain coprime to 210."
   ],
   "next_step": "Frozen type still unproved. Compiled first-entry of 277 (k=19) and 281 (k=11) lifts the leftover cutoff to lpf ≥ 293. Euclid iff and 210-stock do not inject leftover factors. Remaining work is an unconditional first-entry bound q | x(q(q+2)-1) for leftover q ≥ 293, or a Lean-checkable counterexample. Complementary Type A injectors and Type B k≤q^2 still need a prime in an AP. Extending minFac does not finish ∀p. Do not claim completion.",
-  "handoff_research_commit": "52a231a2"
+  "handoff_research_commit": "cea4a371"
 }
