@@ -5989,6 +5989,55 @@ lemma cayleySum_complementary_eq_inner {α : Type*}
     have hne1 : τ ≠ 1 := fun hτ1 => hpτ (by simp [hτ1])
     rw [if_neg hne1, cayleySum_fibre_remainder_of_moves x p τ hpτ]
 
+/-- Cayley kernel matrix. Off-diagonal entries are `(x_j + x_i)/(x_j - x_i)`
+so that Mathlib's permanent `∏_i M (σ i) i` matches `cayleyWeight`. -/
+noncomputable def cayleyMatrix {α : Type*} [DecidableEq α] (x : α → ℂ) :
+    Matrix α α ℂ :=
+  fun i j => if i = j then (1 : ℂ) else (x j + x i) / (x j - x i)
+
+lemma cayleyMatrix_apply_eq {α : Type*} [DecidableEq α] (x : α → ℂ) (i : α) :
+    cayleyMatrix x i i = 1 := by
+  simp [cayleyMatrix]
+
+lemma cayleyMatrix_apply_ne {α : Type*} [DecidableEq α] (x : α → ℂ) {i j : α}
+    (hij : i ≠ j) :
+    cayleyMatrix x i j = (x j + x i) / (x j - x i) := by
+  simp [cayleyMatrix, hij]
+
+lemma prod_cayleyMatrix_eq_cayleyWeight {α : Type*} [Fintype α] [DecidableEq α]
+    (x : α → ℂ) (σ : Perm α) :
+    (∏ i, cayleyMatrix x (σ i) i) = cayleyWeight x σ := by
+  unfold cayleyWeight
+  rw [← union_compl σ.support, prod_union disjoint_compl_right]
+  have hfix : ∏ i ∈ σ.supportᶜ, cayleyMatrix x (σ i) i = 1 := by
+    refine prod_eq_one fun i hi => ?_
+    have : σ i = i := Equiv.Perm.notMem_support.mp (mem_compl.mp hi)
+    rw [this, cayleyMatrix_apply_eq]
+  rw [hfix, mul_one]
+  refine prod_congr rfl fun i hi => ?_
+  have hne : σ i ≠ i := Equiv.Perm.mem_support.mp hi
+  rw [cayleyMatrix_apply_ne x hne]
+
+lemma permanent_cayleyMatrix {α : Type*} [Fintype α] [DecidableEq α] (x : α → ℂ) :
+    (cayleyMatrix x).permanent = ∑ σ : Perm α, cayleyWeight x σ := by
+  unfold Matrix.permanent
+  refine Fintype.sum_congr _ _ fun σ => prod_cayleyMatrix_eq_cayleyWeight x σ
+
+lemma permanent_cayleyMatrix_eq_cayleySum {α : Type*} [Fintype α] [DecidableEq α]
+    [LinearOrder α] (x : α → ℂ) :
+    (cayleyMatrix x).permanent = cayleySum x := by
+  rw [permanent_cayleyMatrix, cayleySum]
+  exact sum_cayleyWeight_eq_sum_no_odd x
+
+lemma sunMatrix_eq_cayleyMatrix {n : ℕ} [NeZero n] {ζ : ℂ}
+    (hζ : IsPrimitiveRoot ζ (2 * n)) :
+    sunMatrix n ζ = cayleyMatrix (fun i : Fin (2 * n) => ζ ^ i.val) := by
+  ext i j
+  by_cases hij : i = j
+  · simp [hij, sunMatrix, cayleyMatrix]
+  · rw [sunMatrix_apply_ne hζ hij, cayleyMatrix_apply_ne _ hij]
+    exact (cayley_eq_sunFactor (N := 2 * n) hζ (Ne.symm hij)).symm
+
 #check (OeisA1818.conjecture1 :
     ∀ (n : ℕ), 1 ≤ n → ∀ (ζ : ℂ), IsPrimitiveRoot ζ (2 * n) →
       (sunMatrix n ζ).permanent = (a n : ℂ))
@@ -6155,5 +6204,10 @@ lemma cayleySum_complementary_eq_inner {α : Type*}
 #print axioms cayleySum_fibre_remainder_of_moves
 #print axioms cayleySum_complementary_eq_sum_fibres
 #print axioms cayleySum_complementary_eq_inner
+#print axioms cayleyMatrix_apply_eq
+#print axioms prod_cayleyMatrix_eq_cayleyWeight
+#print axioms permanent_cayleyMatrix
+#print axioms permanent_cayleyMatrix_eq_cayleySum
+#print axioms sunMatrix_eq_cayleyMatrix
 
 end A001818C1
