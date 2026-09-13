@@ -25,6 +25,7 @@ python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/first
 python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/injector_bound.py
 python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/injector_mod.py
 python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/first_entry_shape.py
+python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/injector_window.py
 ```
 
 No `lake clean`, `lake update`, or full default `lake build`.
@@ -70,6 +71,9 @@ conjecture_of_thirty_seven_dvd / forty_one / forty_seven / fifty_three / fifty_n
 conjecture_of_minFac_entered / gcd_gt_one_of_composite_shift / two_dvd_x : propext, Classical.choice, Quot.sound (two_dvd_x: propext, Quot.sound)
 conjecture_of_sixty_seven_dvd / seventy_one / seventy_nine / eighty_three / eighty_nine / ninety_seven / one_hundred_one : propext, Classical.choice, Quot.sound
 conjecture_of_minFac_le_one_hundred_one_or_twin / remaining_prime_le_one_hundred_one : propext, Classical.choice, Quot.sound
+exists_prime_index_injector / exists_prime_index_injector_mod_one / q_dvd_x_eventually / q_dvd_x_eventually_mod_one : propext, Classical.choice, Quot.sound
+coprime_five_mul_sub_two / coprime_sub_two_six_mul : propext, Classical.choice, Quot.sound
+nine_dvd_succ_of_three_dvd_a / not_three_dvd_a_of_not_nine : propext, Quot.sound
 ```
 
 No `sorryAx`, `native_decide`, or `Lean.trustCompiler` on these declarations. `Classical.choice` enters through `Nat.find` in `exists_least_dvd` and through Mathlib `decide` instances. Full log: `experiments/a135508_axioms.log`.

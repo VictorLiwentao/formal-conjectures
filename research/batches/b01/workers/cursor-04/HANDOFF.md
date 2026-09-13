@@ -13,6 +13,8 @@ Do not start duplicate work on this declaration. Cursor-07 owns non-OEIS discove
 
 Cloitre Prop. 6.5 is proved in the research file as `a_two_four_pow`. That is not McEachen.
 
+Dirichlet existence of some prime injector is now proved (`exists_prime_index_injector`, `q_dvd_x_eventually`). That does not bound the injector by `q(q+2)-1` and is not a resolution.
+
 ## Reproduce
 
 ```bash
@@ -36,6 +38,8 @@ python3 research/batches/b01/control/check_assignments.py --repo . --worker curs
 - Tight remaining reduction `conjecture_of_minFac_entered`: it is enough that `lpf(p-2)` divides `x` by index `q(q+2)-1`.
 - Composite shifts are not coprime injectors once that least factor has entered (`gcd_gt_one_of_composite_shift`).
 - General prime-index injector `q_dvd_x_of_prime_index` (the index need only be `≡ 2 (mod 3)`).
+- Dirichlet: some (unbounded) prime injector `kq-2 ≡ 2 (mod 3)` exists for every prime `q ≡ 2 (mod 3)` (`k ≡ 5 (mod 6)`) and every prime `q ≡ 1 (mod 3)` with `q ≥ 7` (`k ≡ 1 (mod 6)`). Hence those primes eventually divide `x`.
+- If `n ≥ 3` and `3 ∣ a n`, then `9 ∣ n+1`.
 - Cloitre 6.7 as `cloitre_valuation_barrier`.
 - Unconditional twin inhibition for pairs with smaller member `≥ 11` (Cloitre 6.3 without `C₁`).
 - Cloitre 2-adic staircase `a(2·4^k-1)=2` for every `k`.
@@ -50,5 +54,5 @@ See `proof.md`. Remaining McEachen primes have `lpf(p-2) ≥ 103` not a larger t
 
 ## Commit SHA
 
-Research commit: `4733eaba`
+Research commit: pending (filled after commit)
 Branch: `cursor/a135508-lcm-primes-770d`

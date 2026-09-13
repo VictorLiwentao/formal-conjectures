@@ -30,8 +30,10 @@ criterion, and the conjecture for every prime `p ≥ 7` with `3 ∣ p - 2`
 They also prove Cloitre's 2-adic staircase `a(2 · 4^k - 1) = 2`, the
 remaining-class factor `q ≡ 2 (mod 3)` of `p-2`, injection of a factor of
 `p-2` when some `kq-2` is a prime `≡ 2 (mod 3)`, McEachen when a factor of
-`p-2` is a larger twin, Cloitre's valuation barrier, and remaining McEachen
-when `lpf(p-2) ≤ 101` or that least factor is a larger twin.
+`p-2` is a larger twin, Cloitre's valuation barrier, remaining McEachen
+when `lpf(p-2) ≤ 101` or that least factor is a larger twin, Dirichlet
+existence of some (unbounded) prime injector for every prime `q ≥ 5`,
+and that `3 ∣ a n` for `n ≥ 3` forces `9 ∣ n+1`.
 -/
 
 namespace OeisA135508
@@ -126,6 +128,28 @@ lemma gcd_gt_one_of_three_dvd_succ {n : ℕ} (hn : 4 ≤ n) (h3 : 3 ∣ n + 1) :
   have : 3 ≤ Nat.gcd (x n) (n + 1) :=
     Nat.le_of_dvd (Nat.gcd_pos_of_pos_right _ (by omega)) hg
   omega
+
+/-- If `n ≥ 3` and `3 ∣ a n`, then `9 ∣ n+1`. In particular `3 ∤ a n`
+whenever `9` does not divide `n+1`. -/
+lemma nine_dvd_succ_of_three_dvd_a {n : ℕ} (hn : 3 ≤ n) (h3 : 3 ∣ a n) :
+    9 ∣ n + 1 := by
+  have hnpos : 0 < n := by omega
+  by_cases hn4 : 4 ≤ n
+  · have hsucc : 3 ∣ n + 1 := h3.trans (a_dvd hnpos)
+    have hg3 : 3 ∣ Nat.gcd (x n) (n + 1) :=
+      Nat.dvd_gcd (three_dvd_x hn4) hsucc
+    have hmul := a_mul_gcd hnpos
+    have : 3 * 3 ∣ a n * Nat.gcd (x n) (n + 1) := Nat.mul_dvd_mul h3 hg3
+    rwa [hmul] at this
+  · have heq : n = 3 := by omega
+    subst heq
+    have : ¬ 3 ∣ a 3 := by
+      rw [a_3]
+      decide
+    exact False.elim (this h3)
+
+lemma not_three_dvd_a_of_not_nine {n : ℕ} (hn : 3 ≤ n) (h9 : ¬ 9 ∣ n + 1) :
+    ¬ 3 ∣ a n := fun h => h9 (nine_dvd_succ_of_three_dvd_a hn h)
 
 lemma five_dvd_x_three : 5 ∣ x 3 := by
   have h := x_succ_a (n := 2) (by decide)
@@ -1002,6 +1026,187 @@ theorem conjecture_of_five_prime_injector {p q : ℕ} (hp : p.Prime) (hp5 : 5 �
     (hle : 5 * q - 2 ≤ p - 3) (hqp : q ∣ p - 2) (hq1 : 1 < q) :
     a (p - 1) = p :=
   conjecture_of_prime_injector hp hp5 (by decide) hmodq hpr h7 hle hqp hq1
+
+/-- Residue `5q-2` is coprime to the Dirichlet modulus `6q` when `q ≡ 2 (mod 3)`. -/
+lemma coprime_five_mul_sub_two {q : ℕ} (hq : q.Prime) (h5 : 5 ≤ q)
+    (hmod : q % 3 = 2) : Nat.Coprime (5 * q - 2) (6 * q) := by
+  have h2le : 2 ≤ q := le_trans (by decide : 2 ≤ 5) h5
+  have hrep : 5 * q - 2 = 4 * q + (q - 2) := by omega
+  have hcopq : Nat.Coprime (5 * q - 2) q := by
+    rw [hrep, Nat.coprime_mul_right_add_left, Nat.coprime_self_sub_left h2le]
+    exact ((hq.coprime_iff_not_dvd).2 (by
+      intro h
+      have : q = 2 := (Nat.prime_dvd_prime_iff_eq hq Nat.prime_two).1 h
+      omega)).symm
+  have hcop2 : Nat.Coprime (5 * q - 2) 2 := by
+    refine (Nat.prime_two.coprime_iff_not_dvd.2 ?_).symm
+    intro h
+    have hmod2 : (5 * q - 2) % 2 = 0 := Nat.mod_eq_zero_of_dvd h
+    have hqodd : q % 2 = 1 := by
+      rcases hq.eq_two_or_odd with h2 | hodd
+      · omega
+      · exact hodd
+    omega
+  have hcop3 : Nat.Coprime (5 * q - 2) 3 := by
+    have hqrep : q = 3 * (q / 3) + 2 := by
+      simpa [hmod] using (Nat.div_add_mod q 3).symm
+    have hmod3 : (5 * q - 2) % 3 = 2 := by omega
+    refine (Nat.prime_three.coprime_iff_not_dvd.2 ?_).symm
+    intro h
+    have : (5 * q - 2) % 3 = 0 := Nat.mod_eq_zero_of_dvd h
+    omega
+  have hcop6 : Nat.Coprime (5 * q - 2) 6 := hcop2.mul_right hcop3
+  exact hcop6.mul_right hcopq
+
+/-- Residue `q-2` is coprime to `6q` when `q ≡ 1 (mod 3)`. -/
+lemma coprime_sub_two_six_mul {q : ℕ} (hq : q.Prime) (h7 : 7 ≤ q)
+    (hmod : q % 3 = 1) : Nat.Coprime (q - 2) (6 * q) := by
+  have h2le : 2 ≤ q := le_trans (by decide : 2 ≤ 7) h7
+  have hcopq : Nat.Coprime (q - 2) q := by
+    rw [Nat.coprime_self_sub_left h2le]
+    exact ((hq.coprime_iff_not_dvd).2 (by
+      intro h
+      have : q = 2 := (Nat.prime_dvd_prime_iff_eq hq Nat.prime_two).1 h
+      omega)).symm
+  have hcop2 : Nat.Coprime (q - 2) 2 := by
+    refine (Nat.prime_two.coprime_iff_not_dvd.2 ?_).symm
+    intro h
+    have hmod2 : (q - 2) % 2 = 0 := Nat.mod_eq_zero_of_dvd h
+    have hqodd : q % 2 = 1 := by
+      rcases hq.eq_two_or_odd with h2 | hodd
+      · omega
+      · exact hodd
+    omega
+  have hcop3 : Nat.Coprime (q - 2) 3 := by
+    have hqrep : q = 3 * (q / 3) + 1 := by
+      simpa [hmod] using (Nat.div_add_mod q 3).symm
+    have hmod3 : (q - 2) % 3 = 2 := by omega
+    refine (Nat.prime_three.coprime_iff_not_dvd.2 ?_).symm
+    intro h
+    have : (q - 2) % 3 = 0 := Nat.mod_eq_zero_of_dvd h
+    omega
+  have hcop6 : Nat.Coprime (q - 2) 6 := hcop2.mul_right hcop3
+  exact hcop6.mul_right hcopq
+
+lemma five_residue_add {q t : ℕ} (h2 : 2 ≤ 5 * q) :
+    6 * q * t + (5 * q - 2) + 2 = (6 * t + 5) * q := by
+  have hmul : (6 * t + 5) * q = 6 * q * t + 5 * q := by ring
+  have h5 : (5 * q - 2) + 2 = 5 * q := Nat.sub_add_cancel h2
+  omega
+
+lemma injector_eq_of_five_residue {q r : ℕ} (h2 : 2 ≤ 5 * q)
+    (hsum : 6 * q * (r / (6 * q)) + (5 * q - 2) = r) :
+    (6 * (r / (6 * q)) + 5) * q - 2 = r := by
+  have hplus : (6 * (r / (6 * q)) + 5) * q = r + 2 := by
+    have := five_residue_add (t := r / (6 * q)) h2
+    omega
+  have hle : 2 ≤ (6 * (r / (6 * q)) + 5) * q := by
+    omega
+  exact (Nat.sub_eq_iff_eq_add hle).2 hplus
+
+lemma r_mod_three_of_five_residue {q r : ℕ} (hmod : q % 3 = 2)
+    (hr : r % (6 * q) = 5 * q - 2) : r % 3 = 2 := by
+  have hdiv := Nat.div_add_mod r (6 * q)
+  rw [hr] at hdiv
+  have hqrep : q = 3 * (q / 3) + 2 := by
+    simpa [hmod] using (Nat.div_add_mod q 3).symm
+  have h52 : (5 * q - 2) % 3 = 2 := by omega
+  have h60 : (6 * q * (r / (6 * q))) % 3 = 0 := by
+    have : (6 * q) % 3 = 0 := by omega
+    rw [Nat.mul_mod, this, Nat.zero_mul, Nat.zero_mod]
+  have : r % 3 = (6 * q * (r / (6 * q)) + (5 * q - 2)) % 3 := by
+    rw [hdiv]
+  rw [this, Nat.add_mod, h60, Nat.zero_add, Nat.mod_mod, h52]
+
+lemma injector_eq_of_one_residue {q r : ℕ} (h2 : 2 ≤ q)
+    (hsum : 6 * q * (r / (6 * q)) + (q - 2) = r) :
+    (6 * (r / (6 * q)) + 1) * q - 2 = r := by
+  have hplus : (6 * (r / (6 * q)) + 1) * q = r + 2 := by
+    have : (q - 2) + 2 = q := Nat.sub_add_cancel h2
+    have hmul : (6 * (r / (6 * q)) + 1) * q =
+        6 * q * (r / (6 * q)) + q := by ring
+    omega
+  have hle : 2 ≤ (6 * (r / (6 * q)) + 1) * q := by omega
+  exact (Nat.sub_eq_iff_eq_add hle).2 hplus
+
+lemma r_mod_three_of_one_residue {q r : ℕ} (h2 : 2 ≤ q) (hmod : q % 3 = 1)
+    (hr : r % (6 * q) = q - 2) : r % 3 = 2 := by
+  have hdiv := Nat.div_add_mod r (6 * q)
+  rw [hr] at hdiv
+  have hqrep : q = 3 * (q / 3) + 1 := by
+    simpa [hmod] using (Nat.div_add_mod q 3).symm
+  have h52 : (q - 2) % 3 = 2 := by omega
+  have h60 : (6 * q * (r / (6 * q))) % 3 = 0 := by
+    have : (6 * q) % 3 = 0 := by omega
+    rw [Nat.mul_mod, this, Nat.zero_mul, Nat.zero_mod]
+  have : r % 3 = (6 * q * (r / (6 * q)) + (q - 2)) % 3 := by
+    rw [hdiv]
+  rw [this, Nat.add_mod, h60, Nat.zero_add, Nat.mod_mod, h52]
+
+/-- Dirichlet: some prime `r = kq-2` with `k ≡ 5 (mod 6)` and `r ≡ 2 (mod 3)`.
+This does not bound `r` by `q(q+2)-1`. -/
+lemma exists_prime_index_injector {q : ℕ} (hq : q.Prime) (h5 : 5 ≤ q)
+    (hmod : q % 3 = 2) :
+    ∃ k, (k * q - 2).Prime ∧ 7 ≤ k * q - 2 ∧ (k * q - 2) % 3 = 2 ∧ k % 6 = 5 := by
+  obtain ⟨r, _hrgt, hpr, hrmod⟩ :=
+    Nat.forall_exists_prime_gt_and_modEq 1 (q := 6 * q) (a := 5 * q - 2)
+      (by omega : 6 * q ≠ 0) (coprime_five_mul_sub_two hq h5 hmod)
+  have hlt : 5 * q - 2 < 6 * q := by omega
+  have hres : (5 * q - 2) % (6 * q) = 5 * q - 2 := Nat.mod_eq_of_lt hlt
+  have hr_mod : r % (6 * q) = 5 * q - 2 := by
+    have : r % (6 * q) = (5 * q - 2) % (6 * q) := hrmod
+    rwa [hres] at this
+  have hsum : 6 * q * (r / (6 * q)) + (5 * q - 2) = r := by
+    have := Nat.div_add_mod r (6 * q)
+    rwa [hr_mod] at this
+  have h2 : 2 ≤ 5 * q := by omega
+  have heq := injector_eq_of_five_residue h2 hsum
+  refine ⟨6 * (r / (6 * q)) + 5, ?_, ?_, ?_, ?_⟩
+  · rwa [heq]
+  · have : 5 * q - 2 ≤ r := by omega
+    have : 23 ≤ 5 * q - 2 := by omega
+    omega
+  · have hmod3 := r_mod_three_of_five_residue hmod hr_mod
+    rwa [heq]
+  · omega
+
+/-- Dirichlet: some prime `r = kq-2 ≡ 2 (mod 3)` when `q ≡ 1 (mod 3)`.
+Typical residue is `k ≡ 1 (mod 6)`. No square-window bound. -/
+lemma exists_prime_index_injector_mod_one {q : ℕ} (hq : q.Prime) (h7 : 7 ≤ q)
+    (hmod : q % 3 = 1) :
+    ∃ k, (k * q - 2).Prime ∧ 7 ≤ k * q - 2 ∧ (k * q - 2) % 3 = 2 ∧ k % 6 = 1 := by
+  obtain ⟨r, hrgt, hpr, hrmod⟩ :=
+    Nat.forall_exists_prime_gt_and_modEq 6 (q := 6 * q) (a := q - 2)
+      (by omega : 6 * q ≠ 0) (coprime_sub_two_six_mul hq h7 hmod)
+  have hlt : q - 2 < 6 * q := by omega
+  have hres : (q - 2) % (6 * q) = q - 2 := Nat.mod_eq_of_lt hlt
+  have hr_mod : r % (6 * q) = q - 2 := by
+    have : r % (6 * q) = (q - 2) % (6 * q) := hrmod
+    rwa [hres] at this
+  have hsum : 6 * q * (r / (6 * q)) + (q - 2) = r := by
+    have := Nat.div_add_mod r (6 * q)
+    rwa [hr_mod] at this
+  have h2 : 2 ≤ q := le_trans (by decide : 2 ≤ 7) h7
+  have heq := injector_eq_of_one_residue h2 hsum
+  refine ⟨6 * (r / (6 * q)) + 1, ?_, ?_, ?_, ?_⟩
+  · rwa [heq]
+  · have : 7 ≤ r := by omega
+    omega
+  · have hmod3 := r_mod_three_of_one_residue h2 hmod hr_mod
+    rwa [heq]
+  · omega
+
+/-- Every prime `q ≡ 2 (mod 3)` eventually divides `x`. No index bound. -/
+lemma q_dvd_x_eventually {q : ℕ} (hq : q.Prime) (h5 : 5 ≤ q)
+    (hmod : q % 3 = 2) : ∃ n, q ∣ x n := by
+  obtain ⟨k, hpr, h7, hrmod, _⟩ := exists_prime_index_injector hq h5 hmod
+  exact ⟨k * q - 2, q_dvd_x_of_prime_index hpr h7 hrmod⟩
+
+/-- Every prime `q ≡ 1 (mod 3)` with `q ≥ 7` eventually divides `x`. -/
+lemma q_dvd_x_eventually_mod_one {q : ℕ} (hq : q.Prime) (h7 : 7 ≤ q)
+    (hmod : q % 3 = 1) : ∃ n, q ∣ x n := by
+  obtain ⟨k, hpr, h7k, hrmod, _⟩ := exists_prime_index_injector_mod_one hq h7 hmod
+  exact ⟨k * q - 2, q_dvd_x_of_prime_index hpr h7k hrmod⟩
 
 /-- Remaining McEachen primes reduce to one prime injector `kq-2 ≤ p-3`. -/
 theorem conjecture_of_remaining_injector {p : ℕ} (hp : p.Prime) (hp7 : 7 ≤ p)
@@ -1914,6 +2119,8 @@ lemma v2_x_two_four_pow_pred (k : ℕ) :
 #print axioms remaining_minFac_ge_five
 #print axioms prime_le_twentythree
 #print axioms gcd_gt_one_of_three_dvd_succ
+#print axioms nine_dvd_succ_of_three_dvd_a
+#print axioms not_three_dvd_a_of_not_nine
 #print axioms larger_twin_dvd_x
 #print axioms conjecture_of_larger_twin_dvd
 #print axioms q_dvd_x_of_prime_index
@@ -1951,5 +2158,11 @@ lemma v2_x_two_four_pow_pred (k : ℕ) :
 #print axioms conjecture_of_one_hundred_one_dvd
 #print axioms remaining_prime_le_one_hundred_one
 #print axioms conjecture_of_minFac_le_one_hundred_one_or_twin
+#print axioms coprime_five_mul_sub_two
+#print axioms coprime_sub_two_six_mul
+#print axioms exists_prime_index_injector
+#print axioms exists_prime_index_injector_mod_one
+#print axioms q_dvd_x_eventually
+#print axioms q_dvd_x_eventually_mod_one
 
 end OeisA135508

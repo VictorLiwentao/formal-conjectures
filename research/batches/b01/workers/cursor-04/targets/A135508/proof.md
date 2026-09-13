@@ -77,19 +77,21 @@ The leftover primes are `p ≡ 1 (mod 3)` with `p-2` composite, `lpf(p-2) ≥ 10
 
 `conjecture_of_minFac_entered` records the tight remaining reduction: McEachen holds once `lpf(p-2)` divides `x` by index `q(q+2)-1`. `gcd_gt_one_of_composite_shift` shows that an odd composite `kq-2 ≡ 2 (mod 3)` is not a coprime injector once that least factor has already entered by its own square-window. Together these isolate the remaining gap as existence of a prime injector `kq-2 ≤ q(q+2)-1`, not a defect in the first-entry algebra.
 
-`q_dvd_x_of_prime_index` injects any factor of `p-2` at a prime `kq-2 ≡ 2 (mod 3)`, including factors `≡ 1 (mod 3)` that are not twins. Cloitre Lemma 6.7 is now `cloitre_valuation_barrier`. If `3 ∣ n+1` and `n ≥ 4` then `gcd(x n, n+1) > 1`.
+`q_dvd_x_of_prime_index` injects any factor of `p-2` at a prime `kq-2 ≡ 2 (mod 3)`, including factors `≡ 1 (mod 3)` that are not twins. Cloitre Lemma 6.7 is now `cloitre_valuation_barrier`. If `3 ∣ n+1` and `n ≥ 4` then `gcd(x n, n+1) > 1`. If `n ≥ 3` and `3 ∣ a n`, then `9 ∣ n+1` (`nine_dvd_succ_of_three_dvd_a`).
+
+Dirichlet is now in the research file, still without a window bound. `exists_prime_index_injector` produces a prime `r = kq-2` with `k ≡ 5 (mod 6)` and `r ≡ 2 (mod 3)` for every prime `q ≡ 2 (mod 3)`, `q ≥ 5`. `exists_prime_index_injector_mod_one` does the same for `q ≡ 1 (mod 3)`, `q ≥ 7`, with `k ≡ 1 (mod 6)`. Hence every such `q` eventually divides `x` (`q_dvd_x_eventually`, `q_dvd_x_eventually_mod_one`). That is not McEachen: the frozen type needs the injector at or before index `p-3`, and the tight remaining case needs `r ≤ q(q+2)-1`.
 
 If `r` itself is a prime `≡ 2 (mod 3)`, then `r ≡ -2 (mod q)` and `r ≤ p-3` suffices (`q_dvd_x_of_prime_injector`, `conjecture_of_prime_injector`). For `lpf(p-2)=q` one has `p-2 ≥ q(q+2)` (`remaining_minFac_mul_add_two_le`). The square `p = q^2+2` is never an odd prime for `q > 3`. So a prime
 
 `r = kq - 2 ≤ q(q+2)-1` with `k ≡ 2 (mod 3)` and `r ≥ 7`
 
-would finish McEachen for a factor `q ≡ 2 (mod 3)`. Even `k` makes `kq-2` even (`not_prime_kq_sub_two_of_even`). If `k ≡ 1 (mod 3)` then `3 ∣ kq-2`, hence composite for `q ≥ 11` (`not_prime_kq_sub_two_of_k_mod_one`). The only prime-injector candidates for such `q` are therefore `k ≡ 5 (mod 6)`. For a factor `r ≡ 1 (mod 3)` that is not a twin, the usable indices are primes `kr-2 ≡ 2 (mod 3)`, typically `k ≡ 1 (mod 6)` (`q_dvd_x_of_prime_index`). Existence of such an index below `q(q+2)-1` is a Linnik-type statement. Mathlib has Dirichlet’s theorem (`Nat.forall_exists_prime_gt_and_eq_mod`), which gives infinitely many primes in that class but no bound `r ≤ q(q+2)-1`. Current Linnik exponents (`L = 5`) are larger than `2`. Even the usual GRH bound is larger than `q^2` by a log factor. The bound was **not** assumed.
+would finish McEachen for a factor `q ≡ 2 (mod 3)`. Even `k` makes `kq-2` even (`not_prime_kq_sub_two_of_even`). If `k ≡ 1 (mod 3)` then `3 ∣ kq-2`, hence composite for `q ≥ 11` (`not_prime_kq_sub_two_of_k_mod_one`). The only prime-injector candidates for such `q` are therefore `k ≡ 5 (mod 6)`. For a factor `r ≡ 1 (mod 3)` that is not a twin, the usable indices are primes `kr-2 ≡ 2 (mod 3)`, typically `k ≡ 1 (mod 6)` (`q_dvd_x_of_prime_index`). Existence of such an index below `q(q+2)-1` is a Linnik-type statement. Current Linnik exponents (`L = 5`) are larger than `2`. Even the usual GRH bound is larger than `q^2` by a log factor. The bound was **not** assumed.
 
 `conjecture_of_cases` splits the frozen type into `p=2`, `p=3`, `p ≡ 2 (mod 3)`, or a remaining injector. `not_q_dvd_x_le` proves that a prime `q ≡ 2 (mod 3)` with `q ≥ 7` does not divide `x n` for `0 < n ≤ q`.
 
 Composite injection is also available: if `gcd(x(kq-3), kq-2)=1`, then `q` enters even when `kq-2` is composite (`q_dvd_x_of_coprime_shift`). When `kq-2` is prime the gcd is 1 by the mod-3 theorem. A scan of first entries for primes `11 ≤ q ≤ 4000` up to `n = 30000` found **no** composite `kq-2` first entries: every recorded first entry was a prime injector. That scan is not a proof, but it indicates that composites in the window do not remove the Linnik barrier.
 
-Deterministic experiments (`injector_bound.py`, `injector_mod.py`, `first_entry_shape.py`): for every prime `q ≡ 2 (mod 3)` with `11 ≤ q ≤ 5000`, a `k ≡ 5 (mod 6)` injector exists with `k ≤ q+2` (worst `k = 89` at `q = 4271`). No McEachen failure and no composite `a(n)` to `n = 40000`. For `n ≥ 3`, no `a(n)` was divisible by `3`. Finite checks are not a resolution.
+Deterministic experiments (`injector_bound.py`, `injector_mod.py`, `first_entry_shape.py`, `injector_window.py`): for every prime `q ≡ 2 (mod 3)` with `11 ≤ q ≤ 30000`, a `k ≡ 5 (mod 6)` injector exists with `k ≤ q+2` (worst `k = 131` at `q = 9209`). No McEachen failure and no composite `a(n)` to `n = 80000`. For `n ≥ 3`, no `a(n)` was divisible by `3`; the only index with `v_3(n+1) > v_3(x n)` was `n = 2`. Finite checks are not a resolution.
 
 Cloitre’s route (assume `C₁`, then Theorem 6.2) was not used. `C₁` is stronger than McEachen and remains open.
 
@@ -103,7 +105,7 @@ Proved: `v2(gcd)`, `v2(a n)`, `v2(x(n+1))`, odd-increment stability, dyadic bloc
 - Claiming Cloitre Cor. 6.6 (needs `C₁`).
 - Proving `q ∣ x(q^2-1)` in full generality (Epoch’s closest attempt; still open).
 - Using `native_decide` or the frozen `sorry`.
-- Using Mathlib Dirichlet without a Linnik bound.
+- Using Mathlib Dirichlet without a Linnik bound. The file now proves unbounded injectors; that still does not give `r ≤ q(q+2)-1`.
 - Using GRH or current Linnik `L=5` as if they implied `r ≤ q(q+2)-1`. They do not.
 
 ## Status
