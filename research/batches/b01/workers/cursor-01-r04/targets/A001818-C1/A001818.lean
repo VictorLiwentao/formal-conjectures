@@ -6110,6 +6110,36 @@ lemma injective_cayleyPowZero {n : ℕ} {ε : ℝ} (hε0 : 0 < ε) (hε1 : ε < 
         omega
       exact Fin.eq_of_val_eq hival
 
+lemma cayleyMatrix_powZero_of_val_lt {n : ℕ} {ε : ℂ} {i j : Fin n}
+    (hi : i.val ≠ 0) (hj : j.val ≠ 0) (hij : i.val < j.val) (hε : ε ≠ 0) :
+    cayleyMatrix (cayleyPowZero n ε) i j =
+      (1 + ε ^ (j.val - i.val)) / (1 - ε ^ (j.val - i.val)) := by
+  have hne : i ≠ j := Fin.ne_of_val_ne (ne_of_lt hij)
+  rw [cayleyMatrix_apply_ne _ hne, cayleyPowZero_of_ne_zero hi,
+    cayleyPowZero_of_ne_zero hj]
+  have hsub : n - i.val = (n - j.val) + (j.val - i.val) := by
+    have : i.val ≤ n := Nat.le_of_lt i.isLt
+    have : j.val ≤ n := Nat.le_of_lt j.isLt
+    omega
+  rw [hsub, pow_add]
+  have hden : ε ^ (n - j.val) ≠ 0 := pow_ne_zero _ hε
+  field_simp [hden]
+
+lemma cayleyMatrix_powZero_of_val_gt {n : ℕ} {ε : ℂ} {i j : Fin n}
+    (hi : i.val ≠ 0) (hj : j.val ≠ 0) (hji : j.val < i.val) (hε : ε ≠ 0) :
+    cayleyMatrix (cayleyPowZero n ε) i j =
+      (ε ^ (i.val - j.val) + 1) / (ε ^ (i.val - j.val) - 1) := by
+  have hne : i ≠ j := Fin.ne_of_val_ne (ne_of_gt hji)
+  rw [cayleyMatrix_apply_ne _ hne, cayleyPowZero_of_ne_zero hi,
+    cayleyPowZero_of_ne_zero hj]
+  have hsub : n - j.val = (n - i.val) + (i.val - j.val) := by
+    have : i.val ≤ n := Nat.le_of_lt i.isLt
+    have : j.val ≤ n := Nat.le_of_lt j.isLt
+    omega
+  rw [hsub, pow_add]
+  have hden : ε ^ (n - i.val) ≠ 0 := pow_ne_zero _ hε
+  field_simp [hden]
+
 #check (OeisA1818.conjecture1 :
     ∀ (n : ℕ), 1 ≤ n → ∀ (ζ : ℂ), IsPrimitiveRoot ζ (2 * n) →
       (sunMatrix n ζ).permanent = (a n : ℂ))
@@ -6285,5 +6315,7 @@ lemma injective_cayleyPowZero {n : ℕ} {ε : ℝ} (hε0 : 0 < ε) (hε1 : ε < 
 #print axioms cayleyMatrix_powZero_col_zero
 #print axioms cayleyMatrix_powZero_row_zero
 #print axioms injective_cayleyPowZero
+#print axioms cayleyMatrix_powZero_of_val_lt
+#print axioms cayleyMatrix_powZero_of_val_gt
 
 end A001818C1

@@ -21,7 +21,7 @@
   "novelty_status": "known_mathematics_formalization",
   "mathematical_novelty": "known_mathematics_She_Sun_Xia_2022_Thm1_3_ii",
   "formalization_novelty": "no_prior_exact_public_lean_found_in_checked_sources_audit_incomplete_until_stop",
-  "last_updated_utc": "2026-09-13T08:38:00Z",
+  "last_updated_utc": "2026-09-13T08:40:00Z",
   "proof_declarations": [
     "A001818C1.conjecture1_of_one",
     "A001818C1.zpow_sub_ne_one",
@@ -160,7 +160,13 @@
     "A001818C1.cayleySum_complementary_eq_sum_fibres",
     "A001818C1.cayleySum_complementary_eq_inner",
     "A001818C1.permanent_cayleyMatrix_eq_cayleySum",
-    "A001818C1.sunMatrix_eq_cayleyMatrix"
+    "A001818C1.sunMatrix_eq_cayleyMatrix",
+    "A001818C1.cayleyPowZero_zero",
+    "A001818C1.cayleyMatrix_powZero_col_zero",
+    "A001818C1.cayleyMatrix_powZero_row_zero",
+    "A001818C1.injective_cayleyPowZero",
+    "A001818C1.cayleyMatrix_powZero_of_val_lt",
+    "A001818C1.cayleyMatrix_powZero_of_val_gt"
   ],
   "unresolved_gaps": [
     "General n>=1 C1 identity still open. Have per(M-J)=a n, Sigma1/Sigma2, Lemma 2.3, paper (3.5), s_1=-1, long even-cycle sums, Lemma 3.1 per(A_n)=0, card-2 vanishing, even-cycle binomial expansion, remainder split, and complementary fibres equal to cayleyWeight(tau)*(1+evenCycleSumThrough on Fix(tau)). Need complementary cancellation by IH, identity (3.9) via the sign-matrix limit, recurrence (4.8), and Thm 1.1."
