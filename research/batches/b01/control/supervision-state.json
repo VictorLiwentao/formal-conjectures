@@ -2,9 +2,9 @@
   "automation_id": "maintain-seven-cursor-math-workers",
   "interval_minutes": 15,
   "target_cursor_slots": 7,
-  "updated_at_utc": "2026-09-13T00:34:15.926518+00:00",
+  "updated_at_utc": "2026-09-13T00:55:35.680645+00:00",
   "accept_known_informal_proofs_for_new_lean_formalization": true,
-  "note": "Seven active goals verified in authenticated Cursor browser during this heartbeat. No stopped worker, exact completion, replacement or user action needed. Native Mac app access reports locked, but in-app browser inspection remains functional.",
+  "note": "Seven active goals verified in authenticated Cursor browser this heartbeat. All workers show ongoing proof or experiment activity; no stopped worker, exact completion, replacement or user action needed. Prior concern about cursor-03-r02 limited visible progress is resolved by new certificate compilation and pushed checkpoint.",
   "slots": [
     {
       "slot": "cursor-01",
@@ -19,8 +19,8 @@
           "launched_at_utc": "2026-09-13T00:14:28.257975+00:00"
         }
       ],
-      "last_checked_at_utc": "2026-09-13T00:34:15.926518+00:00",
-      "progress_note": "Goal active; A109074 source pin checked, factorial-valuation and binary digit-sum integrality exploration; literature/catalog checks running. No complete result claimed.",
+      "last_checked_at_utc": "2026-09-13T00:55:35.680645+00:00",
+      "progress_note": "Goal active with Stop control; A109074 binary-recursion and popcount inequalities in development. Exact factorial-ratio theorem unresolved.",
       "history": [
         {
           "run_id": "cursor-01",
@@ -36,7 +36,7 @@
       "launch_verified_at_utc": "2026-09-13T00:14:28.257975+00:00",
       "goal_command_submitted": true,
       "goal_active_verified": true,
-      "goal_verified_at_utc": "2026-09-13T00:34:15.926518+00:00",
+      "goal_verified_at_utc": "2026-09-13T00:55:35.680645+00:00",
       "environment_build": "bld-20260912-716b23c3-d124-4da8-ab69-743e1fb16843",
       "model": "Cursor Grok 4.6 Extra High"
     },
@@ -47,17 +47,17 @@
       "state": "researching",
       "actual_branch": "cursor/b01-cursor-02-13c0",
       "replacements": [],
-      "last_checked_at_utc": "2026-09-13T00:34:15.926518+00:00",
-      "progress_note": "Goal active; A108081 n=3 cardinality and structural lemmas, bijection/Catalan peel experiments. Universal identity unresolved.",
+      "last_checked_at_utc": "2026-09-13T00:55:35.680645+00:00",
+      "progress_note": "Goal active with Stop control; A108081 recursive word/Catalan first-peel experiments and proof development continue. Remote branch advanced; no exact completion claimed.",
       "goal_active_verified": true,
-      "goal_verified_at_utc": "2026-09-13T00:34:15.926518+00:00"
+      "goal_verified_at_utc": "2026-09-13T00:55:35.680645+00:00"
     },
     {
       "slot": "cursor-03",
       "run_id": "cursor-03-r02",
       "agent_url": "https://cursor.com/agents/bc-a23b458f-124c-4db7-adc3-8fc7a6d14f64",
       "state": "researching",
-      "actual_branch": null,
+      "actual_branch": "cursor/b01-cursor-03-r02-4f64",
       "replacements": [
         {
           "run_id": "cursor-03-r02",
@@ -65,8 +65,8 @@
           "launched_at_utc": "2026-09-13T00:12:48.331188+00:00"
         }
       ],
-      "last_checked_at_utc": "2026-09-13T00:34:15.926518+00:00",
-      "progress_note": "Goal active with Stop control; A069004 still inspecting Epoch submissions and primality APIs, showing Planning next moves. Limited visible progress since previous check; no stop/error/result. Recheck progress next heartbeat before any intervention.",
+      "last_checked_at_utc": "2026-09-13T00:55:35.680645+00:00",
+      "progress_note": "Goal active with Stop control; substantial progress since last check. A069004 Pratt-certificate and prime-count chunks compiling; pilot successes reported, glued exact theorems and full axiom audit pending. No intervention needed.",
       "history": [
         {
           "run_id": "cursor-03",
@@ -82,7 +82,7 @@
       "launch_verified_at_utc": "2026-09-13T00:12:48.331188+00:00",
       "goal_command_submitted": true,
       "goal_active_verified": true,
-      "goal_verified_at_utc": "2026-09-13T00:34:15.926518+00:00",
+      "goal_verified_at_utc": "2026-09-13T00:55:35.680645+00:00",
       "environment_build": "bld-20260912-716b23c3-d124-4da8-ab69-743e1fb16843",
       "model": "Cursor Grok 4.6 Extra High"
     },
@@ -93,10 +93,10 @@
       "state": "researching",
       "actual_branch": "cursor/a135508-lcm-primes-770d",
       "replacements": [],
-      "last_checked_at_utc": "2026-09-13T00:34:15.926518+00:00",
-      "progress_note": "Goal active and automatic continuation visible after partial checkpoint. New A135508 helper development/compilation; exact conjecture unresolved.",
+      "last_checked_at_utc": "2026-09-13T00:55:35.680645+00:00",
+      "progress_note": "Goal active with Stop control; worker reports compiled Cloitre 2-adic staircase helper and continues the first-entry/injector gap. Exact McEachen conjecture explicitly unresolved.",
       "goal_active_verified": true,
-      "goal_verified_at_utc": "2026-09-13T00:34:15.926518+00:00"
+      "goal_verified_at_utc": "2026-09-13T00:55:35.680645+00:00"
     },
     {
       "slot": "cursor-05",
@@ -105,10 +105,10 @@
       "state": "researching",
       "actual_branch": "cursor/b01-cursor-05-cb88",
       "replacements": [],
-      "last_checked_at_utc": "2026-09-13T00:34:15.926518+00:00",
-      "progress_note": "Goal active; A063880 multiplicativity, valuation/CRT lemmas and leftover Diophantine search. Partial checkpoint, no full theorem claimed.",
+      "last_checked_at_utc": "2026-09-13T00:55:35.680645+00:00",
+      "progress_note": "Goal active with Stop control; A063880 v3=3 complement lemma and leftover sigma/usigma case analysis developed. Full statements explicitly unresolved.",
       "goal_active_verified": true,
-      "goal_verified_at_utc": "2026-09-13T00:34:15.926518+00:00"
+      "goal_verified_at_utc": "2026-09-13T00:55:35.680645+00:00"
     },
     {
       "slot": "cursor-06",
@@ -117,10 +117,10 @@
       "state": "researching",
       "actual_branch": "cursor/b01-cursor-06-a108866-efe4",
       "replacements": [],
-      "last_checked_at_utc": "2026-09-13T00:34:15.926518+00:00",
-      "progress_note": "Goal active; A108866 odd-identity/prime-direction Lean work. Pushed branch advanced to 3a2ed7d62d5c84efc650b68bf517fbac5adcd4b1; full iff unresolved.",
+      "last_checked_at_utc": "2026-09-13T00:55:35.680645+00:00",
+      "progress_note": "Goal active with Stop control; A108866 odd-identity Lean compilation repairs continue. No exact iff completion claimed.",
       "goal_active_verified": true,
-      "goal_verified_at_utc": "2026-09-13T00:34:15.926518+00:00"
+      "goal_verified_at_utc": "2026-09-13T00:55:35.680645+00:00"
     },
     {
       "slot": "cursor-07",
@@ -129,15 +129,15 @@
       "state": "researching",
       "actual_branch": "cursor/b01-cursor-07-ca94",
       "replacements": [],
-      "last_checked_at_utc": "2026-09-13T00:34:15.926518+00:00",
-      "progress_note": "Goal active; developing WOWII31 Lean helper lemmas for known graph mathematics under the authorized new-formalization policy. No exact completion claimed.",
+      "last_checked_at_utc": "2026-09-13T00:55:35.680645+00:00",
+      "progress_note": "Goal active with Stop control; worker reports Chung helper lemmas compile and is developing shortened-path construction and inductive WOWII31 theorem. Known mathematics formalization; no exact completion claimed.",
       "goal_active_verified": true,
-      "goal_verified_at_utc": "2026-09-13T00:34:15.926518+00:00"
+      "goal_verified_at_utc": "2026-09-13T00:55:35.680645+00:00"
     }
   ],
   "last_heartbeat": {
-    "scheduled_at_utc": "2026-09-13T00:31:17.966Z",
-    "completed_at_utc": "2026-09-13T00:34:15.926518+00:00",
+    "scheduled_at_utc": "2026-09-13T00:49:47.992Z",
+    "completed_at_utc": "2026-09-13T00:55:35.680645+00:00",
     "occupied_slots": 7,
     "replacements": 0,
     "resumes": 0,
