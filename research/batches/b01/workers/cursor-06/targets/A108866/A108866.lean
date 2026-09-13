@@ -21,13 +21,18 @@ New proof development and write-up: Wentao Li.
 import FormalConjectures.OEIS.«108866»
 import Mathlib.NumberTheory.Padics.PadicVal.Basic
 import Mathlib.Data.Nat.Log
+import Mathlib.Algebra.Polynomial.Derivative
+import Mathlib.Algebra.Polynomial.Eval.Coeff
+import Mathlib.Algebra.Ring.GeomSum
+import Mathlib.Data.Nat.Choose.Sum
 
 /-!
 Partial development for OEIS A108866.
 
 This file does not use `OeisA108866.conjecture`. It proves that an even
-`n > 3` never satisfies the congruence. The prime direction and the
-odd-composite converse are not proved here.
+`n > 3` never satisfies the congruence, and the Komatsu–Sury odd
+identity for `T(n)`. The prime direction and the odd-composite converse
+are not proved here.
 -/
 
 open Finset
@@ -272,5 +277,310 @@ theorem not_n_sq_dvd_num_of_even {n : ℕ} (hn : n > 3) (he : Even n) :
     exact_mod_cast (even_iff_two_dvd.mp he)
   have h2sq : (2 : ℤ) ∣ (n : ℤ) ^ 2 := dvd_pow h2n (by decide)
   exact hnot (h2sq.trans (by simpa using hdiv))
+
+/- Komatsu–Sury Lemma 2, specialised at `x = -2`. -/
+
+open Polynomial
+
+/-- Left-hand polynomial in Komatsu–Sury Lemma 2. -/
+noncomputable def altHarmonicPoly (n : ℕ) : ℚ[X] :=
+  ∑ i ∈ range n, C ((-1 : ℚ) ^ i / (i + 1)) * X ^ (i + 1)
+
+/-- Main right-hand polynomial in Komatsu–Sury Lemma 2, without the constant. -/
+noncomputable def binomAltHarmonicPoly (n : ℕ) : ℚ[X] :=
+  ∑ i ∈ range n,
+    C ((n.choose (i + 1) : ℚ) * (-1 : ℚ) ^ i / (i + 1)) * (X + 1) ^ (i + 1)
+
+lemma C_neg_one_pow_mul_X_pow (i : ℕ) :
+    C ((-1 : ℚ) ^ i) * X ^ i = (-X : ℚ[X]) ^ i := by
+  have h1 : (-1 : ℚ[X]) = C (-1) := by simp
+  refine Eq.symm ?_
+  calc
+    (-X : ℚ[X]) ^ i = ((-1 : ℚ[X]) * X) ^ i := by simp
+    _ = (-1 : ℚ[X]) ^ i * X ^ i := mul_pow _ _ _
+    _ = C (-1) ^ i * X ^ i := by rw [h1]
+    _ = C ((-1 : ℚ) ^ i) * X ^ i := by rw [C_pow]
+
+lemma derivative_altHarmonicPoly (n : ℕ) :
+    derivative (altHarmonicPoly n) = ∑ i ∈ range n, (-X : ℚ[X]) ^ i := by
+  unfold altHarmonicPoly
+  rw [derivative_sum]
+  refine Finset.sum_congr rfl fun i _ => ?_
+  have hi : (i + 1 : ℚ) ≠ 0 := by exact_mod_cast Nat.succ_ne_zero i
+  rw [derivative_C_mul_X_pow, Nat.add_one_sub_one, Nat.cast_succ]
+  have : ((-1 : ℚ) ^ i / (i + 1)) * (i + 1) = (-1 : ℚ) ^ i := by
+    field_simp [hi]
+  rw [this, C_neg_one_pow_mul_X_pow]
+
+lemma geom_sum_neg_X (n : ℕ) (hn : Odd n) :
+    (∑ i ∈ range n, (-X : ℚ[X]) ^ i) * (1 + X) = 1 + X ^ n := by
+  have h := geom_sum_mul_neg (-X : ℚ[X]) n
+  have h1 : (1 : ℚ[X]) - (-X) = 1 + X := by ring
+  rw [h1] at h
+  have : (1 : ℚ[X]) - (-X) ^ n = 1 + X ^ n := by
+    rw [neg_pow, hn.neg_one_pow]
+    ring
+  rwa [this] at h
+
+lemma one_add_X_ne_zero : (1 + X : ℚ[X]) ≠ 0 := by
+  intro h
+  have := congr_arg (eval (0 : ℚ)) h
+  simp at this
+
+lemma mul_derivative_altHarmonicPoly (n : ℕ) (hn : Odd n) :
+    (1 + X) * derivative (altHarmonicPoly n) = 1 + X ^ n := by
+  rw [derivative_altHarmonicPoly, mul_comm]
+  exact geom_sum_neg_X n hn
+
+lemma X_pow_binomial (n : ℕ) :
+    (X : ℚ[X]) ^ n =
+      ∑ m ∈ range (n + 1),
+        C ((n.choose m : ℚ) * (-1 : ℚ) ^ (n - m)) * (X + 1) ^ m := by
+  have hbase : ((X + 1 : ℚ[X]) + (-1)) ^ n = X ^ n := by
+    have : (X + 1 + (-1 : ℚ[X])) = X := by ring
+    rw [this]
+  rw [← hbase, add_pow]
+  refine Finset.sum_congr rfl fun m _ => ?_
+  have hneg : (-1 : ℚ[X]) ^ (n - m) = C ((-1 : ℚ) ^ (n - m)) := by
+    have : (-1 : ℚ[X]) = C (-1) := by simp
+    rw [this, C_pow]
+  rw [hneg, ← C_eq_natCast]
+  simp
+  ring
+
+lemma neg_one_pow_pred {m : ℕ} (hm : 0 < m) :
+    (-1 : ℚ) ^ (m - 1) = - ((-1) ^ m) := by
+  have : (-1 : ℚ) ^ m = (-1) ^ (m - 1) * (-1) := by
+    rw [← pow_succ, Nat.sub_add_cancel hm]
+  rw [this]
+  ring
+
+lemma neg_one_pow_sub_eq {n m : ℕ} (hn : Odd n) (hm : m ≤ n) (hm0 : 0 < m) :
+    (-1 : ℚ) ^ (n - m) = (-1) ^ (m - 1) := by
+  have hmul : (-1 : ℚ) ^ (n - m) * (-1) ^ m = (-1) ^ n := by
+    rw [← pow_add, Nat.sub_add_cancel hm]
+  have hsq : ((-1 : ℚ) ^ m) ^ 2 = 1 := by simp [← pow_mul]
+  have hprod : (-1 : ℚ) ^ (n - m) = (-1) ^ n * (-1) ^ m := by
+    calc
+      (-1 : ℚ) ^ (n - m) = (-1) ^ (n - m) * ((-1) ^ m) ^ 2 := by rw [hsq, mul_one]
+      _ = ((-1) ^ (n - m) * (-1) ^ m) * (-1) ^ m := by ring
+      _ = (-1) ^ n * (-1) ^ m := by rw [hmul]
+  rw [hprod, hn.neg_one_pow, neg_one_pow_pred hm0]
+  ring
+
+lemma X_pow_add_one_eq (n : ℕ) (hn : Odd n) :
+    (X : ℚ[X]) ^ n + 1 =
+      ∑ i ∈ range n, C ((n.choose (i + 1) : ℚ) * (-1 : ℚ) ^ i) * (X + 1) ^ (i + 1) := by
+  have hbin := X_pow_binomial n
+  have h0 : C ((n.choose 0 : ℚ) * (-1 : ℚ) ^ (n - 0)) * (X + 1) ^ 0 = -1 := by
+    simp [hn.neg_one_pow]
+  have hsum :
+      (X : ℚ[X]) ^ n =
+        -1 + ∑ i ∈ range n,
+          C ((n.choose (i + 1) : ℚ) * (-1 : ℚ) ^ (n - (i + 1))) * (X + 1) ^ (i + 1) := by
+    rw [hbin, sum_range_succ', h0, add_comm]
+  rw [hsum, add_comm, add_neg_cancel_left]
+  refine Finset.sum_congr rfl fun i hi => ?_
+  have him : i + 1 ≤ n := by
+    have : i < n := mem_range.mp hi
+    omega
+  have hsign : (-1 : ℚ) ^ (n - (i + 1)) = (-1) ^ i := by
+    simpa [Nat.add_one_sub_one] using neg_one_pow_sub_eq hn him (Nat.succ_pos i)
+  rw [hsign]
+
+lemma derivative_one_add_X : derivative (X + 1 : ℚ[X]) = 1 := by
+  simp [derivative_add, derivative_X, derivative_one]
+
+lemma derivative_binomAltHarmonicPoly (n : ℕ) :
+    derivative (binomAltHarmonicPoly n) =
+      ∑ i ∈ range n, C ((n.choose (i + 1) : ℚ) * (-1 : ℚ) ^ i) * (X + 1) ^ i := by
+  unfold binomAltHarmonicPoly
+  rw [derivative_sum]
+  refine Finset.sum_congr rfl fun i _ => ?_
+  have hi : (i + 1 : ℚ) ≠ 0 := by exact_mod_cast Nat.succ_ne_zero i
+  have hder : derivative ((X + 1 : ℚ[X]) ^ (i + 1)) =
+      C (i + 1 : ℚ) * (X + 1) ^ i := by
+    rw [derivative_pow, Nat.add_one_sub_one, derivative_one_add_X, mul_one, Nat.cast_succ]
+  rw [derivative_C_mul, hder, ← mul_assoc, ← C_mul]
+  have : ((n.choose (i + 1) : ℚ) * (-1 : ℚ) ^ i / (i + 1)) * (i + 1) =
+      (n.choose (i + 1) : ℚ) * (-1 : ℚ) ^ i := by
+    field_simp [hi]
+  rw [this]
+
+lemma mul_derivative_binomAltHarmonicPoly (n : ℕ) (hn : Odd n) :
+    (1 + X) * derivative (binomAltHarmonicPoly n) = 1 + X ^ n := by
+  rw [derivative_binomAltHarmonicPoly, mul_sum]
+  have hX : (1 + X : ℚ[X]) = X + 1 := by ring
+  have hsum :
+      ∑ i ∈ range n,
+          (1 + X) * (C ((n.choose (i + 1) : ℚ) * (-1 : ℚ) ^ i) * (X + 1) ^ i) =
+        ∑ i ∈ range n,
+          C ((n.choose (i + 1) : ℚ) * (-1 : ℚ) ^ i) * (X + 1) ^ (i + 1) := by
+    refine Finset.sum_congr rfl fun i _ => ?_
+    calc
+      (1 + X) * (C ((n.choose (i + 1) : ℚ) * (-1 : ℚ) ^ i) * (X + 1) ^ i) =
+          (X + 1) * (C ((n.choose (i + 1) : ℚ) * (-1 : ℚ) ^ i) * (X + 1) ^ i) := by
+        rw [hX]
+      _ = C ((n.choose (i + 1) : ℚ) * (-1 : ℚ) ^ i) * ((X + 1) * (X + 1) ^ i) := by
+        ring
+      _ = C ((n.choose (i + 1) : ℚ) * (-1 : ℚ) ^ i) * (X + 1) ^ (i + 1) := by
+        rw [← pow_succ']
+  rw [hsum]
+  rw [add_comm (1 : ℚ[X]) (X ^ n)]
+  exact (X_pow_add_one_eq n hn).symm
+
+lemma derivative_altHarmonicPoly_eq_binom (n : ℕ) (hn : Odd n) :
+    derivative (altHarmonicPoly n) = derivative (binomAltHarmonicPoly n) := by
+  apply mul_left_cancel₀ one_add_X_ne_zero
+  rw [mul_derivative_altHarmonicPoly n hn, mul_derivative_binomAltHarmonicPoly n hn]
+
+lemma eval_altHarmonicPoly_zero (n : ℕ) : (altHarmonicPoly n).eval 0 = 0 := by
+  unfold altHarmonicPoly
+  rw [eval_finsetSum]
+  refine Finset.sum_eq_zero fun i _ => ?_
+  simp [pow_succ]
+
+lemma eval_binomAltHarmonicPoly_zero (n : ℕ) :
+    (binomAltHarmonicPoly n).eval 0 =
+      ∑ i ∈ range n, (n.choose (i + 1) : ℚ) * (-1 : ℚ) ^ i / (i + 1) := by
+  unfold binomAltHarmonicPoly
+  rw [eval_finsetSum]
+  refine Finset.sum_congr rfl fun i _ => ?_
+  simp [pow_succ]
+
+lemma altHarmonicPoly_eq_binom_add_const (n : ℕ) (hn : Odd n) :
+    altHarmonicPoly n =
+      binomAltHarmonicPoly n +
+        C (∑ i ∈ range n, (n.choose (i + 1) : ℚ) * (-1 : ℚ) ^ (i + 1) / (i + 1)) := by
+  have hder : derivative (altHarmonicPoly n - binomAltHarmonicPoly n) = 0 := by
+    rw [derivative_sub, derivative_altHarmonicPoly_eq_binom n hn, sub_self]
+  have hC := eq_C_of_derivative_eq_zero hder
+  have heval :
+      (altHarmonicPoly n - binomAltHarmonicPoly n).eval 0 =
+        ∑ i ∈ range n, (n.choose (i + 1) : ℚ) * (-1 : ℚ) ^ (i + 1) / (i + 1) := by
+    rw [eval_sub, eval_altHarmonicPoly_zero, eval_binomAltHarmonicPoly_zero, zero_sub,
+      ← Finset.sum_neg_distrib]
+    refine Finset.sum_congr rfl fun (i : ℕ) _ => ?_
+    ring
+  have hconst :
+      altHarmonicPoly n - binomAltHarmonicPoly n =
+        C (∑ i ∈ range n, (n.choose (i + 1) : ℚ) * (-1 : ℚ) ^ (i + 1) / (i + 1)) := by
+    rw [hC, coeff_zero_eq_eval_zero, heval]
+  exact eq_add_of_sub_eq' hconst
+
+lemma eval_altHarmonicPoly_neg_two (n : ℕ) :
+    (altHarmonicPoly n).eval (-2) = -∑ i ∈ range n, (2 : ℚ) ^ (i + 1) / (i + 1) := by
+  unfold altHarmonicPoly
+  rw [eval_finsetSum, ← Finset.sum_neg_distrib]
+  refine Finset.sum_congr rfl fun i _ => ?_
+  have hpow : (-2 : ℚ) ^ (i + 1) = (-1 : ℚ) ^ (i + 1) * 2 ^ (i + 1) := by
+    rw [neg_pow]
+  rw [eval_C_mul, eval_pow, eval_X, hpow]
+  have hsign : (-1 : ℚ) ^ (i + 1) * (-1) ^ i = -1 := by
+    rw [← pow_add, show i + 1 + i = 2 * i + 1 by omega, pow_succ, pow_mul]
+    ring
+  field_simp
+  linarith
+
+lemma eval_binomAltHarmonicPoly_neg_two (n : ℕ) :
+    (binomAltHarmonicPoly n).eval (-2) =
+      ∑ i ∈ range n,
+        (n.choose (i + 1) : ℚ) * (-1 : ℚ) ^ i / (i + 1) * (-1) ^ (i + 1) := by
+  unfold binomAltHarmonicPoly
+  rw [eval_finsetSum]
+  refine Finset.sum_congr rfl fun i _ => ?_
+  have hx : ((-2 : ℚ) + 1) = -1 := by ring
+  simp [eval_pow, eval_add, eval_X, eval_one, hx]
+
+/-- Komatsu–Sury Lemma 2 at `x = -2`, for odd `n`. -/
+lemma sum_two_pow_div_eq_two_sum_odd_choose {n : ℕ} (hn : Odd n) :
+    ∑ i ∈ range n, (2 : ℚ) ^ (i + 1) / (i + 1) =
+      2 * ∑ i ∈ range n,
+        if Odd (i + 1) then (n.choose (i + 1) : ℚ) / (i + 1) else 0 := by
+  have h := congr_arg (eval (-2 : ℚ)) (altHarmonicPoly_eq_binom_add_const n hn)
+  rw [eval_add, eval_C, eval_altHarmonicPoly_neg_two, eval_binomAltHarmonicPoly_neg_two] at h
+  have hneg := congr_arg Neg.neg h
+  simp only [neg_neg, neg_add] at hneg
+  rw [hneg, mul_sum, ← Finset.sum_neg_distrib, ← Finset.sum_neg_distrib, ← Finset.sum_add_distrib]
+  refine Finset.sum_congr rfl fun i _ => ?_
+  by_cases hodd : Odd (i + 1)
+  · have heven : Even i := by
+      have : ¬ Odd i := by simpa [Nat.odd_add_one] using hodd
+      exact Nat.not_odd_iff_even.mp this
+    simp [if_pos hodd, heven.neg_one_pow, hodd.neg_one_pow]
+    ring
+  · have heven : Even (i + 1) := Nat.not_odd_iff_even.mp hodd
+    have hiodd : Odd i := by
+      simpa [Nat.odd_add_one] using hodd
+    simp [if_neg hodd, hiodd.neg_one_pow, heven.neg_one_pow]
+    ring
+
+lemma ratExpression_eq_two_sum_odd_choose {n : ℕ} (hn : Odd n) (hn0 : 0 < n) :
+    ratExpression n =
+      (2 * ∑ i ∈ range n,
+          (if Odd (i + 1) then (n.choose (i + 1) : ℚ) / (i + 1) else (0 : ℚ)))
+        - (2 / n) := by
+  rw [ratExpression_of_pos hn0, sum_two_pow_div_eq_two_sum_odd_choose hn]
+  simp [sub_eq_add_neg, add_comm, neg_div]
+
+lemma ratExpression_eq_two_sum_odd_choose_lt {n : ℕ} (hn : Odd n) (hn1 : 1 < n) :
+    ratExpression n =
+      2 * ∑ i ∈ range (n - 1),
+        (if Odd (i + 1) then (n.choose (i + 1) : ℚ) / (i + 1) else (0 : ℚ)) := by
+  have hn0 : 0 < n := Nat.zero_lt_of_lt hn1
+  rw [ratExpression_eq_two_sum_odd_choose hn hn0]
+  let f : ℕ → ℚ := fun i =>
+    if Odd (i + 1) then (n.choose (i + 1) : ℚ) / (i + 1) else 0
+  have hsplit : ∑ i ∈ range n, f i = ∑ i ∈ range (n - 1), f i + f (n - 1) := by
+    have := Finset.sum_range_succ f (n - 1)
+    rwa [Nat.sub_add_cancel (Nat.one_le_of_lt hn1)] at this
+  have hlast : f (n - 1) = (1 : ℚ) / n := by
+    have hn' : n - 1 + 1 = n := Nat.sub_add_cancel (Nat.one_le_of_lt hn1)
+    have hodd : Odd (n - 1 + 1) := by simpa [hn'] using hn
+    have hcast : ((n - 1 : ℕ) : ℚ) + 1 = n := by exact_mod_cast hn'
+    simp only [f]
+    rw [if_pos hodd, hn', Nat.choose_self, hcast]
+    simp
+  rw [hsplit, hlast]
+  simp [f]
+  ring
+
+lemma choose_succ_div_eq (n k : ℕ) :
+    ((n + 1).choose (k + 1) : ℚ) / (k + 1) =
+      (n + 1) * (n.choose k : ℚ) / (k + 1) ^ 2 := by
+  have hk : (k + 1 : ℚ) ≠ 0 := by exact_mod_cast Nat.succ_ne_zero k
+  have hN := Nat.add_one_mul_choose_eq n k
+  have : ((n + 1).choose (k + 1) : ℚ) * (k + 1) =
+      (n + 1) * (n.choose k : ℚ) := by
+    exact_mod_cast hN.symm
+  field_simp [hk]
+  linarith
+
+lemma ratExpression_eq_two_mul_n_sum_choose_sq {n : ℕ} (hn : Odd n) (hn1 : 1 < n) :
+    ratExpression n =
+      2 * n *
+        ∑ i ∈ range (n - 1),
+          if Odd (i + 1) then ((n - 1).choose i : ℚ) / (i + 1 : ℚ) ^ 2 else 0 := by
+  rw [ratExpression_eq_two_sum_odd_choose_lt hn hn1]
+  have hn' : n = n - 1 + 1 := (Nat.sub_add_cancel (Nat.one_le_of_lt hn1)).symm
+  have hsum :
+      ∑ i ∈ range (n - 1),
+          (if Odd (i + 1) then (n.choose (i + 1) : ℚ) / (i + 1) else (0 : ℚ)) =
+        n *
+          ∑ i ∈ range (n - 1),
+            if Odd (i + 1) then ((n - 1).choose i : ℚ) / (i + 1 : ℚ) ^ 2 else 0 := by
+    rw [mul_sum]
+    refine Finset.sum_congr rfl fun i hi => ?_
+    by_cases hodd : Odd (i + 1)
+    · have hn' : n - 1 + 1 = n := Nat.sub_add_cancel (Nat.one_le_of_lt hn1)
+      have hcast : ((n - 1 : ℕ) : ℚ) + 1 = n := by exact_mod_cast hn'
+      simp [if_pos hodd]
+      have hdiv := choose_succ_div_eq (n - 1) i
+      rw [hn'] at hdiv
+      rw [hdiv, hcast]
+      ring
+    · simp [if_neg hodd]
+  rw [hsum]
+  ring
 
 end OeisA108866

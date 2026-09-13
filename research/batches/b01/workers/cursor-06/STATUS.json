@@ -7,14 +7,17 @@
   "source_sha256": "afa95297bd177a882fb72b03f32f1da68ecae58d9126981567562462b73266f8",
   "current_status": "partial",
   "novelty_status": "no_public_exact_solution_in_checked_sources",
-  "last_updated_utc": "2026-09-12T23:50:00Z",
+  "last_updated_utc": "2026-09-13T00:14:00Z",
   "proof_declarations": [
-    "OeisA108866.not_n_sq_dvd_num_of_even"
+    "OeisA108866.not_n_sq_dvd_num_of_even",
+    "OeisA108866.sum_two_pow_div_eq_two_sum_odd_choose",
+    "OeisA108866.ratExpression_eq_two_sum_odd_choose_lt",
+    "OeisA108866.ratExpression_eq_two_mul_n_sum_choose_sq"
   ],
   "unresolved_gaps": [
     "Prime direction: Komatsu-Sury 2023 congruence T(p) ≡ 0 mod p^2 is published but not yet kernel-checked here.",
     "Odd composite converse: no counterexample in c5-k4 n≤4000; structural p-adic argument not finished.",
     "Independently_verified is not claimed."
   ],
-  "next_step": "Formalize Komatsu–Sury Lemma 2 (odd identity) and the prime-direction congruence; continue the odd-composite p-adic converse beyond c5-k4 n=4000."
+  "next_step": "Formalize the prime-direction congruence from the odd identity and ZMod.cast_descFactorial; continue the odd-composite p-adic converse beyond c5-k4 n=4000."
 }

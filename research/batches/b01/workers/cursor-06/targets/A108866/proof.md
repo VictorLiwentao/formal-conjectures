@@ -23,6 +23,10 @@ Argument: `T(n) = ∑_{k=1}^{n-1} 2^k/k + (2^n-2)/n`. The first sum has 2-adic v
 
 This is the even half of the converse. It is not the full iff.
 
+`ratExpression_eq_two_mul_n_sum_choose_sq`: for odd `n > 1`,
+`T(n) = 2 n ∑_{odd r < n} C(n-1, r-1) / r^2`.
+This is Komatsu–Sury Lemma 2 at `x = -2`, after cancelling the last binomial term against `-2/n` and using `C(n,r)/r = n C(n-1,r-1)/r^2`. The identity is polynomial: the derivatives of the two generating polynomials agree, and evaluation at `-2` gives the odd-sum formula. Python checks it for odd `n ≤ 121`.
+
 ## Prime direction (published, not kernel-checked here)
 
 For odd prime `p`,
@@ -32,9 +36,7 @@ The denominator of the first sum divides `lcm(1,…,p-1)`, hence is coprime to `
 Komatsu–Sury, arXiv:2309.09491, Proposition 1, and Zhi-Hong Sun, J. Number Theory 128 (2008), give
 `∑_{k=1}^{p-1} 2^k/k ≡ -(2^p-2)/p (mod p^2)`.
 
-An equivalent identity for every odd `n` (not just primes):
-`∑_{r=1}^n 2^r/r = 2 ∑_{r odd} C(n,r)/r`,
-hence `T(n) = 2 ∑_{odd r < n} C(n,r)/r`. Python checks this for odd `n ≤ 121`. For primes, `C(p,r)/r = p C(p-1,r-1)/r^2` and the remaining inner sum is `0 mod p` because `∑_{x=1}^{p-1} x^{-2} = ∑ x^2 = 0` in `𝔽_p` for `p ≥ 5`.
+From the odd identity, it is enough to show that the inner sum `∑_{odd r < p} C(p-1,r-1)/r^2` is `0` in `ℤ_{(p)}/p`. Mathlib has `ZMod.cast_descFactorial`, so `C(p-1,i) ≡ (-1)^i (mod p)` for `i < p`. For odd `r` this is `1`, and `∑_{x=1}^{p-1} x^{-2} = ∑ x^2 = 0` in `𝔽_p` for `p ≥ 5`.
 
 ## Odd composite converse
 
