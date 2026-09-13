@@ -63,6 +63,18 @@ Argument: Mathlib `ZMod.cast_descFactorial` gives `C(p-1,i) ≡ (-1)^i (mod p)` 
 
 `not_n_sq_dvd_num_of_unique_prime_mul`: the same hypotheses give the converse at `n=mp`.
 
+`padicValRat_ratExpression_eq_neg_pow_of_trunc`: if `p^e ≤ m < p^{e+1}`, `p ∤ m`, and
+`L(m/p^e) := ∑_{j=1}^{m/p^e} 2^j/j ≠ 0` in `𝔽_p`, then `v_p(T(m)) = -e`.
+The proof splits the terms whose denominator is divisible by `p^e`, reduces their
+leading coefficients to `L` by Fermat (`2^{p^e} ≡ 2` in `𝔽_p`), and uses the ultrametric
+inequality against the remaining terms of valuation at least `1-e`.
+
+`not_n_sq_dvd_num_of_trunc` / `not_n_sq_dvd_num_of_log`: the same hypotheses give the converse
+at `n = mp`. The `Nat.log` form takes `e = ⌊log_p m⌋`.
+
+`twoHarmonicTrunc_two_ne_zero`: `L(2) = 4 ≠ 0` in `𝔽_p` for odd primes `p`, so the criterion
+applies whenever `2p ≤ m < 3p` and `p ∤ m`.
+
 ## Odd composite converse
 
 Not finished. c5-k4 found no counterexample for `n ≤ 4000`. The binomial identity reduces the problem to showing that for some prime `p | n` one has `v_p(T(n)) < 2 v_p(n)`.
@@ -73,9 +85,11 @@ Kernel-checked fragments of the converse:
 
 - even `n`
 - `n=mq` with prime `q`, `1<m<q`, and `q∤T(m).num`
-- `n=mp` with odd prime `p`, `p≤m<2p`, and `p∤m`
+- `n=mp` with odd prime `p` and `v_p(T(m))<1`, including:
+  - `p≤m<2p` and `p∤m` (unique multiple)
+  - `p^e ≤ m < p^{e+1}`, `p∤m`, and `L(m/p^e)≠0` in `𝔽_p`
 
-Remaining odd composites include prime powers `p^e` (`e≥2`) and products where every prime factor `q` has `v_q(T(n/q))≥1`. Experiments (`experiments/padic_converse.py`) give:
+Remaining odd composites include prime powers `p^e` (`e≥2`, so `p | m`) and products where `L(m/p^e)=0` in `𝔽_p` for every odd prime `p` with `p ∤ (n/p)`. Experiments (`experiments/padic_converse.py`) give:
 
 - `v_p(T(p^2))∈{0,1,2}` for primes `p≤61`, always `<4`. For `11≤p≤61` this valuation is `1`.
 - Empirically `v_p(p T(p^2)-T(p))>v_p(T(p))`, which would give `v_p(T(p^2))=v_p(T(p))-1` from the min lemma. Not kernel-checked.

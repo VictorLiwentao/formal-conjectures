@@ -30,6 +30,7 @@ import Mathlib.Data.Nat.Factorial.NatCast
 import Mathlib.Data.ZMod.Factorial
 import Mathlib.Algebra.Field.ZMod
 import Mathlib.NumberTheory.Multiplicity
+import Mathlib.FieldTheory.Finite.Basic
 
 /-!
 Partial development for OEIS A108866.
@@ -42,8 +43,9 @@ odd-composite converse. For `1 < m < q` with `q` prime and
 gives the recurrence: if `v_q(T(m)) < 1` then
 `v_q(T(mq)) = v_q(T(m)) - 1`. If an odd prime `p` satisfies
 `p ≤ m < 2p` and `p ∤ m`, then `v_p(T(m)) = -1`, so the converse
-holds at `n = mp`. The remaining odd-composite cases are not
-proved here.
+holds at `n = mp`. If `p^e ≤ m < p^{e+1}`, `p ∤ m`, and the truncated
+sum `L(m / p^e)` is nonzero in `𝔽_p`, then `v_p(T(m)) = -e`.
+The remaining odd-composite cases are not proved here.
 -/
 
 open Finset
@@ -1856,4 +1858,463 @@ lemma padicValRat_ratExpression_mul_eq_min_sub_one {m q : ℕ}
 #print axioms OeisA108866.not_n_sq_dvd_num_of_unique_prime_mul
 #print axioms OeisA108866.padicValRat_ratExpression_mul_eq_min_sub_one
 
+/-- Integer `m! T(m)` after clearing denominators. -/
+def factClear (m : ℕ) : ℤ :=
+  -2 * ((m - 1).factorial : ℤ) +
+    ∑ i ∈ range m, (2 : ℤ) ^ (i + 1) * (m.factorial / (i + 1) : ℕ)
+
+lemma nat_cast_div_factorial {m k : ℕ} (hk : 0 < k) (hkm : k ≤ m) :
+    ((m.factorial / k : ℕ) : ℚ) = (m.factorial : ℚ) / k := by
+  have hdvd : k ∣ m.factorial := Nat.dvd_factorial hk hkm
+  have hk0 : (k : ℚ) ≠ 0 := Nat.cast_ne_zero.mpr (Nat.pos_iff_ne_zero.mp hk)
+  have := congrArg (fun n : ℕ => (n : ℚ)) (Nat.div_mul_cancel hdvd)
+  rw [Nat.cast_mul] at this
+  exact (eq_div_iff hk0).2 (by simpa [mul_comm] using this)
+
+lemma factClear_eq {m : ℕ} (hm : 0 < m) :
+    (factClear m : ℚ) = m.factorial * ratExpression m := by
+  have hmne : (m : ℚ) ≠ 0 := Nat.cast_ne_zero.mpr (Nat.pos_iff_ne_zero.mp hm)
+  have hsucc : (m.factorial : ℚ) = m * (m - 1).factorial := by
+    rw [← Nat.mul_factorial_pred (Nat.pos_iff_ne_zero.mp hm), Nat.cast_mul]
+  simp only [factClear, Int.cast_add, Int.cast_mul, Int.cast_neg, Int.cast_natCast,
+    Int.cast_ofNat, Int.cast_sum, Int.cast_pow]
+  rw [ratExpression_of_pos hm, mul_add]
+  have hneg : (m.factorial : ℚ) * ((-2 : ℚ) / m) = -2 * (m - 1).factorial := by
+    rw [hsucc]
+    field_simp [hmne]
+  rw [hneg, mul_sum]
+  refine congrArg (fun t => -2 * (↑(m - 1).factorial : ℚ) + t) ?_
+  refine sum_congr rfl fun i hi => ?_
+  have hk : 0 < i + 1 := Nat.succ_pos i
+  have hkm : i + 1 ≤ m := Nat.succ_le_of_lt (mem_range.mp hi)
+  have hdiv := nat_cast_div_factorial hk hkm
+  simp [Nat.cast_succ, hdiv, div_eq_mul_inv, mul_left_comm]
+
+lemma padicValNat_factorial_eq_div {m p : ℕ} [Fact p.Prime]
+    (hmp : m < p ^ 2) : padicValNat p m.factorial = m / p := by
+  have hp := ‹Fact p.Prime›.out
+  rw [← padicValNat_mul_div_factorial m, padicValNat_factorial_mul]
+  have hlt : m / p < p := Nat.div_lt_of_lt_mul (by simpa [pow_two, mul_comm] using hmp)
+  have hnd : ¬ p ∣ (m / p).factorial := by
+    intro h
+    exact hlt.not_ge ((hp.dvd_factorial).1 h)
+  rw [padicValNat.eq_zero_of_not_dvd hnd, zero_add]
+
+/-- Truncated base-2 harmonic sum `\sum_{j=1}^r 2^j/j` in `ZMod p`. -/
+def twoHarmonicTrunc (r p : ℕ) : ZMod p :=
+  ∑ j ∈ range r, (2 : ZMod p) ^ (j + 1) * (j + 1 : ZMod p)⁻¹
+
+lemma twoHarmonicTrunc_two_ne_zero {p : ℕ} [Fact p.Prime] (hp2 : p ≠ 2) :
+    twoHarmonicTrunc 2 p ≠ 0 := by
+  have hp : Nat.Prime p := ‹Fact p.Prime›.out
+  have h2 : (2 : ZMod p) ≠ 0 := by
+    intro h
+    have : p ∣ 2 := (ZMod.natCast_eq_zero_iff _ _).1 (by simpa using h)
+    have : p = 1 ∨ p = 2 := (Nat.dvd_prime Nat.prime_two).mp this
+    exact this.elim (fun h1 => hp.ne_one h1) hp2
+  have hinv : (2 : ZMod p) * (2 : ZMod p)⁻¹ = 1 := mul_inv_cancel₀ h2
+  have hs : twoHarmonicTrunc 2 p =
+      (2 : ZMod p) * (1 : ZMod p)⁻¹ + (2 : ZMod p) ^ 2 * (2 : ZMod p)⁻¹ := by
+    simp [twoHarmonicTrunc, sum_range_succ, pow_one]
+    exact Or.inl (by ring)
+  rw [hs, inv_one, mul_one, pow_two, mul_assoc, hinv, mul_one]
+  have h4z : (2 : ZMod p) + 2 = 4 := by ring
+  rw [h4z]
+  intro h0
+  have hd : p ∣ 4 := (ZMod.natCast_eq_zero_iff _ _).1 h0
+  have hpow : p ∣ 2 ^ 2 := by simpa using hd
+  have : p ∣ 2 := hp.dvd_of_dvd_pow hpow
+  have : p = 1 ∨ p = 2 := (Nat.dvd_prime Nat.prime_two).mp this
+  exact this.elim (fun h1 => hp.ne_one h1) hp2
+
+#print axioms OeisA108866.factClear_eq
+#print axioms OeisA108866.padicValNat_factorial_eq_div
+#print axioms OeisA108866.twoHarmonicTrunc_two_ne_zero
+
+lemma twoHarmonicTrunc_one_ne_zero {p : ℕ} [Fact p.Prime] (hp2 : p ≠ 2) :
+    twoHarmonicTrunc 1 p ≠ 0 := by
+  have hp : Nat.Prime p := ‹Fact p.Prime›.out
+  have h2 : (2 : ZMod p) ≠ 0 := by
+    intro h
+    have : p ∣ 2 := (ZMod.natCast_eq_zero_iff _ _).1 (by simpa using h)
+    have : p = 1 ∨ p = 2 := (Nat.dvd_prime Nat.prime_two).mp this
+    exact this.elim (fun h1 => hp.ne_one h1) hp2
+  simp [twoHarmonicTrunc]
+  exact h2
+
+#print axioms OeisA108866.twoHarmonicTrunc_one_ne_zero
+
+lemma padicValRat_ratExpression_factClear {m p : ℕ} [Fact p.Prime]
+    (hm1 : 1 < m) :
+    padicValRat p (ratExpression m) =
+      padicValInt p (factClear m) - padicValNat p m.factorial := by
+  have hT : ratExpression m ≠ 0 := ne_of_gt (ratExpression_pos hm1)
+  have hm0 : 0 < m := Nat.zero_lt_of_lt hm1
+  have hfac : (m.factorial : ℚ) ≠ 0 := Nat.cast_ne_zero.mpr (Nat.factorial_ne_zero m)
+  have heq := factClear_eq hm0
+  have hmul : padicValRat p (factClear m : ℚ) =
+      padicValRat p (m.factorial : ℚ) + padicValRat p (ratExpression m) := by
+    rw [heq, padicValRat.mul hfac hT]
+  rw [padicValRat.of_int, padicValRat.of_nat] at hmul
+  linarith
+
+#print axioms OeisA108866.padicValRat_ratExpression_factClear
+
+lemma sum_filter_dvd_succ_div {m q : ℕ} (hq0 : 0 < q) (f : ℕ → ℚ) :
+    ∑ i ∈ (range m).filter (fun i => q ∣ i + 1), f (i + 1) =
+      ∑ j ∈ range (m / q), f ((j + 1) * q) := by
+  refine Eq.symm (sum_nbij' (fun j => (j + 1) * q - 1) (fun i => (i + 1) / q - 1)
+    ?hi ?hj ?left ?right ?heq)
+  · intro j hj
+    have hj1 : 0 < (j + 1) * q := Nat.mul_pos (Nat.succ_pos j) hq0
+    have hle : (j + 1) * q ≤ m := by
+      have : j + 1 ≤ m / q := Nat.succ_le_of_lt (mem_range.mp hj)
+      exact le_trans (Nat.mul_le_mul_right q this) (by
+        rw [mul_comm]
+        exact Nat.mul_div_le m q)
+    have hsucc : (j + 1) * q - 1 + 1 = (j + 1) * q := Nat.sub_add_cancel hj1
+    have hmem : (j + 1) * q - 1 < m :=
+      Nat.lt_of_succ_le (by
+        rw [Nat.succ_eq_add_one, Nat.sub_add_cancel hj1]
+        exact hle)
+    refine mem_filter.mpr ⟨mem_range.mpr hmem, ?_⟩
+    rw [hsucc, mul_comm]
+    exact Nat.dvd_mul_right q (j + 1)
+  · intro i hi
+    have hi' := mem_filter.mp hi
+    have hdvd : q ∣ i + 1 := hi'.2
+    have hpos : 0 < (i + 1) / q :=
+      Nat.div_pos (Nat.le_of_dvd (Nat.succ_pos i) hdvd) hq0
+    have hle : (i + 1) / q ≤ m / q :=
+      Nat.div_le_div_right (Nat.succ_le_of_lt (mem_range.mp hi'.1))
+    exact mem_range.mpr (Nat.lt_of_succ_le (by
+      rw [Nat.succ_eq_add_one, Nat.sub_add_cancel hpos]
+      exact hle))
+  · intro j _hj
+    have hj1 : 0 < (j + 1) * q := Nat.mul_pos (Nat.succ_pos j) hq0
+    have hsucc : (j + 1) * q - 1 + 1 = (j + 1) * q := Nat.sub_add_cancel hj1
+    rw [hsucc, Nat.mul_div_cancel _ hq0, Nat.add_sub_cancel]
+  · intro i hi
+    have hi' := mem_filter.mp hi
+    have hdvd : q ∣ i + 1 := hi'.2
+    have hpos : 0 < (i + 1) / q :=
+      Nat.div_pos (Nat.le_of_dvd (Nat.succ_pos i) hdvd) hq0
+    rw [Nat.sub_add_cancel hpos, Nat.div_mul_cancel hdvd, Nat.add_sub_cancel]
+  · intro j _hj
+    have hj1 : 0 < (j + 1) * q := Nat.mul_pos (Nat.succ_pos j) hq0
+    rw [Nat.sub_add_cancel hj1]
+
+lemma sum_pow_muls_eq_div {m p e : ℕ} (hp0 : 0 < p) :
+    ∑ i ∈ (range m).filter (fun i => p ^ e ∣ i + 1),
+        (2 : ℚ) ^ (i + 1) / (i + 1) =
+      (∑ j ∈ range (m / p ^ e), (2 : ℚ) ^ ((j + 1) * p ^ e) / (j + 1)) /
+        (p : ℚ) ^ e := by
+  have hq0 : 0 < p ^ e := Nat.pow_pos hp0
+  have hne : (p : ℚ) ^ e ≠ 0 :=
+    pow_ne_zero _ (Nat.cast_ne_zero.mpr (Nat.pos_iff_ne_zero.mp hp0))
+  have hsum : ∑ i ∈ (range m).filter (fun i => p ^ e ∣ i + 1),
+      (2 : ℚ) ^ (i + 1) / (i + 1) =
+    ∑ i ∈ (range m).filter (fun i => p ^ e ∣ i + 1),
+      (2 : ℚ) ^ (i + 1) / (i + 1 : ℕ) :=
+    sum_congr rfl fun i _ => by simp [Nat.cast_succ]
+  rw [hsum, eq_div_iff hne, sum_filter_dvd_succ_div hq0 (fun k => (2 : ℚ) ^ k / k),
+    mul_comm, mul_sum]
+  refine sum_congr rfl fun j _ => ?_
+  have hj0 : ((j + 1 : ℕ) : ℚ) ≠ 0 := Nat.cast_ne_zero.mpr (Nat.succ_ne_zero j)
+  field_simp [hj0, hne]
+  simp [Nat.cast_succ, Nat.cast_pow, Nat.cast_mul, mul_comm]
+
+/-- Integer `r! ∑_{j=1}^r 2^{j e} / j`. -/
+def twoHarmonicClear (r e : ℕ) : ℤ :=
+  ∑ j ∈ range r, (2 : ℤ) ^ ((j + 1) * e) * (r.factorial / (j + 1) : ℕ)
+
+lemma twoHarmonicClear_eq (r e : ℕ) :
+    (twoHarmonicClear r e : ℚ) =
+      (r.factorial : ℚ) * ∑ j ∈ range r, (2 : ℚ) ^ ((j + 1) * e) / (j + 1) := by
+  simp only [twoHarmonicClear, Int.cast_sum, Int.cast_mul, Int.cast_pow, Int.cast_ofNat,
+    Int.cast_natCast]
+  rw [mul_sum]
+  refine sum_congr rfl fun j hj => ?_
+  have hk : 0 < j + 1 := Nat.succ_pos j
+  have hkm : j + 1 ≤ r := Nat.succ_le_of_lt (mem_range.mp hj)
+  have hdiv := nat_cast_div_factorial hk hkm
+  simp [Nat.cast_succ, hdiv, div_eq_mul_inv, mul_left_comm]
+
+lemma nat_cast_div_zmod {r k p : ℕ} [Fact p.Prime]
+    (hk : 0 < k) (hkr : k ≤ r) (hr : r < p) :
+    ((r.factorial / k : ℕ) : ZMod p) =
+      (r.factorial : ZMod p) * (k : ZMod p)⁻¹ := by
+  have hdvd : k ∣ r.factorial := Nat.dvd_factorial hk hkr
+  have hk0 : (k : ZMod p) ≠ 0 := by
+    intro h
+    have hp := ‹Fact p.Prime›.out
+    have : p ∣ k := (ZMod.natCast_eq_zero_iff _ _).1 h
+    exact (Nat.le_of_dvd hk this).not_gt (lt_of_le_of_lt hkr hr)
+  have hmul : ((r.factorial / k : ℕ) : ZMod p) * k = r.factorial := by
+    rw [← Nat.cast_mul, Nat.div_mul_cancel hdvd]
+  exact (eq_mul_inv_iff_mul_eq₀ hk0).mpr hmul
+
+lemma natCast_factorial_ne_zero {r p : ℕ} [Fact p.Prime] (hr : r < p) :
+    (r.factorial : ZMod p) ≠ 0 := by
+  intro h
+  have hp := ‹Fact p.Prime›.out
+  have : p ∣ r.factorial := (ZMod.natCast_eq_zero_iff _ _).1 h
+  exact hr.not_ge (hp.dvd_factorial.1 this)
+
+lemma twoHarmonicClear_mod {r p e : ℕ} [Fact p.Prime] (hr : r < p) :
+    (twoHarmonicClear r (p ^ e) : ZMod p) =
+      (r.factorial : ZMod p) * twoHarmonicTrunc r p := by
+  unfold twoHarmonicClear twoHarmonicTrunc
+  rw [Int.cast_sum, mul_sum]
+  refine sum_congr rfl fun j hj => ?_
+  have hk : 0 < j + 1 := Nat.succ_pos j
+  have hkm : j + 1 ≤ r := Nat.succ_le_of_lt (mem_range.mp hj)
+  have hdiv := nat_cast_div_zmod hk hkm hr
+  have hpow : ((2 : ℤ) : ZMod p) ^ ((j + 1) * p ^ e) = (2 : ZMod p) ^ (j + 1) := by
+    have h2 : ((2 : ℤ) : ZMod p) = (2 : ZMod p) := by simp
+    rw [h2, mul_comm (j + 1), pow_mul, ZMod.pow_card_pow]
+  rw [Int.cast_mul, Int.cast_pow, Int.cast_natCast, hdiv, hpow]
+  simp [Nat.cast_succ]
+  ring
+
+lemma padicValRat_twoHarmonic_pow_eq_zero {r p e : ℕ} [Fact p.Prime]
+    (hr : r < p) (hL : twoHarmonicTrunc r p ≠ 0) :
+    padicValRat p (∑ j ∈ range r, (2 : ℚ) ^ ((j + 1) * p ^ e) / (j + 1)) = 0 := by
+  have hp := ‹Fact p.Prime›.out
+  set H := ∑ j ∈ range r, (2 : ℚ) ^ ((j + 1) * p ^ e) / (j + 1)
+  have hC := twoHarmonicClear_eq r (p ^ e)
+  have hfac : (r.factorial : ℚ) ≠ 0 := Nat.cast_ne_zero.mpr (Nat.factorial_ne_zero r)
+  have hCmod : (twoHarmonicClear r (p ^ e) : ZMod p) ≠ 0 := by
+    rw [twoHarmonicClear_mod hr]
+    exact mul_ne_zero (natCast_factorial_ne_zero hr) hL
+  have hCne : twoHarmonicClear r (p ^ e) ≠ 0 := by
+    intro h
+    exact hCmod (by simp [h])
+  have hH : H ≠ 0 := by
+    intro h0
+    have : (twoHarmonicClear r (p ^ e) : ℚ) = 0 := by
+      simp [H] at h0
+      rw [hC, h0, mul_zero]
+    exact hCne (Int.cast_eq_zero.mp this)
+  have hfacval : padicValRat p (r.factorial : ℚ) = 0 := by
+    rw [padicValRat.of_nat]
+    exact_mod_cast padicValNat.eq_zero_of_not_dvd (fun h =>
+      hr.not_ge (hp.dvd_factorial.1 h))
+  have hCval : padicValRat p (twoHarmonicClear r (p ^ e) : ℚ) = 0 := by
+    rw [padicValRat.of_int]
+    have hnd : ¬ (p : ℤ) ∣ twoHarmonicClear r (p ^ e) := by
+      intro hd
+      exact hCmod ((ZMod.intCast_zmod_eq_zero_iff_dvd _ _).mpr hd)
+    exact_mod_cast padicValInt.eq_zero_of_not_dvd hnd
+  have hmul : padicValRat p (twoHarmonicClear r (p ^ e) : ℚ) =
+      padicValRat p (r.factorial : ℚ) + padicValRat p H := by
+    rw [hC, padicValRat.mul hfac hH]
+  linarith [hCval, hfacval, hmul]
+
+lemma le_padicValRat_sum {α : Type*} [DecidableEq α] {q : ℕ} [Fact q.Prime]
+    {s : Finset α} (f : α → ℚ) {n : ℤ} (hn : n ≤ 0)
+    (hf : ∀ i ∈ s, n ≤ padicValRat q (f i)) :
+    n ≤ padicValRat q (∑ i ∈ s, f i) := by
+  by_cases hsum : ∑ i ∈ s, f i = 0
+  · simpa [hsum] using hn
+  · induction s using Finset.induction_on with
+    | empty =>
+      simp at hsum
+    | insert a s ha ih =>
+      rw [sum_insert ha] at hsum ⊢
+      by_cases hrest : ∑ i ∈ s, f i = 0
+      · simpa [hrest] using hf a (mem_insert_self _ _)
+      · have h1 := hf a (mem_insert_self _ _)
+        have h2 := ih (fun i hi => hf i (mem_insert_of_mem hi)) hrest
+        exact le_trans (le_min h1 h2) (padicValRat.min_le_padicValRat_add (p := q) hsum)
+
+lemma ratExpression_eq_pow_muls_add {m p e : ℕ} (hm : 0 < m) :
+    ratExpression m =
+      (-2 : ℚ) / m +
+        ∑ i ∈ (range m).filter (fun i => p ^ e ∣ i + 1),
+          (2 : ℚ) ^ (i + 1) / (i + 1) +
+        ∑ i ∈ (range m).filter (fun i => ¬ p ^ e ∣ i + 1),
+          (2 : ℚ) ^ (i + 1) / (i + 1) := by
+  rw [ratExpression_of_pos hm, add_assoc,
+    ← sum_filter_add_sum_filter_not (range m) (fun i => p ^ e ∣ i + 1)]
+
+/-- If `p^e ≤ m < p^{e+1}`, `p ∤ m`, and `L(m/p^e) ≠ 0` in `𝔽_p`, then `v_p(T(m)) = -e`. -/
+lemma padicValRat_ratExpression_eq_neg_pow_of_trunc {m p e : ℕ}
+    (hp : p.Prime) (hp2 : p ≠ 2) (he : 0 < e) (hpe : p ^ e ≤ m)
+    (hm : m < p ^ (e + 1)) (hnd : ¬ p ∣ m) :
+    twoHarmonicTrunc (m / p ^ e) p ≠ 0 →
+      padicValRat p (ratExpression m) = -e := by
+  intro hL
+  have : Fact p.Prime := ⟨hp⟩
+  have hp0 : 0 < p := hp.pos
+  have hm1 : 1 < m :=
+    lt_of_lt_of_le hp.one_lt (le_trans (Nat.le_self_pow (Nat.pos_iff_ne_zero.mp he) p) hpe)
+  have hm0 : 0 < m := Nat.zero_lt_of_lt hm1
+  have hT : ratExpression m ≠ 0 := ne_of_gt (ratExpression_pos hm1)
+  have hr : m / p ^ e < p :=
+    Nat.div_lt_of_lt_mul (by simpa [pow_succ, mul_comm] using hm)
+  have hsplit := ratExpression_eq_pow_muls_add (p := p) (e := e) hm0
+  set S := ∑ i ∈ (range m).filter (fun i => p ^ e ∣ i + 1),
+      (2 : ℚ) ^ (i + 1) / (i + 1)
+  set R := (-2 : ℚ) / m +
+      ∑ i ∈ (range m).filter (fun i => ¬ p ^ e ∣ i + 1),
+        (2 : ℚ) ^ (i + 1) / (i + 1)
+  have hTR : ratExpression m = S + R := by
+    simpa [S, R, add_assoc, add_left_comm] using hsplit
+  have hSeq : S =
+      (∑ j ∈ range (m / p ^ e), (2 : ℚ) ^ ((j + 1) * p ^ e) / (j + 1)) /
+        (p : ℚ) ^ e :=
+    sum_pow_muls_eq_div hp0
+  have hHval : padicValRat p
+      (∑ j ∈ range (m / p ^ e), (2 : ℚ) ^ ((j + 1) * p ^ e) / (j + 1)) = 0 :=
+    padicValRat_twoHarmonic_pow_eq_zero hr hL
+  have hHne : ∑ j ∈ range (m / p ^ e), (2 : ℚ) ^ ((j + 1) * p ^ e) / (j + 1) ≠ 0 := by
+    intro h
+    have hC := twoHarmonicClear_eq (m / p ^ e) (p ^ e)
+    have hCmod : (twoHarmonicClear (m / p ^ e) (p ^ e) : ZMod p) ≠ 0 := by
+      rw [twoHarmonicClear_mod hr]
+      exact mul_ne_zero (natCast_factorial_ne_zero hr) hL
+    have : (twoHarmonicClear (m / p ^ e) (p ^ e) : ℚ) = 0 := by
+      rw [hC, h, mul_zero]
+    exact hCmod (by
+      have : twoHarmonicClear (m / p ^ e) (p ^ e) = 0 := Int.cast_eq_zero.mp this
+      simp [this])
+  have hpeval : padicValRat p ((p : ℚ) ^ e) = e := by
+    rw [← Nat.cast_pow, padicValRat.of_nat]
+    exact_mod_cast padicValNat.prime_pow e
+  have hSval : padicValRat p S = -e := by
+    have hpe0 : (p : ℚ) ^ e ≠ 0 :=
+      pow_ne_zero _ (Nat.cast_ne_zero.mpr hp.ne_zero)
+    rw [hSeq, padicValRat.div hHne hpe0, hHval, hpeval, zero_sub]
+  have hS0 : S ≠ 0 := by
+    intro h
+    have : padicValRat p S = 0 := by simp [h]
+    rw [hSval] at this
+    exact (neg_ne_zero.mpr (Nat.cast_ne_zero.mpr (Nat.pos_iff_ne_zero.mp he))) this
+  have hneg : padicValRat p ((-2 : ℚ) / m) = 0 := by
+    have hmne : (m : ℚ) ≠ 0 := Nat.cast_ne_zero.mpr (Nat.pos_iff_ne_zero.mp hm0)
+    have h2ne : (-2 : ℚ) ≠ 0 := by norm_num
+    have h2val : padicValRat p (2 : ℚ) = 0 := by
+      rw [show (2 : ℚ) = ((2 : ℕ) : ℚ) from rfl, padicValRat.of_nat]
+      exact_mod_cast (padicValNat_primes hp2)
+    have hmval : padicValRat p (m : ℚ) = 0 := by
+      rw [padicValRat.of_nat]
+      exact_mod_cast padicValNat.eq_zero_of_not_dvd hnd
+    rw [padicValRat.div h2ne hmne, padicValRat.neg, h2val, hmval]
+    simp
+  have he1 : 1 ≤ e := Nat.succ_le_of_lt he
+  have hrest : (1 - (e : ℤ)) ≤ padicValRat p
+      (∑ i ∈ (range m).filter (fun i => ¬ p ^ e ∣ i + 1),
+        (2 : ℚ) ^ (i + 1) / (i + 1)) := by
+    refine le_padicValRat_sum _ (sub_nonpos.mpr (Nat.one_le_cast.mpr he1)) ?_
+    intro i hi
+    have hi' := mem_filter.mp hi
+    have hndk : ¬ p ^ e ∣ i + 1 := hi'.2
+    have hk0 : 0 < i + 1 := Nat.succ_pos i
+    have hvlt : padicValNat p (i + 1) < e := by
+      rw [← not_le]
+      intro hle
+      exact hndk ((padicValNat_dvd_iff_le (Nat.succ_ne_zero i)).2 hle)
+    have hval : padicValRat p ((2 : ℚ) ^ (i + 1) / (i + 1)) =
+        - (padicValNat p (i + 1) : ℤ) := by
+      simpa [Nat.cast_succ] using
+        padicValRat_two_pow_div_eq_neg_padicValNat hp hp2 hk0
+    have hv : (padicValNat p (i + 1) : ℤ) < e := Nat.cast_lt.mpr hvlt
+    linarith [hval, hv]
+  have hR : (1 - (e : ℤ)) ≤ padicValRat p R := by
+    by_cases hsum : (-2 : ℚ) / m +
+        ∑ i ∈ (range m).filter (fun i => ¬ p ^ e ∣ i + 1),
+          (2 : ℚ) ^ (i + 1) / (i + 1) = 0
+    · have : (1 - (e : ℤ)) ≤ 0 := sub_nonpos.mpr (Nat.one_le_cast.mpr he1)
+      simpa [R, hsum] using this
+    · have hneg' : (1 - (e : ℤ)) ≤ padicValRat p ((-2 : ℚ) / m) :=
+        le_trans (sub_nonpos.mpr (Nat.one_le_cast.mpr he1)) hneg.ge
+      exact le_trans (le_min hneg' hrest)
+        (padicValRat.min_le_padicValRat_add (p := p) (by simpa [R] using hsum))
+  by_cases hR0 : R = 0
+  · simpa [hTR, hR0] using hSval
+  · have hlt : padicValRat p S < padicValRat p R := by
+      rw [hSval]
+      linarith
+    have hsum0 : S + R ≠ 0 := by
+      rwa [← hTR]
+    rw [hTR, padicValRat.add_eq_of_lt hsum0 hS0 hR0 hlt, hSval]
+
+lemma not_n_sq_dvd_num_of_trunc {m p e : ℕ}
+    (hp : p.Prime) (hp2 : p ≠ 2) (he : 0 < e) (hpe : p ^ e ≤ m)
+    (hm : m < p ^ (e + 1)) (hnd : ¬ p ∣ m) (hn : 3 < m * p)
+    (hL : twoHarmonicTrunc (m / p ^ e) p ≠ 0) :
+    ¬ (ratExpression (m * p)).num ≡ 0 [ZMOD ((m * p) ^ 2 : ℤ)] := by
+  have hm1 : 1 < m :=
+    lt_of_lt_of_le hp.one_lt (le_trans (Nat.le_self_pow (Nat.pos_iff_ne_zero.mp he) p) hpe)
+  have hB : padicValRat p (ratExpression m) < 1 := by
+    have := padicValRat_ratExpression_eq_neg_pow_of_trunc hp hp2 he hpe hm hnd hL
+    linarith
+  exact not_n_sq_dvd_num_of_val_pred hm1 hp hp2 hn hB
+
+lemma padicValRat_ratExpression_eq_neg_log_of_trunc {m p : ℕ}
+    (hp : p.Prime) (hp2 : p ≠ 2) (hpm : p ≤ m) (hnd : ¬ p ∣ m)
+    (hL : twoHarmonicTrunc (m / p ^ Nat.log p m) p ≠ 0) :
+    padicValRat p (ratExpression m) = - Nat.log p m :=
+  padicValRat_ratExpression_eq_neg_pow_of_trunc hp hp2
+    (Nat.log_pos hp.one_lt hpm)
+    (Nat.pow_log_le_self p (Nat.pos_iff_ne_zero.mp (Nat.lt_of_lt_of_le hp.pos hpm)))
+    (Nat.lt_pow_succ_log_self hp.one_lt m) hnd hL
+
+lemma not_n_sq_dvd_num_of_log {m p : ℕ}
+    (hp : p.Prime) (hp2 : p ≠ 2) (hpm : p ≤ m) (hnd : ¬ p ∣ m)
+    (hn : 3 < m * p)
+    (hL : twoHarmonicTrunc (m / p ^ Nat.log p m) p ≠ 0) :
+    ¬ (ratExpression (m * p)).num ≡ 0 [ZMOD ((m * p) ^ 2 : ℤ)] := by
+  have hm1 : 1 < m := lt_of_lt_of_le hp.one_lt hpm
+  have hB : padicValRat p (ratExpression m) < 1 := by
+    have := padicValRat_ratExpression_eq_neg_log_of_trunc hp hp2 hpm hnd hL
+    have : 0 < Nat.log p m := Nat.log_pos hp.one_lt hpm
+    linarith
+  exact not_n_sq_dvd_num_of_val_pred hm1 hp hp2 hn hB
+
+lemma padicValRat_ratExpression_eq_neg_one_of_two_mul {m p : ℕ}
+    (hp : p.Prime) (hp2 : p ≠ 2) (h2 : 2 * p ≤ m) (h3 : m < 3 * p)
+    (hnd : ¬ p ∣ m) :
+    padicValRat p (ratExpression m) = -1 := by
+  have : Fact p.Prime := ⟨hp⟩
+  have he : 0 < (1 : ℕ) := Nat.succ_pos 0
+  have hpe : p ^ 1 ≤ m := by
+    rw [pow_one]
+    exact le_trans (Nat.le_mul_of_pos_left p two_pos) h2
+  have hmp : m < p ^ (1 + 1) := by
+    have hp3 : 3 ≤ p := by
+      have : 2 ≤ p := hp.two_le
+      omega
+    have : 3 * p ≤ p * p := Nat.mul_le_mul_right p hp3
+    have : m < p * p := lt_of_lt_of_le h3 this
+    simpa [pow_succ, pow_one] using this
+  have hr : m / p ^ 1 = 2 := by
+    rw [pow_one]
+    exact Nat.div_eq_of_lt_le h2 h3
+  have hL : twoHarmonicTrunc (m / p ^ 1) p ≠ 0 := by
+    rw [hr]
+    exact twoHarmonicTrunc_two_ne_zero hp2
+  simpa using
+    padicValRat_ratExpression_eq_neg_pow_of_trunc hp hp2 he (by simpa using hpe) hmp hnd hL
+
+lemma not_n_sq_dvd_num_of_two_mul {m p : ℕ}
+    (hp : p.Prime) (hp2 : p ≠ 2) (h2 : 2 * p ≤ m) (h3 : m < 3 * p)
+    (hnd : ¬ p ∣ m) (hn : 3 < m * p) :
+    ¬ (ratExpression (m * p)).num ≡ 0 [ZMOD ((m * p) ^ 2 : ℤ)] := by
+  have hm1 : 1 < m :=
+    lt_of_lt_of_le hp.one_lt (le_trans (Nat.le_mul_of_pos_left p two_pos) h2)
+  have hB : padicValRat p (ratExpression m) < 1 := by
+    have := padicValRat_ratExpression_eq_neg_one_of_two_mul hp hp2 h2 h3 hnd
+    linarith
+  exact not_n_sq_dvd_num_of_val_pred hm1 hp hp2 hn hB
+
+#print axioms OeisA108866.padicValRat_ratExpression_eq_neg_pow_of_trunc
+#print axioms OeisA108866.not_n_sq_dvd_num_of_trunc
+#print axioms OeisA108866.padicValRat_ratExpression_eq_neg_log_of_trunc
+#print axioms OeisA108866.not_n_sq_dvd_num_of_log
+#print axioms OeisA108866.padicValRat_ratExpression_eq_neg_one_of_two_mul
+#print axioms OeisA108866.not_n_sq_dvd_num_of_two_mul
+
 end OeisA108866
+

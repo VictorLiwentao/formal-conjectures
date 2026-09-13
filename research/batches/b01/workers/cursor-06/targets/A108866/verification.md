@@ -56,6 +56,21 @@ Kernel-checked LTE recurrence and unique-multiple fragment, same axioms, `#print
 
 These cover additional `n=mq` with `v_q(T(m))<1`, and `n=mp` when `p≤m<2p` and `p∤m`. The file still does not prove the frozen iff.
 
+Kernel-checked truncated harmonic criterion, same axioms, `#print axioms` on 2026-09-13:
+
+```
+'OeisA108866.twoHarmonicTrunc_two_ne_zero'
+'OeisA108866.twoHarmonicTrunc_one_ne_zero'
+'OeisA108866.padicValRat_ratExpression_eq_neg_pow_of_trunc'
+'OeisA108866.not_n_sq_dvd_num_of_trunc'
+'OeisA108866.padicValRat_ratExpression_eq_neg_log_of_trunc'
+'OeisA108866.not_n_sq_dvd_num_of_log'
+'OeisA108866.padicValRat_ratExpression_eq_neg_one_of_two_mul'
+'OeisA108866.not_n_sq_dvd_num_of_two_mul'
+```
+
+If `p^e ≤ m < p^{e+1}`, `p ∤ m`, and `L(m/p^e) ≠ 0` in `𝔽_p`, then `v_p(T(m)) = -e`, so the converse holds at `n=mp`. This is not the frozen iff.
+
 Exact type of the prime-direction theorem, from `#print OeisA108866.n_sq_dvd_num_of_prime`:
 
 ```
