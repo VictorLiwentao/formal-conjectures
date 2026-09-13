@@ -137,6 +137,11 @@ The same unfolding of `oddInnerNum p` by `sum_range_succ` and
 `inv_pair_zmod`: in `ZMod (p^2)`,
 `k^{-1} + (p-k)^{-1} = -p k^{-2}` for `0 < k < p`.
 
+`harmonic_pred_eq_zero_zmod`: pairing then gives
+`H_{p-1} ≡ 0` in `ZMod (p^2)` for primes `p ≥ 5`, because
+`2 H_{p-1} = -p ∑ k^{-2}` and that inverse-square sum is `0` in
+`𝔽_p`, hence a multiple of `p` in `ZMod (p^2)`.
+
 `choose_pred_eq_one_sub_harmonic_zmod`: for odd `a ≤ p`,
 `C(p-1,a-1) ≡ 1 - p H_{a-1}` exactly in `ZMod (p^2)`, because the
 product `∏(1-p/b)` truncates after the linear term. Therefore

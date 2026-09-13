@@ -133,6 +133,7 @@ Kernel-checked `p^e` converse for `p ∈ {11,13,17,19,23,29,31}` by unfolding `o
 
 ```
 'OeisA108866.inv_pair_zmod'
+'OeisA108866.harmonic_pred_eq_zero_zmod'
 'OeisA108866.not_n_sq_dvd_num_of_eleven_pow'
 'OeisA108866.not_n_sq_dvd_num_of_thirteen_pow'
 'OeisA108866.not_n_sq_dvd_num_of_seventeen_pow'
@@ -142,7 +143,7 @@ Kernel-checked `p^e` converse for `p ∈ {11,13,17,19,23,29,31}` by unfolding `o
 'OeisA108866.not_n_sq_dvd_num_of_thirty_one_pow'
 ```
 
-Compile log: `/opt/cursor/artifacts/a108866_lean_wfail_small_prime_pow.log`, exit 0, no `sorryAx`.
+Compile log: `/opt/cursor/artifacts/a108866_lean_wfail_wolstenholme.log`, exit 0, no `sorryAx`.
 This is not the frozen iff.
 
 Kernel-checked exact evaluations `n=9,25,27,49` and packaging lemmas remain in the same file, same axioms.

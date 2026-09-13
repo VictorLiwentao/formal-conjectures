@@ -33,6 +33,7 @@ import Mathlib.Data.ZMod.Factorial
 import Mathlib.Algebra.Field.ZMod
 import Mathlib.NumberTheory.Multiplicity
 import Mathlib.FieldTheory.Finite.Basic
+import Mathlib.Algebra.BigOperators.Intervals
 
 /-!
 Partial development for OEIS A108866.
@@ -4556,6 +4557,135 @@ lemma inv_pair_zmod {p k : ℕ} (hp : p.Prime) (hk : 0 < k) (hkp : k < p) :
   rw [hinv]
   ring
 
+lemma dvd_pow_self_two (p : ℕ) : p ∣ p ^ 2 :=
+  dvd_pow_self p (by decide : (2 : ℕ) ≠ 0)
+
+lemma cast_inv_nat {p i : ℕ} (hp : p.Prime) (hi : i < p) :
+    ZMod.cast ((i : ZMod (p ^ 2))⁻¹) = (i : ZMod p)⁻¹ := by
+  have hdiv := dvd_pow_self_two p
+  by_cases h0 : i = 0
+  · subst h0
+    simp [ZMod.inv_zero]
+  · have hpos : 0 < i := Nat.pos_of_ne_zero h0
+    have hcop := coprime_sq_of_lt_prime hp hpos hi
+    have hmul : (i : ZMod (p ^ 2)) * (i : ZMod (p ^ 2))⁻¹ = 1 :=
+      ZMod.coe_mul_inv_eq_one i hcop
+    have : (i : ZMod p) * ZMod.cast ((i : ZMod (p ^ 2))⁻¹) = 1 := by
+      have hmap := (ZMod.castHom hdiv (ZMod p)).map_mul
+        (i : ZMod (p ^ 2)) ((i : ZMod (p ^ 2))⁻¹)
+      rw [hmul, map_one] at hmap
+      have hiφ : ZMod.castHom hdiv (ZMod p) (i : ZMod (p ^ 2)) =
+          (i : ZMod p) := map_natCast _ i
+      have hinvφ : ZMod.castHom hdiv (ZMod p) ((i : ZMod (p ^ 2))⁻¹) =
+          ZMod.cast ((i : ZMod (p ^ 2))⁻¹) := ZMod.castHom_apply _
+      rw [hiφ, hinvφ] at hmap
+      exact hmap.symm
+    exact (ZMod.inv_eq_of_mul_eq_one p _ _ this).symm
+
+lemma inv_sq_sum_cast_eq_zero {p : ℕ} (hp : p.Prime) (h5 : 5 ≤ p) :
+    ZMod.cast (∑ i ∈ range p, ((i : ZMod (p ^ 2))⁻¹) ^ 2 : ZMod (p ^ 2)) =
+      (0 : ZMod p) := by
+  have hdiv := dvd_pow_self_two p
+  have hsum :=
+    map_sum (ZMod.castHom hdiv (ZMod p))
+      (fun i : ℕ => ((i : ZMod (p ^ 2))⁻¹) ^ 2) (range p)
+  have hterm : ∀ i ∈ range p,
+      ZMod.castHom hdiv (ZMod p) (((i : ZMod (p ^ 2))⁻¹) ^ 2) =
+        ((i : ZMod p)⁻¹) ^ 2 := by
+    intro i hi
+    have hi' : i < p := mem_range.mp hi
+    rw [map_pow, ZMod.castHom_apply, cast_inv_nat hp hi']
+  rw [ZMod.castHom_apply] at hsum
+  rw [hsum, sum_congr rfl hterm, sum_inv_sq_range_eq_zero hp h5]
+
+lemma mul_p_of_cast_eq_zero {p : ℕ} [NeZero p] [NeZero (p ^ 2)]
+    (x : ZMod (p ^ 2)) (hx : ZMod.cast x = (0 : ZMod p)) :
+    (p : ZMod (p ^ 2)) * x = 0 := by
+  have hval : (x.val : ZMod p) = 0 := by
+    rwa [ZMod.natCast_val]
+  have hdvd : p ∣ x.val := (ZMod.natCast_eq_zero_iff x.val p).1 hval
+  obtain ⟨k, hk⟩ := hdvd
+  have : (p : ZMod (p ^ 2)) * x =
+      (p : ZMod (p ^ 2)) * (x.val : ZMod (p ^ 2)) := by
+    rw [ZMod.natCast_zmod_val]
+  rw [this, hk, Nat.cast_mul, ← mul_assoc, n_mul_self_eq_zero p, zero_mul]
+
+lemma mul_p_inv_sq_sum_eq_zero {p : ℕ} (hp : p.Prime) (h5 : 5 ≤ p) :
+    (p : ZMod (p ^ 2)) *
+      ∑ i ∈ range p, ((i : ZMod (p ^ 2))⁻¹) ^ 2 = 0 := by
+  have : NeZero p := ⟨hp.ne_zero⟩
+  have : NeZero (p ^ 2) := ⟨pow_ne_zero 2 hp.ne_zero⟩
+  exact mul_p_of_cast_eq_zero _ (inv_sq_sum_cast_eq_zero hp h5)
+
+lemma inv_sq_sum_succ {p : ℕ} (hp0 : 0 < p) :
+    ∑ i ∈ range (p - 1), (((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹) ^ 2 =
+      ∑ i ∈ range p, ((i : ZMod (p ^ 2))⁻¹) ^ 2 := by
+  have hsplit := sum_range_succ' (fun i => ((i : ZMod (p ^ 2))⁻¹) ^ 2) (p - 1)
+  have : p - 1 + 1 = p := Nat.sub_add_cancel hp0
+  rw [this] at hsplit
+  rw [eq_comm, hsplit]
+  simp [ZMod.inv_zero]
+
+lemma two_mul_harmonic_eq_neg_p_inv_sq {p : ℕ} (hp : p.Prime) (h5 : 5 ≤ p) :
+    (2 : ZMod (p ^ 2)) *
+        ∑ i ∈ range (p - 1), ((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹ =
+      -((p : ZMod (p ^ 2)) *
+          ∑ i ∈ range (p - 1), (((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹) ^ 2) := by
+  have hpair :
+      ∑ i ∈ range (p - 1),
+          (((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹ +
+            (((p - 1 - i : ℕ) : ZMod (p ^ 2))⁻¹)) =
+        ∑ i ∈ range (p - 1),
+          -((p : ZMod (p ^ 2)) *
+              (((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹) ^ 2) := by
+    refine sum_congr rfl fun i hi => ?_
+    have hi' : i < p - 1 := mem_range.mp hi
+    have hkpos : 0 < i + 1 := Nat.succ_pos i
+    have hkp : i + 1 < p := by omega
+    have hpk : p - (i + 1) = p - 1 - i := by omega
+    simpa [hpk] using inv_pair_zmod hp hkpos hkp
+  have h2 :
+      ∑ i ∈ range (p - 1),
+          (((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹ +
+            (((p - 1 - i : ℕ) : ZMod (p ^ 2))⁻¹)) =
+        (2 : ZMod (p ^ 2)) *
+          ∑ i ∈ range (p - 1), ((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹ := by
+    rw [sum_add_distrib, two_mul]
+    have hrefl :=
+      sum_range_reflect (fun i => ((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹) (p - 1)
+    have : ∑ i ∈ range (p - 1), (((p - 1 - i : ℕ) : ZMod (p ^ 2))⁻¹) =
+        ∑ i ∈ range (p - 1), ((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹ := by
+      trans ∑ i ∈ range (p - 1),
+          ((((p - 1) - 1 - i) + 1 : ℕ) : ZMod (p ^ 2))⁻¹
+      · refine sum_congr rfl fun i hi => ?_
+        have : p - 1 - i = (p - 1 - 1 - i) + 1 := by
+          have : i < p - 1 := mem_range.mp hi
+          omega
+        rw [this]
+      · exact hrefl
+    rw [this]
+  rw [← h2, hpair, sum_neg_distrib, ← mul_sum]
+
+lemma harmonic_pred_eq_zero_zmod {p : ℕ} (hp : p.Prime) (h5 : 5 ≤ p) :
+    ∑ i ∈ range (p - 1), ((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹ = 0 := by
+  have hodd : Odd p := hp.odd_of_ne_two
+    (ne_of_gt (lt_of_lt_of_le (by decide : (2 : ℕ) < 5) h5))
+  have hcop2 : (2 : ℕ).Coprime (p ^ 2) :=
+    (Nat.coprime_pow_right_iff (by decide : 0 < 2) 2 p).mpr
+      (Nat.coprime_two_left.mpr hodd)
+  have h2 : (2 : ZMod (p ^ 2)) * (2 : ZMod (p ^ 2))⁻¹ = 1 :=
+    ZMod.coe_mul_inv_eq_one 2 hcop2
+  have h2H := two_mul_harmonic_eq_neg_p_inv_sq hp h5
+  have hI0 := mul_p_inv_sq_sum_eq_zero hp h5
+  have hI := inv_sq_sum_succ (p := p) hp.pos
+  have : (2 : ZMod (p ^ 2)) *
+      ∑ i ∈ range (p - 1), ((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹ = 0 := by
+    rw [h2H, hI, hI0, neg_zero]
+  have h2' : (2 : ZMod (p ^ 2))⁻¹ * 2 = 1 := by rw [mul_comm, h2]
+  have hmul := congrArg (fun z => (2 : ZMod (p ^ 2))⁻¹ * z) this
+  rw [← mul_assoc, h2', one_mul, mul_zero] at hmul
+  exact hmul
+
 lemma oddInnerNum_eleven : oddInnerNum 11 = 253372686336000 := by
   unfold oddInnerNum oddDenom
   rw [show Nat.factorial 10 = 3628800 by decide]
@@ -4700,6 +4830,7 @@ lemma not_n_sq_dvd_num_of_thirty_one_pow {e : ℕ} (he : 2 ≤ e) :
 #print axioms OeisA108866.not_n_sq_dvd_num_of_three_pow
 #print axioms OeisA108866.not_n_sq_dvd_num_of_three_mul_pow
 #print axioms OeisA108866.inv_pair_zmod
+#print axioms OeisA108866.harmonic_pred_eq_zero_zmod
 #print axioms OeisA108866.not_n_sq_dvd_num_of_eleven_pow
 #print axioms OeisA108866.not_n_sq_dvd_num_of_thirteen_pow
 #print axioms OeisA108866.not_n_sq_dvd_num_of_seventeen_pow
