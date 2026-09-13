@@ -81,5 +81,5 @@ See `proof.md`. Remaining McEachen primes have `lpf(p-2) ≥ 113` not a larger t
 
 ## Commit SHA
 
-Research commit: `b882fc69`
+Research commit: `6061feaa`
 Branch: `cursor/a135508-lcm-primes-770d`
