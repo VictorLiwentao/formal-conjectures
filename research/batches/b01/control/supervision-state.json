@@ -2,65 +2,101 @@
   "automation_id": "maintain-seven-cursor-math-workers",
   "interval_minutes": 15,
   "target_cursor_slots": 7,
-  "updated_at_utc": "2026-09-12T23:43:19.647053+00:00",
+  "updated_at_utc": "2026-09-13T00:11:52.305832+00:00",
   "accept_known_informal_proofs_for_new_lean_formalization": true,
-  "note": "Initialized from verified launch/goal records. Live status must be reconciled on each heartbeat.",
+  "note": "Five original workers healthy. Two predecessors stopped and independently audited; fresh distinct replacement reservations prepared, launch pending.",
   "slots": [
     {
       "slot": "cursor-01",
-      "run_id": "cursor-01",
-      "agent_url": "https://cursor.com/agents/bc-d869c776-ad57-4a3d-9e94-9c0f83308a28",
-      "state": "launched_goal_previously_verified",
+      "run_id": "cursor-01-r02",
+      "agent_url": null,
+      "state": "reserved_not_started",
       "actual_branch": null,
-      "replacements": []
+      "replacements": [],
+      "last_checked_at_utc": "2026-09-13T00:05:43.648025+00:00",
+      "progress_note": "Replacement prepared; not launched yet.",
+      "history": [
+        {
+          "run_id": "cursor-01",
+          "agent_url": "https://cursor.com/agents/bc-d869c776-ad57-4a3d-9e94-9c0f83308a28",
+          "actual_branch": "cursor/b01-cursor-01-8a28",
+          "retired_at_utc": "2026-09-13T00:11:52.305832+00:00",
+          "result": "independently_verified_known_math_formalization",
+          "audit": "research/batches/b01/control/audits/cursor-01.md"
+        }
+      ],
+      "predecessor": "cursor-01"
     },
     {
       "slot": "cursor-02",
       "run_id": "cursor-02",
       "agent_url": "https://cursor.com/agents/bc-a355afc5-9f46-4bc6-861e-4bfe455f13c0",
-      "state": "launched_goal_previously_verified",
-      "actual_branch": null,
-      "replacements": []
+      "state": "researching",
+      "actual_branch": "cursor/b01-cursor-02-13c0",
+      "replacements": [],
+      "last_checked_at_utc": "2026-09-13T00:05:43.648025+00:00",
+      "progress_note": "Goal active; structural enumeration lemmas and small cases; full identity unresolved."
     },
     {
       "slot": "cursor-03",
-      "run_id": "cursor-03",
-      "agent_url": "https://cursor.com/agents/bc-763d4240-9103-421d-a777-fde27a4491b3",
-      "state": "launched_goal_previously_verified",
+      "run_id": "cursor-03-r02",
+      "agent_url": null,
+      "state": "reserved_not_started",
       "actual_branch": null,
-      "replacements": []
+      "replacements": [],
+      "last_checked_at_utc": "2026-09-13T00:05:43.648025+00:00",
+      "progress_note": "Replacement prepared; not launched yet.",
+      "history": [
+        {
+          "run_id": "cursor-03",
+          "agent_url": "https://cursor.com/agents/bc-763d4240-9103-421d-a777-fde27a4491b3",
+          "actual_branch": "cursor/b01-cursor-03-91b3",
+          "retired_at_utc": "2026-09-13T00:11:52.305832+00:00",
+          "result": "prior_public_lean_independently_verified",
+          "audit": "research/batches/b01/control/audits/cursor-03.md"
+        }
+      ],
+      "predecessor": "cursor-03"
     },
     {
       "slot": "cursor-04",
       "run_id": "cursor-04",
       "agent_url": "https://cursor.com/agents/bc-a0152c56-6609-4ec3-aa7f-7934ea8f770d",
-      "state": "launched_goal_previously_verified",
+      "state": "researching",
       "actual_branch": null,
-      "replacements": []
+      "replacements": [],
+      "last_checked_at_utc": "2026-09-13T00:05:43.648025+00:00",
+      "progress_note": "Goal active; prime recurrence structural lemmas; full target unresolved."
     },
     {
       "slot": "cursor-05",
       "run_id": "cursor-05",
       "agent_url": "https://cursor.com/agents/bc-9a31de2a-22ad-4f85-b8b0-c5eae877cb88",
-      "state": "launched_goal_previously_verified",
+      "state": "researching",
       "actual_branch": null,
-      "replacements": []
+      "replacements": [],
+      "last_checked_at_utc": "2026-09-13T00:05:43.648025+00:00",
+      "progress_note": "Goal active; divisor-sum multiplicativity and CRT development; full target unresolved."
     },
     {
       "slot": "cursor-06",
       "run_id": "cursor-06",
       "agent_url": "https://cursor.com/agents/bc-c701d4c6-5791-456d-bec8-130a051cefe4",
-      "state": "launched_goal_previously_verified",
-      "actual_branch": null,
-      "replacements": []
+      "state": "researching",
+      "actual_branch": "cursor/b01-cursor-06-a108866-efe4",
+      "replacements": [],
+      "last_checked_at_utc": "2026-09-13T00:05:43.648025+00:00",
+      "progress_note": "Goal active; even-composite direction compiled per worker, prime direction known informally; exact iff unresolved."
     },
     {
       "slot": "cursor-07",
       "run_id": "cursor-07",
       "agent_url": "https://cursor.com/agents/bc-c4e9245b-94f8-4ba9-a87c-6eb5b962ca94",
-      "state": "launched_goal_previously_verified",
-      "actual_branch": null,
-      "replacements": []
+      "state": "researching",
+      "actual_branch": "cursor/b01-cursor-07-ca94",
+      "replacements": [],
+      "last_checked_at_utc": "2026-09-13T00:05:43.648025+00:00",
+      "progress_note": "Goal active; WOW graph search/proof exploration. Explicit known-informal-proof acceptance policy delivered and acknowledged."
     }
   ]
 }

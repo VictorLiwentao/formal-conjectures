@@ -1,5 +1,5 @@
 {
-  "schema": 1,
+  "schema": 2,
   "batch": "b01",
   "prepared_date": "2026-09-12",
   "upstream": "https://github.com/google-deepmind/formal-conjectures",
@@ -10,37 +10,12 @@
   "publication_policy": "User authorized public working branches on VictorLiwentao/formal-conjectures on 2026-09-12. Upstream PRs, OEIS edits and other publication remain unauthorized.",
   "workers": [
     {
-      "worker_id": "cursor-01",
-      "title": "Carmichael divisor blocks",
-      "platform": "Cursor Cloud",
-      "requested_model": "Grok 4.6 Extra (select in UI if available; no substitution)",
-      "branch": "codex/b01-cursor-01",
-      "status": "reserved_not_started",
-      "novelty_status": "provisional_requires_fresh_audit",
-      "reserved_sequence_groups": [
-        "A237271"
-      ],
-      "targets": [
-        {
-          "id": "A237271",
-          "source_file": "FormalConjectures/OEIS/237271.lean",
-          "source_sha256": "4f5f9875d35bc3f009af89444945296942a5967d1f8af20a4a102460227da11b",
-          "declarations": [
-            "OeisA237271.observation_carmichael"
-          ],
-          "source_url": "https://github.com/google-deepmind/formal-conjectures/blob/a2f4a1bb12a28e04a969da78feefac7d1ce49565/FormalConjectures/OEIS/237271.lean",
-          "oeis_url": "https://oeis.org/A237271"
-        }
-      ],
-      "notes": "Start with the corrected IsCarmichael hypothesis. Public accepted proofs of conjecture_2 and the old vacuous Carmichael statement are different targets. Inspect issue #4974 and its correction #4987. Establish an ordered-divisor structural lemma; any library lemma with sorry must be proved independently before use."
-    },
-    {
       "worker_id": "cursor-02",
       "title": "Recursive word enumeration",
       "platform": "Cursor Cloud",
       "requested_model": "Grok 4.6 Extra (select in UI if available; no substitution)",
       "branch": "codex/b01-cursor-02",
-      "status": "reserved_not_started",
+      "status": "researching_goal_active",
       "novelty_status": "provisional_requires_fresh_audit",
       "reserved_sequence_groups": [
         "A108081"
@@ -60,37 +35,12 @@
       "notes": "Audit the constructors and indexing: Lean uses a(n-1), consistent with the small examples despite an OEIS prose offset discrepancy. Look for a canonical decomposition or generating-function recurrence. Public c5-k4 work already counted lengths 13 and 14; do not repeat those as novelty."
     },
     {
-      "worker_id": "cursor-03",
-      "title": "Binary substring multiplicity",
-      "platform": "Cursor Cloud",
-      "requested_model": "Grok 4.6 Extra (select in UI if available; no substitution)",
-      "branch": "codex/b01-cursor-03",
-      "status": "reserved_not_started",
-      "novelty_status": "provisional_requires_fresh_audit",
-      "reserved_sequence_groups": [
-        "A076141"
-      ],
-      "targets": [
-        {
-          "id": "A076141",
-          "source_file": "FormalConjectures/OEIS/76141.lean",
-          "source_sha256": "7954f35f38ed7da506eefc949c1d401e99625a70406561413198c467e63d4c78",
-          "declarations": [
-            "OeisA76141.conjecture"
-          ],
-          "source_url": "https://github.com/google-deepmind/formal-conjectures/blob/a2f4a1bb12a28e04a969da78feefac7d1ce49565/FormalConjectures/OEIS/76141.lean",
-          "oeis_url": "https://oeis.org/A076141"
-        }
-      ],
-      "notes": "Audit overlapping occurrences, leading zeros and the representation of zero. Derive constraints from two assumed occurrences in n squared. Three checked Epoch runs were rejected; this is neither a proof of openness nor evidence that the problem is easy."
-    },
-    {
       "worker_id": "cursor-04",
       "title": "LCM recurrence at primes",
       "platform": "Cursor Cloud",
       "requested_model": "Grok 4.6 Extra (select in UI if available; no substitution)",
       "branch": "codex/b01-cursor-04",
-      "status": "reserved_not_started",
+      "status": "researching_goal_active",
       "novelty_status": "provisional_requires_fresh_audit",
       "reserved_sequence_groups": [
         "A135508"
@@ -115,7 +65,7 @@
       "platform": "Cursor Cloud",
       "requested_model": "Grok 4.6 Extra (select in UI if available; no substitution)",
       "branch": "codex/b01-cursor-05",
-      "status": "reserved_not_started",
+      "status": "researching_goal_active",
       "novelty_status": "provisional_requires_fresh_audit",
       "reserved_sequence_groups": [
         "A063880"
@@ -141,7 +91,7 @@
       "platform": "Cursor Cloud",
       "requested_model": "Grok 4.6 Extra (select in UI if available; no substitution)",
       "branch": "codex/b01-cursor-06",
-      "status": "reserved_not_started",
+      "status": "researching_goal_active",
       "novelty_status": "provisional_requires_fresh_audit",
       "reserved_sequence_groups": [
         "A108866",
@@ -232,7 +182,7 @@
       "platform": "Cursor Cloud",
       "requested_model": "Grok 4.6 Extra (select in UI if available; no substitution)",
       "branch": "codex/b01-cursor-07",
-      "status": "reserved_not_started",
+      "status": "researching_goal_active",
       "novelty_status": "discovery_scope_not_screened",
       "reserved_sequence_groups": [],
       "reserved_source_prefixes": [
@@ -243,6 +193,63 @@
       ],
       "targets": [],
       "notes": "Exclusive non-OEIS discovery scope. Build and record a screened queue before proof work. No specific conjecture in this scope is certified open or tractable. Exclude mathematical equivalents of every assigned or excluded OEIS problem. Keep queue under this worker folder; do not edit global assignments."
+    },
+    {
+      "worker_id": "cursor-03-r02",
+      "slot": "cursor-03",
+      "predecessor": "cursor-03",
+      "title": "A069004 finite counterexample certification",
+      "platform": "Cursor Cloud",
+      "requested_model": "Cursor Grok 4.6 Extra High",
+      "branch": "codex/b01-cursor-03-r02",
+      "status": "reserved_not_started",
+      "novelty_status": "known_mathematics_public_resource_limited_lean_attempts",
+      "reserved_sequence_groups": [
+        "A069004"
+      ],
+      "targets": [
+        {
+          "id": "A069004",
+          "source_file": "FormalConjectures/OEIS/69004.lean",
+          "source_sha256": "c29abb2a5c1e48761cc6d7ebb4332bd728071b6ea6059263ffcf153800282ca2",
+          "declarations": [
+            "OeisA69004.conjecture2.variants.upper_bound_false",
+            "OeisA69004.conjecture2"
+          ],
+          "source_url": "https://github.com/google-deepmind/formal-conjectures/blob/a2f4a1bb12a28e04a969da78feefac7d1ce49565/FormalConjectures/OEIS/69004.lean",
+          "oeis_url": "https://oeis.org/A069004"
+        }
+      ],
+      "notes": "Known counterexample n=512720. Complete efficient kernel certification; inspect and credit existing Epoch scripts that timed out/OOM. No new mathematical-discovery claim. See replacement-screening-01.md and prompts/cursor-03-r02.md."
+    },
+    {
+      "worker_id": "cursor-01-r02",
+      "slot": "cursor-01",
+      "predecessor": "cursor-01",
+      "title": "A109074 factorial-product ratio formalization",
+      "platform": "Cursor Cloud",
+      "requested_model": "Cursor Grok 4.6 Extra High",
+      "branch": "codex/b01-cursor-01-r02",
+      "status": "reserved_not_started",
+      "novelty_status": "known_mathematics_formalization_candidate",
+      "reserved_sequence_groups": [
+        "A109074",
+        "A005156",
+        "A134357"
+      ],
+      "targets": [
+        {
+          "id": "A109074",
+          "source_file": "FormalConjectures/OEIS/109074.lean",
+          "source_sha256": "cd5a2af1993d52ae29df9480d9304cbecae195e24d2ab51a45919806899cfd1e",
+          "declarations": [
+            "OeisA109074.conjecture"
+          ],
+          "source_url": "https://github.com/google-deepmind/formal-conjectures/blob/a2f4a1bb12a28e04a969da78feefac7d1ce49565/FormalConjectures/OEIS/109074.lean",
+          "oeis_url": "https://oeis.org/A109074"
+        }
+      ],
+      "notes": "Known ASM product formula; prove natural quotient integrality and positivity before rational cancellation. Credit Robbins/Kuperberg/Razumov\u2013Stroganov accurately; not new mathematical enumeration. Old defective formulation and old counterexample irrelevant. See replacement-screening-01.md and prompts/cursor-01-r02.md."
     }
   ],
   "excluded": {
@@ -262,7 +269,7 @@
     "A007226": "Previous Lean attempt failed; deprioritize",
     "A060957": "Local exact disproof with independent review exists; no fresh solve assignment. Publication/novelty are separate.",
     "A022030": "Accepted public Epoch results located.",
-    "A052709": "Live OEIS cites an exact public proof in arXiv:2608.11941.",
+    "A052709": "Known informal proof AND accepted public Epoch Lean result oeis_52709_conjecture_0, Anthropic run. Retain exclusion.",
     "A181546": "Public proof and accepted Epoch result located.",
     "A176477": "Accepted public result with integrality/parity development; exclude pending exact mapping review.",
     "A103885": "Accepted Epoch results located.",
@@ -272,6 +279,79 @@
     "A007406": "Accepted Epoch result located.",
     "A141057": "Accepted Epoch result located.",
     "A211417": "Accepted Epoch result located.",
-    "A109074": "Likely covered by classical alternating-sign-matrix enumeration; exclude pending novelty review."
-  }
+    "A076141": "Exact public Lean proof independently compiled, allowlisted axioms: KitaKen1/oeis-a076141-binary-word b4e179767fa3041c43e019b559ee77e6737317aa. Retired cursor-03.",
+    "A237271": "Corrected Carmichael observation independently verified in this batch; preserve other known results, do not restart same sequence group."
+  },
+  "accept_known_informal_proofs_for_new_lean_formalization": true,
+  "retired_workers": [
+    {
+      "worker_id": "cursor-03",
+      "title": "Binary substring multiplicity",
+      "platform": "Cursor Cloud",
+      "requested_model": "Grok 4.6 Extra (select in UI if available; no substitution)",
+      "branch": "codex/b01-cursor-03",
+      "status": "retired_prior_lean_solution",
+      "novelty_status": "provisional_requires_fresh_audit",
+      "reserved_sequence_groups": [
+        "A076141"
+      ],
+      "targets": [
+        {
+          "id": "A076141",
+          "source_file": "FormalConjectures/OEIS/76141.lean",
+          "source_sha256": "7954f35f38ed7da506eefc949c1d401e99625a70406561413198c467e63d4c78",
+          "declarations": [
+            "OeisA76141.conjecture"
+          ],
+          "source_url": "https://github.com/google-deepmind/formal-conjectures/blob/a2f4a1bb12a28e04a969da78feefac7d1ce49565/FormalConjectures/OEIS/76141.lean",
+          "oeis_url": "https://oeis.org/A076141"
+        }
+      ],
+      "notes": "Audit overlapping occurrences, leading zeros and the representation of zero. Derive constraints from two assumed occurrences in n squared. Three checked Epoch runs were rejected; this is neither a proof of openness nor evidence that the problem is easy.",
+      "actual_branch": "cursor/b01-cursor-03-91b3",
+      "retired_at_utc": "2026-09-13T00:10:33.096719+00:00",
+      "successor": "cursor-03-r02",
+      "audit_file": "research/batches/b01/control/audits/cursor-03.md"
+    },
+    {
+      "worker_id": "cursor-01",
+      "title": "Carmichael divisor blocks",
+      "platform": "Cursor Cloud",
+      "requested_model": "Grok 4.6 Extra (select in UI if available; no substitution)",
+      "branch": "codex/b01-cursor-01",
+      "status": "retired_independently_verified",
+      "novelty_status": "provisional_requires_fresh_audit",
+      "reserved_sequence_groups": [
+        "A237271"
+      ],
+      "targets": [
+        {
+          "id": "A237271",
+          "source_file": "FormalConjectures/OEIS/237271.lean",
+          "source_sha256": "4f5f9875d35bc3f009af89444945296942a5967d1f8af20a4a102460227da11b",
+          "declarations": [
+            "OeisA237271.observation_carmichael"
+          ],
+          "source_url": "https://github.com/google-deepmind/formal-conjectures/blob/a2f4a1bb12a28e04a969da78feefac7d1ce49565/FormalConjectures/OEIS/237271.lean",
+          "oeis_url": "https://oeis.org/A237271"
+        }
+      ],
+      "notes": "Start with the corrected IsCarmichael hypothesis. Public accepted proofs of conjecture_2 and the old vacuous Carmichael statement are different targets. Inspect issue #4974 and its correction #4987. Establish an ordered-divisor structural lemma; any library lemma with sorry must be proved independently before use.",
+      "actual_branch": "cursor/b01-cursor-01-8a28",
+      "final_commit": "7a2f94d822d3bdef3aceaa1fafc54ed99e828b8c",
+      "mathematical_novelty": "known_informal_mathematics",
+      "formalization_status": "independently_verified_new_lean_development",
+      "retired_at_utc": "2026-09-13T00:11:52.305832+00:00",
+      "successor": "cursor-01-r02",
+      "audit_file": "research/batches/b01/control/audits/cursor-01.md"
+    }
+  ],
+  "exclusion_changes": [
+    {
+      "sequence": "A109074",
+      "previous_reason": "Likely covered by classical alternating-sign-matrix enumeration; exclude pending novelty review.",
+      "date_utc": "2026-09-13T00:11:52.305832+00:00",
+      "new_policy": "Known informal mathematics without a located completed public Lean proof is now accepted; reserve corrected product-ratio target exclusively to cursor-01-r02."
+    }
+  ]
 }

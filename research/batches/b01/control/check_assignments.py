@@ -9,6 +9,18 @@ p.add_argument('--against',help='Coordinator seed commit, for worker changed-pat
 a=p.parse_args()
 m=json.loads((Path(__file__).parent/'assignments.json').read_text())
 seen={}; decls={}; ids=set(); failures=[]; scopes=[]
+# Historical attempts are retained for provenance, but do not own active slots.
+retired=m.get('retired_workers', [])
+retired_ids=[w['worker_id'] for w in retired]
+if len(retired_ids)!=len(set(retired_ids)): failures.append('duplicate retired worker')
+active_ids={w['worker_id'] for w in m['workers']}
+if active_ids.intersection(retired_ids): failures.append('worker is both active and retired')
+for w in retired:
+    if not w.get('status', '').startswith('retired_'):
+        failures.append(f"historical worker lacks retirement status: {w['worker_id']}")
+    for group in w.get('reserved_sequence_groups', []):
+        if group not in m['excluded']:
+            failures.append(f"retired sequence missing exclusion: {group}")
 for w in m['workers']:
     wid=w['worker_id']
     if wid in ids: failures.append(f'duplicate worker {wid}')
