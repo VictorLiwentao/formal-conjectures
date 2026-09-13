@@ -13,7 +13,10 @@ from pathlib import Path
 ROOT = Path("/workspace/research/batches/b01/workers/cursor-03-r02/targets/A069004")
 LEAN_DIR = ROOT / "lean"
 LOG = ROOT / "compile.log"
-JOBS = 2
+# CountRange blocks at n≈3e5 use several GiB each; two concurrent Count
+# compiles approached the 15 GiB VM limit. Keep this at 1 after C* finish,
+# or for mixed C/Count runs on this VM.
+JOBS = 1
 
 
 def files() -> list[Path]:
