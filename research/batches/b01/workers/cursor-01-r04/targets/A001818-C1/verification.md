@@ -46,6 +46,13 @@ which type-checks. The original `a` is used. The admitted `OeisA1818.conjecture1
 'A001818C1.sum_cycleEdgeWeight_replace_cycle' depends on axioms: [propext, Classical.choice, Quot.sound]
 'A001818C1.sign_of_cycleType_replicate_two' depends on axioms: [propext, Classical.choice, Quot.sound]
 'A001818C1.derangement_long_cycle_or_replicate_two' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.inv_one_sub_prod_of_univ' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.involution_unsigned_eq_neg_signed' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.inv_one_sub_replace_cycle' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.remainder_support_eq_compl' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.ofSubtype_mul_remainder' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.longPoints_mul_listing' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.sum_eq_sum_longKey' depends on axioms: [propext, Classical.choice, Quot.sound]
 ```
 
 No `sorryAx`, `native_decide`, or `Lean.trustCompiler` in those lemmas. The general `n ≥ 1` identity is not yet proved.

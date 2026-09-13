@@ -1673,6 +1673,289 @@ lemma derangement_long_cycle_or_replicate_two {n : ℕ} {σ : Perm (Fin (2 * n))
       exact hlong ⟨c, Finset.mem_def.mpr hc, h3⟩
     omega
 
+lemma inv_one_sub_prod_of_univ {N : ℕ} [NeZero N] {ζ : ℂ} (hζ : IsPrimitiveRoot ζ N)
+    {σ : Perm (Fin N)} (hsup : σ.support = univ) :
+    ∏ i : Fin N, (1 - ζ ^ ((σ i).val - i.val : ℤ))⁻¹ =
+      (∏ i : Fin N, (-ζ ^ i.val)⁻¹)⁻¹ *
+        cycleEdgeWeight (fun i => ζ ^ i.val) σ := by
+  have hC := zeta_inv_prod_ne_zero hζ
+  rw [eq_inv_mul_iff_mul_eq₀ hC]
+  exact (cycleEdgeWeight_zeta_univ hζ hsup).symm
+
+lemma involution_unsigned_eq_neg_signed {n : ℕ} {ζ : ℂ} :
+    (∑ σ : Perm (Fin (2 * n)),
+      if (∀ i, σ i ≠ i) ∧ σ.cycleType = Multiset.replicate n 2 then
+        ∏ i : Fin (2 * n), (1 - ζ ^ ((σ i).val - i.val : ℤ))⁻¹
+      else 0) =
+      (-1 : ℂ) ^ n *
+        ∑ σ : Perm (Fin (2 * n)),
+          if (∀ i, σ i ≠ i) ∧ σ.cycleType = Multiset.replicate n 2 then
+            (Perm.sign σ : ℂ) *
+              ∏ i : Fin (2 * n), (1 - ζ ^ ((σ i).val - i.val : ℤ))⁻¹
+          else 0 := by
+  have hterm : ∀ σ : Perm (Fin (2 * n)),
+      (if (∀ i, σ i ≠ i) ∧ σ.cycleType = Multiset.replicate n 2 then
+        ∏ i : Fin (2 * n), (1 - ζ ^ ((σ i).val - i.val : ℤ))⁻¹
+      else 0) =
+        (-1 : ℂ) ^ n *
+          (if (∀ i, σ i ≠ i) ∧ σ.cycleType = Multiset.replicate n 2 then
+            (Perm.sign σ : ℂ) *
+              ∏ i : Fin (2 * n), (1 - ζ ^ ((σ i).val - i.val : ℤ))⁻¹
+          else 0) := by
+    intro σ
+    split_ifs with h
+    · have hsign := sign_of_cycleType_replicate_two h.2
+      rw [hsign, ← mul_assoc, ← pow_add, ← two_mul, pow_mul, neg_one_sq, one_pow, one_mul]
+    · rw [mul_zero]
+  simp_rw [hterm, ← mul_sum]
+
+lemma mem_of_support_subset {α : Type*} [Fintype α] [DecidableEq α] {s : Finset α}
+    {f : Perm α} (h : f.support ⊆ s) (x : α) : x ∈ s ↔ f x ∈ s := by
+  constructor
+  · intro hx
+    by_cases hsup : x ∈ f.support
+    · exact h (Equiv.Perm.apply_mem_support.mpr hsup)
+    · rwa [Equiv.Perm.notMem_support.mp hsup]
+  · intro hx
+    by_cases hsup : x ∈ f.support
+    · exact h hsup
+    · rwa [← Equiv.Perm.notMem_support.mp hsup]
+
+lemma ofSubtype_subtypePerm_of_support_subset {α : Type*} [Fintype α] [DecidableEq α]
+    {s : Finset α} {f : Perm α} (hsub : f.support ⊆ s) :
+    Equiv.Perm.ofSubtype
+      (f.subtypePerm fun x => (mem_of_support_subset (s := s) hsub x).symm) = f := by
+  ext x
+  by_cases hx : x ∈ s
+  · rw [Equiv.Perm.ofSubtype_apply_of_mem _ hx, Equiv.Perm.subtypePerm_apply]
+  · rw [Equiv.Perm.ofSubtype_apply_of_not_mem _ hx]
+    exact (Equiv.Perm.notMem_support.mp fun h => hx (hsub h)).symm
+
+lemma two_le_card_subtype_ne_of_card_three {α : Type*} [Fintype α] [DecidableEq α]
+    {s : Finset α} (p : {a // a ∈ s}) (hs : 3 ≤ s.card) :
+    2 ≤ Fintype.card {q : {a // a ∈ s} // q ≠ p} := by
+  rw [card_subtype_ne, Fintype.card_coe]
+  omega
+
+lemma listingPerm_apply_ne {α : Type*} [Fintype α] [DecidableEq α] {s : Finset α}
+    (p : {a // a ∈ s})
+    (e : Fin (Fintype.card {q : {a // a ∈ s} // q ≠ p}) ≃ {q : {a // a ∈ s} // q ≠ p})
+    (hcard : 2 ≤ Fintype.card {q : {a // a ∈ s} // q ≠ p})
+    (q : {a // a ∈ s}) : listingPerm (p := p) e q ≠ q := by
+  have hsup := listingPerm_support_univ (p := p) e hcard
+  have hmem : q ∈ (listingPerm (p := p) e).support := by
+    rw [hsup]
+    exact mem_univ q
+  exact Equiv.Perm.mem_support.mp hmem
+
+lemma support_ofSubtype_listing {α : Type*} [Fintype α] [DecidableEq α] {s : Finset α}
+    (p : {a // a ∈ s})
+    (e : Fin (Fintype.card {q : {a // a ∈ s} // q ≠ p}) ≃ {q : {a // a ∈ s} // q ≠ p})
+    (hcard : 2 ≤ Fintype.card {q : {a // a ∈ s} // q ≠ p}) :
+    (Equiv.Perm.ofSubtype (listingPerm (p := p) e)).support = s := by
+  ext x
+  constructor
+  · intro hx
+    by_cases hx' : x ∈ s
+    · exact hx'
+    · have hne := Equiv.Perm.mem_support.mp hx
+      rw [Equiv.Perm.ofSubtype_apply_of_not_mem _ hx'] at hne
+      exact (hne rfl).elim
+  · intro hx
+    refine Equiv.Perm.mem_support.mpr ?_
+    rw [Equiv.Perm.ofSubtype_apply_of_mem _ hx]
+    intro h
+    exact listingPerm_apply_ne p e hcard ⟨x, hx⟩ (Subtype.ext h)
+
+lemma support_mul_listing_τ {α : Type*} [Fintype α] [DecidableEq α] {s : Finset α}
+    (p : {a // a ∈ s})
+    (e : Fin (Fintype.card {q : {a // a ∈ s} // q ≠ p}) ≃ {q : {a // a ∈ s} // q ≠ p})
+    (hcard : 2 ≤ Fintype.card {q : {a // a ∈ s} // q ≠ p})
+    {τ : Perm α} (hτ : τ.support = sᶜ) :
+    (Equiv.Perm.ofSubtype (listingPerm (p := p) e) * τ).support = univ := by
+  have hd := ofSubtype_disjoint_of_support_subset_compl (listingPerm (p := p) e)
+    (show τ.support ⊆ sᶜ from hτ.symm ▸ Subset.rfl)
+  rw [Equiv.Perm.Disjoint.support_mul hd, support_ofSubtype_listing p e hcard, hτ, union_compl]
+
+lemma inv_one_sub_replace_cycle {N : ℕ} [NeZero N] {ζ : ℂ} (hζ : IsPrimitiveRoot ζ N)
+    {s : Finset (Fin N)} (p : {a // a ∈ s})
+    (hcard : 2 ≤ Fintype.card {q : {a // a ∈ s} // q ≠ p})
+    {τ : Perm (Fin N)} (hτ : τ.support = sᶜ) :
+    ∑ e : Fin (Fintype.card {q : {a // a ∈ s} // q ≠ p}) ≃ {q : {a // a ∈ s} // q ≠ p},
+      ∏ i : Fin N,
+        (1 - ζ ^ (((Equiv.Perm.ofSubtype (listingPerm (p := p) e) * τ) i).val
+          - i.val : ℤ))⁻¹ = 0 := by
+  have hterm : ∀ e,
+      (∏ i : Fin N,
+          (1 - ζ ^ (((Equiv.Perm.ofSubtype (listingPerm (p := p) e) * τ) i).val
+            - i.val : ℤ))⁻¹) =
+        (∏ i : Fin N, (-ζ ^ i.val)⁻¹)⁻¹ *
+          cycleEdgeWeight (fun i => ζ ^ i.val)
+            (Equiv.Perm.ofSubtype (listingPerm (p := p) e) * τ) := fun e =>
+    inv_one_sub_prod_of_univ hζ (support_mul_listing_τ p e hcard hτ)
+  simp_rw [hterm]
+  rw [← mul_sum, sum_cycleEdgeWeight_replace_cycle (fun i => ζ ^ i.val)
+      (zeta_pow_fin_injective hζ) p hcard (show τ.support ⊆ sᶜ from hτ.symm ▸ Subset.rfl),
+    mul_zero]
+
+/-- Points that lie on a cycle of length at least 3. -/
+noncomputable def longPoints {α : Type*} [Fintype α] [DecidableEq α] (σ : Perm α) :
+    Finset α :=
+  univ.filter fun a => 3 ≤ (σ.cycleOf a).support.card
+
+lemma mem_longPoints {α : Type*} [Fintype α] [DecidableEq α] {σ : Perm α} {a : α} :
+    a ∈ longPoints σ ↔ 3 ≤ (σ.cycleOf a).support.card := by
+  simp [longPoints]
+
+lemma longPoints_nonempty_iff {α : Type*} [Fintype α] [DecidableEq α] {σ : Perm α} :
+    (longPoints σ).Nonempty ↔ ∃ c ∈ σ.cycleFactorsFinset, 3 ≤ c.support.card := by
+  constructor
+  · intro ⟨a, ha⟩
+    rw [mem_longPoints] at ha
+    have hne : σ a ≠ a := by
+      intro h
+      have h1 : σ.cycleOf a = 1 := (Equiv.Perm.cycleOf_eq_one_iff σ).mpr h
+      have h0 : (σ.cycleOf a).support.card = 0 := by
+        rw [h1, Equiv.Perm.support_one, card_empty]
+      omega
+    exact ⟨σ.cycleOf a, (Equiv.Perm.cycleOf_mem_cycleFactorsFinset_iff).2
+      (Equiv.Perm.mem_support.mpr hne), ha⟩
+  · intro ⟨c, hc, h3⟩
+    obtain ⟨a, ha⟩ := Equiv.Perm.IsCycle.nonempty_support
+      (Equiv.Perm.mem_cycleFactorsFinset_iff.mp hc).1
+    refine ⟨a, mem_longPoints.mpr ?_⟩
+    rwa [← Equiv.Perm.cycle_is_cycleOf ha hc]
+
+lemma inv_apply_eq_self_of_apply_eq_self {α : Type*} {c : Perm α} {x : α}
+    (h : c x = x) : c⁻¹ x = x := by
+  refine c.injective ?_
+  have hleft : c (c⁻¹ x) = x := by simp
+  rw [hleft, h]
+
+lemma remainder_apply_eq_self_of_mem {α : Type*} [Fintype α] [DecidableEq α]
+    {σ c : Perm α} (hc : c ∈ σ.cycleFactorsFinset) {x : α} (hx : x ∈ c.support) :
+    (σ * c⁻¹) x = x := by
+  have hagree := (Equiv.Perm.mem_cycleFactorsFinset_iff.mp hc).2
+  have hxinv : c⁻¹ x ∈ c.support := by
+    have hx' : x ∈ c⁻¹.support := by rwa [Equiv.Perm.support_inv]
+    have hx'' : c⁻¹ x ∈ c⁻¹.support := Equiv.Perm.apply_mem_support.mpr hx'
+    rwa [Equiv.Perm.support_inv] at hx''
+  change σ (c⁻¹ x) = x
+  rw [← hagree _ hxinv]
+  simp
+
+lemma remainder_support_eq_compl {α : Type*} [Fintype α] [DecidableEq α]
+    {σ c : Perm α} (hc : c ∈ σ.cycleFactorsFinset) (hsup : σ.support = univ) :
+    (σ * c⁻¹).support = c.supportᶜ := by
+  ext x
+  constructor
+  · intro hxrem
+    by_cases hx : x ∈ c.support
+    · have : x ∉ (σ * c⁻¹).support :=
+        Equiv.Perm.notMem_support.mpr (remainder_apply_eq_self_of_mem hc hx)
+      exact (this hxrem).elim
+    · exact mem_compl.mpr hx
+  · intro hxcompl
+    have hx : x ∉ c.support := mem_compl.mp hxcompl
+    have hcx : c x = x := Equiv.Perm.notMem_support.mp hx
+    have hinv : c⁻¹ x = x := inv_apply_eq_self_of_apply_eq_self hcx
+    refine Equiv.Perm.mem_support.mpr ?_
+    change σ (c⁻¹ x) ≠ x
+    rw [hinv]
+    exact Equiv.Perm.mem_support.mp (hsup.symm ▸ mem_univ x)
+
+lemma ofSubtype_mul_remainder {α : Type*} [Fintype α] [DecidableEq α]
+    {σ c : Perm α} (hc : c ∈ σ.cycleFactorsFinset) :
+    Equiv.Perm.ofSubtype
+        (c.subtypePerm fun x =>
+          (mem_of_support_subset (s := c.support) (Subset.rfl) x).symm) *
+      (σ * c⁻¹) = σ := by
+  rw [ofSubtype_subtypePerm_of_support_subset (s := c.support) Subset.rfl]
+  have hd := Equiv.Perm.disjoint_mul_inv_of_mem_cycleFactorsFinset hc
+  rw [← hd.commute.eq]
+  simp
+
+lemma not_mem_support_of_mem_of_subset_compl {α : Type*} [Fintype α] [DecidableEq α]
+    {s : Finset α} {τ : Perm α} (hτ : τ.support ⊆ sᶜ) {x : α} (hx : x ∈ s) :
+    τ x = x :=
+  Equiv.Perm.notMem_support.mp fun h => (mem_compl.mp (hτ h)) hx
+
+lemma cycleOf_mul_listing {α : Type*} [Fintype α] [DecidableEq α] {s : Finset α}
+    (p : {a // a ∈ s})
+    (e : Fin (Fintype.card {q : {a // a ∈ s} // q ≠ p}) ≃ {q : {a // a ∈ s} // q ≠ p})
+    (hcard : 2 ≤ Fintype.card {q : {a // a ∈ s} // q ≠ p})
+    {τ : Perm α} (hτ : τ.support ⊆ sᶜ) {x : α} (hx : x ∈ s) :
+    (Equiv.Perm.ofSubtype (listingPerm (p := p) e) * τ).cycleOf x =
+      Equiv.Perm.ofSubtype (listingPerm (p := p) e) := by
+  have hd := ofSubtype_disjoint_of_support_subset_compl (listingPerm (p := p) e) hτ
+  have hτx : τ x = x := not_mem_support_of_mem_of_subset_compl hτ hx
+  have hcycle := ofSubtype_isCycle (listingPerm_isCycle (p := p) e hcard)
+  have hne : Equiv.Perm.ofSubtype (listingPerm (p := p) e) x ≠ x :=
+    Equiv.Perm.mem_support.mp (by
+      rw [support_ofSubtype_listing p e hcard]
+      exact hx)
+  rw [Equiv.Perm.cycleOf_mul_of_apply_right_eq_self hd.commute x hτx]
+  exact Equiv.Perm.IsCycle.cycleOf_eq hcycle hne
+
+lemma longPoints_mul_listing {α : Type*} [Fintype α] [DecidableEq α] {s : Finset α}
+    (p : {a // a ∈ s})
+    (e : Fin (Fintype.card {q : {a // a ∈ s} // q ≠ p}) ≃ {q : {a // a ∈ s} // q ≠ p})
+    (hcard : 2 ≤ Fintype.card {q : {a // a ∈ s} // q ≠ p})
+    (hs : 3 ≤ s.card) {τ : Perm α} (hτ : τ.support ⊆ sᶜ) :
+    longPoints (Equiv.Perm.ofSubtype (listingPerm (p := p) e) * τ) =
+      s ∪ longPoints τ := by
+  ext x
+  by_cases hx : x ∈ s
+  · have hcy := cycleOf_mul_listing p e hcard hτ hx
+    have hsup : (Equiv.Perm.ofSubtype (listingPerm (p := p) e)).support = s :=
+      support_ofSubtype_listing p e hcard
+    simp only [mem_longPoints, mem_union, hx, true_or, iff_true]
+    rw [hcy, hsup]
+    exact hs
+  · have hd := ofSubtype_disjoint_of_support_subset_compl (listingPerm (p := p) e) hτ
+    have hfx : Equiv.Perm.ofSubtype (listingPerm (p := p) e) x = x :=
+      Equiv.Perm.notMem_support.mp (by
+        rw [support_ofSubtype_listing p e hcard]
+        exact hx)
+    have hcy : (Equiv.Perm.ofSubtype (listingPerm (p := p) e) * τ).cycleOf x =
+        τ.cycleOf x := by
+      rw [Equiv.Perm.Disjoint.cycleOf_mul_distrib hd,
+        (Equiv.Perm.cycleOf_eq_one_iff _).mpr hfx, one_mul]
+    simp only [mem_longPoints, mem_union, hx, false_or]
+    rw [hcy]
+
+noncomputable def longKey {α : Type*} [Fintype α] [DecidableEq α] [LinearOrder α]
+    (σ : Perm α) : Finset α × Perm α :=
+  if h : (longPoints σ).Nonempty then
+    ((σ.cycleOf ((longPoints σ).min' h)).support,
+      σ * (σ.cycleOf ((longPoints σ).min' h))⁻¹)
+  else
+    (∅, 1)
+
+lemma sum_eq_sum_longKey {α : Type*} [Fintype α] [DecidableEq α] [LinearOrder α]
+    (g : Perm α → ℂ) :
+    ∑ σ : Perm α, g σ =
+      ∑ s : Finset α, ∑ τ : Perm α,
+        ∑ σ : Perm α, if longKey σ = (s, τ) then g σ else 0 := by
+  have hσ : ∀ σ : Perm α,
+      g σ = ∑ s : Finset α, ∑ τ : Perm α,
+        if longKey σ = (s, τ) then g σ else 0 := by
+    intro σ
+    have hpair :
+        (∑ p : Finset α × Perm α, if longKey σ = p then g σ else 0) = g σ := by
+      rw [sum_ite_eq, if_pos (mem_univ _)]
+    have hprod :
+        (∑ p : Finset α × Perm α, if longKey σ = p then g σ else 0) =
+          ∑ s : Finset α, ∑ τ : Perm α,
+            if longKey σ = (s, τ) then g σ else 0 := by
+      exact Fintype.sum_prod_type
+        (fun p : Finset α × Perm α => if longKey σ = p then g σ else 0)
+    exact hpair.symm.trans hprod
+  refine (Fintype.sum_congr _ _ hσ).trans ?_
+  rw [sum_comm]
+  refine Fintype.sum_congr _ _ fun s => ?_
+  rw [sum_comm]
+
 #check (OeisA1818.conjecture1 :
     ∀ (n : ℕ), 1 ≤ n → ∀ (ζ : ℂ), IsPrimitiveRoot ζ (2 * n) →
       (sunMatrix n ζ).permanent = (a n : ℂ))
@@ -1716,5 +1999,17 @@ lemma derangement_long_cycle_or_replicate_two {n : ℕ} {σ : Perm (Fin (2 * n))
 #print axioms sign_of_cycleType_replicate_two
 #print axioms cycleType_eq_replicate_two
 #print axioms derangement_long_cycle_or_replicate_two
+#print axioms inv_one_sub_prod_of_univ
+#print axioms involution_unsigned_eq_neg_signed
+#print axioms ofSubtype_subtypePerm_of_support_subset
+#print axioms support_ofSubtype_listing
+#print axioms support_mul_listing_τ
+#print axioms inv_one_sub_replace_cycle
+#print axioms longPoints_nonempty_iff
+#print axioms remainder_support_eq_compl
+#print axioms ofSubtype_mul_remainder
+#print axioms cycleOf_mul_listing
+#print axioms longPoints_mul_listing
+#print axioms sum_eq_sum_longKey
 
 end A001818C1
