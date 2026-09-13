@@ -2282,6 +2282,26 @@ lemma sum_H_mul_catalan_eq_two_mul {n : ℕ} (hn : 1 ≤ n) :
   have hsum := sum_H_mul_catalan hn
   omega
 
+lemma sum_catalan_mul_H_eq_two_mul {n : ℕ} (hn : 1 ≤ n) :
+    ∑ j ∈ Finset.range (n + 1), catalan j * H (n - j) = 2 * H n := by
+  have h := sum_range_sub_eq n (fun j => H j * catalan (n - j))
+  have hsimpl :
+      ∑ k ∈ Finset.range (n + 1), H (n - k) * catalan (n - (n - k)) =
+        ∑ k ∈ Finset.range (n + 1), H (n - k) * catalan k := by
+    refine Finset.sum_congr rfl ?_
+    intro k hk
+    have : k < n + 1 := Finset.mem_range.mp hk
+    have hk' : n - (n - k) = k := by omega
+    rw [hk']
+  have hswap :
+      ∑ j ∈ Finset.range (n + 1), catalan j * H (n - j) =
+        ∑ k ∈ Finset.range (n + 1), H (n - k) * catalan k := by
+    refine Finset.sum_congr rfl ?_
+    intro j _hj
+    ring
+  rw [hswap, ← hsimpl, h]
+  exact sum_H_mul_catalan_eq_two_mul hn
+
 lemma RIrreducible.xWord {w : Word} (h : RIrreducible w) : XWord w := h.1
 
 lemma RIrreducible.getLast_ne_one {w : Word} (h : RIrreducible w) :
@@ -5503,6 +5523,65 @@ lemma ncard_iN_succ_add_eq_two_mul_sum_catalan (n : ℕ) (hn : 1 ≤ n) :
   rw [hrec, hsum1, hsum2, hsplit]
   ring
 
+/-- I-count padded by `iCard 0 = 0`. -/
+noncomputable def iCard : ℕ → ℕ
+  | 0 => 0
+  | n + 1 => (iN (n + 1)).ncard
+
+/-- Xia-count padded by `xCard 0 = 0`. -/
+noncomputable def xCard : ℕ → ℕ
+  | 0 => 0
+  | n + 1 => (xN (n + 1)).ncard
+
+lemma iCard_of_pos {n : ℕ} (hn : 1 ≤ n) : iCard n = (iN n).ncard := by
+  cases n with
+  | zero => omega
+  | succ _ => rfl
+
+lemma xCard_of_pos {n : ℕ} (hn : 1 ≤ n) : xCard n = (xN n).ncard := by
+  cases n with
+  | zero => omega
+  | succ _ => rfl
+
+lemma xCard_eq_sum_iCard_H :
+    ∀ n, xCard n = ∑ k ∈ Finset.range (n + 1), iCard k * H (n - k)
+  | 0 => by
+    simp [xCard, iCard]
+  | n + 1 => by
+    have hn : 1 ≤ n + 1 := Nat.succ_le_succ (Nat.zero_le n)
+    have h := ncard_xN_eq_sum_iN_H (n + 1) hn
+    rw [xCard_of_pos hn, h]
+    have hrange :
+        Finset.range (n + 1 + 1) = insert 0 (Finset.Icc 1 (n + 1)) := by
+      ext k
+      simp [Finset.mem_range, Finset.mem_Icc]
+      omega
+    have h0 : 0 ∉ Finset.Icc 1 (n + 1) := by simp [Finset.mem_Icc]
+    rw [hrange, Finset.sum_insert h0]
+    rw [show iCard 0 = 0 from rfl, zero_mul, zero_add]
+    refine Finset.sum_congr rfl ?_
+    intro k hk
+    have hk1 : 1 ≤ k := (Finset.mem_Icc.mp hk).1
+    rw [iCard_of_pos hk1]
+
+lemma iCard_succ_add {n : ℕ} (hn : 1 ≤ n) :
+    iCard (n + 1) + iCard n =
+      2 * ∑ k ∈ Finset.range (n + 1), catalan k * iCard (n - k) := by
+  have h := ncard_iN_succ_add_eq_two_mul_sum_catalan n hn
+  have hsum :
+      ∑ k ∈ Finset.range (n + 1), catalan k * iCard (n - k) =
+        ∑ k ∈ Finset.range n, catalan k * (iN (n - k)).ncard := by
+    rw [Finset.range_add_one, Finset.sum_insert Finset.notMem_range_self]
+    have hz : n - n = 0 := by omega
+    rw [hz, show iCard 0 = 0 from rfl, mul_zero, zero_add]
+    refine Finset.sum_congr rfl ?_
+    intro k hk
+    have : k < n := Finset.mem_range.mp hk
+    have hnk : 1 ≤ n - k := by omega
+    rw [iCard_of_pos hnk]
+  rw [show iCard (n + 1) = (iN (n + 1)).ncard from rfl, iCard_of_pos hn, hsum]
+  exact h
+
 #print axioms ncard_xN_one
 #print axioms ncard_xN_two
 #print axioms ncard_xN_three
@@ -5539,6 +5618,7 @@ lemma ncard_iN_succ_add_eq_two_mul_sum_catalan (n : ℕ) (hn : 1 ≤ n) :
 #print axioms sum_H_mul_catalan_succ
 #print axioms sum_H_mul_catalan
 #print axioms sum_H_mul_catalan_eq_two_mul
+#print axioms sum_catalan_mul_H_eq_two_mul
 #print axioms xword_exists_rIrreducible_yword
 #print axioms eq_of_rIrreducible_yword
 #print axioms ncard_xN_eq_sum_iN_H
@@ -5595,6 +5675,8 @@ lemma ncard_iN_succ_add_eq_two_mul_sum_catalan (n : ℕ) (hn : 1 ≤ n) :
 #print axioms goodPairs_eq_left_union_pConcatOne
 #print axioms ncard_iN_eq_sum_catalan_iN_add_pConcatOne
 #print axioms ncard_iN_succ_add_eq_two_mul_sum_catalan
+#print axioms xCard_eq_sum_iCard_H
+#print axioms iCard_succ_add
 #print axioms PWord.l_append_not_rIrreducible_of_penultimate_ge_two
 #print axioms l_append_zero_eq_cons_zero_r_of_getLast_eq_one
 #print axioms isRightParse_l_append_zero_cons_zero

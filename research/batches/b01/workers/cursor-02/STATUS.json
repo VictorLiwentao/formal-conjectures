@@ -6,7 +6,7 @@
   "coordination_commit": "238f78bdd5701ae4c97a0d70d4e22e2d45770d7a",
   "current_status": "partial",
   "novelty_status": "provisional_no_public_solution_found",
-  "last_updated_utc": "2026-09-13T06:56:00Z",
+  "last_updated_utc": "2026-09-13T07:08:00Z",
   "kickoff_utc": "2026-09-12T23:10:00Z",
   "session_limit_utc": "2026-09-13T07:10:00Z",
   "proof_declarations": [
@@ -63,6 +63,9 @@
     "OeisA108081.ncard_iN_eq_sum_catalan_iN_add_pConcatOne",
     "OeisA108081.ncard_iN_succ_add_eq_two_mul_sum_catalan",
     "OeisA108081.sum_H_mul_catalan_eq_two_mul",
+    "OeisA108081.sum_catalan_mul_H_eq_two_mul",
+    "OeisA108081.xCard_eq_sum_iCard_H",
+    "OeisA108081.iCard_succ_add",
     "OeisA108081.isRightParse_l_append_r_append_zero_of_penultimate_le_one",
     "OeisA108081.isRightParse_l_cons_zero_r_append_zero_of_penultimate_le_one"
   ],

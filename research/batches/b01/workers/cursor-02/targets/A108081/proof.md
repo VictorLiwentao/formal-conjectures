@@ -70,7 +70,8 @@ Proved:
 - Therefore the good first-return factors of I-words are exactly LeftWords (last `0`) and last-`1` penultimate-`≤ 1` unique-zero words, i.e. `s ++ [1]` for `PWord s`. Combined with unique `P × I` enumeration, `goodPairs n = leftIPairs n ∪ pConcatOneIPairs n`, so
   `|I_n| = ∑_{k=1}^{n-1} C_{k-1}|I_{n-k}| + ∑_{k=2}^{n-1} C_{k-1}|I_{n-k}|` for `n ≥ 2` (`ncard_iN_eq_sum_catalan_iN_add_pConcatOne`). This is the Callan/A081696 first-return recurrence.
 - Rewrite of that recurrence (`ncard_iN_succ_add_eq_two_mul_sum_catalan`): for `n ≥ 1`, `|I_{n+1}| + |I_n| = 2 ∑_{k=0}^{n-1} C_k |I_{n-k}|`. Combined with `|I_1| = 1`, this is the Cauchy form of `Q/x + Q = 2 C Q + 1` for `Q(x) = ∑_{n≥1} |I_n| x^n`.
-- Full Catalan convolution of `H` (`sum_H_mul_catalan_eq_two_mul`): `∑_{j=0}^n H_j C_{n-j} = 2 H_n` for `n ≥ 1`. Together with the truncated identity `∑_{j=0}^{n-1} H_j C_{n-j} = H_n`, this is the coefficient form of `H C = 2H - 1`.
+- Full Catalan convolution of `H` (`sum_H_mul_catalan_eq_two_mul`, `sum_catalan_mul_H_eq_two_mul`): `∑_{j=0}^n H_j C_{n-j} = ∑_{j=0}^n C_j H_{n-j} = 2 H_n` for `n ≥ 1`.
+- Padded counts `iCard` / `xCard` with value `0` at `0`. Then `xCard n = ∑_{k=0}^n iCard k H_{n-k}` for every `n`, and `|I_{n+1}| + |I_n| = 2 ∑_{k=0}^n C_k iCard(n-k)` for `n ≥ 1` (`iCard_succ_add`). These are the Cauchy forms of `S = Q H` and `(1+x-2xC)Q = x`.
 
 ## Experimental decomposition (not a proof)
 
