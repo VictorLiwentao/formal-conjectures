@@ -1,0 +1,38 @@
+{
+  "worker_id": "cursor-07-r03",
+  "target_id": "Green66-trivial-bound",
+  "declaration": "Green66.green_66.variants.trivial_bound",
+  "actual_branch": "cursor/b01-cursor-07-r03-ceef",
+  "baseline_commit": "a2f4a1bb12a28e04a969da78feefac7d1ce49565",
+  "coordination_commit": "486f35dcee50c2c32b98f946726adbd20f6a5fbf",
+  "source_file": "FormalConjectures/GreensOpenProblems/66.lean",
+  "source_sha256": "d38ab7e233260302ef58121037a02dc94866ddae820e9fc84308ce7264e07acb",
+  "prompt_present": true,
+  "current_status": "researching",
+  "mathematical_novelty": "known_mathematics",
+  "formalization_novelty": "in_progress_no_prior_exact_public_lean_found_in_checked_sources",
+  "novelty_status": "known_mathematics_formalization_candidate",
+  "last_updated_utc": "2026-09-13T02:07:46Z",
+  "session_kickoff_utc": "2026-09-13T02:07:46Z",
+  "session_limit_hours": 8,
+  "session_deadline_utc": "2026-09-13T10:07:46Z",
+  "proof_declarations": [],
+  "proof_file": "research/batches/b01/workers/cursor-07-r03/targets/Green66-trivial-bound/Green66.lean",
+  "independently_verified": false,
+  "unresolved_gaps": [
+    "Lean implementation of Green's successive greatest-square argument is in progress.",
+    "Coordinator independent audit is not started.",
+    "No exact public Lean proof was found in the checked sources; that is not a proof of universal absence."
+  ],
+  "next_step": "Implement and compile the uniform C=10 eventual O(X^{1/4}) bound.",
+  "environment": {
+    "name": "VictorLiwentao/formal-conjectures",
+    "lean": "leanprover/lean4:v4.33.1",
+    "model": "Cursor Grok 4.6 Extra High"
+  },
+  "publication_policy": "Push only this worker branch to VictorLiwentao/formal-conjectures. No PR.",
+  "timer_subscription": null,
+  "further_target_work": "active",
+  "classification": "known_mathematics_formalization",
+  "not_open_green66": true
+}
