@@ -268,6 +268,113 @@ lemma seven_sigma_eq_ten_usigma_of_A_four_mul {m : ℕ} (hm : Odd m) (hA : A (4 
   rw [sigma_mul_of_coprime hc, usigma_mul hc, usigma_four, sigma_four] at heq
   linarith
 
+lemma usigma_le_sigma (n : ℕ) : usigma n ≤ σ 1 n := by
+  simpa [usigma, sigma_one_apply] using
+    sum_le_sum_of_subset_of_nonneg (unitaryDivisors_subset_divisors n)
+      (fun _ _ _ => Nat.zero_le _)
+
+lemma seven_mul_sigma_three_pow_gt {k : ℕ} (hk : 4 ≤ k) :
+    10 * usigma (3 ^ k) < 7 * σ 1 (3 ^ k) := by
+  have hk0 : 0 < k := by omega
+  have hu : usigma (3 ^ k) = 1 + 3 ^ k := usigma_prime_pow Nat.prime_three hk0
+  have hσ : σ 1 (3 ^ k) = (3 ^ (k + 1) - 1) / 2 := sigma_prime_pow_div Nat.prime_three
+  have hdiv : 2 ∣ 3 ^ (k + 1) - 1 := sub_one_dvd_pow_sub_one (p := 3)
+  have h81 : 81 ≤ 3 ^ k := by
+    have : 3 ^ 4 = 81 := by decide
+    exact this ▸ Nat.pow_le_pow_right (by decide : 1 ≤ 3) hk
+  have hsucc : 3 ^ (k + 1) = 3 * 3 ^ k := by rw [pow_succ']
+  have hpos : 1 ≤ 3 * 3 ^ k := by
+    exact Nat.succ_le_of_lt (Nat.mul_pos (by decide) (Nat.pow_pos (n := k) (by decide : 0 < 3)))
+  have hmain : 20 * (1 + 3 ^ k) < 7 * (3 ^ (k + 1) - 1) := by
+    rw [hsucc]
+    have : 27 < 3 ^ k := by omega
+    have : 20 + 20 * 3 ^ k + 7 < 21 * 3 ^ k := by nlinarith
+    have : 20 + 20 * 3 ^ k < 21 * 3 ^ k - 7 := by omega
+    convert this using 1
+    · ring
+    · omega
+  rw [hu, hσ]
+  have hN : 7 * ((3 ^ (k + 1) - 1) / 2) = 7 * (3 ^ (k + 1) - 1) / 2 :=
+    (Nat.mul_div_assoc 7 hdiv).symm
+  rw [hN]
+  have h2N : 2 ∣ 7 * (3 ^ (k + 1) - 1) := hdiv.mul_left 7
+  have hcancel : 2 * (7 * (3 ^ (k + 1) - 1) / 2) = 7 * (3 ^ (k + 1) - 1) :=
+    Nat.mul_div_cancel' h2N
+  refine Nat.lt_of_mul_lt_mul_left (a := 2) ?_
+  rw [hcancel]
+  convert hmain using 1
+  ring
+
+lemma padicValNat_three_lt_four_of_seven_sigma {m : ℕ} (hm : m ≠ 0)
+    (h : 7 * σ 1 m = 10 * usigma m) : padicValNat 3 m < 4 := by
+  by_contra! hk
+  have hdecomp : ordProj[3] m * ordCompl[3] m = m :=
+    Nat.ordProj_mul_ordCompl_eq_self m 3
+  have hc : Coprime (ordProj[3] m) (ordCompl[3] m) :=
+    (Nat.coprime_ordCompl Nat.prime_three hm).pow_left (m.factorization 3)
+  have h' : 7 * σ 1 (ordProj[3] m) * σ 1 (ordCompl[3] m) =
+      10 * usigma (ordProj[3] m) * usigma (ordCompl[3] m) := by
+    have := h
+    rw [← hdecomp, sigma_mul_of_coprime hc, usigma_mul hc] at this
+    convert this using 1 <;> ring
+  have hle : 7 * σ 1 (ordProj[3] m) * σ 1 (ordCompl[3] m) ≤
+      10 * usigma (ordProj[3] m) * σ 1 (ordCompl[3] m) := by
+    rw [h']
+    gcongr
+    exact usigma_le_sigma _
+  have ht : 0 < σ 1 (ordCompl[3] m) := by
+    have : ordCompl[3] m ≠ 0 := by
+      intro h0
+      apply hm
+      rw [← hdecomp, h0, mul_zero]
+    exact sigma_pos_iff.mpr (Nat.pos_of_ne_zero this)
+  have hle' : 7 * σ 1 (ordProj[3] m) ≤ 10 * usigma (ordProj[3] m) :=
+    Nat.le_of_mul_le_mul_right hle ht
+  have hproj : ordProj[3] m = 3 ^ padicValNat 3 m := by
+    simp [Nat.factorization_def m Nat.prime_three]
+  have hlt : 10 * usigma (3 ^ padicValNat 3 m) < 7 * σ 1 (3 ^ padicValNat 3 m) :=
+    seven_mul_sigma_three_pow_gt hk
+  rw [hproj] at hle'
+  omega
+
+lemma padicValNat_three_lt_four_of_A_four_mul {m : ℕ} (hm : Odd m) (hA : A (4 * m)) :
+    padicValNat 3 m < 4 :=
+  padicValNat_three_lt_four_of_seven_sigma (Nat.pos_iff_ne_zero.mp hm.pos)
+    (seven_sigma_eq_ten_usigma_of_A_four_mul hm hA)
+
+lemma sigma_twentySeven : σ 1 27 = 40 := by decide
+
+lemma seven_sigma_twentySeven : 7 * σ 1 27 = 10 * usigma 27 := by
+  rw [sigma_twentySeven, usigma_twentySeven]
+
+lemma sigma_eq_usigma_ordCompl_of_val_three {m : ℕ} (hm : m ≠ 0)
+    (h : 7 * σ 1 m = 10 * usigma m) (h3 : padicValNat 3 m = 3) :
+    σ 1 (ordCompl[3] m) = usigma (ordCompl[3] m) := by
+  have hv : m.factorization 3 = 3 := by
+    rw [Nat.factorization_def m Nat.prime_three, h3]
+  have hpow : 3 ^ m.factorization 3 = 27 := by
+    rw [hv]
+    decide
+  have hc : Coprime 27 (m / 27) := by
+    have : Coprime (3 ^ m.factorization 3) (m / 3 ^ m.factorization 3) :=
+      (Nat.coprime_ordCompl Nat.prime_three hm).pow_left (m.factorization 3)
+    simpa [hpow] using this
+  have hdecomp : 27 * (m / 27) = m := by
+    have := Nat.ordProj_mul_ordCompl_eq_self m 3
+    simpa [hpow] using this
+  have hmul : 7 * σ 1 27 * σ 1 (m / 27) = 10 * usigma 27 * usigma (m / 27) := by
+    have := h
+    rw [← hdecomp, sigma_mul_of_coprime hc, usigma_mul hc] at this
+    convert this using 1 <;> ring
+  have hcoeff : 7 * σ 1 27 = 10 * usigma 27 := seven_sigma_twentySeven
+  have hpos : 0 < 7 * σ 1 27 := by
+    rw [hcoeff, usigma_twentySeven]
+    decide
+  have : (7 * σ 1 27) * σ 1 (m / 27) = (7 * σ 1 27) * usigma (m / 27) := by
+    rw [hmul, hcoeff]
+  have heq := Nat.eq_of_mul_eq_mul_left hpos this
+  simpa [hpow] using heq
+
 end Unitary
 
 section Congruence

@@ -22,8 +22,11 @@ In `A063880.lean`, compiled with `lake env lean -DwarningAsError=true`:
 - `n % 216 = 108` iff `n % 8 = 4` and `27 ∣ n`.
 - For `n ≠ 0`, that is equivalent to `padicValNat 2 n = 2` and `3 ≤ padicValNat 3 n`.
 - Concrete values: `usigma 4 = 5`, `usigma 27 = 28`, `usigma 108 = 140`.
+- If `4m` is in `A` and `m` is odd, then `7 σ(m) = 10 usigma(m)`.
+- Under that leftover equation, `padicValNat 3 m < 4`. In particular `3^4` cannot divide the odd part.
+- If also `padicValNat 3 m = 3`, then `σ` and `usigma` agree on the 3-free part of `m`.
 
-These lemmas are infrastructure. They do not decide the open statements.
+These lemmas are infrastructure and partial case analysis. They do not decide the open statements.
 
 ## Intended remaining argument
 
