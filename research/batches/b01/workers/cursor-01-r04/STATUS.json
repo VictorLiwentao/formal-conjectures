@@ -21,7 +21,7 @@
   "novelty_status": "known_mathematics_formalization",
   "mathematical_novelty": "known_mathematics_She_Sun_Xia_2022_Thm1_3_ii",
   "formalization_novelty": "no_prior_exact_public_lean_found_in_checked_sources_audit_incomplete_until_stop",
-  "last_updated_utc": "2026-09-13T08:53:13Z",
+  "last_updated_utc": "2026-09-13T09:15:00Z",
   "proof_declarations": [
     "A001818C1.conjecture1_of_one",
     "A001818C1.zpow_sub_ne_one",
@@ -177,12 +177,18 @@
     "A001818C1.tendsto_cayleySum_powZero",
     "A001818C1.isCycle_permCongr_iff",
     "A001818C1.evenCycleSumThrough_permCongr",
-    "A001818C1.even_card_support_of_oddLongPoints_empty"
+    "A001818C1.even_card_support_of_oddLongPoints_empty",
+    "A001818C1.equivFinZero_apply",
+    "A001818C1.cayleySum_comp_equivFinZero",
+    "A001818C1.evenCycleSumThrough_comp_equivFinZero",
+    "A001818C1.cayleySum_eq_zero_fin",
+    "A001818C1.identity_three_nine",
+    "A001818C1.cayleySum_eq_zero_of_zero"
   ],
   "unresolved_gaps": [
-    "General n>=1 C1 identity still open. Have per(M-J)=a n, Sigma1/Sigma2, Lemma 2.3, paper (3.5), s_1=-1, long even-cycle sums, Lemma 3.1 per(A_n)=0, card-2 vanishing, even-cycle binomial expansion, remainder split, complementary fibres, and the geometric Cayley matrix tending to the transposed sign matrix so cayleySum of cayleyPowZero tends to 0 on even sizes. Need complementary cancellation by IH, identity (3.9), recurrence (4.8), and Thm 1.1."
+    "General n>=1 C1 identity still open. Have per(M-J)=a n, Sigma1/Sigma2, Lemma 2.3, paper (3.5), s_1=-1, Lemma 3.1, complementary fibres, the geometric sign-matrix limit, complementary cancellation by even-card induction, and identity (3.9). Need recurrence (4.8), Theorem 1.1, and SSX 1.3(i)."
   ],
-  "next_step": "Strong induction on even card: complementary fibres vanish by IH on Fix(tau), then 1+evenCycleSumThrough is the binomial constant and equals 0 by the geometric sign-matrix limit.",
+  "next_step": "Assemble recurrence (4.8) from Sigma1/Sigma2/Sigma3 plus (3.9), then prove Theorem 1.1 by induction.",
   "self_review": "not a candidate yet; cannot set independently_verified",
   "excluded_from_this_worker": [
     "OeisA1818.conjecture2",

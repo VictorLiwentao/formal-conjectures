@@ -6362,6 +6362,227 @@ lemma even_card_support_of_oddLongPoints_empty {α : Type*} [Fintype α] [Decida
     h ((oddLongPoints_nonempty_iff (σ := σ)).mpr ⟨c, hc, hodd⟩)
   exact Nat.not_odd_iff_even.mp this
 
+noncomputable def equivFinZero {α : Type*} [Fintype α] [NeZero (Fintype.card α)] (p : α) :
+    α ≃ Fin (Fintype.card α) :=
+  (Fintype.equivFin α).trans (Equiv.swap (Fintype.equivFin α p) 0)
+
+lemma equivFinZero_apply {α : Type*} [Fintype α] [NeZero (Fintype.card α)] (p : α) :
+    equivFinZero p p = 0 := by
+  change Equiv.swap (Fintype.equivFin α p) 0 (Fintype.equivFin α p) = 0
+  simp
+
+lemma cayleySum_comp_equivFinZero {α : Type*} [Fintype α] [DecidableEq α] [LinearOrder α]
+    [NeZero (Fintype.card α)] (x : α → ℂ) (p : α) :
+    cayleySum x = cayleySum (x ∘ (equivFinZero p).symm) := by
+  have h := cayleySum_permCongr (equivFinZero p) (x ∘ (equivFinZero p).symm)
+  have hx : (x ∘ (equivFinZero p).symm) ∘ equivFinZero p = x := by
+    funext a
+    simp
+  rw [hx] at h
+  exact h
+
+lemma evenCycleSumThrough_comp_equivFinZero {α : Type*} [Fintype α] [DecidableEq α]
+    [NeZero (Fintype.card α)] (x : α → ℂ) (p : α) :
+    evenCycleSumThrough p x =
+      evenCycleSumThrough (0 : Fin (Fintype.card α)) (x ∘ (equivFinZero p).symm) := by
+  have h := evenCycleSumThrough_permCongr (equivFinZero p) p (x ∘ (equivFinZero p).symm)
+  have hx : (x ∘ (equivFinZero p).symm) ∘ equivFinZero p = x := by
+    funext a
+    simp
+  rw [hx, equivFinZero_apply] at h
+  exact h
+
+lemma injective_comp_equivFinZero {α : Type*} [Fintype α] [NeZero (Fintype.card α)]
+    {x : α → ℂ} (hx : Function.Injective x) (p : α) :
+    Function.Injective (x ∘ (equivFinZero p).symm) :=
+  hx.comp (equivFinZero p).symm.injective
+
+lemma equivFinZero_symm_zero {α : Type*} [Fintype α] [NeZero (Fintype.card α)] (p : α) :
+    (equivFinZero p).symm 0 = p :=
+  (Equiv.symm_apply_eq (equivFinZero p)).mpr (equivFinZero_apply p).symm
+
+def finZero {n : ℕ} (hn2 : 2 ≤ n) : Fin n :=
+  ⟨0, Nat.zero_lt_of_lt (Nat.succ_le_iff.mp hn2)⟩
+
+lemma finZero_val {n : ℕ} (hn2 : 2 ≤ n) : (finZero hn2).val = 0 := rfl
+
+lemma finZero_eq_zero {n : ℕ} [NeZero n] (hn2 : 2 ≤ n) : finZero hn2 = 0 :=
+  Fin.eq_of_val_eq (by simp [finZero])
+
+open scoped Classical in
+lemma cayleySum_eq_zero_fin :
+    ∀ (n : ℕ) (hn2 : 2 ≤ n), Even n →
+      ∀ (x : Fin n → ℂ), Function.Injective x → x (finZero hn2) = 0 →
+        cayleySum x = 1 + evenCycleSumThrough (finZero hn2) x ∧
+          cayleySum x = 0 := by
+  intro n
+  induction n using Nat.strong_induction_on with
+  | _ n ih =>
+    intro hn2 heven x hx hx0
+    have : NeZero n := ⟨by omega⟩
+    rw [finZero_eq_zero hn2] at hx0 ⊢
+    by_cases h2 : n = 2
+    · subst h2
+      have hcard : Fintype.card (Fin 2) = 2 := Fintype.card_fin 2
+      have hsum := cayleySum_eq_one_add_even_cycles_of_card_two (0 : Fin 2) x hcard
+      have hx1 : x 1 ≠ 0 := fun h1 =>
+        Fin.zero_ne_one (hx (hx0.trans h1.symm))
+      exact ⟨hsum, cayleySum_fin_two_of_zero hx0 hx1⟩
+    · have hcomp : ∀ (y : Fin n → ℂ), Function.Injective y → y 0 = 0 →
+          (∑ σ : Perm (Fin n),
+              if σ * (σ.cycleOf 0)⁻¹ = 1 then (0 : ℂ)
+              else if (oddLongPoints σ).Nonempty then 0 else cayleyWeight y σ) = 0 := by
+        intro y hy hy0
+        rw [cayleySum_complementary_eq_inner (0 : Fin n) y]
+        refine Fintype.sum_eq_zero _ fun τ => ?_
+        by_cases hpτ : τ 0 = 0
+        · rw [dif_pos hpτ]
+          by_cases hτ1 : τ = 1
+          · simp [hτ1]
+          · rw [if_neg hτ1]
+            by_cases hodd : (oddLongPoints τ).Nonempty
+            · simp [hodd]
+            · rw [if_neg hodd]
+              let p0 : {a // a ∈ τ.supportᶜ} :=
+                ⟨0, mem_support_compl_of_fixes hpτ⟩
+              suffices hinter :
+                  1 + evenCycleSumThrough p0 (fun a => y a.1) = 0 by
+                rw [hinter, mul_zero]
+              let β := {a // a ∈ τ.supportᶜ}
+              let k := Fintype.card β
+              have hkcoe : k = τ.supportᶜ.card := Fintype.card_coe _
+              have hsup_even : Even τ.support.card :=
+                even_card_support_of_oddLongPoints_empty hodd
+              have hk_even : Even k := by
+                rw [hkcoe, card_compl, Fintype.card_fin]
+                obtain ⟨a, ha⟩ := heven
+                obtain ⟨b, hb⟩ := hsup_even
+                refine ⟨a - b, ?_⟩
+                omega
+              have hk_ge : 2 ≤ k := by
+                have hpos : 1 ≤ τ.supportᶜ.card :=
+                  Finset.card_pos.mpr ⟨0, mem_support_compl_of_fixes hpτ⟩
+                have hk1 : k ≠ 1 := by
+                  intro hk1
+                  have : Odd k := ⟨0, by simp [hk1]⟩
+                  exact Nat.not_odd_iff_even.mpr hk_even this
+                omega
+              have hk_lt : k < n := by
+                rw [hkcoe, card_compl, Fintype.card_fin]
+                have hne : τ.support.Nonempty := by
+                  rw [Finset.nonempty_iff_ne_empty]
+                  intro hempty
+                  exact hτ1 (Equiv.Perm.support_eq_empty_iff.mp hempty)
+                have hpos : 0 < τ.support.card := Finset.card_pos.mpr hne
+                have hle : τ.support.card ≤ n := by
+                  simpa [Fintype.card_fin] using card_le_univ τ.support
+                omega
+              have : NeZero k := ⟨by omega⟩
+              have htr := evenCycleSumThrough_comp_equivFinZero
+                (fun a : β => y a.1) p0
+              rw [htr]
+              let z : Fin k → ℂ :=
+                (fun a : β => y a.1) ∘ (equivFinZero p0).symm
+              have hz0' : z 0 = 0 := by
+                change y ((equivFinZero p0).symm 0).1 = 0
+                rw [equivFinZero_symm_zero]
+                exact hy0
+              have hz0 : z (finZero hk_ge) = 0 := by
+                rwa [finZero_eq_zero hk_ge]
+              have hzinj : Function.Injective z := by
+                intro i j hij
+                have hval : ((equivFinZero p0).symm i).1 =
+                    ((equivFinZero p0).symm j).1 := hy hij
+                exact (equivFinZero p0).symm.injective (Subtype.ext hval)
+              have hih := ih k hk_lt hk_ge hk_even z hzinj hz0
+              have : 1 + evenCycleSumThrough (0 : Fin k) z = 0 := by
+                rw [finZero_eq_zero hk_ge] at hih
+                rw [← hih.1]
+                exact hih.2
+              simpa [z] using this
+        · rw [dif_neg hpτ]
+      have h1e : cayleySum x = 1 + evenCycleSumThrough (0 : Fin n) x := by
+        rw [cayleySum_eq_one_add_even_cycles_add_complementary (0 : Fin n) x, hcomp x hx hx0,
+          add_zero]
+      refine ⟨h1e, ?_⟩
+      have hbin : evenCycleSumThrough (0 : Fin n) x =
+          ∑ t ∈ Icc (1 : ℕ) (n / 2),
+            ((n - 1).choose (2 * t - 1) : ℂ) * cayleyHamConst t := by
+        have h := evenCycleSumThrough_eq_binom x hx (0 : Fin n) hx0
+        simpa [Fintype.card_fin] using h
+      have hC : cayleySum x =
+          1 + ∑ t ∈ Icc (1 : ℕ) (n / 2),
+            ((n - 1).choose (2 * t - 1) : ℂ) * cayleyHamConst t := by
+        rw [h1e, hbin]
+      have hgeom : ∀ ε ∈ Set.Ioo (0 : ℝ) 1,
+          cayleySum (cayleyPowZero n (ε : ℂ)) =
+            1 + ∑ t ∈ Icc (1 : ℕ) (n / 2),
+              ((n - 1).choose (2 * t - 1) : ℂ) * cayleyHamConst t := by
+        intro ε hε
+        have hyinj := injective_cayleyPowZero (n := n) hε.1 hε.2
+        have hy0 : cayleyPowZero n (ε : ℂ) 0 = 0 := cayleyPowZero_zero _
+        have h1e' : cayleySum (cayleyPowZero n (ε : ℂ)) =
+            1 + evenCycleSumThrough (0 : Fin n) (cayleyPowZero n (ε : ℂ)) := by
+          rw [cayleySum_eq_one_add_even_cycles_add_complementary (0 : Fin n)
+              (cayleyPowZero n (ε : ℂ)),
+            hcomp _ hyinj hy0, add_zero]
+        have hbin' := evenCycleSumThrough_eq_binom
+          (cayleyPowZero n (ε : ℂ)) hyinj (0 : Fin n) hy0
+        rw [h1e']
+        apply congrArg (fun t : ℂ => 1 + t)
+        simpa [Fintype.card_fin] using hbin'
+      have hlim0 := tendsto_cayleySum_powZero hn2 heven
+      have hCval :
+          (1 + ∑ t ∈ Icc (1 : ℕ) (n / 2),
+              ((n - 1).choose (2 * t - 1) : ℂ) * cayleyHamConst t) = 0 := by
+        have hlimC :
+            Filter.Tendsto (fun ε : ℝ => cayleySum (cayleyPowZero n (ε : ℂ)))
+              (nhdsWithin 0 (Set.Ioo 0 1))
+              (nhds (1 + ∑ t ∈ Icc (1 : ℕ) (n / 2),
+                ((n - 1).choose (2 * t - 1) : ℂ) * cayleyHamConst t)) :=
+          tendsto_nhdsWithin_congr (fun ε hε => (hgeom ε hε).symm) tendsto_const_nhds
+        have : Filter.NeBot (nhdsWithin (0 : ℝ) (Set.Ioo 0 1)) :=
+          left_nhdsWithin_Ioo_neBot (by norm_num : (0 : ℝ) < 1)
+        exact tendsto_nhds_unique hlimC hlim0
+      rw [hC, hCval]
+
+lemma identity_three_nine {n : ℕ} (hn2 : 2 ≤ n) (he : Even n) :
+    1 + ∑ k ∈ Icc (1 : ℕ) (n / 2),
+      ((n - 1).choose (2 * k - 1) : ℂ) * cayleyHamConst k = 0 := by
+  have : NeZero n := ⟨by omega⟩
+  have hx := injective_cayleyPowZero (n := n)
+    (by norm_num : (0 : ℝ) < 1 / 2) (by norm_num : (1 / 2 : ℝ) < 1)
+  have hx0 : cayleyPowZero n ((1 / 2 : ℝ) : ℂ) (finZero hn2) = 0 := by
+    rw [finZero_eq_zero hn2, cayleyPowZero_zero]
+  have h := cayleySum_eq_zero_fin n hn2 he _ hx hx0
+  have hbin : evenCycleSumThrough (finZero hn2) (cayleyPowZero n ((1 / 2 : ℝ) : ℂ)) =
+      ∑ k ∈ Icc (1 : ℕ) (n / 2),
+        ((n - 1).choose (2 * k - 1) : ℂ) * cayleyHamConst k := by
+    rw [finZero_eq_zero hn2]
+    have hb := evenCycleSumThrough_eq_binom
+      (cayleyPowZero n ((1 / 2 : ℝ) : ℂ)) hx (0 : Fin n)
+      (by rw [← finZero_eq_zero hn2]; exact hx0)
+    simpa [Fintype.card_fin] using hb
+  have : cayleySum (cayleyPowZero n ((1 / 2 : ℝ) : ℂ)) =
+      1 + ∑ k ∈ Icc (1 : ℕ) (n / 2),
+        ((n - 1).choose (2 * k - 1) : ℂ) * cayleyHamConst k := by
+    rw [h.1, hbin]
+  rw [← this]
+  exact h.2
+
+lemma cayleySum_eq_zero_of_zero {α : Type*} [Fintype α] [DecidableEq α] [LinearOrder α]
+    (x : α → ℂ) (hx : Function.Injective x) (p : α) (hxp : x p = 0)
+    (heven : Even (Fintype.card α)) (h2 : 2 ≤ Fintype.card α) :
+    cayleySum x = 0 := by
+  have : NeZero (Fintype.card α) := ⟨by omega⟩
+  have hz : (x ∘ (equivFinZero p).symm) (finZero h2) = 0 := by
+    rw [finZero_eq_zero h2, Function.comp_apply, equivFinZero_symm_zero]
+    exact hxp
+  have h := cayleySum_eq_zero_fin (Fintype.card α) h2 heven
+    (x ∘ (equivFinZero p).symm) (injective_comp_equivFinZero hx p) hz
+  rw [cayleySum_comp_equivFinZero x p]
+  exact h.2
+
 #check (OeisA1818.conjecture1 :
     ∀ (n : ℕ), 1 ≤ n → ∀ (ζ : ℂ), IsPrimitiveRoot ζ (2 * n) →
       (sunMatrix n ζ).permanent = (a n : ℂ))
@@ -6550,5 +6771,11 @@ lemma even_card_support_of_oddLongPoints_empty {α : Type*} [Fintype α] [Decida
 #print axioms isCycle_permCongr_iff
 #print axioms evenCycleSumThrough_permCongr
 #print axioms even_card_support_of_oddLongPoints_empty
+#print axioms equivFinZero_apply
+#print axioms cayleySum_comp_equivFinZero
+#print axioms evenCycleSumThrough_comp_equivFinZero
+#print axioms cayleySum_eq_zero_fin
+#print axioms identity_three_nine
+#print axioms cayleySum_eq_zero_of_zero
 
 end A001818C1

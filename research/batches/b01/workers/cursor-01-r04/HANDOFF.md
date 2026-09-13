@@ -49,7 +49,9 @@ Complementary terms group by remainder `τ`. If `τ p ≠ p` the fibre is empty.
 
 The geometric assignment `cayleyPowZero` has a zero at index 0 and values `ε^{n-i}` off zero. For real `0<ε<1` it is injective. Its Cayley matrix tends pointwise to the transpose of the sign matrix, so on even size the Cayley sum tends to 0 (`tendsto_cayleySum_powZero`). Hamiltonian even-cycle sums transport along `permCongr` (`evenCycleSumThrough_permCongr`).
 
-Still needed: complementary cancellation by induction plus identity (3.9), recurrence (4.8) / Theorem 1.1 matching formula, then She–Sun–Xia 1.3(i).
+Strong induction on even cardinality: complementary fibres vanish on strictly smaller even `Fix(τ)`, so `cayleySum = 1 + evenCycleSumThrough`. That combination is the binomial in `s_k` and equals 0 by the geometric limit (`cayleySum_eq_zero_fin`, `identity_three_nine`). The same vanishing transports to any even-card type with a zero coordinate (`cayleySum_eq_zero_of_zero`).
+
+Still needed: recurrence (4.8) / Theorem 1.1 matching formula, then She–Sun–Xia 1.3(i).
 
 ## Attribution
 
