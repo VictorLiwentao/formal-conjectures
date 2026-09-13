@@ -16,6 +16,7 @@ Kickoff UTC: `2026-09-13T03:44:44Z`
 Deadline UTC: `2026-09-13T11:44:44Z` (eight hours, never reset)
 Worker stopped: `2026-09-13T04:06:00Z`
 Candidate commit: `c8ff6949525cb4aa23a697ed5fa57578914d91bd`
+Documentation commit: `26be32b6f1e72ef9bac7a112c0184fa21d4bf9d2`
 
 Proof file: `research/batches/b01/workers/cursor-07-r05/targets/WOWII7/WOWII7.lean`
 Audit file: `research/batches/b01/workers/cursor-07-r05/targets/WOWII7/WOWII7_audit.lean`
