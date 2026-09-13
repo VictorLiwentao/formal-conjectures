@@ -46,7 +46,7 @@ Indexed OEIS text and `/internal` pages were used instead.
 ## Original mathematics
 
 - Robbins / Mills–Robbins–Rumsey: VSASM product conjectures
-- Greg Kuperberg, *Symmetry classes of alternating-sign matrices under one roof*, arXiv:math/0008184 (2000–2001), journal Adv. Math. 2002. Ice/Yang–Baxter proof of the VSASM count. The Kuperberg product is a double product, not the factorial form in Lean `b`.
+- Greg Kuperberg, *Symmetry classes of alternating-sign matrices under one roof*, arXiv:math/0008184 (2000–2001), *Annals of Mathematics* **156** (2002), 835–866. Ice/Yang–Baxter proof of the VSASM count. The Kuperberg product is a double product, not the factorial form in Lean `b`.
 - A. V. Razumov and Yu. G. Stroganov, *On refined enumerations of some symmetry classes of alternating-sign matrices*, arXiv:math-ph/0312071. Factorial product matching Lean `b`.
 - The ratio `frac(n+1) = b(n+1)/b n` is then an algebraic identity **once** `b n` is a positive integer equal to that product.
 
@@ -76,8 +76,9 @@ Searches: `A109074 Lean`, `OeisA109074.conjecture`, `A005156 Lean proof`, GitHub
 - GitHub code search API returned HTTP 429 during this pass; the contents listing above is the AlphaProof check.
 - Upstream still has `FormalConjectures/OEIS/109074.lean` with `sorry` on `OeisA109074.conjecture`.
 
-Status remains `known_mathematics_formalization_candidate`.
-No independently verified exact public Lean proof of the frozen theorem was located. This worker file is a candidate, not a certified prior solution.
+Status remains `known_mathematics_formalization_candidate` for the bounded public screen: no earlier corrected exact Lean proof was located in the checked sources.
+
+Coordinator independent audit of commit `5e40973bec551bd85d8749fdc3b2c6b539130720` PASSED (compile exit 0, exact type, allowlisted axioms, integrality/positivity). That verification is distinct from this worker’s self-review. The coordinator report is `research/batches/b01/control/audits/cursor-01-r02.md` on the coordinator branch.
 
 ## Formalization notes
 

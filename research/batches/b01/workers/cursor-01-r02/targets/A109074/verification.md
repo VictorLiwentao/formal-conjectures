@@ -73,4 +73,6 @@ Do not use `OeisA109074.conjecture` (`sorry`) as a proof. The import is definiti
 - Indexing matches PR #5231, not the old Fuss–Catalan source.
 - `frac n` need not be an integer (`frac 3 = 26/3`). The theorem is a rational identity.
 
-Self-review cannot set `independently_verified`.
+Self-review recorded `candidate_proof` only and cannot set `independently_verified`.
+
+Coordinator independent audit **PASSED** for exact commit `5e40973bec551bd85d8749fdc3b2c6b539130720`: source/candidate compile exit 0, exact type matches, full allowed axioms, integrality/positivity verified. Known mathematics; no earlier corrected exact Lean proof found in checked sources. The coordinator report will be `research/batches/b01/control/audits/cursor-01-r02.md` on the coordinator branch.

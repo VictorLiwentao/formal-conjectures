@@ -22,17 +22,21 @@ python3 research/batches/b01/control/check_assignments.py --repo . --worker curs
 Public push: only `origin` `cursor/b01-cursor-01-r02-0918` on `https://github.com/VictorLiwentao/formal-conjectures.git`.
 No PRs. No other branches. No subagents.
 
-Final commit SHA: `52a9147f45c75e889450d31e3be44497c1b43b48`.
+Audited proof commit SHA: `5e40973bec551bd85d8749fdc3b2c6b539130720`.
+This documentation revision is a later commit on the same worker branch.
 
 ## Status
 
-`candidate_proof`.
-Novelty: `known_mathematics_formalization_candidate`.
-No exact public completed Lean proof of the frozen statement was located in the bounded repeat audit.
+Worker self-review: `candidate_proof` only.
+Coordinator independent verification: **PASSED** for exact commit `5e40973bec551bd85d8749fdc3b2c6b539130720` (compile exit 0, exact type, allowlisted axioms, integrality/positivity). Report: `research/batches/b01/control/audits/cursor-01-r02.md` on the coordinator branch. Worker `current_status` is `independently_verified` from that coordinator audit, not from self-review.
+Novelty: `known_mathematics_formalization`. No earlier corrected exact Lean proof found in the checked sources.
 
 `A109074Proof.conjecture` compiles with axioms `{propext, Classical.choice, Quot.sound}`.
 Natural-division integrality (`den_dvd_num`) and positivity (`b_pos`) are proved before rational cancellation.
-Self-review cannot set `independently_verified`.
+
+Remain stopped. No new research target. No goal/timers. No PRs.
+
+Bibliographic note: Kuperberg 2002 is *Annals of Mathematics* 156, 835–866, not Advances in Mathematics. Proof code and credits are unchanged.
 
 ## Proved in `targets/A109074/A109074.lean`
 

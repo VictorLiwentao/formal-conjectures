@@ -84,6 +84,6 @@ Termwise \(s_p(2m)+s_p(2m+1)\ge s_p(3m+1)+s_p(m)\) is false. Prefixes are essent
 
 ## Status
 
-`A109074Proof.conjecture` has the exact frozen type. The worker file contains no `sorry`. `#print axioms` reports `propext`, `Classical.choice`, `Quot.sound`. This is a candidate formalization of known mathematics. It is not `independently_verified`.
+`A109074Proof.conjecture` has the exact frozen type. The worker file contains no `sorry`. `#print axioms` reports `propext`, `Classical.choice`, `Quot.sound`. This is a formalization of known mathematics. Worker self-review was `candidate_proof` only. Coordinator independent verification of commit `5e40973bec551bd85d8749fdc3b2c6b539130720` passed; see `research/batches/b01/control/audits/cursor-01-r02.md` on the coordinator branch.
 
 Failed approaches: termwise integrality of `frac`; per-bit comparison of \(s_2(2k-1)\) vs \(s_2(6k-2)\); crude \(s_2(x+y)\le s_2(x)+s_2(y)\) for the odd \(P/R/U\) step; Kuperberg/PARI products with non-integral intermediate factors.
