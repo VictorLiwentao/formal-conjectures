@@ -11,7 +11,7 @@
   "novelty_status": "no_exact_public_solution_found_in_checked_sources",
   "statement_audit": "matches_intended_mceachen_statement",
   "oeis_editability": "unknown",
-  "last_updated_utc": "2026-09-13T09:00:00Z",
+    "last_updated_utc": "2026-09-13T09:20:00Z",
   "session_kickoff_utc": "2026-09-12T23:12:00Z",
   "session_hard_stop_utc": "2026-09-13T07:12:00Z",
   "proof_declarations": [
@@ -352,5 +352,5 @@
     "exists_first_entry_index, the g-1 criterion, k=1 blockage for q ≡ 2 (mod 3), and the 30/210 stock package entered small primes. Leftover least factors remain coprime to 210. a_eq_self_iff_gcd_gt_one does not inject leftover q ≥ 409."
   ],
   "next_step": "Frozen type still unproved. Compiled first-entry of 397 (k=7) and 401 (k=5) lifts the leftover cutoff to lpf ≥ 409. The McEachen invariant gcd(x(p-3),p-2)>1, the g-1 criterion, k=1 blockage for q ≡ 2 (mod 3), and fully smooth composite blocking do not inject leftover factors. Remaining work is an unconditional first-entry bound q | x(q(q+2)-1) for leftover q ≥ 409, or a Lean-checkable counterexample. Complementary Type A injectors and Type B k≤q^2 still need a prime in an AP. Extending minFac does not finish ∀p. Do not claim completion.",
-  "handoff_research_commit": "PENDING_RESEARCH_COMMIT"
+  "handoff_research_commit": "69c6e08554248f43c600105eada1cc27c8b92c83"
 }
