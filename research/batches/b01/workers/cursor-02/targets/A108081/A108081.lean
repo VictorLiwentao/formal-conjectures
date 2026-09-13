@@ -594,6 +594,13 @@ lemma PWord.step_right_factor_nonneg {u v : Word} (hu : XWord u) (hv : XWord v)
     simpa [count_eq_zero] using hneg
   exact hv.nonneg_of_not_mem_neg_one hmem hx
 
+lemma PWord.step_left_factor_nonpos {u v : Word} (hu : XWord u) (hv : XWord v)
+    (h : PWord (l u ++ v)) {x : ℤ} (hx : x ∈ u) : x ≤ 0 := by
+  have hones := (PWord.of_step_left hu hv h).2
+  have hmem : (1 : ℤ) ∉ u := by
+    simpa [count_eq_zero] using hones
+  exact hu.nonpos_of_not_mem_one hmem hx
+
 lemma exists_left_parse_of_head_eq_neg_one {w : Word} (hw : XWord w)
     (h : w.head hw.ne_nil = -1) :
     ∃ u v, IsLeftParse w u v :=
@@ -939,6 +946,7 @@ lemma exists_right_parse_append_YWord_tail {c y : Word} (hc : XWord c)
 #print axioms PWord.of_step_right
 #print axioms XWord.convex
 #print axioms PWord.step_right_factor_nonneg
+#print axioms PWord.step_left_factor_nonpos
 #print axioms PWord.of_step_left
 #print axioms xN_finite
 #print axioms XWord.rho_mem
