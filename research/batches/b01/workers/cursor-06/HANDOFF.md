@@ -22,7 +22,7 @@ python3 research/batches/b01/workers/cursor-06/targets/A108866/experiments/leadi
 python3 research/batches/b01/workers/cursor-06/targets/A108866/experiments/combo_coeff_fp.py
 ```
 
-Final math commit SHA: `c5ccf731`.
+Final math commit SHA: `8b168a89`.
 
 ## Status
 
@@ -53,6 +53,8 @@ Partial. Kernel-checked so far:
 - inverse-square sum `I = ∑ k^{p-3} - p ∑ q_k k^{p-3}`
 - `∑ k^{p-3}` is a multiple of `p` in `ZMod (p^2)`
 - `I = p (σ - ∑ q_k k^{p-3})`
+- Faulhaber: `∑ k^{p-3} = p B_{p-3} + p^2 · (rest)` in `ℚ`
+- `p ∤ den(B_{p-3})` for primes `p ≥ 5`
 - `v_7(U0)=2`: `padicValRat_oddLeadingSum0_seven`
 - `v_7(T(49))=2`: `padicValRat_ratExpression_forty_nine`
 - `C(p-1,a-1) ≡ 1 - p H_{a-1}` in `ZMod (p^2)` for odd `a`
@@ -60,5 +62,7 @@ Partial. Kernel-checked so far:
 - reduction `conjecture_of_odd_composite_converse`
 
 Axioms `{propext, Classical.choice, Quot.sound}` on the printed theorems. Full odd converse open. No PR. No OEIS edit. Not the frozen iff.
+
+Eight-hour cutoff 2026-09-13T07:13Z reached. Remaining work is to lift Faulhaber to `ZMod (p^2)` (Glaisher), then `κ ≡ -7/24 B_{p-3}` in `𝔽_p`, then `p=7` and mixed composites.
 
 Run URL: https://cursor.com/agents/bc-c701d4c6-5791-456d-bec8-130a051cefe4
