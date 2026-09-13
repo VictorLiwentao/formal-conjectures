@@ -4085,6 +4085,79 @@ lemma not_seven_sigma_eq_ten_usigma_five_pow_ge_seven_seven_sq {p k a : ℕ}
     · exact (seven_sigma_lt_ten_usigma_five_seven_sq_cap_large hp h401
         (by omega) (by omega)).ne heq
 
+lemma prime_ge_eleven_le_nineteen {p : ℕ} (hp : p.Prime)
+    (h11 : 11 ≤ p) (h19 : p ≤ 19) :
+    p = 11 ∨ p = 13 ∨ p = 17 ∨ p = 19 := by
+  have hmem : p = 11 ∨ p = 12 ∨ p = 13 ∨ p = 14 ∨ p = 15 ∨ p = 16 ∨
+      p = 17 ∨ p = 18 ∨ p = 19 := by omega
+  rcases hmem with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
+  · exact Or.inl rfl
+  · exact False.elim ((by decide : ¬ Nat.Prime 12) hp)
+  · exact Or.inr (Or.inl rfl)
+  · exact False.elim ((by decide : ¬ Nat.Prime 14) hp)
+  · exact False.elim ((by decide : ¬ Nat.Prime 15) hp)
+  · exact False.elim ((by decide : ¬ Nat.Prime 16) hp)
+  · exact Or.inr (Or.inr (Or.inl rfl))
+  · exact False.elim ((by decide : ¬ Nat.Prime 18) hp)
+  · exact Or.inr (Or.inr (Or.inr rfl))
+
+lemma prime_ge_twenty_ge_twenty_three {p : ℕ} (hp : p.Prime)
+    (h : 20 ≤ p) : 23 ≤ p := by
+  have hmem : p = 20 ∨ p = 21 ∨ p = 22 ∨ 23 ≤ p := by omega
+  rcases hmem with rfl | rfl | rfl | h23
+  · exact False.elim ((by decide : ¬ Nat.Prime 20) hp)
+  · exact False.elim ((by decide : ¬ Nat.Prime 21) hp)
+  · exact False.elim ((by decide : ¬ Nat.Prime 22) hp)
+  · exact h23
+
+/-- `{5^a, 7^b, p^k}` cannot fill leftover `10/7` for primes `p ≥ 11` and
+exponents `a,b,k ≥ 2`. -/
+lemma not_seven_sigma_eq_ten_usigma_five_seven_prime {a b k p : ℕ}
+    (hp : p.Prime) (hp11 : 11 ≤ p) (ha : 2 ≤ a) (hb : 2 ≤ b) (hk : 2 ≤ k) :
+    ¬ 7 * σ 1 (5 ^ a) * σ 1 (7 ^ b) * σ 1 (p ^ k) =
+        10 * usigma (5 ^ a) * usigma (7 ^ b) * usigma (p ^ k) := by
+  rcases le_or_gt p 19 with h19 | h20
+  · rcases prime_ge_eleven_le_nineteen hp hp11 h19 with rfl | rfl | rfl | rfl
+    · exact not_seven_sigma_eq_ten_usigma_five_seven_eleven ha hb hk
+    · exact not_seven_sigma_eq_ten_usigma_five_seven_thirteen ha hb hk
+    · exact not_seven_sigma_eq_ten_usigma_five_seven_seventeen ha hb hk
+    · exact not_seven_sigma_eq_ten_usigma_five_seven_nineteen ha hb hk
+  · have hp23 : 23 ≤ p := prime_ge_twenty_ge_twenty_three hp (by omega)
+    rcases eq_or_lt_of_le ha with ha2 | ha3
+    · rw [← ha2]
+      rcases eq_or_lt_of_le hb with hb2 | hb3
+      · rw [← hb2]
+        exact (seven_sigma_lt_ten_usigma_five_seven_sq_large hp hp23
+          (by omega)).ne
+      · have hb3' : 3 ≤ b := Nat.succ_le_of_lt hb3
+        rcases eq_or_lt_of_le hb3' with hb3eq | hb4
+        · rw [← hb3eq]
+          exact not_seven_sigma_eq_ten_usigma_five_sq_seven_cube hp hp23 hk
+        · exact not_seven_sigma_eq_ten_usigma_five_sq_seven_pow_ge_four hp hp23
+            (Nat.succ_le_of_lt hb4) hk
+    · have ha3' : 3 ≤ a := Nat.succ_le_of_lt ha3
+      rcases eq_or_lt_of_le hb with hb2 | hb3
+      · rw [← hb2]
+        rcases eq_or_lt_of_le ha3' with ha3eq | ha4
+        · rw [← ha3eq]
+          exact not_seven_sigma_eq_ten_usigma_five_cube_seven_sq hp hp23 hk
+        · have ha4' : 4 ≤ a := Nat.succ_le_of_lt ha4
+          rcases eq_or_lt_of_le ha4' with ha4eq | ha5
+          · rw [← ha4eq]
+            exact not_seven_sigma_eq_ten_usigma_five_fourth_seven_sq hp hp23 hk
+          · have ha5' : 5 ≤ a := Nat.succ_le_of_lt ha5
+            rcases eq_or_lt_of_le ha5' with ha5eq | ha6
+            · rw [← ha5eq]
+              exact not_seven_sigma_eq_ten_usigma_five_fifth_seven_sq hp hp23 hk
+            · have ha6' : 6 ≤ a := Nat.succ_le_of_lt ha6
+              rcases eq_or_lt_of_le ha6' with ha6eq | ha7
+              · rw [← ha6eq]
+                exact not_seven_sigma_eq_ten_usigma_five_sixth_seven_sq hp hp23 hk
+              · exact not_seven_sigma_eq_ten_usigma_five_pow_ge_seven_seven_sq
+                  hp hp23 (Nat.succ_le_of_lt ha7) hk
+      · exact not_seven_sigma_eq_ten_usigma_five_seven_ge_three_mul ha3'
+          (Nat.succ_le_of_lt hb3) (Nat.pow_pos hp.pos).ne'
+
 lemma not_nine_dvd_of_A_of_val_two_ge_three {n : ℕ} (hA : A n)
     (h2 : 3 ≤ padicValNat 2 n) : ¬ 9 ∣ n := by
   intro h9

@@ -41,7 +41,7 @@ Do not run a full `lake build`, `lake clean`, or `lake update`.
 - `{5,13,19}` cannot fill leftover `10/7`.
 - `{5^a, 7^b}` with `a,b ≥ 3` overshoots leftover `10/7`, and any extra positive factor still overshoots.
 - `{5^2, 7^b, p^k}` with `b≥4`, `p≥23`, `k≥2` cannot fill leftover `10/7`.
-- `{5^a, 7^2, p^k}` cannot fill leftover `10/7` for every `a≥4`, `p≥23`, `k≥2`. Combined with earlier `{5^3,7^2,p}` and `{5^2,7^3,p}` rays, every leftover `10/7` triple `{5^a,7^b,p}` with `a,b≥2` and `p≥11` is closed at family-lemma level.
+- `{5^a, 7^b, p^k}` cannot fill leftover `10/7` for every `a,b,k ≥ 2` and prime `p ≥ 11` (`not_seven_sigma_eq_ten_usigma_five_seven_prime`).
 - Use `norm_num`, not `decide`, to prove `Nat.Prime 397`.
 - Previous checkpoint still holds: CRT reduction; leftover `10/7` ω=1 for `p≥5`; ω=2 with two squareful primes `≥5`; ω=3 with all primes `≥7`; `{5,11,13/17/19/23}`, `{5,13,17}`; leftover `6/5` unique squareful prime impossible; `v₂≥3 ⇒ v₃<2`.
 

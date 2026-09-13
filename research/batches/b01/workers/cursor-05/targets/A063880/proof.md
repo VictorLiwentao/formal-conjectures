@@ -45,6 +45,7 @@ In `A063880.lean`, compiled with `lake env lean -DwarningAsError=true`:
 - `{5^2, 7^b, p^k}` with `b≥4` cannot fill leftover `10/7` for `p≥23` and `k≥2`: squares overshoot on `23≤p≤31`, the prime `p=37` undershoots only at `(b,k)=(4,2)` and `(5,2)` and overshoots from `(4,3)` and `(6,2)`, and `ρ(25) cap(7) cap(p)` kills `p≥41`.
 - `{5^4, 7^2, p^k}` cannot fill leftover `10/7` for `p≥23` and `k≥2`: squares overshoot on `23≤p≤223`, and `ρ(625) ρ(49) cap(p)` kills `p≥227`.
 - `{5^5, 7^2, p^k}` and `{5^6, 7^2, p^k}` are closed the same way, with square/cap splits at `337/347` and `383/389`. For `a≥7`, squares `{5^7,7^2,p^2}` overshoot on `p≤389`, the prime `p=397` undershoots only at `a=7,k=2` and overshoots from `(7,2,3)` and `(8,2,2)`, and `ρ(5^a) ρ(49) cap(p)` kills every `p≥401`.
+- `{5^a, 7^b, p^k}` with `p ≥ 11` and `a,b,k ≥ 2` cannot fill leftover `10/7`. This is `not_seven_sigma_eq_ten_usigma_five_seven_prime`.
 - An extra positive factor cannot repair an overshoot of leftover `10/7`. In particular every kernel containing `5^a 7^b 11^c` with `a,b,c≥2` overshoots, including ω≥4 supersets of `{5,7,11}`.
 
 These lemmas are infrastructure and partial case analysis. They do not decide the open statements.
