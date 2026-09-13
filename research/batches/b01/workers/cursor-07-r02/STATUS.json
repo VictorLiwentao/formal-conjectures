@@ -1,0 +1,32 @@
+{
+  "worker_id": "cursor-07-r02",
+  "target_id": "WOWII101",
+  "actual_branch": "cursor/b01-cursor-07-r02-05fb",
+  "baseline_commit": "a2f4a1bb12a28e04a969da78feefac7d1ce49565",
+  "coordination_commit": "dc6f750f34db0ca579f76bc358082157072f2083",
+  "source_file": "FormalConjectures/WrittenOnTheWallII/GraphConjecture101.lean",
+  "source_sha256": "870cd77d2cb8bf98fcbe4bdeee7c52620009af97368fc4358dc595af716046c6",
+  "current_status": "researching",
+  "mathematical_novelty": "known_mathematics",
+  "formalization_novelty": "searching_then_implementing",
+  "novelty_status": "known_mathematics_formalization_candidate",
+  "last_updated_utc": "2026-09-13T01:23:02Z",
+  "session_kickoff_utc": "2026-09-13T01:23:02Z",
+  "session_limit_hours": 8,
+  "session_deadline_utc": "2026-09-13T09:23:02Z",
+  "proof_declarations": [],
+  "unresolved_gaps": [
+    "Public exact Lean search in progress; no matching completed proof located in the first pass.",
+    "Lean candidate not yet compiled."
+  ],
+  "next_step": "Finish public-Lean search notes and formalize Hajnal/Levit–Mandrescu family inequality plus alphaCore equivalence.",
+  "environment": {
+    "name": "VictorLiwentao/formal-conjectures",
+    "environmentPublicId": "ed88cb37-ae94-11f1-bf4b-42ffb4d10ea7",
+    "buildId": "bld-20260912-716b23c3-d124-4da8-ab69-743e1fb16843",
+    "lean": "leanprover/lean4:v4.33.1"
+  },
+  "publication_policy": "Push only this worker branch to VictorLiwentao/formal-conjectures. No PR.",
+  "independently_verified": false,
+  "timer_subscription": null
+}
