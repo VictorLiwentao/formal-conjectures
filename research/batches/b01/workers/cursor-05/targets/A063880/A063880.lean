@@ -375,6 +375,291 @@ lemma sigma_eq_usigma_ordCompl_of_val_three {m : ℕ} (hm : m ≠ 0)
   have heq := Nat.eq_of_mul_eq_mul_left hpos this
   simpa [hpow] using heq
 
+lemma dvd_div_of_sq_dvd {n p : ℕ} (h : p ^ 2 ∣ n) : p ∣ n / p := by
+  have hp_dvd : p ∣ n := (dvd_pow_self p (by decide : 2 ≠ 0)).trans h
+  exact (Nat.dvd_div_iff_mul_dvd hp_dvd).2 (by simpa [pow_two] using h)
+
+lemma not_coprime_of_sq_dvd {n p : ℕ} (hp : p.Prime) (h : p ^ 2 ∣ n) :
+    ¬ p.Coprime (n / p) := by
+  have hp_div : p ∣ n / p := dvd_div_of_sq_dvd h
+  intro hc
+  have hg : p.gcd (n / p) = 1 := hc
+  have hgp : p.gcd (n / p) = p := Nat.gcd_eq_left hp_div
+  exact hp.ne_one (hgp.symm.trans hg)
+
+lemma exists_prime_pow_two_dvd_of_not_squarefree {n : ℕ} (hn : ¬ Squarefree n) :
+    ∃ p, p.Prime ∧ p ^ 2 ∣ n := by
+  rw [squarefree_iff_prime_squarefree] at hn
+  push Not at hn
+  obtain ⟨p, hp, h⟩ := hn
+  exact ⟨p, hp, by simpa [pow_two] using h⟩
+
+/-- On positive integers, `σ` and `usigma` agree if and only if `n` is squarefree.
+If `p^2 ∣ n`, then `p` is a non-unitary divisor, so the sums differ. -/
+lemma sigma_eq_usigma_iff_squarefree {n : ℕ} (hn : 0 < n) :
+    σ 1 n = usigma n ↔ Squarefree n := by
+  constructor
+  · intro heq
+    by_contra hnsq
+    obtain ⟨p, hp, hsq⟩ := exists_prime_pow_two_dvd_of_not_squarefree hnsq
+    have hp_dvd : p ∣ n := (dvd_pow_self p (by decide : 2 ≠ 0)).trans hsq
+    have hmem : p ∈ n.divisors := mem_divisors.mpr ⟨hp_dvd, hn.ne'⟩
+    have hnmem : p ∉ unitaryDivisors n := by
+      intro hU
+      exact not_coprime_of_sq_dvd hp hsq (mem_unitaryDivisors.mp hU).2.2
+    have hlt : usigma n < σ 1 n := by
+      rw [usigma, sigma_one_apply]
+      exact sum_lt_sum_of_subset (unitaryDivisors_subset_divisors n) hmem hnmem
+        hp.pos fun _ _ _ => Nat.zero_le _
+    omega
+  · intro hs
+    exact (usigma_eq_sigma_of_squarefree hs).symm
+
+lemma squarefree_ordCompl_of_val_three {m : ℕ} (hm : m ≠ 0)
+    (h : 7 * σ 1 m = 10 * usigma m) (h3 : padicValNat 3 m = 3) :
+    Squarefree (ordCompl[3] m) := by
+  have hpos : 0 < ordCompl[3] m := Nat.ordCompl_pos 3 hm
+  exact (sigma_eq_usigma_iff_squarefree hpos).mp
+    (sigma_eq_usigma_ordCompl_of_val_three hm h h3)
+
+/-- Peeling a prime-power factor from `A σ = B usigma`. -/
+lemma mul_sigma_ordProj_le {A B n p : ℕ} (hp : p.Prime) (hn : n ≠ 0)
+    (h : A * σ 1 n = B * usigma n) :
+    A * σ 1 (ordProj[p] n) ≤ B * usigma (ordProj[p] n) := by
+  have hdecomp : ordProj[p] n * ordCompl[p] n = n :=
+    Nat.ordProj_mul_ordCompl_eq_self n p
+  have hc : Coprime (ordProj[p] n) (ordCompl[p] n) :=
+    (Nat.coprime_ordCompl hp hn).pow_left (n.factorization p)
+  have h' : A * σ 1 (ordProj[p] n) * σ 1 (ordCompl[p] n) =
+      B * usigma (ordProj[p] n) * usigma (ordCompl[p] n) := by
+    have := h
+    rw [← hdecomp, sigma_mul_of_coprime hc, usigma_mul hc] at this
+    convert this using 1 <;> ring
+  have hle : A * σ 1 (ordProj[p] n) * σ 1 (ordCompl[p] n) ≤
+      B * usigma (ordProj[p] n) * σ 1 (ordCompl[p] n) := by
+    rw [h']
+    gcongr
+    exact usigma_le_sigma _
+  have ht : 0 < σ 1 (ordCompl[p] n) :=
+    sigma_pos_iff.mpr (Nat.ordCompl_pos p hn)
+  exact Nat.le_of_mul_le_mul_right hle ht
+
+/-- For leftover `100/91`, every `5^k` with `k ≥ 2` overshoots. -/
+lemma hundred_usigma_lt_ninety_one_sigma_five_pow {k : ℕ} (hk : 2 ≤ k) :
+    100 * usigma (5 ^ k) < 91 * σ 1 (5 ^ k) := by
+  have hk0 : 0 < k := by omega
+  have hu : usigma (5 ^ k) = 1 + 5 ^ k := usigma_prime_pow Nat.prime_five hk0
+  have hσ : σ 1 (5 ^ k) = (5 ^ (k + 1) - 1) / 4 := sigma_prime_pow_div Nat.prime_five
+  have hdiv : 4 ∣ 5 ^ (k + 1) - 1 := sub_one_dvd_pow_sub_one (p := 5)
+  have h25 : 25 ≤ 5 ^ k := by
+    have : 5 ^ 2 = 25 := by decide
+    exact this ▸ Nat.pow_le_pow_right (by decide : 1 ≤ 5) hk
+  have hsucc : 5 ^ (k + 1) = 5 * 5 ^ k := by rw [pow_succ']
+  have hmain : 400 * (1 + 5 ^ k) < 91 * (5 ^ (k + 1) - 1) := by
+    rw [hsucc]
+    have : 491 < 55 * 5 ^ k := by nlinarith
+    have : 400 + 400 * 5 ^ k + 91 < 455 * 5 ^ k := by nlinarith
+    have : 400 + 400 * 5 ^ k < 455 * 5 ^ k - 91 := by omega
+    convert this using 1
+    · ring
+    · omega
+  rw [hu, hσ]
+  have hN : 91 * ((5 ^ (k + 1) - 1) / 4) = 91 * (5 ^ (k + 1) - 1) / 4 :=
+    (Nat.mul_div_assoc 91 hdiv).symm
+  rw [hN]
+  have h4N : 4 ∣ 91 * (5 ^ (k + 1) - 1) := hdiv.mul_left 91
+  have hcancel : 4 * (91 * (5 ^ (k + 1) - 1) / 4) = 91 * (5 ^ (k + 1) - 1) :=
+    Nat.mul_div_cancel' h4N
+  refine Nat.lt_of_mul_lt_mul_left (a := 4) ?_
+  rw [hcancel]
+  convert hmain using 1
+  ring
+
+/-- For leftover `100/91`, every `7^k` with `k ≥ 2` overshoots. -/
+lemma hundred_usigma_lt_ninety_one_sigma_seven_pow {k : ℕ} (hk : 2 ≤ k) :
+    100 * usigma (7 ^ k) < 91 * σ 1 (7 ^ k) := by
+  have hk0 : 0 < k := by omega
+  have hp7 : Nat.Prime 7 := by decide
+  have hu : usigma (7 ^ k) = 1 + 7 ^ k := usigma_prime_pow hp7 hk0
+  have hσ : σ 1 (7 ^ k) = (7 ^ (k + 1) - 1) / 6 := sigma_prime_pow_div hp7
+  have hdiv : 6 ∣ 7 ^ (k + 1) - 1 := sub_one_dvd_pow_sub_one (p := 7)
+  have h49 : 49 ≤ 7 ^ k := by
+    have : 7 ^ 2 = 49 := by decide
+    exact this ▸ Nat.pow_le_pow_right (by decide : 1 ≤ 7) hk
+  have hsucc : 7 ^ (k + 1) = 7 * 7 ^ k := by rw [pow_succ']
+  have hmain : 600 * (1 + 7 ^ k) < 91 * (7 ^ (k + 1) - 1) := by
+    rw [hsucc]
+    have : 691 < 37 * 7 ^ k := by nlinarith
+    have : 600 + 600 * 7 ^ k + 91 < 637 * 7 ^ k := by nlinarith
+    have : 600 + 600 * 7 ^ k < 637 * 7 ^ k - 91 := by omega
+    convert this using 1
+    · ring
+    · omega
+  rw [hu, hσ]
+  have hN : 91 * ((7 ^ (k + 1) - 1) / 6) = 91 * (7 ^ (k + 1) - 1) / 6 :=
+    (Nat.mul_div_assoc 91 hdiv).symm
+  rw [hN]
+  have h6N : 6 ∣ 91 * (7 ^ (k + 1) - 1) := hdiv.mul_left 91
+  have hcancel : 6 * (91 * (7 ^ (k + 1) - 1) / 6) = 91 * (7 ^ (k + 1) - 1) :=
+    Nat.mul_div_cancel' h6N
+  refine Nat.lt_of_mul_lt_mul_left (a := 6) ?_
+  rw [hcancel]
+  convert hmain using 1
+  ring
+
+/-- For leftover `100/91`, every `11^k` with `k ≥ 3` overshoots. -/
+lemma hundred_usigma_lt_ninety_one_sigma_eleven_pow {k : ℕ} (hk : 3 ≤ k) :
+    100 * usigma (11 ^ k) < 91 * σ 1 (11 ^ k) := by
+  have hk0 : 0 < k := by omega
+  have hp11 : Nat.Prime 11 := by decide
+  have hu : usigma (11 ^ k) = 1 + 11 ^ k := usigma_prime_pow hp11 hk0
+  have hσ : σ 1 (11 ^ k) = (11 ^ (k + 1) - 1) / 10 := sigma_prime_pow_div hp11
+  have hdiv : 10 ∣ 11 ^ (k + 1) - 1 := sub_one_dvd_pow_sub_one (p := 11)
+  have h1331 : 1331 ≤ 11 ^ k := by
+    have : 11 ^ 3 = 1331 := by decide
+    exact this ▸ Nat.pow_le_pow_right (by decide : 1 ≤ 11) hk
+  have hsucc : 11 ^ (k + 1) = 11 * 11 ^ k := by rw [pow_succ']
+  have hmain : 1000 * (1 + 11 ^ k) < 91 * (11 ^ (k + 1) - 1) := by
+    rw [hsucc]
+    have : 1091 < 11 ^ k := by nlinarith
+    have : 1000 + 1000 * 11 ^ k + 91 < 1001 * 11 ^ k := by nlinarith
+    have : 1000 + 1000 * 11 ^ k < 1001 * 11 ^ k - 91 := by omega
+    convert this using 1
+    · ring
+    · omega
+  rw [hu, hσ]
+  have hN : 91 * ((11 ^ (k + 1) - 1) / 10) = 91 * (11 ^ (k + 1) - 1) / 10 :=
+    (Nat.mul_div_assoc 91 hdiv).symm
+  rw [hN]
+  have h10N : 10 ∣ 91 * (11 ^ (k + 1) - 1) := hdiv.mul_left 91
+  have hcancel : 10 * (91 * (11 ^ (k + 1) - 1) / 10) = 91 * (11 ^ (k + 1) - 1) :=
+    Nat.mul_div_cancel' h10N
+  refine Nat.lt_of_mul_lt_mul_left (a := 10) ?_
+  rw [hcancel]
+  convert hmain using 1
+  ring
+
+lemma padicValNat_five_lt_two_of_hundred_ninety_one {t : ℕ} (ht : t ≠ 0)
+    (h : 91 * σ 1 t = 100 * usigma t) :
+    padicValNat 5 t < 2 := by
+  by_contra! hk
+  have hproj : ordProj[5] t = 5 ^ padicValNat 5 t := by
+    simp [Nat.factorization_def t Nat.prime_five]
+  have hle := mul_sigma_ordProj_le Nat.prime_five ht h
+  rw [hproj] at hle
+  have hover := hundred_usigma_lt_ninety_one_sigma_five_pow hk
+  omega
+
+lemma padicValNat_seven_lt_two_of_hundred_ninety_one {t : ℕ} (ht : t ≠ 0)
+    (h : 91 * σ 1 t = 100 * usigma t) :
+    padicValNat 7 t < 2 := by
+  by_contra! hk
+  have hp7 : Nat.Prime 7 := by decide
+  have hproj : ordProj[7] t = 7 ^ padicValNat 7 t := by
+    simp [Nat.factorization_def t hp7]
+  have hle := mul_sigma_ordProj_le hp7 ht h
+  rw [hproj] at hle
+  have hover := hundred_usigma_lt_ninety_one_sigma_seven_pow hk
+  omega
+
+lemma padicValNat_eleven_lt_three_of_hundred_ninety_one {t : ℕ} (ht : t ≠ 0)
+    (h : 91 * σ 1 t = 100 * usigma t) :
+    padicValNat 11 t < 3 := by
+  by_contra! hk
+  have hp11 : Nat.Prime 11 := by decide
+  have hproj : ordProj[11] t = 11 ^ padicValNat 11 t := by
+    simp [Nat.factorization_def t hp11]
+  have hle := mul_sigma_ordProj_le hp11 ht h
+  rw [hproj] at hle
+  have hover := hundred_usigma_lt_ninety_one_sigma_eleven_pow hk
+  omega
+
+lemma ninety_one_sigma_eq_hundred_usigma_of_val_three_two {m : ℕ} (hm : m ≠ 0)
+    (h : 7 * σ 1 m = 10 * usigma m) (h3 : padicValNat 3 m = 2) :
+    91 * σ 1 (ordCompl[3] m) = 100 * usigma (ordCompl[3] m) := by
+  have hv : m.factorization 3 = 2 := by
+    rw [Nat.factorization_def m Nat.prime_three, h3]
+  have hpow : 3 ^ m.factorization 3 = 9 := by
+    rw [hv]
+    decide
+  have hc : Coprime 9 (m / 9) := by
+    have : Coprime (3 ^ m.factorization 3) (m / 3 ^ m.factorization 3) :=
+      (Nat.coprime_ordCompl Nat.prime_three hm).pow_left (m.factorization 3)
+    simpa [hpow] using this
+  have hdecomp : 9 * (m / 9) = m := by
+    have := Nat.ordProj_mul_ordCompl_eq_self m 3
+    simpa [hpow] using this
+  have hσ9 : σ 1 9 = 13 := by decide
+  have hu9 : usigma 9 = 10 := by
+    simpa using usigma_prime_pow Nat.prime_three (by decide : 0 < 2)
+  have hmul : 7 * σ 1 9 * σ 1 (m / 9) = 10 * usigma 9 * usigma (m / 9) := by
+    have := h
+    rw [← hdecomp, sigma_mul_of_coprime hc, usigma_mul hc] at this
+    convert this using 1 <;> ring
+  rw [hσ9, hu9] at hmul
+  have : 91 * σ 1 (m / 9) = 100 * usigma (m / 9) := by
+    rw [show (91 : ℕ) = 7 * 13 by decide, show (100 : ℕ) = 10 * 10 by decide]
+    exact hmul
+  simpa [hpow] using this
+
+lemma coprime_eight_of_odd {m : ℕ} (h : Odd m) : Coprime 8 m :=
+  (coprime_pow_left_iff (n := 3) (by decide : 0 < 3) 2 m).mpr h.coprime_two_left
+
+lemma usigma_eight : usigma 8 = 9 := by
+  simpa using usigma_prime_pow Nat.prime_two (by decide : 0 < 3)
+
+lemma sigma_eight : σ 1 8 = 15 := by decide
+
+/-- If `8m` is in `A` and `m` is odd, the leftover equation is `5 σ(m) = 6 usigma(m)`. -/
+lemma five_sigma_eq_six_usigma_of_A_eight_mul {m : ℕ} (hm : Odd m) (hA : A (8 * m)) :
+    5 * σ 1 m = 6 * usigma m := by
+  have hc : Coprime 8 m := coprime_eight_of_odd hm
+  have heq := hA.2
+  rw [sigma_mul_of_coprime hc, usigma_mul hc, usigma_eight, sigma_eight] at heq
+  linarith
+
+lemma six_usigma_lt_five_sigma_three_pow {k : ℕ} (hk : 2 ≤ k) :
+    6 * usigma (3 ^ k) < 5 * σ 1 (3 ^ k) := by
+  have hk0 : 0 < k := by omega
+  have hu : usigma (3 ^ k) = 1 + 3 ^ k := usigma_prime_pow Nat.prime_three hk0
+  have hσ : σ 1 (3 ^ k) = (3 ^ (k + 1) - 1) / 2 := sigma_prime_pow_div Nat.prime_three
+  have hdiv : 2 ∣ 3 ^ (k + 1) - 1 := sub_one_dvd_pow_sub_one (p := 3)
+  have h9 : 9 ≤ 3 ^ k := by
+    have : 3 ^ 2 = 9 := by decide
+    exact this ▸ Nat.pow_le_pow_right (by decide : 1 ≤ 3) hk
+  have hsucc : 3 ^ (k + 1) = 3 * 3 ^ k := by rw [pow_succ']
+  have hmain : 12 * (1 + 3 ^ k) < 5 * (3 ^ (k + 1) - 1) := by
+    rw [hsucc]
+    have : 17 < 3 * 3 ^ k := by nlinarith
+    have : 12 + 12 * 3 ^ k + 5 < 15 * 3 ^ k := by nlinarith
+    have : 12 + 12 * 3 ^ k < 15 * 3 ^ k - 5 := by omega
+    convert this using 1
+    · ring
+    · omega
+  rw [hu, hσ]
+  have hN : 5 * ((3 ^ (k + 1) - 1) / 2) = 5 * (3 ^ (k + 1) - 1) / 2 :=
+    (Nat.mul_div_assoc 5 hdiv).symm
+  rw [hN]
+  have h2N : 2 ∣ 5 * (3 ^ (k + 1) - 1) := hdiv.mul_left 5
+  have hcancel : 2 * (5 * (3 ^ (k + 1) - 1) / 2) = 5 * (3 ^ (k + 1) - 1) :=
+    Nat.mul_div_cancel' h2N
+  refine Nat.lt_of_mul_lt_mul_left (a := 2) ?_
+  rw [hcancel]
+  convert hmain using 1
+  ring
+
+lemma padicValNat_three_lt_two_of_A_eight_mul {m : ℕ} (hm : Odd m) (hA : A (8 * m)) :
+    padicValNat 3 m < 2 := by
+  have h := five_sigma_eq_six_usigma_of_A_eight_mul hm hA
+  by_contra! hk
+  have hm0 : m ≠ 0 := Nat.pos_iff_ne_zero.mp hm.pos
+  have hproj : ordProj[3] m = 3 ^ padicValNat 3 m := by
+    simp [Nat.factorization_def m Nat.prime_three]
+  have hle := mul_sigma_ordProj_le Nat.prime_three hm0 h
+  rw [hproj] at hle
+  have hover := six_usigma_lt_five_sigma_three_pow hk
+  omega
+
 end Unitary
 
 section Congruence
@@ -418,6 +703,12 @@ lemma mod_216_eq_108_iff_valuations {n : ℕ} (hn : n ≠ 0) :
   rw [mod_216_eq_108_iff, ← Nat.dvd_iff_mod_eq_zero,
     mod_8_eq_four_iff_dvd, padicValNat_two_eq_two_iff hn,
     padicValNat_three_ge_three_iff hn]
+
+/-- The frozen congruence, assuming the two local valuations. -/
+lemma mod_216_of_A_of_valuations {n : ℕ} (hA : A n)
+    (h2 : padicValNat 2 n = 2) (h3 : 3 ≤ padicValNat 3 n) :
+    n % 216 = 108 :=
+  (mod_216_eq_108_iff_valuations hA.1.ne').mpr ⟨h2, h3⟩
 
 end Congruence
 

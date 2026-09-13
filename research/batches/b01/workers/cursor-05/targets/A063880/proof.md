@@ -25,6 +25,10 @@ In `A063880.lean`, compiled with `lake env lean -DwarningAsError=true`:
 - If `4m` is in `A` and `m` is odd, then `7 σ(m) = 10 usigma(m)`.
 - Under that leftover equation, `padicValNat 3 m < 4`. In particular `3^4` cannot divide the odd part.
 - If also `padicValNat 3 m = 3`, then `σ` and `usigma` agree on the 3-free part of `m`.
+- `σ 1 n = usigma n` iff `n` is squarefree, for `n > 0`. Combined with the previous item, `v₃(m) = 3` on leftover `10/7` forces the 3-free part of `m` to be squarefree.
+- CRT plus the two valuations is recorded as `mod_216_of_A_of_valuations`: if `A n`, `v₂(n) = 2`, and `v₃(n) ≥ 3`, then `n % 216 = 108`. This is not yet the frozen theorem, because those valuations are not forced.
+- If leftover `10/7` has `v₃ = 2`, the 3-free part `t` satisfies `91 σ(t) = 100 usigma(t)`. On that equation, `v₅(t) < 2`, `v₇(t) < 2`, and `v₁₁(t) < 3`.
+- If `8m` is in `A` with `m` odd (so `v₂ = 3`), then `5 σ(m) = 6 usigma(m)` and `v₃(m) < 2`. In particular `9` cannot divide the odd part of a term with `v₂ = 3`.
 
 These lemmas are infrastructure and partial case analysis. They do not decide the open statements.
 
@@ -48,6 +52,8 @@ For `n = 2^a * m` with `m` odd, the leftover is `2 / ρ(2^a)`. In particular:
 - `a = 4`: leftover `34/31`
 
 The script `experiments/abundancy_enum.py` does exact `Fraction` one- and two-prime fills. It found no fills other than the known `3^3` for leftover `10/7`. Empty one/two-prime searches are **not** a proof: three or more primes remain, and last-prime bounds grow when leftover is close to 1.
+
+The script `experiments/case_tree.py` classifies leftovers `10/7`, `100/91`, `6/5`, `34/31`, `22/21`, `130/127`, and odd leftover `2`. It reports: the only one-prime fill among these is `3^3` for `10/7`; all listed two-prime searches returned empty with no `INCOMPLETE` flag on the ω=2 last-prime bound. Three-or-more-prime fills are not thereby excluded. This is **not** a proof.
 
 A broader recursive search (`experiments/leftover_search.py`) was written and is explicitly unverified. A first run did not return in a bounded time and was stopped.
 

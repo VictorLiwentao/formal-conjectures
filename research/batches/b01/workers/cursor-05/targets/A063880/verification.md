@@ -28,7 +28,7 @@ Command:
 LEAN_NUM_THREADS=2 lake env lean -DwarningAsError=true research/batches/b01/workers/cursor-05/targets/A063880/A063880.lean
 ```
 
-Result on 2026-09-13T00:18Z: exit code 0, no warnings, no `sorry` in this file.
+Result on 2026-09-13T00:44Z: exit code 0, no warnings, no `sorry` declaration in this file.
 
 This is **not** a compile of the frozen theorems. The frozen `sorry` theorems in `FormalConjectures/OEIS/63880.lean` were not used as proof steps.
 
@@ -50,6 +50,12 @@ python3 research/batches/b01/workers/cursor-05/targets/A063880/experiments/abund
 Exact `Fraction` one- and two-prime leftover fills. Output: empty except the known `3^3` for leftover `10/7`. Explicitly unverified as a proof. Three-or-more-prime fills are not covered.
 
 `experiments/leftover_search.py` is a broader recursive search. It is explicitly unverified and was not used as evidence of emptiness: a first run did not finish in a bounded time.
+
+```text
+python3 research/batches/b01/workers/cursor-05/targets/A063880/experiments/case_tree.py
+```
+
+Exact `Fraction` ω=1 and ω=2 leftover classification. Only one-prime hit: `3^3` for leftover `10/7`. ω=2 empty on the listed leftovers. Explicitly unverified as a proof of emptiness for ω≥3.
 
 ## Formalization audit
 

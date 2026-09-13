@@ -8,13 +8,13 @@
   "source_sha256": "b50d00e13735613cbe37bd3a25c19130874e8f036ca2a0e3c1aceb177a33c683",
   "current_status": "partial",
   "novelty_status": "no_public_solution_found_in_checked_sources",
-  "last_updated_utc": "2026-09-13T00:30:00Z",
+  "last_updated_utc": "2026-09-13T00:45:00Z",
   "proof_declarations": [],
   "unresolved_gaps": [
     "OeisA63880.mod_216_of_a not proved",
     "OeisA63880.unique_primitive_108 not proved",
     "Need independent proofs of sorry helpers if used: powerful_of_isPrimitiveTerm, exists_primitive_of_a",
-    "v2(n)=2 leftover 10/7: v3>=4 is ruled out in Lean; v3=0 and v3=2 remain; v2≠2 is open"
+    "v2=2 leftover 10/7: v3>=4 ruled out; v3=3 implies 3-free part squarefree; v3=2 implies leftover 100/91 with v5<2, v7<2, v11<3; v3=0,1 and v2≠2 remain"
   ],
-  "next_step": "Rule out leftover 10/7 with v3=0 or 2, and leftover 2 (odd n). Then CRT gives mod_216_of_a. Uniqueness of kernel 108 is secondary."
+  "next_step": "Close leftover 100/91 (v3=2) and leftover 10/7 without 27; then leftover 2 (odd n) and v2>=3. CRT plus v2=2 and v3>=3 would give mod_216_of_a."
 }

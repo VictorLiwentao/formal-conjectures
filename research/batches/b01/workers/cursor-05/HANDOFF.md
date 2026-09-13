@@ -11,8 +11,8 @@ Incomplete research session. No exact proof or disproof. Do not treat this as a 
 - source baseline: `a2f4a1bb12a28e04a969da78feefac7d1ce49565`
 - source SHA-256: `b50d00e13735613cbe37bd3a25c19130874e8f036ca2a0e3c1aceb177a33c683`
 - original kickoff (UTC): 2026-09-12T23:12Z
-- this checkpoint (UTC): 2026-09-13T00:30Z
-- final commit SHA: `41aad926c060d7a1b750bc5ed6552aaddd259569`
+- this checkpoint (UTC): 2026-09-13T00:45Z
+- final commit SHA: see the following commit on this branch after this file is updated
 
 ## Reproduction
 
@@ -22,6 +22,7 @@ python3 research/batches/b01/control/check_assignments.py --repo . --worker curs
 sha256sum FormalConjectures/OEIS/63880.lean
 LEAN_NUM_THREADS=2 lake env lean -DwarningAsError=true research/batches/b01/workers/cursor-05/targets/A063880/A063880.lean
 python3 research/batches/b01/workers/cursor-05/targets/A063880/experiments/abundancy_enum.py
+python3 research/batches/b01/workers/cursor-05/targets/A063880/experiments/case_tree.py
 ```
 
 Do not run a full `lake build`, `lake clean`, or `lake update`.
@@ -35,7 +36,7 @@ Do not run a full `lake build`, `lake clean`, or `lake update`.
 
 ## Next step
 
-Continue the local-valuation case analysis in Lean: `A n` iff the squareful kernel `K` has `ρ(K) = 2`; prove `v₂(K) = 2` and `v₃(K) ≥ 3`; then uniqueness of `K = 108` if reachable. Do not claim Eldar’s decomposition or the `10^18` search as a new resolution. Do not open a PR.
+Continue the local-valuation case analysis in Lean. CRT plus `v₂ = 2` and `v₃ ≥ 3` already implies the congruence (`mod_216_of_A_of_valuations`). Remaining: force `v₂ = 2` and `v₃ = 3` (in particular leftover `100/91`, leftover `10/7` without `27`, leftover `2`, and `v₂ ≥ 3`). Do not claim Eldar’s decomposition or the `10^18` search as a new resolution. Do not open a PR.
 
 ## Cross-owner notes
 
