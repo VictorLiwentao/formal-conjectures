@@ -13,6 +13,7 @@
   "proof_declarations": ["WOWII31.conjecture31"],
   "proof_commit": "a4a7b8cb4557aa7ed7d76947382e48bd18ef40e5",
   "coordinator_fetched_commit": "54991f4b",
+  "pause_checkpoint_commit": "629d5307",
   "unresolved_gaps": [
     "Self-review is not independent verification.",
     "Coordinator has assigned the independent compile/type/axiom audit of commit 54991f4b. Do not claim independently_verified."

@@ -27,6 +27,7 @@ Erdős–Saks–Sós Theorem 2.2. Classification:
 
 Proof commit: `a4a7b8cb4557aa7ed7d76947382e48bd18ef40e5`.
 Handoff commit previously fetched by the coordinator: `54991f4b`.
+Pause checkpoint commit: `629d5307`.
 
 ## Reproduction
 
