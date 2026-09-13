@@ -3412,6 +3412,70 @@ lemma cayleyWeight_formPerm {α : Type*} [Fintype α] [DecidableEq α]
   refine prod_congr rfl fun i _ => ?_
   rw [List.formPerm_apply_getElem l hl i.val i.isLt]
 
+/-- Inserting `p` on the closing edge of `L` multiplies the remaining Cayley weight
+by the three-point kernel, after clearing the skipped `L`-edge. -/
+lemma cayleyWeight_formPerm_cons {α : Type*} [Fintype α] [DecidableEq α]
+    (x : α → ℂ) {p : α} {L : List α}
+    (hL : L.Nodup) (hp : p ∉ L) (h2 : 2 ≤ L.length)
+    (hx : Function.Injective x) :
+    cayleyWeight x (List.formPerm (p :: L)) *
+        ((x (L[L.length - 1]'(by omega)) + x (L[0]'(by omega))) /
+          (x (L[L.length - 1]'(by omega)) - x (L[0]'(by omega)))) =
+      cayleyWeight x L.formPerm *
+        ((x p + x (L[0]'(by omega))) / (x p - x (L[0]'(by omega)))) *
+        ((x (L[L.length - 1]'(by omega)) + x p) /
+          (x (L[L.length - 1]'(by omega)) - x p)) := by
+  have hl : (p :: L).Nodup := List.nodup_cons.2 ⟨hp, hL⟩
+  have hLne : L ≠ [] := List.ne_nil_of_length_pos (by omega)
+  have hneG : ∀ a : α, p :: L ≠ [a] := by
+    cases L with
+    | nil => intro a _; simp at h2
+    | cons _ _ => intro a h; simp at h
+  have hneL : ∀ a : α, L ≠ [a] := by
+    intro a h
+    have hlenL : L.length = 1 := by simp [h]
+    omega
+  unfold cayleyWeight
+  rw [List.support_formPerm_of_nodup _ hl hneG,
+    List.support_formPerm_of_nodup _ hL hneL, List.toFinset_cons]
+  have hp' : p ∉ L.toFinset := by simpa using hp
+  rw [prod_insert hp', formPerm_cons_apply_head hl (by omega)]
+  have hlast_mem : L.getLast hLne ∈ L.toFinset :=
+    List.mem_toFinset.2 (List.getLast_mem hLne)
+  rw [← prod_erase_mul L.toFinset _ hlast_mem]
+  have hagree :
+      ∏ a ∈ L.toFinset.erase (L.getLast hLne),
+          (x a + x ((p :: L).formPerm a)) / (x a - x ((p :: L).formPerm a)) =
+        ∏ a ∈ L.toFinset.erase (L.getLast hLne),
+          (x a + x (L.formPerm a)) / (x a - x (L.formPerm a)) :=
+    prod_congr rfl fun a ha => by
+      rw [formPerm_cons_apply_of_ne_getLast hl hL hLne
+        (List.mem_toFinset.mp (mem_of_mem_erase ha)) (ne_of_mem_erase ha)]
+  rw [hagree, formPerm_cons_apply_getLast hLne]
+  have hLsplit :
+      (∏ i ∈ L.toFinset, (x i + x (L.formPerm i)) / (x i - x (L.formPerm i))) =
+        (∏ a ∈ L.toFinset.erase (L.getLast hLne),
+            (x a + x (L.formPerm a)) / (x a - x (L.formPerm a))) *
+          ((x (L.getLast hLne) + x (L.formPerm (L.getLast hLne))) /
+            (x (L.getLast hLne) - x (L.formPerm (L.getLast hLne)))) :=
+    (prod_erase_mul L.toFinset
+      (fun i => (x i + x (L.formPerm i)) / (x i - x (L.formPerm i))) hlast_mem).symm
+  rw [hLsplit, formPerm_apply_getLast_eq_head hL hLne h2]
+  have hlast_get : L.getLast hLne = L[L.length - 1]'(by omega) := List.getLast_eq_getElem _
+  rw [hlast_get]
+  have hx0p : x (L[0]'(by omega)) ≠ x p :=
+    hx.ne (ne_of_mem_of_not_mem (List.getElem_mem _) hp)
+  have hxpLast : x p ≠ x (L[L.length - 1]'(by omega)) :=
+    hx.ne (ne_of_mem_of_not_mem (List.getElem_mem _) hp).symm
+  have hxends : x (L[0]'(by omega)) ≠ x (L[L.length - 1]'(by omega)) := by
+    refine hx.ne ?_
+    exact (List.Nodup.getElem_inj_iff hL).not.mpr (by omega)
+  have hne1 : x (L[L.length - 1]'(by omega)) - x (L[0]'(by omega)) ≠ 0 :=
+    sub_ne_zero.2 hxends.symm
+  have hne2 : x p - x (L[0]'(by omega)) ≠ 0 := sub_ne_zero.2 hx0p.symm
+  have hne3 : x (L[L.length - 1]'(by omega)) - x p ≠ 0 := sub_ne_zero.2 hxpLast.symm
+  field_simp [hne1, hne2, hne3]
+
 lemma support_subset_compl_of_fixed {α : Type*} [Fintype α] [DecidableEq α]
     {p : α} {σ : Perm α} (h : σ p = p) : σ.support ⊆ ({p} : Finset α)ᶜ := by
   intro x hx
@@ -3595,6 +3659,7 @@ lemma cayleySum_eq_sigma1_add_sigma2_add {α : Type*} [Fintype α] [DecidableEq 
 #print axioms cayleySum_sigma2
 #print axioms cayley_triple_identity
 #print axioms cayleyWeight_formPerm
+#print axioms cayleyWeight_formPerm_cons
 #print axioms sum_fiber_fixed
 #print axioms cayleySum_sigma1
 #print axioms cayleySum_split

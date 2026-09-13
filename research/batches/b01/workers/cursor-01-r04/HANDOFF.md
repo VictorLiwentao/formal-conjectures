@@ -35,7 +35,7 @@ Odd cycles of length at least 3 cancel: reversing the distinguished odd cycle (t
 
 Two-point evaluation: `1 + cayleyWeight (swap a b) = -4 xa xb / (xa-xb)^2`. On `Fin 2` this is `cayleySum`. Cayley weights and odd-cycle points restrict through `ofSubtype` (`oddLongPoints_ofSubtype_nonempty_iff`, `cayleySum_ofSubtype`) and through multiplying by a disjoint transposition.
 
-Paper Σ1/Σ2: even-cycle Cayley sums split by the cycle of a distinguished point `p`. Permutations fixing `p` match `cayleySumOn ({p}ᶜ)` (`cayleySum_sigma1`). Permutations whose cycle through `p` is a transposition equal `∑_{q ≠ p} cayleyWeight (swap p q) * cayleySumOn ({p,q}ᶜ)` (`cayleySum_sigma2`). The remainder is the sum over cycle length at least 4 (`cayleySum_eq_sigma1_add_sigma2_add`). Algebraic identity (2.4) (`cayley_triple_identity`) and the Hamiltonian Cayley product (`cayleyWeight_formPerm`) are in place for Lemma 2.3.
+Paper Σ1/Σ2: even-cycle Cayley sums split by the cycle of a distinguished point `p`. Permutations fixing `p` match `cayleySumOn ({p}ᶜ)` (`cayleySum_sigma1`). Permutations whose cycle through `p` is a transposition equal `∑_{q ≠ p} cayleyWeight (swap p q) * cayleySumOn ({p,q}ᶜ)` (`cayleySum_sigma2`). The remainder is the sum over cycle length at least 4 (`cayleySum_eq_sigma1_add_sigma2_add`). Algebraic identity (2.4) (`cayley_triple_identity`) and Hamiltonian listing products (`cayleyWeight_formPerm`, `cayleyWeight_formPerm_cons`) are in place for Lemma 2.3.
 
 Still needed: She–Sun–Xia Lemma 2.3 / Σ3, then recurrence (4.8) / Theorem 1.1 matching formula, then `per M = per(M-J)`.
 

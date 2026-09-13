@@ -82,6 +82,7 @@ which type-checks. The original `a` is used. The admitted `OeisA1818.conjecture1
 'A001818C1.cayleySum_sigma2' depends on axioms: [propext, Classical.choice, Quot.sound]
 'A001818C1.cayley_triple_identity' depends on axioms: [propext, Classical.choice, Quot.sound]
 'A001818C1.cayleyWeight_formPerm' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.cayleyWeight_formPerm_cons' depends on axioms: [propext, Classical.choice, Quot.sound]
 'A001818C1.sum_fiber_fixed' depends on axioms: [propext, Classical.choice, Quot.sound]
 'A001818C1.cayleySum_sigma1' depends on axioms: [propext, Classical.choice, Quot.sound]
 'A001818C1.cayleySum_split' depends on axioms: [propext, Classical.choice, Quot.sound]

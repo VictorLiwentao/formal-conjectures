@@ -67,5 +67,5 @@ Do not import or use `OeisA1818.conjecture1` (`sorry`). Use original `a`. Prove 
 - Two-point identity: `1 + f((a b)) = -4 x_a x_b / (x_a-x_b)^2` (`one_add_cayleyWeight_swap`). On two letters this is `cayleySum`. Weights restrict to subtypes (`cayleyWeight_ofSubtype`, `cayleySum_ofSubtype`). Multiplying by a disjoint transposition does not change the odd-long-cycle set. `ofSubtype` preserves emptiness of odd-long-cycle points.
 - Paper Σ2: permutations with `d(τ)=2` at a distinguished point `p` are `swap p q` times a permutation of the complement. Their Cayley sum is `∑_{q ≠ p} f((p q)) S(omit p,q)` (`cayleySum_sigma2`).
 - Paper Σ1: permutations fixing `p` match the even-cycle sum on `{p}ᶜ` (`cayleySum_sigma1`). Together with the length-`≥ 4` remainder this decomposes `cayleySum` (`cayleySum_eq_sigma1_add_sigma2_add`).
-- Identity (2.4) (`cayley_triple_identity`) and the Hamiltonian listing product (`cayleyWeight_formPerm`) are the algebraic input for Lemma 2.3.
+- Identity (2.4) (`cayley_triple_identity`) and Hamiltonian listing products (`cayleyWeight_formPerm`, `cayleyWeight_formPerm_cons`) are the algebraic input for Lemma 2.3.
 - Still needed: Lemma 2.3 (Hamiltonian even-cycle sums constant), then recurrence (4.8) / matching formula Theorem 1.1, then She–Sun–Xia 1.3(i).
