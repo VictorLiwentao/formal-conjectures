@@ -21,7 +21,7 @@ described by Ben Green, A list of open problems, problem 66. This is not a
 proof of the open fixed-constant 1/10 question. The sharper Bambah–Chowla
 gap theorem is not used.
 -/
-import FormalConjectures.GreensOpenProblems.66
+import FormalConjectures.GreensOpenProblems.«66»
 
 /-!
 Independent Lean proof of `Green66.green_66.variants.trivial_bound`.
@@ -114,11 +114,14 @@ theorem trivial_bound :
     simp [n, Nat.cast_add, Nat.cast_pow]
   have hv2 : (v : ℝ) ^ 2 ≤ R := floor_sqrt_sq_le hR0
   have hnle : (n : ℝ) ≤ X := by
-    have : (u : ℝ) ^ 2 + (v : ℝ) ^ 2 ≤ (u : ℝ) ^ 2 + R := add_le_add_left hv2 _
+    have : (u : ℝ) ^ 2 + (v : ℝ) ^ 2 ≤ (u : ℝ) ^ 2 + R := add_le_add_right hv2 _
     simpa [hncast, R] using this
   have hgap : X - (n : ℝ) < 2 * √R + 1 := by
-    have : R - (v : ℝ) ^ 2 < 2 * √R + 1 := sub_floor_sqrt_sq_lt_sqrt hR0
-    simpa [hncast, R] using this
+    have hrem : R - (v : ℝ) ^ 2 < 2 * √R + 1 := sub_floor_sqrt_sq_lt_sqrt hR0
+    have hsub : X - (n : ℝ) = R - (v : ℝ) ^ 2 := by
+      rw [hncast]
+      ring
+    rwa [hsub]
   have hRle : R ≤ 3 * √X := remainder_le_three_sqrt hX
   have hsqrtR : √R ≤ √3 * √(√X) := by
     have h3 : 0 ≤ (3 : ℝ) := by norm_num
@@ -128,8 +131,8 @@ theorem trivial_bound :
   have hsqrt3 : √(3 : ℝ) ≤ 2 := by
     have hle : √(3 : ℝ) ≤ √(4 : ℝ) := sqrt_le_sqrt (by norm_num)
     have h4 : √(4 : ℝ) = 2 := by
-      have := sqrt_sq (by positivity : (0 : ℝ) ≤ 2)
-      simpa using this
+      rw [show (4 : ℝ) = 2 ^ 2 by norm_num]
+      exact sqrt_sq (by positivity : (0 : ℝ) ≤ 2)
     linarith
   have hone : 1 ≤ X ^ (1 / 4 : ℝ) := one_le_rpow hX (by norm_num : (0 : ℝ) ≤ 1 / 4)
   have hpow : √(√X) = X ^ (1 / 4 : ℝ) := sqrt_sqrt_eq_rpow_one_div_four hX0
