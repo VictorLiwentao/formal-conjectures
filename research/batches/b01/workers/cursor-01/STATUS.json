@@ -5,8 +5,15 @@
   "baseline_commit": "238f78bdd5701ae4c97a0d70d4e22e2d45770d7a",
   "source_commit": "a2f4a1bb12a28e04a969da78feefac7d1ce49565",
   "current_status": "candidate_proof",
-  "novelty_status": "no_public_formal_proof_found_informal_argument_in_issue_5447",
-  "last_updated_utc": "2026-09-12T23:32:49Z",
+  "novelty_status": "known_mathematics_new_lean_proof",
+  "prior_informal_proof_url": "https://github.com/google-deepmind/formal-conjectures/pull/5447",
+  "prior_informal_proof_github_author": "j2d9w5xtjn-png",
+  "prior_informal_proof_date": "2026-09-10",
+  "copyright": "Copyright 2026 The Formal Conjectures Authors. Copyright 2026 Wentao Li.",
+  "original_formalization": "The Formal Conjectures Authors",
+  "new_lean_development_and_writeup": "Wentao Li",
+  "ai_assistance": "Cursor Grok 4.6 Extra High, as a research worker in batch b01",
+  "last_updated_utc": "2026-09-13T00:06:21Z",
   "proof_declarations": [
     "OeisA237271.Cursor01.observation_carmichael",
     "OeisA237271.Cursor01.a_ge_three_of_odd_composite"

@@ -1,5 +1,17 @@
 # Literature and novelty audit: A237271 Carmichael observation
 
+Copyright 2026 The Formal Conjectures Authors.
+Copyright 2026 Wentao Li.
+Original Lean formalization: The Formal Conjectures Authors.
+New Lean development and write-up: Wentao Li.
+AI assistance: Cursor Grok 4.6 Extra High, as a research worker in batch b01.
+
+Prior informal mathematical proof:
+https://github.com/google-deepmind/formal-conjectures/pull/5447
+by GitHub author j2d9w5xtjn-png (2026-09-10).
+This audit classifies the result as known mathematics with a newly
+developed Lean proof, not a new mathematical discovery.
+
 Target: `OeisA237271.observation_carmichael` on frozen source
 `FormalConjectures/OEIS/237271.lean`, SHA-256
 `4f5f9875d35bc3f009af89444945296942a5967d1f8af20a4a102460227da11b`.
@@ -43,12 +55,15 @@ status is **unknown**. No OEIS edit was made.
   merged 2026-08-16 as `9ec87fd`, replaced the hypothesis by `IsCarmichael`.
   The corrected declaration remains `sorry` on frozen source and on
   DeepMind `main` as of this audit.
-- Open issue
-  [#5447](https://github.com/google-deepmind/formal-conjectures/issues/5447)
-  (2026-09-10) records an informal proof that the claim holds for every
-  odd composite, hence for Carmichael numbers, and states that there is
-  no public formal proof. That issue is not an accepted Lean submission
-  and does not inhabit the frozen declaration.
+- Open pull request
+  [#5447](https://github.com/google-deepmind/formal-conjectures/pull/5447)
+  by GitHub author j2d9w5xtjn-png (2026-09-10) records an informal proof
+  that the claim holds for every odd composite, hence for Carmichael
+  numbers, and states that there is no public formal proof. That PR is
+  the prior informal mathematical proof. It is not an accepted Lean
+  submission and does not inhabit the frozen declaration. This worker
+  file is known mathematics with a newly developed Lean proof, not a
+  new mathematical discovery.
 
 ## Public formal results that are different targets
 
@@ -70,7 +85,7 @@ status is **unknown**. No OEIS edit was made.
 | Source | Query / object | Result |
 | --- | --- | --- |
 | DeepMind formal-conjectures `main` raw file | `observation_carmichael` | still `sorry` |
-| GitHub PRs on A237271 | PRs 4924, 4987 | parity marking; hypothesis fix; no proof |
+| GitHub PRs on A237271 | PRs 4924, 4987, 5447 | parity marking; hypothesis fix; PR 5447 informal proof by j2d9w5xtjn-png (2026-09-10), no Lean proof |
 | alphaproof-nexus-results | `observation_carmichael` | no hit; only conjecture 2 |
 | epoch-research/LeanOpenProblems-results | A237271 / observation_carmichael | no hit; Carmichael hits are A309132 |
 | Kuberwastaken/c5-k4 | A237271 | issue 4974 audit of the vacuous form |
@@ -78,10 +93,13 @@ status is **unknown**. No OEIS edit was made.
 | OEIS A237271 comments/links/history through #308 | observation remains an observation | Kitamura closed only conjectures 4 and 5 |
 
 No-match here means no public kernel-checked proof of the corrected
-quantified statement was found in the sources above. Issue 5447 is an
-informal write-up of the same elementary argument used in this worker
-file. It is recorded so that the Lean development is not presented as
-the first discovery of the mathematics.
+quantified statement was found in the sources above. The prior informal
+mathematical proof is pull request
+[#5447](https://github.com/google-deepmind/formal-conjectures/pull/5447)
+by GitHub author j2d9w5xtjn-png (2026-09-10). It is an informal write-up of
+the same elementary argument used in this worker file. This Lean
+development is known mathematics with a newly developed Lean proof, not a
+new mathematical discovery.
 
 ## Statement audit
 
@@ -105,5 +123,6 @@ the first discovery of the mathematics.
 ## Conclusion
 
 Proceed with a Lean proof of the frozen corrected declaration. Do not
-treat conjecture 2, the vacuous old theorem, or issue 5447’s informal
-write-up as a completed formal solution.
+treat conjecture 2, the vacuous old theorem, or the informal argument in
+PR 5447 as a completed formal solution. Credit that PR as the prior
+informal mathematical proof by GitHub author j2d9w5xtjn-png (2026-09-10).

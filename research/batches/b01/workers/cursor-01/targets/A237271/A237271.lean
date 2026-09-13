@@ -15,8 +15,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 Original Lean formalization: The Formal Conjectures Authors.
-New proof development and write-up: Wentao Li.
+New Lean development and write-up: Wentao Li.
 AI assistance: Cursor Grok 4.6 Extra High, as a research worker in batch b01.
+
+Prior informal mathematical proof:
+https://github.com/google-deepmind/formal-conjectures/pull/5447
+GitHub author: j2d9w5xtjn-png (2026-09-10).
+This file is known mathematics with a newly developed Lean proof.
+It is not a new mathematical discovery.
 -/
 
 import FormalConjectures.OEIS.«237271»
