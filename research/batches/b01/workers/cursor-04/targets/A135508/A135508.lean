@@ -31,7 +31,7 @@ They also prove Cloitre's 2-adic staircase `a(2 · 4^k - 1) = 2`, the
 remaining-class factor `q ≡ 2 (mod 3)` of `p-2`, injection of a factor of
 `p-2` when some `kq-2` is a prime `≡ 2 (mod 3)`, McEachen when a factor of
 `p-2` is a larger twin, Cloitre's valuation barrier, remaining McEachen
-when `lpf(p-2) ≤ 101` or that least factor is a larger twin, Dirichlet
+when `lpf(p-2) ≤ 107` or that least factor is a larger twin, Dirichlet
 existence of some (unbounded) prime injector for every prime `q ≥ 5`,
 that `3 ∣ a n` for `n ≥ 3` forces `9 ∣ n+1`, that `3 ∣ a n` for `n ≥ 6`
 forces `81 ∣ n+1`, that `3 ∣ a n` for `n ≥ 7` forces `729 ∣ n+1`, that
@@ -1742,6 +1742,18 @@ theorem conjecture_of_one_hundred_one_dvd {p : ℕ} (hp : p.Prime) (hp506 : 506 
   conjecture_of_factor_dvd_x hp (by omega) (by decide : 1 < 101) h101
     (one_hundred_one_dvd_x (by omega : 503 ≤ p - 3))
 
+lemma one_hundred_seven_dvd_x_2459 : 107 ∣ x 2459 :=
+  q_dvd_x_of_prime_index (k := 23) (q := 107)
+    (by norm_num) (by decide) (by decide)
+
+lemma one_hundred_seven_dvd_x {n : ℕ} (hn : 2459 ≤ n) : 107 ∣ x n :=
+  one_hundred_seven_dvd_x_2459.trans (x_dvd_of_le (by decide : 0 < 2459) hn)
+
+theorem conjecture_of_one_hundred_seven_dvd {p : ℕ} (hp : p.Prime)
+    (hp2462 : 2462 ≤ p) (h107 : 107 ∣ p - 2) : a (p - 1) = p :=
+  conjecture_of_factor_dvd_x hp (by omega) (by decide : 1 < 107) h107
+    (one_hundred_seven_dvd_x (by omega : 2459 ≤ p - 3))
+
 lemma remaining_minFac_ge_five {p : ℕ} (hp : p.Prime) (hp7 : 7 ≤ p)
     (hmod : p % 3 = 1) : 5 ≤ Nat.minFac (p - 2) := by
   have hn : 1 < p - 2 := by omega
@@ -2587,6 +2599,51 @@ theorem conjecture_of_minFac_le_one_hundred_one_or_twin {p : ℕ} (hp : p.Prime)
     · have : Nat.minFac (p - 2) ≤ 29 := by omega
       exact conjecture_of_minFac_le_twenty_nine hp hp7 hmod hcomp this
 
+lemma remaining_prime_eq_one_hundred_seven {q : ℕ} (hq : q.Prime)
+    (h102 : 102 ≤ q) (h107 : q ≤ 107) (hnotwin : ¬ (q - 2).Prime) :
+    q = 107 := by
+  interval_cases q
+  · exact ((by decide : ¬ Nat.Prime 102) hq).elim
+  · exact (hnotwin (by decide : Nat.Prime 101)).elim
+  · exact ((by decide : ¬ Nat.Prime 104) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 105) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 106) hq).elim
+  · rfl
+
+/-- Remaining McEachen if `lpf(p-2) ≤ 107` or that least factor is a larger twin. -/
+theorem conjecture_of_minFac_le_one_hundred_seven_or_twin {p : ℕ} (hp : p.Prime)
+    (hp7 : 7 ≤ p) (hmod : p % 3 = 1) (hcomp : ¬ (p - 2).Prime)
+    (h : Nat.minFac (p - 2) ≤ 107 ∨ (Nat.minFac (p - 2) - 2).Prime) :
+    a (p - 1) = p := by
+  have hpr : (Nat.minFac (p - 2)).Prime :=
+    Nat.minFac_prime (by omega : p - 2 ≠ 1)
+  have hd : Nat.minFac (p - 2) ∣ p - 2 := Nat.minFac_dvd _
+  have hbound := remaining_minFac_mul_add_two_le hp hp7 hmod hcomp
+  rcases h with h107 | htwin
+  · by_cases h101 : Nat.minFac (p - 2) ≤ 101
+    · exact conjecture_of_minFac_le_one_hundred_one_or_twin hp hp7 hmod hcomp
+        (Or.inl h101)
+    · by_cases ht : (Nat.minFac (p - 2) - 2).Prime
+      · have h13 : 13 ≤ Nat.minFac (p - 2) := by omega
+        exact conjecture_of_larger_twin_dvd hp (by omega) hcomp hpr h13 ht hd
+      · have h102 : 102 ≤ Nat.minFac (p - 2) := by omega
+        have heq : Nat.minFac (p - 2) = 107 :=
+          remaining_prime_eq_one_hundred_seven hpr h102 h107 ht
+        have hd107 : 107 ∣ p - 2 := by rwa [heq] at hd
+        have hp2462 : 2462 ≤ p := by
+          rw [heq] at hbound
+          have h2le : 2 ≤ p := le_trans (by decide : 2 ≤ 7) hp7
+          have hnum : 107 * (107 + 2) + 2 = 11665 := by decide
+          have : 107 * (107 + 2) + 2 ≤ p - 2 + 2 :=
+            Nat.add_le_add_right hbound 2
+          rw [hnum, Nat.sub_add_cancel h2le] at this
+          exact le_trans (by decide : 2462 ≤ 11665) this
+        exact conjecture_of_one_hundred_seven_dvd hp hp2462 hd107
+  · by_cases h13 : 13 ≤ Nat.minFac (p - 2)
+    · exact conjecture_of_larger_twin_dvd hp (by omega) hcomp hpr h13 htwin hd
+    · have : Nat.minFac (p - 2) ≤ 29 := by omega
+      exact conjecture_of_minFac_le_twenty_nine hp hp7 hmod hcomp this
+
 private instance : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
 
 private instance : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
@@ -3193,6 +3250,10 @@ lemma v2_x_two_four_pow_pred (k : ℕ) :
 #print axioms conjecture_of_paired_injectors
 #print axioms seven_hundred_twenty_nine_dvd_x
 #print axioms two_thousand_one_hundred_eighty_seven_dvd_succ_of_three_dvd_a
+#print axioms one_hundred_seven_dvd_x_2459
+#print axioms conjecture_of_one_hundred_seven_dvd
+#print axioms remaining_prime_eq_one_hundred_seven
+#print axioms conjecture_of_minFac_le_one_hundred_seven_or_twin
 #print axioms conjecture_of_add_two_overlap
 #print axioms conjecture_of_remaining_add_two_overlap
 #print axioms a_9

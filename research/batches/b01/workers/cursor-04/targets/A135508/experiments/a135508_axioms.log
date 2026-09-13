@@ -132,6 +132,12 @@
 'OeisA135508.two_thousand_one_hundred_eighty_seven_dvd_succ_of_three_dvd_a' depends on axioms: [propext,
  Classical.choice,
  Quot.sound]
+'OeisA135508.one_hundred_seven_dvd_x_2459' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.conjecture_of_one_hundred_seven_dvd' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.remaining_prime_eq_one_hundred_seven' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.conjecture_of_minFac_le_one_hundred_seven_or_twin' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
 'OeisA135508.conjecture_of_add_two_overlap' depends on axioms: [propext, Classical.choice, Quot.sound]
 'OeisA135508.conjecture_of_remaining_add_two_overlap' depends on axioms: [propext, Classical.choice, Quot.sound]
 'OeisA135508.a_9' depends on axioms: [propext, Quot.sound]
