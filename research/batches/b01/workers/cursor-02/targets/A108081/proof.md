@@ -61,6 +61,7 @@ Proved:
 - Prefix cancellation (`PWord.xword_of_l_concat_one_append_prefix`): if `s` is a last-`1` `PWord`, `b` is a prefix of a Xia word, and `L(s ++ [1]) ++ b` is Xia, then `b` is Xia. Any left parse of `L(s ++ [1]) ++ b` is at least as long as `|s|+1` (shorter factors are `00`-prefixes or force a remainder letter `≤ -2`). A longer shortest left factor would be `r(t) ++ (s ++ [1])` with `t` a nonempty prefix of a Xia word forced to start at `≤ -2`.
 - Therefore `L(s ++ [1]) ++ v` is I for every `PWord s` and every I-word `v` (`PWord.concat_one_append_rIrreducible`). Combined with unique `P × I` enumeration, `|I_n| ≥ ∑_{k=1}^{n-1} C_{k-1}|I_{n-k}| + ∑_{k=2}^{n-1} C_{k-1}|I_{n-k}|` for `n ≥ 2` (`ncard_iN_ge_sum_catalan_iN_add_pConcatOne`). This is the Callan/A081696 first-return lower bound: `q(1)=1` and `q(k)=2 C_{k-1}` for `k≥2`.
 - If `s` is a `PWord` ending in `1` with penultimate at most `1`, then `dropLast s` is a `PWord` and `s = dropLast s ++ [1]` (`PWord.eq_concat_one_of_getLast_eq_one_of_penultimate_le_one`). So the extra first-return factors used above are exactly the last-`1` one-zero words with penultimate `≤ 1`.
+- List identity: if `s` ends in `1`, then `L(s) ++ [0] = [0] ++ R((-1) :: map(·-2) dropLast s)`. So the length-1 right parse of `L(s) ++ [0]` exists exactly when `(-1) :: map(·-2) dropLast s` is Xia (`isRightParse_l_append_zero_cons_zero`). This holds for many, but not all, last-`1` penultimate-`≥ 2` `PWord`s.
 
 ## Experimental decomposition (not a proof)
 

@@ -49,6 +49,7 @@ python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/gword
 python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/gword_penultimate.py
 python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/cons_zero_converse.py
 python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/pword_concat_one_xia_prefixes.py
+python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/bad_pword_right_parses.py
 ```
 
 Guard: PASS (worker path only). Source SHA-256 matches.
@@ -164,6 +165,10 @@ Guard: PASS (worker path only). Source SHA-256 matches.
 -- [propext, Classical.choice, Quot.sound]
 #print axioms ncard_iN_ge_sum_catalan_iN_add_pConcatOne
 -- [propext, Classical.choice, Quot.sound]
+#print axioms l_append_zero_eq_cons_zero_r_of_getLast_eq_one
+-- [propext, Quot.sound]
+#print axioms isRightParse_l_append_zero_cons_zero
+-- [propext, Quot.sound]
 #print axioms xN_finite
 -- [propext, Classical.choice, Quot.sound]
 ```

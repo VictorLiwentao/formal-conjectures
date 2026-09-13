@@ -88,8 +88,26 @@ lemma r_append (u v : Word) : r (u ++ v) = r v ++ r u := by
 lemma l_concat_one (u : Word) : l (u ++ [1]) = 0 :: l u := by
   simp [l]
 
+lemma r_map_sub_two (d : Word) : r (d.map (fun x => x - 2)) = l d := by
+  simp [r, l, List.map_reverse, List.map_map]
+  intro a _
+  ring
+
 lemma r_concat_neg_one (v : Word) : r ([-1] ++ v) = r v ++ [0] := by
   simp [r, reverse_cons]
+
+lemma l_append_zero_eq_cons_zero_r_of_getLast_eq_one {s : Word}
+    (hne : s ≠ []) (h1 : s.getLast hne = 1) :
+    l s ++ [0] = [0] ++ r ((-1 : ℤ) :: s.dropLast.map (fun x => x - 2)) := by
+  have hs : s = s.dropLast ++ [1] := by
+    have h := dropLast_append_getLast hne
+    rw [h1] at h
+    exact h.symm
+  rw [hs, l_concat_one, dropLast_concat]
+  change (0 :: l s.dropLast) ++ [0] =
+    [0] ++ r (([-1] ++ s.dropLast.map (fun x => x - 2)))
+  rw [r_concat_neg_one, r_map_sub_two]
+  simp [cons_append]
 
 lemma r_zero : r [0] = [1] := by
   simp [r]
@@ -4026,6 +4044,13 @@ lemma PWord.concat_one_l_append_zero_rIrreducible {s : Word} (hs : PWord s) :
           simp [length_cons, length_l]))
       exact this (hu_eq ▸ hparse.1)
 
+lemma isRightParse_l_append_zero_cons_zero {s : Word}
+    (hne : s ≠ []) (h1 : s.getLast hne = 1)
+    (hq : XWord ((-1 : ℤ) :: s.dropLast.map (fun x => x - 2))) :
+    IsRightParse (l s ++ [0]) [0]
+      ((-1 : ℤ) :: s.dropLast.map (fun x => x - 2)) :=
+  ⟨XWord.base, hq, l_append_zero_eq_cons_zero_r_of_getLast_eq_one hne h1⟩
+
 lemma XWord.exists_left_parse_of_start_zero_zero :
     ∀ {n : ℕ} {z : Word}, z.length = n → XWord z →
       2 ≤ z.length → z.head? = some (0 : ℤ) →
@@ -5161,5 +5186,7 @@ lemma ncard_iN_ge_sum_catalan_iN_add_pConcatOne (n : ℕ) (hn : 2 ≤ n) :
 #print axioms PWord.concat_one_append_rIrreducible
 #print axioms PWord.eq_concat_one_of_getLast_eq_one_of_penultimate_le_one
 #print axioms ncard_iN_ge_sum_catalan_iN_add_pConcatOne
+#print axioms l_append_zero_eq_cons_zero_r_of_getLast_eq_one
+#print axioms isRightParse_l_append_zero_cons_zero
 
 end OeisA108081
