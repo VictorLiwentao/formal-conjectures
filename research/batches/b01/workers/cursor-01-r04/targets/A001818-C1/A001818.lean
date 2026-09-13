@@ -5584,6 +5584,17 @@ lemma cayleySum_eq_one_add_even_cycles_of_card_two {α : Type*}
     simp [remainderThrough_eq_one_of_card_two hcard σ p]
   rw [h0, add_zero]
 
+lemma cycleOf_mul_of_fixes {α : Type*} [Fintype α] [DecidableEq α]
+    {c τ : Perm α} (hd : Equiv.Perm.Disjoint c τ) {p : α} (hp : τ p = p) :
+    (c * τ).cycleOf p = c.cycleOf p :=
+  Equiv.Perm.cycleOf_mul_of_apply_right_eq_self hd.commute p hp
+
+lemma remainder_mul_of_cycleOf_eq {α : Type*} [Fintype α] [DecidableEq α]
+    {c τ : Perm α} (hd : Equiv.Perm.Disjoint c τ) {p : α} (hp : τ p = p)
+    (hc : c.cycleOf p = c) :
+    (c * τ) * ((c * τ).cycleOf p)⁻¹ = τ := by
+  rw [cycleOf_mul_of_fixes hd hp, hc, hd.commute.eq, mul_assoc, mul_inv_cancel, mul_one]
+
 #check (OeisA1818.conjecture1 :
     ∀ (n : ℕ), 1 ≤ n → ∀ (ζ : ℂ), IsPrimitiveRoot ζ (2 * n) →
       (sunMatrix n ζ).permanent = (a n : ℂ))
@@ -5728,5 +5739,7 @@ lemma cayleySum_eq_one_add_even_cycles_of_card_two {α : Type*}
 #print axioms cayleySum_eq_one_add_even_cycles_add_complementary
 #print axioms remainderThrough_eq_one_of_card_two
 #print axioms cayleySum_eq_one_add_even_cycles_of_card_two
+#print axioms cycleOf_mul_of_fixes
+#print axioms remainder_mul_of_cycleOf_eq
 
 end A001818C1
