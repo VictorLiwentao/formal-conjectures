@@ -466,6 +466,58 @@ lemma IsRightParse.left_lt_length {w u v : Word} (h : IsRightParse w u v) :
   have := h.pos_right
   omega
 
+lemma IsLeftParse.length_add {w u v : Word} (h : IsLeftParse w u v) :
+    u.length + v.length = w.length := by
+  rcases h with ⟨_, _, hw⟩
+  simp [hw, l]
+
+lemma IsLeftParse.take {w u v : Word} (h : IsLeftParse w u v) :
+    w.take u.length = l u := by
+  rcases h with ⟨_, _, hw⟩
+  simp [hw, l]
+
+lemma IsLeftParse.drop {w u v : Word} (h : IsLeftParse w u v) :
+    w.drop u.length = v := by
+  rcases h with ⟨_, _, hw⟩
+  simp [hw, l]
+
+lemma IsLeftParse.pos_left {w u v : Word} (h : IsLeftParse w u v) :
+    0 < u.length :=
+  (h.1).length_pos
+
+lemma IsLeftParse.pos_right {w u v : Word} (h : IsLeftParse w u v) :
+    0 < v.length :=
+  (h.2.1).length_pos
+
+lemma IsLeftParse.left_lt_length {w u v : Word} (h : IsLeftParse w u v) :
+    u.length < w.length := by
+  have := h.length_add
+  have := h.pos_right
+  omega
+
+lemma isLeftParse_iff_isRightParse_rho {w u v : Word} :
+    IsLeftParse w u v ↔ IsRightParse (rho w) (rho v) (rho u) := by
+  constructor
+  · intro ⟨hu, hv, hw⟩
+    exact ⟨hv.rho_mem, hu.rho_mem, by rw [hw, rho_append, rho_l]⟩
+  · intro ⟨hv, hu, hw⟩
+    refine ⟨?hu', ?hv', ?hw'⟩
+    · simpa [rho_rho] using hu.rho_mem
+    · simpa [rho_rho] using hv.rho_mem
+    · have := congrArg rho hw
+      simpa [rho_rho, rho_append, rho_r] using this
+
+lemma isLeftParse_take_drop {w : Word} {k : ℕ} (_hk0 : 0 < k)
+    (_hkl : k < w.length) :
+    IsLeftParse w (r (w.take k)) (w.drop k) ↔
+      XWord (r (w.take k)) ∧ XWord (w.drop k) := by
+  constructor
+  · intro h
+    exact ⟨h.1, h.2.1⟩
+  · intro ⟨hu, hv⟩
+    refine ⟨hu, hv, ?_⟩
+    simp [l_r, take_append_drop]
+
 lemma isRightParse_take_drop {w : Word} {k : ℕ} (_hk0 : 0 < k)
     (_hkl : k < w.length) :
     IsRightParse w (w.take k) (l (w.drop k)) ↔
@@ -511,6 +563,49 @@ lemma exists_shortest_right_parse {w : Word} (h : ∃ u v, IsRightParse w u v) :
   have hvlen : (l (w.drop k)).length = w.length - k := by
     simp [length_l, length_drop]
   omega
+
+lemma exists_shortest_left_parse {w : Word} (h : ∃ u v, IsLeftParse w u v) :
+    ∃ u v, IsLeftParse w u v ∧
+      ∀ u' v', IsLeftParse w u' v' → u.length ≤ u'.length := by
+  classical
+  obtain ⟨u0, v0, hp0⟩ := h
+  let S : Finset ℕ :=
+    (Finset.range w.length).filter (fun k =>
+      0 < k ∧ XWord (r (w.take k)) ∧ XWord (w.drop k))
+  have huS : u0.length ∈ S := by
+    refine Finset.mem_filter.mpr ⟨Finset.mem_range.mpr hp0.left_lt_length, ?_⟩
+    refine ⟨hp0.pos_left, ?_, ?_⟩
+    · have htake := hp0.take
+      simpa [htake, r_l] using hp0.1
+    · simpa [hp0.drop] using hp0.2.1
+  have hSne : S.Nonempty := ⟨u0.length, huS⟩
+  let k := S.min' hSne
+  have hkmem := S.min'_mem hSne
+  have hk := (Finset.mem_filter.mp hkmem).2
+  have hklt : k < w.length := Finset.mem_range.mp (Finset.mem_filter.mp hkmem).1
+  refine ⟨r (w.take k), w.drop k,
+      (isLeftParse_take_drop hk.1 hklt).mpr ⟨hk.2.1, hk.2.2⟩, ?_⟩
+  intro u' v' hp'
+  have huS' : u'.length ∈ S := by
+    refine Finset.mem_filter.mpr ⟨Finset.mem_range.mpr hp'.left_lt_length, ?_⟩
+    refine ⟨hp'.pos_left, ?_, ?_⟩
+    · have htake := hp'.take
+      simpa [htake, r_l] using hp'.1
+    · simpa [hp'.drop] using hp'.2.1
+  have hle : k ≤ u'.length := Finset.min'_le S u'.length huS'
+  have htake_len : (r (w.take k)).length = k := by
+    simp [length_r, length_take]
+    omega
+  omega
+
+lemma shortest_left_parse_unique {w u v u' v' : Word}
+    (h : IsLeftParse w u v) (h' : IsLeftParse w u' v')
+    (hmin : ∀ u₂ v₂, IsLeftParse w u₂ v₂ → u.length ≤ u₂.length)
+    (hmin' : ∀ u₂ v₂, IsLeftParse w u₂ v₂ → u'.length ≤ u₂.length) :
+    u = u' ∧ v = v' := by
+  have hu : u.length = u'.length :=
+    Nat.le_antisymm (hmin u' v' h') (hmin' u v h)
+  exact eq_of_left_parse_eq (h.2.2.symm.trans h'.2.2) hu
 
 lemma shortest_right_parse_unique {w u v u' v' : Word}
     (h : IsRightParse w u v) (h' : IsRightParse w u' v')
@@ -922,6 +1017,19 @@ lemma count_zero_rho (w : Word) : (rho w).count 0 = w.count 0 := by
 lemma PWord.rho {w : Word} (hw : PWord w) : PWord (rho w) :=
   ⟨hw.1.rho_mem, (count_zero_rho w).trans hw.2⟩
 
+lemma PWord.le_length_of_isLeftParse_l_append {u v u' v' : Word}
+    (hu : PWord u) (hv : XWord v) (h : IsLeftParse (l u ++ v) u' v') :
+    u.length ≤ u'.length := by
+  have hr : IsRightParse (OeisA108081.rho (l u ++ v))
+      (OeisA108081.rho v') (OeisA108081.rho u') :=
+    isLeftParse_iff_isRightParse_rho.mp h
+  have hr' : IsRightParse (OeisA108081.rho v ++ r (OeisA108081.rho u))
+      (OeisA108081.rho v') (OeisA108081.rho u') := by
+    simpa [rho_append, rho_l] using hr
+  have hle :=
+    PWord.le_length_of_isRightParse_append_r hv.rho_mem hu.rho hr'
+  simpa [length_rho] using hle
+
 lemma XWord.take_idxOf_concat_zero {w : Word} (hw : XWord w) (hc : w.count 0 = 1) :
     PWord (w.take (w.idxOf 0) ++ [0]) :=
   match w, hw with
@@ -1208,6 +1316,22 @@ lemma XWord.of_isRightParse_shortest {w u v : Word}
     omega
   omega
 
+lemma XWord.of_isLeftParse_shortest {w u v : Word}
+    (h : IsLeftParse w u v)
+    (hmin : ∀ u2 v2, IsLeftParse w u2 v2 → u.length ≤ u2.length) :
+    PWord u := by
+  have hr : IsRightParse (rho w) (rho v) (rho u) :=
+    isLeftParse_iff_isRightParse_rho.mp h
+  have hminr : ∀ u2 v2, IsRightParse (rho w) u2 v2 →
+      (rho u).length ≤ v2.length := by
+    intro u2 v2 hp
+    have hl : IsLeftParse w (rho v2) (rho u2) :=
+      isLeftParse_iff_isRightParse_rho.mpr (by simpa [rho_rho] using hp)
+    have := hmin (rho v2) (rho u2) hl
+    simpa [length_rho] using this
+  have hP : PWord (rho u) := XWord.of_isRightParse_shortest hr hminr
+  simpa [rho_rho] using hP.rho
+
 lemma PWord.of_isRightParse_shortest {w u v : Word} (_hw : PWord w)
     (h : IsRightParse w u v)
     (hmin : ∀ u2 v2, IsRightParse w u2 v2 → v.length ≤ v2.length) :
@@ -1275,6 +1399,50 @@ lemma RightWord.head_eq_zero {w : Word} (h : RightWord w) :
 lemma RightWord.of_head_eq_zero {w : Word} (hw : PWord w)
     (hhead : w.head hw.1.ne_nil = 0) : RightWord w :=
   ⟨hw, (head_eq_zero_iff_head? hw.1.ne_nil).mp hhead⟩
+
+lemma getLast_eq_zero_iff_getLast? {w : Word} (h : w ≠ []) :
+    w.getLast h = 0 ↔ w.getLast? = some 0 := by
+  induction w with
+  | nil => exact (h rfl).elim
+  | cons a t ih =>
+    cases t with
+    | nil => simp
+    | cons b u =>
+      simpa [getLast] using ih (by simp)
+
+/-- Unique-zero Xia words that end in `0`. Dual to `RightWord` via `rho`. -/
+def LeftWord (w : Word) : Prop :=
+  PWord w ∧ w.getLast? = some 0
+
+lemma LeftWord.pWord {w : Word} (h : LeftWord w) : PWord w := h.1
+
+lemma LeftWord.xWord {w : Word} (h : LeftWord w) : XWord w := h.1.1
+
+lemma LeftWord.getLast_eq_zero {w : Word} (h : LeftWord w) :
+    w.getLast h.xWord.ne_nil = 0 :=
+  (getLast_eq_zero_iff_getLast? h.xWord.ne_nil).mpr h.2
+
+lemma LeftWord.of_getLast_eq_zero {w : Word} (hw : PWord w)
+    (hlast : w.getLast hw.1.ne_nil = 0) : LeftWord w :=
+  ⟨hw, (getLast_eq_zero_iff_getLast? hw.1.ne_nil).mp hlast⟩
+
+lemma RightWord.rho_mem {w : Word} (h : RightWord w) :
+    LeftWord (OeisA108081.rho w) :=
+  LeftWord.of_getLast_eq_zero h.pWord.rho (by
+    have : (OeisA108081.rho w).getLast (rho_ne_nil h.xWord.ne_nil) =
+        - w.head h.xWord.ne_nil :=
+      rho_getLast h.xWord.ne_nil
+    rw [this, h.head_eq_zero]
+    simp)
+
+lemma LeftWord.rho_mem {w : Word} (h : LeftWord w) :
+    RightWord (OeisA108081.rho w) :=
+  RightWord.of_head_eq_zero h.pWord.rho (by
+    have : (OeisA108081.rho w).head (rho_ne_nil h.xWord.ne_nil) =
+        - w.getLast h.xWord.ne_nil :=
+      rho_head h.xWord.ne_nil
+    rw [this, h.getLast_eq_zero]
+    simp)
 
 lemma length_append_r (u v : Word) : (u ++ r v).length = u.length + v.length := by
   simp [length_r]
@@ -1518,6 +1686,34 @@ lemma ncard_rightN_eq_catalan {n : ℕ} (hn : 1 ≤ n) :
     (rightN n).ncard = catalan (n - 1) := by
   convert ncard_rightN_succ_eq_catalan (n - 1)
   exact (Nat.sub_add_cancel hn).symm
+
+def leftN (n : ℕ) : Set Word :=
+  {w | LeftWord w ∧ w.length = n}
+
+lemma leftN_subset_xN (n : ℕ) : leftN n ⊆ xN n :=
+  fun _ hw => ⟨hw.1.xWord, hw.2⟩
+
+lemma leftN_finite (n : ℕ) : (leftN n).Finite :=
+  (xN_finite n).subset (leftN_subset_xN n)
+
+lemma rho_image_rightN (n : ℕ) :
+    (fun w => OeisA108081.rho w) '' rightN n = leftN n := by
+  ext w
+  constructor
+  · intro h
+    obtain ⟨u, hu, hρ⟩ := h
+    subst hρ
+    exact ⟨hu.1.rho_mem, by simpa [length_rho] using hu.2⟩
+  · intro hw
+    refine ⟨OeisA108081.rho w, ⟨hw.1.rho_mem, by simpa [length_rho] using hw.2⟩, ?_⟩
+    simp [rho_rho]
+
+lemma ncard_leftN_eq_catalan {n : ℕ} (hn : 1 ≤ n) :
+    (leftN n).ncard = catalan (n - 1) := by
+  have hinj : Set.InjOn (fun w => OeisA108081.rho w) (rightN n) := by
+    intro a _ b _ h
+    simpa [rho_rho] using congrArg OeisA108081.rho h
+  rw [← rho_image_rightN n, hinj.ncard_image, ncard_rightN_eq_catalan hn]
 
 lemma XWord.append_zero_of_getLast_eq_one {w : Word} (hw : XWord w)
     (h : w.getLast hw.ne_nil = 1) : XWord (w ++ [0]) := by
@@ -1977,6 +2173,58 @@ lemma RIrreducible.getLast_eq_zero {w : Word} (h : RIrreducible w) :
   rcases this with h0 | h1
   · exact h0
   · exact (h.getLast_ne_one h1).elim
+
+lemma RIrreducible.exists_left_parse {w : Word} (hw : RIrreducible w)
+    (h2 : 2 ≤ w.length) : ∃ u v, IsLeftParse w u v :=
+  match w, hw.1 with
+  | _, .base => by simp at h2
+  | _, @XWord.step_left u v hu hv => ⟨u, v, hu, hv, rfl⟩
+  | _, @XWord.step_right u v hu hv => (hw.2 u v ⟨hu, hv, rfl⟩).elim
+
+lemma RIrreducible.of_isLeftParse_remainder {w u v : Word}
+    (hw : RIrreducible w) (h : IsLeftParse w u v) : RIrreducible v := by
+  refine ⟨h.2.1, fun a b hp => ?_⟩
+  have : IsRightParse w (l u ++ a) b :=
+    ⟨XWord.step_left h.1 hp.1, hp.2.1, by rw [h.2.2, hp.2.2, append_assoc]⟩
+  exact hw.2 _ _ this
+
+lemma getLast_append_r {u v : Word} (hv : v ≠ []) :
+    (u ++ r v).getLast (append_ne_nil_of_right_ne_nil u (r_ne_nil hv)) =
+      v.head hv + 1 := by
+  have h := getLast_append_of_right_ne_nil (l₁ := u) (l₂ := r v) (r_ne_nil hv)
+  rw [h, getLast_r hv]
+
+lemma LeftWord.rIrreducible {w : Word} (h : LeftWord w) : RIrreducible w := by
+  refine ⟨h.xWord, fun u v hp => ?_⟩
+  have hP : PWord (u ++ r v) := by simpa [hp.2.2] using h.pWord
+  have hneg := (PWord.of_step_right hp.1 hp.2.1 hP).2
+  have hlast : w.getLast h.xWord.ne_nil = v.head hp.2.1.ne_nil + 1 := by
+    have := getLast_append_r (u := u) hp.2.1.ne_nil
+    simpa [hp.2.2] using this
+  have hvhead : v.head hp.2.1.ne_nil = -1 := by
+    have := h.getLast_eq_zero
+    omega
+  have hmem : (-1 : ℤ) ∈ v := by
+    simpa [hvhead] using List.head_mem (l := v) (h := hp.2.1.ne_nil)
+  have : 0 < v.count (-1) := count_pos_iff.mpr hmem
+  omega
+
+lemma RIrreducible.shortest_left_factor_pword {w : Word} (hw : RIrreducible w)
+    (h2 : 2 ≤ w.length) :
+    ∃ u v, IsLeftParse w u v ∧ PWord u ∧ RIrreducible v ∧
+      ∀ u' v', IsLeftParse w u' v' → u.length ≤ u'.length := by
+  obtain ⟨u0, v0, hp0⟩ := hw.exists_left_parse h2
+  obtain ⟨u, v, hp, hmin⟩ := exists_shortest_left_parse ⟨u0, v0, hp0⟩
+  exact ⟨u, v, hp, XWord.of_isLeftParse_shortest hp hmin,
+    hw.of_isLeftParse_remainder hp, hmin⟩
+
+lemma leftWord_iff_rIrreducible_pword {w : Word} :
+    LeftWord w ↔ RIrreducible w ∧ PWord w := by
+  constructor
+  · intro h
+    exact ⟨h.rIrreducible, h.pWord⟩
+  · intro ⟨hi, hp⟩
+    exact LeftWord.of_getLast_eq_zero hp hi.getLast_eq_zero
 
 lemma YWord.head_eq_zero {w : Word} (hw : YWord w) :
     w.head hw.ne_nil = 0 :=
@@ -2732,6 +2980,17 @@ lemma iN_subset_xN (n : ℕ) : iN n ⊆ xN n :=
 lemma iN_finite (n : ℕ) : (iN n).Finite :=
   (xN_finite n).subset (iN_subset_xN n)
 
+lemma leftN_subset_iN (n : ℕ) : leftN n ⊆ iN n :=
+  fun _ hw => ⟨hw.1.rIrreducible, hw.2⟩
+
+lemma ncard_leftN_le_iN (n : ℕ) : (leftN n).ncard ≤ (iN n).ncard :=
+  Set.ncard_le_ncard (leftN_subset_iN n) (iN_finite n)
+
+lemma ncard_catalan_le_iN {n : ℕ} (hn : 1 ≤ n) :
+    catalan (n - 1) ≤ (iN n).ncard := by
+  rw [← ncard_leftN_eq_catalan hn]
+  exact ncard_leftN_le_iN n
+
 noncomputable def iNFinset (n : ℕ) : Finset Word :=
   (iN_finite n).toFinset
 
@@ -2886,6 +3145,18 @@ lemma ncard_xN_eq_sum_iN_H (n : ℕ) (hn : 1 ≤ n) :
 #print axioms xword_exists_rIrreducible_yword
 #print axioms eq_of_rIrreducible_yword
 #print axioms ncard_xN_eq_sum_iN_H
+#print axioms RIrreducible.exists_left_parse
+#print axioms RIrreducible.of_isLeftParse_remainder
+#print axioms LeftWord.rIrreducible
+#print axioms XWord.of_isLeftParse_shortest
+#print axioms exists_shortest_left_parse
+#print axioms RIrreducible.shortest_left_factor_pword
+#print axioms LeftWord.rho_mem
+#print axioms RightWord.rho_mem
+#print axioms ncard_leftN_eq_catalan
+#print axioms leftN_subset_iN
+#print axioms ncard_catalan_le_iN
+#print axioms leftWord_iff_rIrreducible_pword
 #print axioms PWord.take_idxOf_concat_zero
 #print axioms PWord.cons_zero_drop_succ_idxOf
 #print axioms PWord.take_idxOf_concat_zero_append_drop

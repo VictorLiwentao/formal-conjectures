@@ -46,10 +46,8 @@ Proved:
 - Every `YWord` of length at least 2 has a unique shortest right parse whose remainder is a `PWord` and whose left factor is a `YWord` (`YWord.shortest_left_is_yword`).
 - Y-count (`ncard_yN_eq_H`): `|Y_n| = H_{n-1}` for `n ≥ 1`. The bijection is `Y_n ≅ ⊔_{k=1}^{n-1} Y_k × P_{n-k}` via `u ++ r p`, and the resulting Catalan convolution equals `H`.
 - Unique I×Y rebuild (`xword_exists_rIrreducible_yword`, `eq_of_rIrreducible_yword`): every Xia word is uniquely `c ++ y.tail` with `c` right-irreducible and `y` a `YWord`. Hence `|X_n| = ∑_{k=1}^n |I_k| H_{n-k}` (`ncard_xN_eq_sum_iN_H`).
-
-## Experimental decomposition (not a proof)
-
-## Experimental decomposition (not a proof)
+- Left parses of I-words: every I-word of length at least 2 has a left parse (`RIrreducible.exists_left_parse`). Any left-parse remainder is again I. The unique shortest left factor is a `PWord`.
+- Unique-zero words that end in `0` are I-words (`LeftWord.rIrreducible`). They are the `rho` dual of `RightWord`, so `|Left_n| = C_{n-1}`. Hence `C_{n-1} ≤ |I_n|`. I-words with a unique `0` are exactly the LeftWords.
 
 ## Experimental decomposition (not a proof)
 
@@ -57,6 +55,7 @@ Deterministic enumerator: `experiments/enumerate_structure.py`,
 `experiments/decomposition.py`, `experiments/bijection_search.py`,
 `experiments/catalan_peels.py`, `experiments/pword_signs.py`,
 `experiments/pword_catalan_split.py`, `experiments/right_pword_factor.py`,
+`experiments/iword_left_factors.py`,
 lengths `n ≤ 8`.
 
 Facts checked in that range, and **not** claimed for all `n`:
@@ -78,7 +77,7 @@ An exact proof can be assembled from three Xia-specific statements plus one gene
 1. `|I_n| = A081696(n-1)` (Wilf irreducible composition pairs of `n-1`, or the D-finite recurrence for that sequence).
 2. Algebraic identity `I(x) H(x) = x G(x)` with `G` the OEIS gf of `a`. This does not mention Xia words and can be proved independently.
 
-The unique I×Y rebuild and `|Y_n| = H_{n-1}` are proved. `|I_n|` and the convolution with `a` are not. The length-3 count and the finite convolution check do not close the conjecture.
+The unique I×Y rebuild and `|Y_n| = H_{n-1}` are proved. I-words contain the Catalan-many LeftWords and have a unique shortest left `PWord` factor with I remainder. Identifying `|I_n|` with A081696(`n-1`) and the convolution with `a` remain open. The length-3 count and the finite convolution check do not close the conjecture.
 
 ## Approaches that failed or stalled
 

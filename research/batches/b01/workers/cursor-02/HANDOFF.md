@@ -5,7 +5,7 @@ Baseline: `a2f4a1bb12a28e04a969da78feefac7d1ce49565`
 Coordination: `238f78bdd5701ae4c97a0d70d4e22e2d45770d7a`
 Kickoff UTC: 2026-09-12T23:10Z. Session budget: eight hours from kickoff (until 2026-09-13T07:10Z). This follow-up does not restart that budget.
 
-Final commit SHA: `8ac1cb22b1cdcdcf85d3b5f808e87addeab964a9`.
+Final commit SHA: update after the content commit on this branch.
 
 ## Reproduction
 
@@ -16,12 +16,7 @@ python3 research/batches/b01/control/check_assignments.py --repo . --worker curs
 python3 research/batches/b01/control/check_assignments.py --repo . --worker cursor-02 --against 238f78bdd5701ae4c97a0d70d4e22e2d45770d7a
 python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/enumerate_structure.py
 python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/decomposition.py
-python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/bijection_search.py
-python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/catalan_peels.py
-python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/pword_signs.py
-python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/pword_catalan_split.py
-python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/right_pword_factor.py
-python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/xia_concat_split.py
+python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/iword_left_factors.py
 LEAN_NUM_THREADS=2 lake --wfail env lean research/batches/b01/workers/cursor-02/targets/A108081/A108081.lean
 ```
 
@@ -29,4 +24,4 @@ LEAN_NUM_THREADS=2 lake --wfail env lean research/batches/b01/workers/cursor-02/
 
 `partial`. No public exact proof/disproof found. Finite counts through `n=14` are already public (c5-k4) and are not a resolution. Statement uses `a(n-1)`, matching Xia’s listed cardinalities `1,2,7`, not the OEIS prose `a(n+1)`.
 
-Lean now proves `|Right_n| = C_{n-1}`, `|P_n| = C_n`, `|Y_n| = H_{n-1}`, and the unique I×Y rebuild `|X_n| = ∑_k |I_k| H_{n-k}`. Identifying `|I_n|` and the convolution with `a(n-1)` remain open.
+Lean now proves `|Right_n| = C_{n-1}`, `|P_n| = C_n`, `|Y_n| = H_{n-1}`, unique I×Y rebuild `|X_n| = ∑_k |I_k| H_{n-k}`, unique shortest left `PWord` factor of I-words, `|Left_n| = C_{n-1}`, and `C_{n-1} ≤ |I_n|`. Identifying `|I_n|` with A081696 and the convolution with `a(n-1)` remain open.

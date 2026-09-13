@@ -57,13 +57,11 @@ Checked on 2026-09-12. Live OEIS HTML history/edit pages were Cloudflare-blocked
 
 ## Repeat search, 2026-09-13
 
-- Repeat search, 2026-09-13 01:54Z: OEIS A108081 JSON still revision 39 (2025-01-19). No Xia-word proof added.
-- OEIS A108081 JSON still revision 39 (2025-01-19). No proof of the Xia word count. Formula list unchanged (Jovovic, Barry, Kotesovec, Manyama).
-- Li-yao Xia’s 2014 repo https://github.com/Lysxia/cfpt enumerates a dual constructor pair `a ++ L(b)` and `R(a) ++ b` (Haskell `exhaust.hs` / `dypro.hs`). Last push 2014-05-07. No proof. The README conjecture `X(n) = ∑ C(2n-i, n+i)` has the same off-by-one as the OEIS prose; Xia’s listed length-1/2/3 cardinalities still match `a(n-1)`.
-- OEIS A081696 (retrieved 2026-09-13, revision 115) is `1,1,3,9,29,97,333,1165,…` with gf `1/(x+sqrt(1-4x))`, matching experimental `|I_n|` as `A081696(n-1)`. The Wilf comment (irreducible composition pairs) is on this sequence. No published bijection with Xia right-irreducible words was found.
+- Repeat search, 2026-09-13 02:55Z: OEIS A108081 JSON still revision 39 (2025-01-19). No Xia-word proof added.
+- Paul Barry’s gf `(1+sqrt(1-4x))/(2 sqrt(1-4x) (x+sqrt(1-4x)))` is exactly `H(x) F(x)` with `F` the gf of A081696 and `H(x)=(1+(1-4x)^{-1/2})/2`. This is a published formula for `a(n)`, not a proof that `|I_n|=A081696(n-1)`.
+- OEIS A081696 still revision 115. Combinatorial models: Wilf irreducible composition pairs; Callan low-peak-free Grand-Dyck; Scambler grand Motzkin with two flat colours avoiding `F` at level 0. D-finite recurrence `n a(n)+2(-4n+3)a(n-1)+3(5n-8)a(n-2)+2(2n-3)a(n-3)=0`. No published bijection with Xia I-words.
+- Li-yao Xia’s 2014 repo https://github.com/Lysxia/cfpt enumerates a dual constructor pair. Last push 2014-05-07. No proof.
 - Fried arXiv:2607.24832 still treats A108080, not A108081.
-- Fried–Shattuck, Enumerative Combinatorics and Applications (2026-01-23), “Counting s-Catalan words according to total variation”, is about classical Catalan words / Motzkin polyominoes, not Xia’s reverse-and-shift constructors.
-- MathOverflow / arXiv searches for the Xia constructors and “functional pregroup types” counting did not return a proof of `|X_n| = a(n-1)`.
 
 ## Novelty conclusion
 

@@ -43,6 +43,7 @@ python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/catal
 python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/pword_signs.py
 python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/pword_catalan_split.py
 python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/right_pword_factor.py
+python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/iword_left_factors.py
 ```
 
 Guard: PASS (worker path only). Source SHA-256 matches.
@@ -92,7 +93,29 @@ Guard: PASS (worker path only). Source SHA-256 matches.
 -- [propext, Classical.choice, Quot.sound]
 #print axioms sum_H_mul_catalan_succ
 -- [propext, Classical.choice, Quot.sound]
+#print axioms xword_exists_rIrreducible_yword
+-- [propext, Classical.choice, Quot.sound]
+#print axioms eq_of_rIrreducible_yword
+-- [propext, Classical.choice, Quot.sound]
 #print axioms ncard_xN_eq_sum_iN_H
+-- [propext, Classical.choice, Quot.sound]
+#print axioms RIrreducible.exists_left_parse
+-- [propext, Classical.choice, Quot.sound]
+#print axioms RIrreducible.of_isLeftParse_remainder
+-- [propext]
+#print axioms LeftWord.rIrreducible
+-- [propext, Classical.choice, Quot.sound]
+#print axioms XWord.of_isLeftParse_shortest
+-- [propext, Classical.choice, Quot.sound]
+#print axioms exists_shortest_left_parse
+-- [propext, Classical.choice, Quot.sound]
+#print axioms RIrreducible.shortest_left_factor_pword
+-- [propext, Classical.choice, Quot.sound]
+#print axioms ncard_leftN_eq_catalan
+-- [propext, Classical.choice, Quot.sound]
+#print axioms ncard_catalan_le_iN
+-- [propext, Classical.choice, Quot.sound]
+#print axioms leftWord_iff_rIrreducible_pword
 -- [propext, Classical.choice, Quot.sound]
 #print axioms xN_finite
 -- [propext, Classical.choice, Quot.sound]
