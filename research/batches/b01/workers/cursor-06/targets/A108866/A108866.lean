@@ -25,14 +25,18 @@ import Mathlib.Algebra.Polynomial.Derivative
 import Mathlib.Algebra.Polynomial.Eval.Coeff
 import Mathlib.Algebra.Ring.GeomSum
 import Mathlib.Data.Nat.Choose.Sum
+import Mathlib.Data.Nat.Choose.Dvd
+import Mathlib.Data.Nat.Factorial.NatCast
+import Mathlib.Data.ZMod.Factorial
+import Mathlib.Algebra.Field.ZMod
 
 /-!
 Partial development for OEIS A108866.
 
-This file does not use `OeisA108866.conjecture`. It proves that an even
-`n > 3` never satisfies the congruence, and the Komatsu–Sury odd
-identity for `T(n)`. The prime direction and the odd-composite converse
-are not proved here.
+This file does not use `OeisA108866.conjecture`. It proves the even
+converse, the Komatsu–Sury odd identity, and the prime direction
+`p^2 ∣ T(p).num` for primes `p > 3`. The odd-composite converse is
+not proved here.
 -/
 
 open Finset
@@ -582,5 +586,411 @@ lemma ratExpression_eq_two_mul_n_sum_choose_sq {n : ℕ} (hn : Odd n) (hn1 : 1 <
     · simp [if_neg hodd]
   rw [hsum]
   ring
+
+/- Prime direction: for an odd prime `p > 3`, `p^2` divides `T(p).num`. -/
+
+def oddDenom (n : ℕ) : ℕ :=
+  (Nat.factorial (n - 1))^2
+
+def oddInnerNum (n : ℕ) : ℕ :=
+  ∑ i ∈ range (n - 1),
+    if Odd (i + 1) then (n - 1).choose i * (oddDenom n / (i + 1) ^ 2) else 0
+
+lemma succ_sq_dvd_oddDenom {n i : ℕ} (_hn : 1 < n) (hi : i ∈ range (n - 1)) :
+    (i + 1) ^ 2 ∣ oddDenom n := by
+  have hle : i + 1 ≤ n - 1 := by
+    have : i < n - 1 := mem_range.mp hi
+    omega
+  unfold oddDenom
+  exact pow_dvd_pow_of_dvd (Nat.dvd_factorial (Nat.succ_pos i) hle) 2
+
+lemma oddDenom_ne_zero {n : ℕ} : oddDenom n ≠ 0 := by
+  unfold oddDenom
+  exact pow_ne_zero _ (Nat.factorial_ne_zero _)
+
+lemma two_mul_choose_two (n : ℕ) : 2 * n.choose 2 = n * (n - 1) := by
+  rw [Nat.choose_two_right, Nat.mul_div_cancel' (Nat.even_mul_pred_self n).two_dvd]
+
+lemma sq_eq_two_mul_choose_two_add (i : ℕ) : i ^ 2 = 2 * i.choose 2 + i := by
+  rw [two_mul_choose_two]
+  cases i with
+  | zero => simp
+  | succ k =>
+    rw [Nat.add_sub_cancel]
+    ring
+
+lemma sum_range_choose_two (n : ℕ) : ∑ i ∈ range n, i.choose 2 = n.choose 3 := by
+  induction n with
+  | zero => simp
+  | succ n ih =>
+    rw [sum_range_succ, ih, add_comm, Nat.choose_succ_succ' n 2]
+
+lemma sum_range_sq (n : ℕ) :
+    ∑ i ∈ range n, i ^ 2 = 2 * n.choose 3 + n.choose 2 := by
+  simp_rw [sq_eq_two_mul_choose_two_add]
+  rw [sum_add_distrib, ← mul_sum, sum_range_choose_two, sum_range_id, ← Nat.choose_two_right]
+
+lemma sum_range_sq_zmod {p : ℕ} (hp : p.Prime) (h5 : 5 ≤ p) :
+    ∑ i ∈ range p, (i : ZMod p) ^ 2 = 0 := by
+  have h2 : 2 < p := lt_of_lt_of_le (by decide : 2 < 5) h5
+  have h3 : 3 < p := lt_of_lt_of_le (by decide : 3 < 5) h5
+  simp_rw [← Nat.cast_pow]
+  rw [← Nat.cast_sum, sum_range_sq, Nat.cast_add, Nat.cast_mul]
+  have hC2 : (p.choose 2 : ZMod p) = 0 :=
+    (ZMod.natCast_eq_zero_iff _ _).2 (hp.dvd_choose_self (by decide) h2)
+  have hC3 : (p.choose 3 : ZMod p) = 0 :=
+    (ZMod.natCast_eq_zero_iff _ _).2 (hp.dvd_choose_self (by decide) h3)
+  simp [hC2, hC3]
+
+lemma choose_pred_cast {p i : ℕ} (hp : p.Prime) (hi : i < p) :
+    ((p - 1).choose i : ZMod p) = (-1) ^ i := by
+  have : Fact p.Prime := ⟨hp⟩
+  have hi' : i ≤ p := hi.le
+  have hdesc := ZMod.cast_descFactorial hi'
+  have hfac := Nat.descFactorial_eq_factorial_mul_choose (p - 1) i
+  have hcast : ((p - 1).descFactorial i : ZMod p) =
+      (i.factorial : ZMod p) * ((p - 1).choose i) := by
+    rw [hfac, Nat.cast_mul]
+  have hunit : IsUnit (i.factorial : ZMod p) :=
+    (IsUnit.natCast_factorial_iff_of_charP (p := p) (A := ZMod p)).2 hi
+  have hne : (i.factorial : ZMod p) ≠ 0 := IsUnit.ne_zero hunit
+  have : (i.factorial : ZMod p) * ((p - 1).choose i) = (-1) ^ i * i.factorial := by
+    rw [← hcast, hdesc]
+  have hcomm : (i.factorial : ZMod p) * ((p - 1).choose i) =
+      (i.factorial : ZMod p) * (-1) ^ i := by
+    rw [this, mul_comm]
+  exact mul_left_cancel₀ hne hcomm
+
+lemma nat_div_sq_cast {p r D : ℕ} (hp : p.Prime) (hr : 0 < r) (hrp : r < p)
+    (hdvd : r ^ 2 ∣ D) :
+    ((D / r ^ 2 : ℕ) : ZMod p) = (D : ZMod p) * (r : ZMod p)⁻¹ ^ 2 := by
+  have : Fact p.Prime := ⟨hp⟩
+  have hr0 : (r : ZMod p) ≠ 0 := by
+    intro h
+    exact Nat.not_dvd_of_pos_of_lt hr hrp ((ZMod.natCast_eq_zero_iff _ _).1 h)
+  have hunit : (r : ZMod p) ^ 2 * (r : ZMod p)⁻¹ ^ 2 = 1 := by
+    rw [← mul_pow, mul_inv_cancel₀ hr0, one_pow]
+  have hmul : ((D / r ^ 2 : ℕ) : ZMod p) * (r : ZMod p) ^ 2 = D := by
+    rw [← Nat.cast_pow, ← Nat.cast_mul, Nat.div_mul_cancel hdvd]
+  calc
+    ((D / r ^ 2 : ℕ) : ZMod p) = ((D / r ^ 2 : ℕ) : ZMod p) * 1 := by rw [mul_one]
+    _ = ((D / r ^ 2 : ℕ) : ZMod p) * ((r : ZMod p) ^ 2 * (r : ZMod p)⁻¹ ^ 2) := by
+      rw [hunit]
+    _ = ((D / r ^ 2 : ℕ) : ZMod p) * (r : ZMod p) ^ 2 * (r : ZMod p)⁻¹ ^ 2 := by
+      rw [mul_assoc]
+    _ = (D : ZMod p) * (r : ZMod p)⁻¹ ^ 2 := by rw [hmul]
+
+lemma sum_inv_sq_eq_sum_sq_range {p : ℕ} (hp : p.Prime) :
+    ∑ i ∈ range p, ((i : ZMod p)⁻¹) ^ 2 = ∑ i ∈ range p, (i : ZMod p) ^ 2 := by
+  have : Fact p.Prime := ⟨hp⟩
+  have : NeZero p := ⟨hp.ne_zero⟩
+  refine sum_nbij (fun i => ((i : ZMod p)⁻¹).val) ?_ ?_ ?_ ?_
+  · intro i _hi
+    exact mem_range.mpr (ZMod.val_lt _)
+  · intro i hi j hj h
+    have hi' : i < p := mem_range.mp hi
+    have hj' : j < p := mem_range.mp hj
+    have hinv : (i : ZMod p)⁻¹ = (j : ZMod p)⁻¹ := ZMod.val_injective p h
+    have hcast : (i : ZMod p) = (j : ZMod p) := by
+      rw [← inv_inv (i : ZMod p), ← inv_inv (j : ZMod p), hinv]
+    have hmod : i % p = j % p := (ZMod.natCast_eq_natCast_iff' _ _ _).1 hcast
+    rw [Nat.mod_eq_of_lt hi', Nat.mod_eq_of_lt hj'] at hmod
+    exact hmod
+  · intro b hb
+    refine ⟨((b : ZMod p)⁻¹).val, mem_range.mpr (ZMod.val_lt _), ?_⟩
+    have hb' : b < p := mem_range.mp hb
+    have : ((((b : ZMod p)⁻¹).val : ZMod p)⁻¹).val = b := by
+      rw [ZMod.natCast_zmod_val, inv_inv, ZMod.val_natCast_of_lt hb']
+    exact this
+  · intro i _hi
+    simp
+
+lemma sum_inv_sq_range_eq_zero {p : ℕ} (hp : p.Prime) (h5 : 5 ≤ p) :
+    ∑ i ∈ range p, ((i : ZMod p)⁻¹) ^ 2 = 0 := by
+  rw [sum_inv_sq_eq_sum_sq_range hp, sum_range_sq_zmod hp h5]
+
+lemma sum_odd_inv_sq_eq_even_erase {p : ℕ} (hp : p.Prime) (h5 : 5 ≤ p) :
+    ∑ r ∈ (range p).filter Odd, ((r : ZMod p)⁻¹) ^ 2 =
+      ∑ r ∈ ((range p).filter Even).erase 0, ((r : ZMod p)⁻¹) ^ 2 := by
+  have hoddP : Odd p := hp.odd_of_ne_two (ne_of_gt (lt_of_lt_of_le (by decide : (2 : ℕ) < 5) h5))
+  have hp0 : 0 < p := hp.pos
+  have : Fact p.Prime := ⟨hp⟩
+  refine sum_nbij (fun r => p - r) ?_ ?_ ?_ ?_
+  · intro r hr
+    have hr' := mem_filter.mp hr
+    have hrlt : r < p := mem_range.mp hr'.1
+    have hr0 : r ≠ 0 := by
+      intro h
+      subst h
+      exact Nat.not_odd_iff_even.2 Even.zero hr'.2
+    have hpos : 0 < r := Nat.pos_of_ne_zero hr0
+    have hmem : p - r ∈ range p := mem_range.mpr (Nat.sub_lt hp0 hpos)
+    have heven : Even (p - r) := by
+      rw [Nat.even_sub hrlt.le]
+      simp [Nat.not_even_iff_odd.2 hoddP, Nat.not_even_iff_odd.2 hr'.2]
+    have hne : p - r ≠ 0 := Nat.sub_ne_zero_of_lt hrlt
+    exact mem_erase.mpr ⟨hne, mem_filter.mpr ⟨hmem, heven⟩⟩
+  · intro r hr s hs h
+    have hrlt : r < p := mem_range.mp (mem_filter.mp hr).1
+    have hslt : s < p := mem_range.mp (mem_filter.mp hs).1
+    exact tsub_inj_right hrlt.le hslt.le h
+  · intro b hb
+    have hbE := mem_erase.mp hb
+    have hb' := mem_filter.mp hbE.2
+    have hblt : b < p := mem_range.mp hb'.1
+    have hb0 : b ≠ 0 := hbE.1
+    have hpos : 0 < b := Nat.pos_of_ne_zero hb0
+    have hmem : p - b ∈ range p := mem_range.mpr (Nat.sub_lt hp0 hpos)
+    have hodd : Odd (p - b) := by
+      have hevenb : Even b := hb'.2
+      have : ¬ Even (p - b) := by
+        rw [Nat.even_sub hblt.le]
+        intro hiff
+        exact Nat.not_even_iff_odd.2 hoddP (hiff.mpr hevenb)
+      exact Nat.not_even_iff_odd.1 this
+    refine ⟨p - b, mem_filter.mpr ⟨hmem, hodd⟩, tsub_tsub_cancel_of_le hblt.le⟩
+  · intro r hr
+    have hr' := mem_filter.mp hr
+    have hrlt : r < p := mem_range.mp hr'.1
+    rw [Nat.cast_sub hrlt.le, ZMod.natCast_self, zero_sub, inv_neg, Even.neg_pow even_two]
+
+lemma sum_odd_inv_sq_eq_zero {p : ℕ} (hp : p.Prime) (h5 : 5 ≤ p) :
+    ∑ r ∈ (range p).filter Odd, ((r : ZMod p)⁻¹) ^ 2 = 0 := by
+  have : Fact p.Prime := ⟨hp⟩
+  have h2 : (2 : ZMod p) ≠ 0 := by
+    intro h
+    have : p ∣ 2 := (ZMod.natCast_eq_zero_iff 2 p).1 (by simpa using h)
+    have : p ≤ 2 := Nat.le_of_dvd (by decide) this
+    omega
+  let f : ℕ → ZMod p := fun r => ((r : ZMod p)⁻¹) ^ 2
+  have htotal : ∑ r ∈ range p, f r = 0 := sum_inv_sq_range_eq_zero hp h5
+  have hsplit := sum_filter_add_sum_filter_not (range p) Odd f
+  have hfeven : (range p).filter (fun r => ¬ Odd r) = (range p).filter Even := by
+    ext x
+    simp [Nat.not_odd_iff_even]
+  have h0 : f 0 = 0 := by simp [f]
+  have h0mem : 0 ∈ (range p).filter Even :=
+    mem_filter.mpr ⟨mem_range.mpr hp.pos, Even.zero⟩
+  have heven_split := add_sum_erase ((range p).filter Even) f h0mem
+  have hpair := sum_odd_inv_sq_eq_even_erase hp h5
+  have heven_eq_odd : ∑ r ∈ (range p).filter Even, f r = ∑ r ∈ (range p).filter Odd, f r := by
+    rw [← heven_split, h0, zero_add, ← hpair]
+  have htwo : (2 : ZMod p) * ∑ r ∈ (range p).filter Odd, f r = 0 := by
+    rw [two_mul]
+    nth_rw 1 [← heven_eq_odd]
+    rw [← hfeven, add_comm, hsplit, htotal]
+  apply mul_left_cancel₀ h2
+  rw [htwo, mul_zero]
+
+lemma sum_reindex_odd {α : Type*} [AddCommMonoid α] {p : ℕ} (f : ℕ → α) (hp : 1 < p) :
+    ∑ i ∈ range (p - 1), (if Odd (i + 1) then f (i + 1) else 0) =
+      ∑ r ∈ (range p).filter Odd, f r := by
+  rw [← sum_filter]
+  refine sum_nbij (fun i => i + 1) ?_ ?_ ?_ ?_
+  · intro i hi
+    have hi' := mem_filter.mp hi
+    have hilt : i < p - 1 := mem_range.mp hi'.1
+    exact mem_filter.mpr ⟨mem_range.mpr (by omega), hi'.2⟩
+  · intro i _hi j _hj h
+    exact Nat.succ_injective h
+  · intro b hb
+    have hb' := mem_filter.mp hb
+    have hblt : b < p := mem_range.mp hb'.1
+    have hodd := hb'.2
+    have hb0 : b ≠ 0 := by
+      intro h
+      have : ¬ Odd (0 : ℕ) := Nat.not_odd_iff_even.2 Even.zero
+      exact this (h ▸ hodd)
+    have hpos : 0 < b := Nat.pos_of_ne_zero hb0
+    refine ⟨b - 1, ?_, Nat.sub_add_cancel hpos⟩
+    have hmem : b - 1 ∈ range (p - 1) := mem_range.mpr (by omega)
+    have hodd' : Odd (b - 1 + 1) := by rwa [Nat.sub_add_cancel hpos]
+    exact mem_filter.mpr ⟨hmem, hodd'⟩
+  · intro i _hi
+    rfl
+
+lemma oddInnerSum_eq_div {n : ℕ} (hn : 1 < n) :
+    ∑ i ∈ range (n - 1),
+      (if Odd (i + 1) then ((n - 1).choose i : ℚ) / (i + 1 : ℚ) ^ 2 else 0) =
+    (oddInnerNum n : ℚ) / oddDenom n := by
+  have hD : (oddDenom n : ℚ) ≠ 0 := Nat.cast_ne_zero.mpr oddDenom_ne_zero
+  rw [eq_div_iff hD]
+  unfold oddInnerNum
+  rw [Nat.cast_sum, Finset.sum_mul]
+  refine Finset.sum_congr rfl fun i hi => ?_
+  by_cases hodd : Odd (i + 1)
+  · have hdvd := succ_sq_dvd_oddDenom hn hi
+    have hr : (i + 1 : ℚ) ≠ 0 := by exact_mod_cast Nat.succ_ne_zero i
+    simp [if_pos hodd]
+    have hcast : ((oddDenom n / (i + 1) ^ 2 : ℕ) : ℚ) =
+        (oddDenom n : ℚ) / (i + 1 : ℚ) ^ 2 := by
+      have hmul : ((oddDenom n / (i + 1) ^ 2 : ℕ) : ℚ) * ((i + 1 : ℕ) : ℚ) ^ 2 =
+          oddDenom n := by
+        rw [← Nat.cast_pow, ← Nat.cast_mul, Nat.div_mul_cancel hdvd]
+      rw [eq_div_iff (pow_ne_zero _ hr)]
+      convert hmul
+      simp
+    rw [hcast]
+    field_simp [hr]
+  · simp [if_neg hodd]
+
+lemma not_dvd_oddDenom {p : ℕ} (hp : p.Prime) :
+    ¬ p ∣ oddDenom p := by
+  have hcop : p.Coprime (Nat.factorial (p - 1)) :=
+    hp.coprime_factorial_of_lt (Nat.sub_one_lt hp.ne_zero)
+  have : p.Coprime (oddDenom p) := (Nat.coprime_pow_right_iff (by decide : 0 < 2) _ _).2 hcop
+  exact hp.coprime_iff_not_dvd.1 this
+
+lemma oddInnerNum_cast {p : ℕ} (hp : p.Prime) (h5 : 5 ≤ p) :
+    (oddInnerNum p : ZMod p) = 0 := by
+  have : Fact p.Prime := ⟨hp⟩
+  have hn1 : 1 < p := lt_of_lt_of_le (by decide : 1 < 5) h5
+  unfold oddInnerNum
+  rw [Nat.cast_sum]
+  have hsum :
+      ∑ i ∈ range (p - 1),
+        ((if Odd (i + 1) then
+            (p - 1).choose i * (oddDenom p / (i + 1) ^ 2) else 0 : ℕ) : ZMod p) =
+      (oddDenom p : ZMod p) *
+        ∑ i ∈ range (p - 1),
+          (if Odd (i + 1) then ((i + 1 : ℕ) : ZMod p)⁻¹ ^ 2 else 0) := by
+    rw [mul_sum]
+    refine Finset.sum_congr rfl fun i hi => ?_
+    by_cases hodd : Odd (i + 1)
+    · have hi' : i < p - 1 := mem_range.mp hi
+      have hrpos : 0 < i + 1 := Nat.succ_pos i
+      have hrp : i + 1 < p := by omega
+      have hdvd := succ_sq_dvd_oddDenom hn1 hi
+      have hC : ((p - 1).choose i : ZMod p) = 1 := by
+        have heven : Even i := by
+          have : ¬ Odd i := by simpa [Nat.odd_add_one] using hodd
+          exact Nat.not_odd_iff_even.mp this
+        rw [choose_pred_cast hp (lt_trans hi' (Nat.sub_one_lt hp.ne_zero)), heven.neg_one_pow]
+      simp [if_pos hodd, Nat.cast_mul, hC, nat_div_sq_cast hp hrpos hrp hdvd]
+    · simp [if_neg hodd]
+  rw [hsum]
+  have hinner :
+      ∑ i ∈ range (p - 1),
+          (if Odd (i + 1) then ((i + 1 : ℕ) : ZMod p)⁻¹ ^ 2 else 0) =
+        ∑ r ∈ (range p).filter Odd, ((r : ZMod p)⁻¹) ^ 2 :=
+    sum_reindex_odd (fun r => ((r : ZMod p)⁻¹) ^ 2) hn1
+  rw [hinner, sum_odd_inv_sq_eq_zero hp h5, mul_zero]
+
+lemma dvd_oddInnerNum {p : ℕ} (hp : p.Prime) (h5 : 5 ≤ p) : p ∣ oddInnerNum p :=
+  (ZMod.natCast_eq_zero_iff _ _).1 (oddInnerNum_cast hp h5)
+
+lemma ratExpression_eq_two_mul_num_div_denom {n : ℕ} (hn : Odd n) (hn1 : 1 < n) :
+    ratExpression n = 2 * n * (oddInnerNum n : ℚ) / oddDenom n := by
+  rw [ratExpression_eq_two_mul_n_sum_choose_sq hn hn1, oddInnerSum_eq_div hn1]
+  ring
+
+lemma two_le_padicValRat_ratExpression_prime {p : ℕ} (hp : p.Prime) (h3 : p > 3) :
+    2 ≤ padicValRat p (ratExpression p) := by
+  have : Fact p.Prime := ⟨hp⟩
+  have h5 : 5 ≤ p := by
+    have : 3 < p := h3
+    have hne4 : p ≠ 4 := by
+      intro h
+      subst h
+      exact (by decide : ¬ Nat.Prime 4) hp
+    omega
+  have hn : Odd p := hp.odd_of_ne_two (by omega)
+  have hn1 : 1 < p := by omega
+  have hT := ratExpression_eq_two_mul_num_div_denom hn hn1
+  have hTne : ratExpression p ≠ 0 := ne_of_gt (ratExpression_pos (by omega))
+  have hNne : (oddInnerNum p : ℚ) ≠ 0 := by
+    intro h0
+    have : ratExpression p = 0 := by
+      rw [hT, h0]
+      simp
+    exact hTne this
+  have h2ne : (2 : ℚ) ≠ 0 := by norm_num
+  have hpne : (p : ℚ) ≠ 0 := Nat.cast_ne_zero.mpr hp.ne_zero
+  have hDne : (oddDenom p : ℚ) ≠ 0 := Nat.cast_ne_zero.mpr oddDenom_ne_zero
+  have h2val : padicValRat p (2 : ℚ) = 0 := by
+    rw [show (2 : ℚ) = ((2 : ℕ) : ℚ) from rfl, padicValRat.of_nat]
+    exact_mod_cast (padicValNat_primes (by omega : p ≠ 2))
+  have hpval : padicValRat p (p : ℚ) = 1 := padicValRat.self hp.one_lt
+  have hNval : 1 ≤ padicValRat p (oddInnerNum p : ℚ) := by
+    have hpos : oddInnerNum p ≠ 0 := by
+      exact_mod_cast hNne
+    have : 1 ≤ padicValNat p (oddInnerNum p) :=
+      one_le_padicValNat_of_dvd hpos (dvd_oddInnerNum hp h5)
+    simpa [padicValRat.of_nat] using this
+  have hDval : padicValRat p (oddDenom p : ℚ) = 0 := by
+    rw [padicValRat.of_nat]
+    exact_mod_cast padicValNat.eq_zero_of_not_dvd (not_dvd_oddDenom hp)
+  have hprod : ratExpression p =
+      ((2 : ℚ) * p * oddInnerNum p) / oddDenom p := by
+    simpa [mul_assoc] using hT
+  have hnumne : (2 : ℚ) * p * oddInnerNum p ≠ 0 :=
+    mul_ne_zero (mul_ne_zero h2ne hpne) hNne
+  rw [hprod, padicValRat.div hnumne hDne, padicValRat.mul (mul_ne_zero h2ne hpne) hNne,
+    padicValRat.mul h2ne hpne, h2val, hpval, hDval]
+  linarith
+
+lemma not_dvd_den_of_nonneg_padicVal {p : ℕ} [Fact p.Prime] {q : ℚ}
+    (_hq : q ≠ 0) (hval : 0 ≤ padicValRat p q) : ¬ p ∣ q.den := by
+  intro hd
+  have hred : Nat.gcd q.num.natAbs q.den = 1 := q.reduced
+  have hnumA : ¬ p ∣ q.num.natAbs := by
+    intro hn
+    have : p ∣ 1 := by
+      have hg := Nat.dvd_gcd hn hd
+      simpa [hred] using hg
+    exact ‹Fact p.Prime›.out.not_dvd_one this
+  have hnum0 : padicValInt p q.num = 0 :=
+    padicValInt.eq_zero_of_not_dvd (fun h ↦ hnumA (Int.natCast_dvd.mp h))
+  have hden1 : 1 ≤ padicValNat p q.den :=
+    one_le_padicValNat_of_dvd q.den_nz hd
+  have : padicValRat p q ≤ -1 := by
+    rw [padicValRat_def, hnum0, Nat.cast_zero, zero_sub]
+    have : (1 : ℤ) ≤ padicValNat p q.den := by exact_mod_cast hden1
+    linarith
+  linarith
+
+lemma not_dvd_den_ratExpression_prime {p : ℕ} (hp : p.Prime) (h3 : p > 3) :
+    ¬ p ∣ (ratExpression p).den := by
+  have : Fact p.Prime := ⟨hp⟩
+  exact not_dvd_den_of_nonneg_padicVal
+    (ne_of_gt (ratExpression_pos (by omega)))
+    (le_trans (by decide : (0 : ℤ) ≤ 2) (two_le_padicValRat_ratExpression_prime hp h3))
+
+/-- For a prime `p > 3`, `p^2` divides the reduced numerator of `T(p)`. -/
+theorem n_sq_dvd_num_of_prime {p : ℕ} (hp : p.Prime) (h3 : p > 3) :
+    (ratExpression p).num ≡ 0 [ZMOD (p ^ 2 : ℤ)] := by
+  have : Fact p.Prime := ⟨hp⟩
+  have hq0 : ratExpression p ≠ 0 := ne_of_gt (ratExpression_pos (by omega))
+  have hval : 2 ≤ padicValRat p (ratExpression p) :=
+    two_le_padicValRat_ratExpression_prime hp h3
+  have hden : ¬ p ∣ (ratExpression p).den := not_dvd_den_ratExpression_prime hp h3
+  have hden0 : padicValNat p (ratExpression p).den = 0 :=
+    padicValNat.eq_zero_of_not_dvd hden
+  have hnum : 2 ≤ padicValInt p (ratExpression p).num := by
+    rw [padicValRat_def] at hval
+    simp [hden0] at hval
+    exact_mod_cast hval
+  have hn0 : (ratExpression p).num.natAbs ≠ 0 :=
+    Int.natAbs_ne_zero.mpr (Rat.num_ne_zero.mpr hq0)
+  have hpow : p ^ 2 ∣ (ratExpression p).num.natAbs := by
+    rw [padicValNat_dvd_iff_le hn0]
+    simpa [padicValInt] using hnum
+  exact Int.modEq_zero_iff_dvd.2 (Int.natCast_dvd.mpr hpow)
+
+/-- The frozen iff follows from the odd-composite converse. -/
+lemma conjecture_of_odd_composite_converse
+    (hconv : ∀ {n : ℕ}, n > 3 → Odd n → ¬ n.Prime →
+      ¬ (ratExpression n).num ≡ 0 [ZMOD (n ^ 2 : ℤ)]) :
+    ∀ {n : ℕ}, n > 3 →
+      ((ratExpression n).num ≡ 0 [ZMOD (n ^ 2 : ℤ)] ↔ n.Prime) := by
+  intro n hn
+  constructor
+  · intro hcong
+    by_contra hnp
+    rcases Nat.even_or_odd n with he | ho
+    · exact not_n_sq_dvd_num_of_even hn he hcong
+    · exact hconv hn ho hnp hcong
+  · intro hp
+    exact n_sq_dvd_num_of_prime hp hn
 
 end OeisA108866

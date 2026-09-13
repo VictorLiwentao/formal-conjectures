@@ -25,7 +25,9 @@ Partial. Kernel-checked so far:
 
 - even-composite converse `not_n_sq_dvd_num_of_even`
 - odd identity `ratExpression_eq_two_mul_n_sum_choose_sq`
+- prime direction `n_sq_dvd_num_of_prime`
+- reduction `conjecture_of_odd_composite_converse`
 
-Axioms `{propext, Classical.choice, Quot.sound}` on the even lemma; re-print after the next compile. Prime direction is published (Sun 2008, Komatsu–Sury 2023) but not independently kernel-checked. Odd converse open. No PR. No OEIS edit.
+Axioms `{propext, Classical.choice, Quot.sound}` on the even lemma, the odd identity, and the prime-direction theorem. Odd converse open. No PR. No OEIS edit.
 
 Run URL: https://cursor.com/agents/bc-c701d4c6-5791-456d-bec8-130a051cefe4
