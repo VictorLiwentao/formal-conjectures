@@ -2563,6 +2563,117 @@ lemma permanent_sunMatrix_sub_ones_eq_a {n : ℕ} (hn : 1 ≤ n) {ζ : ℂ}
   rw [permanent_sunMatrix_sub_ones hn hζ, unsigned_derangement_inv_sum hn hζ]
   exact mul_div_cancel₀ _ h2
 
+/-- Cayley-kernel weight of a permutation. The empty product is 1. -/
+noncomputable def cayleyWeight {α : Type*} [Fintype α] [DecidableEq α]
+    (x : α → ℂ) (σ : Perm α) : ℂ :=
+  ∏ i ∈ σ.support, (x i + x (σ i)) / (x i - x (σ i))
+
+lemma cayleyFactor_swap {R : Type*} [Field R] (a b : R) :
+    (b + a) / (b - a) = -((a + b) / (a - b)) := by
+  by_cases h : a = b
+  · simp [h]
+  · have hab : a - b ≠ 0 := sub_ne_zero.2 h
+    have hba : b - a ≠ 0 := sub_ne_zero.2 (Ne.symm h)
+    field_simp [hab, hba]
+    ring
+
+lemma cayleyWeight_one {α : Type*} [Fintype α] [DecidableEq α] (x : α → ℂ) :
+    cayleyWeight x (1 : Perm α) = 1 := by
+  simp [cayleyWeight]
+
+lemma cayleyWeight_mul_disjoint {α : Type*} [Fintype α] [DecidableEq α]
+    (x : α → ℂ) {σ τ : Perm α} (h : Equiv.Perm.Disjoint σ τ) :
+    cayleyWeight x (σ * τ) = cayleyWeight x σ * cayleyWeight x τ := by
+  simp only [cayleyWeight]
+  rw [h.support_mul, prod_union h.disjoint_support]
+  refine congr_arg₂ (· * ·) ?_ ?_
+  · refine prod_congr rfl fun a ha => ?_
+    have hτ : τ a = a := Equiv.Perm.notMem_support.mp (h.mem_imp ha)
+    simp [hτ]
+  · refine prod_congr rfl fun a ha => ?_
+    have hσa : σ (τ a) = τ a := by
+      have : τ a ∈ τ.support := (Equiv.Perm.apply_mem_support (f := τ)).2 ha
+      exact Equiv.Perm.notMem_support.mp (h.symm.mem_imp this)
+    simp [hσa]
+
+lemma cayleyWeight_inv {α : Type*} [Fintype α] [DecidableEq α]
+    (x : α → ℂ) (σ : Perm α) :
+    cayleyWeight x σ⁻¹ = (-1 : ℂ) ^ σ.support.card * cayleyWeight x σ := by
+  have hsup : σ⁻¹.support = σ.support := Equiv.Perm.support_inv σ
+  unfold cayleyWeight
+  rw [hsup]
+  have hterm : ∀ i ∈ σ.support,
+      (x i + x (σ⁻¹ i)) / (x i - x (σ⁻¹ i)) =
+        -((x (σ⁻¹ i) + x i) / (x (σ⁻¹ i) - x i)) := fun i _ =>
+    cayleyFactor_swap (x (σ⁻¹ i)) (x i)
+  rw [prod_congr rfl hterm, prod_neg]
+  refine congr_arg ((-1 : ℂ) ^ σ.support.card * ·) ?_
+  refine prod_bij (fun i _ => σ⁻¹ i) ?_ ?_ ?_ ?_
+  · intro i hi
+    have hi' : i ∈ σ⁻¹.support := by rwa [hsup]
+    have : σ⁻¹ i ∈ σ⁻¹.support := Equiv.Perm.apply_mem_support.mpr hi'
+    rwa [hsup] at this
+  · intro i _ i' _ h
+    exact σ⁻¹.injective h
+  · intro j hj
+    refine ⟨σ j, Equiv.Perm.apply_mem_support.mpr hj, ?_⟩
+    simp
+  · intro i _hi
+    simp
+
+lemma cayley_add_eq {N : ℕ} [NeZero N] {ζ : ℂ} (hζ : IsPrimitiveRoot ζ N)
+    (i j : Fin N) :
+    ζ ^ i.val + ζ ^ j.val =
+      ζ ^ i.val * (1 + ζ ^ (j.val - i.val : ℤ)) := by
+  have hz := zeta_ne_zero hζ
+  have hi : ζ ^ i.val ≠ 0 := pow_ne_zero _ hz
+  have hdiv : ζ ^ j.val / ζ ^ i.val = ζ ^ (j.val - i.val : ℤ) := by
+    rw [← zpow_natCast, ← zpow_natCast, ← zpow_sub₀ hz]
+  have hsplit : ζ ^ i.val + ζ ^ j.val =
+      ζ ^ i.val * (1 + ζ ^ j.val / ζ ^ i.val) := by
+    field_simp [hi]
+  rw [hsplit, hdiv]
+
+lemma cayley_sub_eq {N : ℕ} [NeZero N] {ζ : ℂ} (hζ : IsPrimitiveRoot ζ N)
+    (i j : Fin N) :
+    ζ ^ i.val - ζ ^ j.val =
+      ζ ^ i.val * (1 - ζ ^ (j.val - i.val : ℤ)) := by
+  rw [← neg_sub, zeta_pow_sub hζ i j, neg_mul, neg_neg]
+
+lemma cayley_eq_sunFactor {N : ℕ} [NeZero N] {ζ : ℂ} (hζ : IsPrimitiveRoot ζ N)
+    {i j : Fin N} (hij : i ≠ j) :
+    (ζ ^ i.val + ζ ^ j.val) / (ζ ^ i.val - ζ ^ j.val) =
+      (1 + ζ ^ (j.val - i.val : ℤ)) / (1 - ζ ^ (j.val - i.val : ℤ)) := by
+  have hi : ζ ^ i.val ≠ 0 := pow_ne_zero _ (zeta_ne_zero hζ)
+  have hden := denom_ne_zero hζ hij.symm
+  rw [cayley_add_eq hζ i j, cayley_sub_eq hζ i j]
+  field_simp [hi, hden]
+
+lemma prod_sunMatrix_eq_cayleyWeight {n : ℕ} [NeZero n] {ζ : ℂ}
+    (hζ : IsPrimitiveRoot ζ (2 * n)) (σ : Perm (Fin (2 * n))) :
+    (∏ i : Fin (2 * n), sunMatrix n ζ (σ i) i) =
+      cayleyWeight (fun i => ζ ^ i.val) σ := by
+  unfold cayleyWeight
+  rw [← union_compl σ.support, prod_union disjoint_compl_right]
+  have hfix : ∏ i ∈ σ.supportᶜ, sunMatrix n ζ (σ i) i = 1 := by
+    refine prod_eq_one fun i hi => ?_
+    have : σ i = i := Equiv.Perm.notMem_support.mp (mem_compl.mp hi)
+    rw [this, sunMatrix_apply_eq]
+  rw [hfix, mul_one]
+  refine prod_congr rfl fun i hi => ?_
+  have hne : σ i ≠ i := Equiv.Perm.mem_support.mp hi
+  rw [sunMatrix_apply_ne hζ hne]
+  exact (cayley_eq_sunFactor (N := 2 * n) hζ hne.symm).symm
+
+lemma permanent_sunMatrix_eq_sum_cayleyWeight {n : ℕ} (hn : 1 ≤ n) {ζ : ℂ}
+    (hζ : IsPrimitiveRoot ζ (2 * n)) :
+    (sunMatrix n ζ).permanent =
+      ∑ σ : Perm (Fin (2 * n)), cayleyWeight (fun i => ζ ^ i.val) σ := by
+  have : NeZero n := ⟨by omega⟩
+  unfold Matrix.permanent
+  refine Fintype.sum_congr _ _ fun σ =>
+    prod_sunMatrix_eq_cayleyWeight hζ σ
+
 #check (OeisA1818.conjecture1 :
     ∀ (n : ℕ), 1 ≤ n → ∀ (ζ : ℂ), IsPrimitiveRoot ζ (2 * n) →
       (sunMatrix n ζ).permanent = (a n : ℂ))
@@ -2627,5 +2738,8 @@ lemma permanent_sunMatrix_sub_ones_eq_a {n : ℕ} (hn : 1 ≤ n) {ζ : ℂ}
 #print axioms long_cycle_signed_inv_one_sub_sum
 #print axioms unsigned_derangement_inv_sum
 #print axioms permanent_sunMatrix_sub_ones_eq_a
+#print axioms cayleyWeight_inv
+#print axioms prod_sunMatrix_eq_cayleyWeight
+#print axioms permanent_sunMatrix_eq_sum_cayleyWeight
 
 end A001818C1

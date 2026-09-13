@@ -61,9 +61,12 @@ which type-checks. The original `a` is used. The admitted `OeisA1818.conjecture1
 'A001818C1.long_cycle_signed_inv_one_sub_sum' depends on axioms: [propext, Classical.choice, Quot.sound]
 'A001818C1.unsigned_derangement_inv_sum' depends on axioms: [propext, Classical.choice, Quot.sound]
 'A001818C1.permanent_sunMatrix_sub_ones_eq_a' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.cayleyWeight_inv' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.prod_sunMatrix_eq_cayleyWeight' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.permanent_sunMatrix_eq_sum_cayleyWeight' depends on axioms: [propext, Classical.choice, Quot.sound]
 ```
 
-No `sorryAx`, `native_decide`, or `Lean.trustCompiler` in those lemmas. The general `n ≥ 1` identity is not yet proved. `per(M-J) = a n` is proved; `per M = per(M-J)` remains.
+No `sorryAx`, `native_decide`, or `Lean.trustCompiler` in those lemmas. The general `n ≥ 1` identity is not yet proved. `per(M-J) = a n` is proved and `per M` equals the Cayley-weight sum; `per M = per(M-J)` remains.
 
 No `sorryAx`, `native_decide`, or `Lean.trustCompiler` in those lemmas. The general `n ≥ 1` identity is not yet proved.
 
