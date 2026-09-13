@@ -11,7 +11,7 @@
   "novelty_status": "no_exact_public_solution_found_in_checked_sources",
   "statement_audit": "matches_intended_mceachen_statement",
   "oeis_editability": "unknown",
-  "last_updated_utc": "2026-09-13T06:17:21Z",
+  "last_updated_utc": "2026-09-13T06:18:00Z",
   "session_kickoff_utc": "2026-09-12T23:12:00Z",
   "session_hard_stop_utc": "2026-09-13T07:12:00Z",
   "proof_declarations": [
@@ -236,5 +236,5 @@
     "Cloitre C1 and Cor. 6.6 are not an unconditional solution."
   ],
   "next_step": "Prove an unconditional first-entry bound q | x(q(q+2)-1) for remaining primes q ≥ 157 not in the explicit families, or find a Lean-checkable counterexample. Complementary k≡1 (mod 6) and Type B k≤q^2 still need a prime in the AP. Extending minFac does not finish ∀p. Do not claim completion.",
-  "handoff_research_commit": "a3035adf"
+  "handoff_research_commit": "5f1b23f6"
 }
