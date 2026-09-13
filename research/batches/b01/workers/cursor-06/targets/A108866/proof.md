@@ -96,6 +96,13 @@ Among odd `r < 3 p^e` the unique multiple of `p^e` is `r=p^e`
 `padicValRat_inner_of_unique` then gives `v_p` of the inner sum equal to
 `-2e`. Kernel-checked; same axioms. This is not the frozen iff.
 
+Product lemmas for the remaining prime-power case: for `1 ≤ a ≤ p`,
+`C(p^e-1, a p^{e-1}-1) = C(p-1, a-1)` times the product of
+`(p^e-j)/j` over those `j ≤ a p^{e-1}-1` not divisible by `p^{e-1}`.
+On multiples `j = b p^{e-1}` the ratio is exactly `(p-b)/b`.
+The rest product is `1 + O(p^2)` experimentally (`v(C-C0)≥4`).
+That congruence is not yet kernel-checked.
+
 ## Odd composite converse
 
 Not finished. c5-k4 found no counterexample for `n ≤ 4000`. The binomial identity reduces the problem to showing that for some prime `p | n` one has `v_p(T(n)) < 2 v_p(n)`.

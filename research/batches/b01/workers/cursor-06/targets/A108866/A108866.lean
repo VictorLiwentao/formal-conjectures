@@ -27,6 +27,8 @@ import Mathlib.Algebra.Ring.GeomSum
 import Mathlib.Data.Nat.Choose.Sum
 import Mathlib.Data.Nat.Choose.Dvd
 import Mathlib.Data.Nat.Factorial.NatCast
+import Mathlib.Data.Nat.Factorial.BigOperators
+import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Data.ZMod.Factorial
 import Mathlib.Algebra.Field.ZMod
 import Mathlib.NumberTheory.Multiplicity
@@ -3002,6 +3004,248 @@ theorem not_n_sq_dvd_num_of_three_mul_pow {p e : ℕ} (hp : p.Prime)
     exact this
   exact not_n_sq_dvd_num_of_padicVal_lt hp (dvd_mul_of_dvd_right (dvd_pow_self p (by omega)) 3)
     hn0 hT hlt
+
+/- Leading binomial coefficients for `T(p^e)`, `p ≥ 5`, `e ≥ 2`. -/
+
+lemma choose_cast_eq_prod {n k : ℕ} (_hk : k ≤ n) :
+    (n.choose k : ℚ) =
+      (∏ i ∈ range k, ((n - i : ℕ) : ℚ)) / (∏ i ∈ range k, (i + 1 : ℚ)) := by
+  have hfac : (k.factorial : ℚ) = ∏ i ∈ range k, (i + 1 : ℚ) := by
+    rw [Nat.factorial_eq_prod_range_add_one, Nat.cast_prod]
+    refine prod_congr rfl fun i _ => by simp
+  have hdesc : (n.descFactorial k : ℚ) = ∏ i ∈ range k, ((n - i : ℕ) : ℚ) := by
+    rw [Nat.descFactorial_eq_prod_range, Nat.cast_prod]
+  have hmul : (n.descFactorial k : ℚ) = (k.factorial : ℚ) * n.choose k := by
+    rw [Nat.descFactorial_eq_factorial_mul_choose n k, Nat.cast_mul]
+  have hden : (∏ i ∈ range k, (i + 1 : ℚ)) ≠ 0 :=
+    prod_ne_zero_iff.2 fun i _ => by exact_mod_cast Nat.succ_ne_zero i
+  rw [eq_div_iff hden, mul_comm, ← hfac, ← hdesc, hmul]
+
+lemma choose_pow_pred_eq_prod {p e k : ℕ} (hp0 : 0 < p) (_he : 0 < e)
+    (hk : k ≤ p ^ e - 1) :
+    ((p ^ e - 1).choose k : ℚ) =
+      ∏ i ∈ range k, (((p ^ e - (i + 1) : ℕ) : ℚ) / (i + 1 : ℚ)) := by
+  have hpe1 : 1 ≤ p ^ e := Nat.one_le_pow e p hp0
+  have hk' : k ≤ p ^ e - 1 := hk
+  have hprod :
+      ∏ i ∈ range k, ((p ^ e - 1 - i : ℕ) : ℚ) =
+        ∏ i ∈ range k, ((p ^ e - (i + 1) : ℕ) : ℚ) := by
+    refine prod_congr rfl fun i hi => ?_
+    have : i < k := mem_range.mp hi
+    have : i + 1 ≤ p ^ e := by omega
+    congr 1
+    omega
+  have hdiv := choose_cast_eq_prod (n := p ^ e - 1) (k := k) hk
+  rw [hprod] at hdiv
+  rw [hdiv, prod_div_distrib]
+
+lemma choose_pred_eq_prod {p a : ℕ} (ha : a ≤ p) :
+    ((p - 1).choose (a - 1) : ℚ) =
+      ∏ b ∈ Icc 1 (a - 1), ((p - b : ℕ) : ℚ) / b := by
+  by_cases ha0 : a = 0
+  · subst ha0
+    simp
+  have ha1 : 1 ≤ a := Nat.pos_of_ne_zero ha0
+  have hk : a - 1 ≤ p - 1 := Nat.sub_le_sub_right ha 1
+  have hprod :
+      ∏ i ∈ range (a - 1), ((p - 1 - i : ℕ) : ℚ) =
+        ∏ i ∈ range (a - 1), ((p - (i + 1) : ℕ) : ℚ) := by
+    refine prod_congr rfl fun i hi => ?_
+    have : i < a - 1 := mem_range.mp hi
+    have : i + 1 ≤ p := by omega
+    congr 1
+    omega
+  have hdiv := choose_cast_eq_prod (n := p - 1) (k := a - 1) hk
+  rw [hprod] at hdiv
+  have himg :
+      ∏ i ∈ range (a - 1), (((p - (i + 1) : ℕ) : ℚ) / (i + 1 : ℚ)) =
+        ∏ b ∈ Icc 1 (a - 1), ((p - b : ℕ) : ℚ) / b := by
+    refine prod_nbij (fun i => i + 1) ?_ ?_ ?_ ?_
+    · intro i hi
+      have : i < a - 1 := mem_range.mp hi
+      exact mem_Icc.mpr ⟨Nat.succ_pos i, Nat.succ_le_of_lt this⟩
+    · intro i _ hi' _ h
+      exact Nat.succ_injective h
+    · intro b hb
+      have hb' := mem_Icc.mp hb
+      refine ⟨b - 1, mem_range.mpr ?_, ?_⟩
+      · exact Nat.sub_lt_right_of_lt_add hb'.1 (by omega)
+      · exact Nat.sub_add_cancel hb'.1
+    · intro i _hi
+      simp [Nat.cast_succ]
+  rw [hdiv, ← prod_div_distrib]
+  exact himg
+
+lemma padicValRat_prod_eq_zero {p : ℕ} [Fact p.Prime] {s : Finset ℕ} (g : ℕ → ℚ)
+    (hg0 : ∀ i ∈ s, g i ≠ 0) (hg : ∀ i ∈ s, padicValRat p (g i) = 0) :
+    padicValRat p (∏ i ∈ s, g i) = 0 := by
+  induction s using Finset.induction_on with
+  | empty => simp
+  | insert a s ha ih =>
+    rw [prod_insert ha]
+    have ha0 : g a ≠ 0 := hg0 a (mem_insert_self _ _)
+    have hs0 : ∏ i ∈ s, g i ≠ 0 :=
+      prod_ne_zero_iff.2 fun i hi => hg0 i (mem_insert_of_mem hi)
+    rw [padicValRat.mul ha0 hs0, hg a (mem_insert_self _ _),
+      ih (fun i hi => hg0 i (mem_insert_of_mem hi))
+        (fun i hi => hg i (mem_insert_of_mem hi)), add_zero]
+
+lemma padicValRat_one_add_eq_zero {p : ℕ} [Fact p.Prime] {x : ℚ}
+    (hx : 0 < padicValRat p x) (hx0 : x ≠ 0) (h1x : (1 : ℚ) + x ≠ 0) :
+    padicValRat p (1 + x) = 0 := by
+  have h1 : padicValRat p (1 : ℚ) = 0 := by simp
+  have hlt : padicValRat p (1 : ℚ) < padicValRat p x := by simpa [h1] using hx
+  rw [padicValRat.add_eq_of_lt h1x (by simp : (1 : ℚ) ≠ 0) hx0 hlt, h1]
+
+lemma padicValRat_prod_one_add_sub_one {p : ℕ} [Fact p.Prime]
+    {s : Finset ℕ} (f : ℕ → ℚ) {n : ℤ} (hn : 0 < n)
+    (hf : ∀ i ∈ s, n ≤ padicValRat p (f i))
+    (hf0 : ∀ i ∈ s, f i ≠ 0)
+    (h1f : ∀ i ∈ s, (1 : ℚ) + f i ≠ 0)
+    (hne : ∏ i ∈ s, (1 + f i) ≠ 1) :
+    n ≤ padicValRat p (∏ i ∈ s, (1 + f i) - 1) := by
+  have hsum :
+      ∏ i ∈ s, (1 + f i) - 1 =
+        ∑ i ∈ s, f i * ∏ j ∈ s.filter (fun j => j < i), (1 + f j) := by
+    rw [prod_one_add_ordered]
+    ring
+  have hsum0 :
+      ∑ i ∈ s, f i * ∏ j ∈ s.filter (fun j => j < i), (1 + f j) ≠ 0 := by
+    intro h0
+    exact hne (by rw [prod_one_add_ordered, h0, add_zero])
+  rw [hsum]
+  refine le_padicValRat_sum_of_ne_zero _ ?_ hsum0
+  intro i hi
+  have hfne : f i ≠ 0 := hf0 i hi
+  have h1val : ∀ j ∈ s.filter (fun j => j < i), padicValRat p (1 + f j) = 0 := by
+    intro j hj
+    have hj' := mem_filter.mp hj
+    have hx : 0 < padicValRat p (f j) := lt_of_lt_of_le hn (hf j hj'.1)
+    exact padicValRat_one_add_eq_zero hx (hf0 j hj'.1) (h1f j hj'.1)
+  have h1ne : ∀ j ∈ s.filter (fun j => j < i), (1 : ℚ) + f j ≠ 0 :=
+    fun j hj => h1f j (mem_filter.mp hj).1
+  have hprod0 : ∏ j ∈ s.filter (fun j => j < i), (1 + f j) ≠ 0 :=
+    prod_ne_zero_iff.2 h1ne
+  have hprodval := padicValRat_prod_eq_zero (fun j => 1 + f j) h1ne h1val
+  have hterm :
+      padicValRat p (f i * ∏ j ∈ s.filter (fun j => j < i), (1 + f j)) =
+        padicValRat p (f i) := by
+    rw [padicValRat.mul hfne hprod0, hprodval, add_zero]
+  rw [hterm]
+  exact hf i hi
+
+lemma filter_dvd_pow_pred_eq_image {p e a : ℕ} (hp0 : 0 < p) (_he : 0 < e)
+    (ha : 1 ≤ a) :
+    ((Icc 1 (a * p ^ (e - 1) - 1)).filter (fun j => p ^ (e - 1) ∣ j)) =
+      (Icc 1 (a - 1)).image (fun b => b * p ^ (e - 1)) := by
+  have hpos : 0 < p ^ (e - 1) := pow_pos hp0 _
+  ext j
+  constructor
+  · intro hj
+    have hj' := mem_filter.mp hj
+    have hjI := mem_Icc.mp hj'.1
+    have hdvd := hj'.2
+    refine mem_image.mpr ⟨j / p ^ (e - 1), mem_Icc.mpr ⟨?_, ?_⟩, Nat.div_mul_cancel hdvd⟩
+    · exact Nat.div_pos (Nat.le_of_dvd (Nat.zero_lt_of_lt hjI.1) hdvd) hpos
+    · have hjlt : j < a * p ^ (e - 1) :=
+        (Nat.le_sub_one_iff_lt (Nat.mul_pos (Nat.zero_lt_of_lt ha) hpos)).1 hjI.2
+      have : j / p ^ (e - 1) < a := (Nat.div_lt_iff_lt_mul hpos).2 hjlt
+      exact Nat.le_sub_one_of_lt this
+  · intro hj
+    obtain ⟨b, hb, rfl⟩ := mem_image.mp hj
+    have hb' := mem_Icc.mp hb
+    refine mem_filter.mpr ⟨mem_Icc.mpr ⟨?_, ?_⟩, dvd_mul_left _ _⟩
+    · have : 1 ≤ b * p ^ (e - 1) :=
+        le_trans (Nat.succ_le_of_lt hpos) (Nat.le_mul_of_pos_left _ hb'.1)
+      exact this
+    · have hle : b * p ^ (e - 1) ≤ (a - 1) * p ^ (e - 1) :=
+        Nat.mul_le_mul_right _ hb'.2
+      have hsub : (a - 1) * p ^ (e - 1) = a * p ^ (e - 1) - p ^ (e - 1) := by
+        cases a with
+        | zero => omega
+        | succ a => simp [Nat.succ_mul]
+      have hpe_le : p ^ (e - 1) ≤ a * p ^ (e - 1) :=
+        Nat.le_mul_of_pos_left _ (Nat.zero_lt_of_lt ha)
+      have : a * p ^ (e - 1) - p ^ (e - 1) ≤ a * p ^ (e - 1) - 1 :=
+        Nat.sub_le_sub_left (Nat.succ_le_of_lt hpos) _
+      omega
+
+lemma pow_sub_mul_pow_pred {p e b : ℕ} (he : 0 < e) (hb : b ≤ p) :
+    p ^ e - b * p ^ (e - 1) = (p - b) * p ^ (e - 1) := by
+  have hpe : p ^ e = p * p ^ (e - 1) := by
+    rw [← pow_succ', Nat.sub_add_cancel he]
+  have hle : b * p ^ (e - 1) ≤ p ^ e := by
+    rw [hpe]
+    exact Nat.mul_le_mul_right _ hb
+  calc
+    p ^ e - b * p ^ (e - 1) = p * p ^ (e - 1) - b * p ^ (e - 1) := by rw [hpe]
+    _ = p ^ (e - 1) * p - p ^ (e - 1) * b := by rw [mul_comm p, mul_comm b]
+    _ = p ^ (e - 1) * (p - b) := by rw [← Nat.mul_sub]
+    _ = (p - b) * p ^ (e - 1) := by rw [mul_comm]
+
+lemma rat_pow_sub_mul_div {p e b : ℕ} (hp0 : 0 < p) (he : 0 < e)
+    (hb0 : 0 < b) (hb : b ≤ p) :
+    (((p ^ e - b * p ^ (e - 1) : ℕ) : ℚ) / (b * p ^ (e - 1) : ℕ)) =
+      ((p - b : ℕ) : ℚ) / b := by
+  have hpos : 0 < p ^ (e - 1) := pow_pos hp0 _
+  have hne' : (b : ℚ) ≠ 0 := Nat.cast_ne_zero.mpr (Nat.pos_iff_ne_zero.mp hb0)
+  have hpe0 : ((p ^ (e - 1) : ℕ) : ℚ) ≠ 0 :=
+    Nat.cast_ne_zero.mpr (Nat.pos_iff_ne_zero.mp hpos)
+  rw [pow_sub_mul_pow_pred he hb, Nat.cast_mul, Nat.cast_mul]
+  field_simp [hne', hpe0]
+
+lemma choose_pow_pred_eq_prod_Icc {p e k : ℕ} (hp0 : 0 < p) (he : 0 < e)
+    (hk : k ≤ p ^ e - 1) :
+    ((p ^ e - 1).choose k : ℚ) =
+      ∏ j ∈ Icc 1 k, (((p ^ e - j : ℕ) : ℚ) / j) := by
+  rw [choose_pow_pred_eq_prod hp0 he hk]
+  refine prod_nbij (fun i => i + 1) ?_ ?_ ?_ ?_
+  · intro i hi
+    have : i < k := mem_range.mp hi
+    exact mem_Icc.mpr ⟨Nat.succ_pos i, Nat.succ_le_of_lt this⟩
+  · intro i _ hi' _ h
+    exact Nat.succ_injective h
+  · intro b hb
+    have hb' := mem_Icc.mp hb
+    refine ⟨b - 1, mem_range.mpr ?_, Nat.sub_add_cancel hb'.1⟩
+    exact Nat.sub_lt_right_of_lt_add hb'.1 (by omega)
+  · intro i _hi
+    simp [Nat.cast_succ]
+
+lemma prod_mul_pow_pred_eq_choose_pred {p e a : ℕ} (hp0 : 0 < p) (he : 0 < e)
+    (ha : 1 ≤ a) (hap : a ≤ p) :
+    ∏ j ∈ (Icc 1 (a * p ^ (e - 1) - 1)).filter (fun j => p ^ (e - 1) ∣ j),
+        (((p ^ e - j : ℕ) : ℚ) / j) =
+      ((p - 1).choose (a - 1) : ℚ) := by
+  have hpos : 0 < p ^ (e - 1) := pow_pos hp0 _
+  rw [filter_dvd_pow_pred_eq_image hp0 he ha]
+  rw [prod_image]
+  · trans ∏ b ∈ Icc 1 (a - 1), ((p - b : ℕ) : ℚ) / b
+    · refine prod_congr rfl fun b hb => ?_
+      have hb' := mem_Icc.mp hb
+      have hb_le : b ≤ p :=
+        le_trans hb'.2 (le_trans (Nat.sub_le a 1) hap)
+      exact rat_pow_sub_mul_div hp0 he (Nat.zero_lt_of_lt hb'.1) hb_le
+    · exact (choose_pred_eq_prod hap).symm
+  · intro b hb b' hb' h
+    exact Nat.eq_of_mul_eq_mul_right hpos h
+
+lemma choose_pow_pred_eq_mul_rest {p e a : ℕ} (hp0 : 0 < p) (he : 0 < e)
+    (ha : 1 ≤ a) (hap : a ≤ p) :
+    ((p ^ e - 1).choose (a * p ^ (e - 1) - 1) : ℚ) =
+      ((p - 1).choose (a - 1) : ℚ) *
+        ∏ j ∈ (Icc 1 (a * p ^ (e - 1) - 1)).filter (fun j => ¬ p ^ (e - 1) ∣ j),
+          (((p ^ e - j : ℕ) : ℚ) / j) := by
+  have hle : a * p ^ (e - 1) ≤ p ^ e := by
+    have hpe : p ^ e = p * p ^ (e - 1) := by
+      rw [← pow_succ', Nat.sub_add_cancel he]
+    rw [hpe]
+    exact Nat.mul_le_mul_right _ hap
+  have hk : a * p ^ (e - 1) - 1 ≤ p ^ e - 1 := Nat.sub_le_sub_right hle 1
+  rw [choose_pow_pred_eq_prod_Icc hp0 he hk]
+  rw [← prod_filter_mul_prod_filter_not (Icc 1 (a * p ^ (e - 1) - 1))
+      (fun j => p ^ (e - 1) ∣ j)]
+  rw [prod_mul_pow_pred_eq_choose_pred hp0 he ha hap]
 
 #print axioms OeisA108866.p_mul_ratExpression_sq_sub_pos
 #print axioms OeisA108866.padicValRat_ratExpression_sq_eq_min_sub_one

@@ -86,6 +86,12 @@ Kernel-checked `n=3 p^e` for primes `p≥5`, same axioms, `#print axioms` on 202
 ```
 
 For `e≥1`, `v_p(T(3 p^e))=-e<2e`. Compile log: `/opt/cursor/artifacts/a108866_lean_wfail_threemulpow.log`, exit 0, no `sorryAx`.
+
+Leading-binomial product lemmas for the remaining `p^e` case (`p≥5`, `e≥2`) are in the same file:
+`choose_pow_pred_eq_prod_Icc`, `prod_mul_pow_pred_eq_choose_pred`,
+`choose_pow_pred_eq_mul_rest`. They give
+`C(p^e-1, a p^{e-1}-1) = C(p-1, a-1) * (rest product)` exactly.
+The `p^2` congruence and leading-unit valuation are not yet kernel-checked.
 The file still does not prove the frozen iff.
 
 Kernel-checked exact evaluations `n=9,25,27,49` and packaging lemmas remain in the same file, same axioms.
