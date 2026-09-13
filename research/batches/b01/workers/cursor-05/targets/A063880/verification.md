@@ -28,11 +28,11 @@ Command:
 LEAN_NUM_THREADS=2 lake env lean -DwarningAsError=true research/batches/b01/workers/cursor-05/targets/A063880/A063880.lean
 ```
 
-Result on 2026-09-13T05:40Z: exit code 0, no warnings, no `sorry` declaration in this file.
+Result on 2026-09-13T05:45Z: exit code 0, no warnings, no `sorry` declaration in this file.
 
 This is **not** a compile of the frozen theorems. The frozen `sorry` theorems in `FormalConjectures/OEIS/63880.lean` were not used as proof steps.
 
-New lemmas compiled in this checkpoint include `not_five_sigma_of_three_sq_primes_seven_thirty_seven_of_val_seven_ge_seven_of_val_thirty_seven_eq_two` and the parent `not_five_sigma_of_three_sq_primes_seven_thirty_seven`, which now glues leftover `6/5` `{7,37,r}` whenever `r ≤ 205` or `v_7 ≤ 6` or `r ≥ 1297` or `v_7 ≥ 7` with `v_{37} = 2`. Remaining in `{7,37,r}`: `v_7 ≥ 7` with `v_{37} ≥ 3` and `211 ≤ r ≤ 1291`.
+New lemmas compiled in this checkpoint include `not_five_sigma_of_three_sq_primes_seven_thirty_seven`, which now glues leftover `6/5` `{7,37,r}` for every third prime `r ≥ 41`. Remaining leftover `6/5` ω=3 includes `{7,q,r}` with `41 ≤ q < 71` and `{5,q,r}` with `q < 313`.
 
 No `#print axioms` audit of a completed target theorem exists, because those theorems are not proved.
 
