@@ -113,9 +113,10 @@ which type-checks. The original `a` is used. The admitted `OeisA1818.conjecture1
 'A001818C1.cayleySumOn_pair' depends on axioms: [propext, Classical.choice, Quot.sound]
 'A001818C1.evenCycleSumThrough_eq_binom' depends on axioms: [propext, Classical.choice, Quot.sound]
 'A001818C1.cayleyWeight_cycleOf_mul_remainder' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.cayleySum_eq_one_add_even_cycles_of_card_two' depends on axioms: [propext, Classical.choice, Quot.sound]
 ```
 
-No `sorryAx`, `native_decide`, or `Lean.trustCompiler` in those lemmas. The general `n ≥ 1` identity is not yet proved. `per(M-J) = a n` is proved and `per M` equals the even-cycle Cayley sum. Paper Σ1 and Σ2 at a distinguished point are proved. Hamiltonian Cayley sums depend only on cardinality for injective assignments on types of cardinality at least 3. Paper (3.5) for `k ≥ 2`, `s_1 = -1`, the sum of long even cycles through a point, She–Sun–Xia Lemma 3.1 (`per(A_n)=0`), the card-2 vanishing base, and the even-cycle binomial expansion at a zero coordinate are proved. Complementary terms in Σ3, (3.9), and recurrence (4.8) remain, so `per M = per(M-J)` remains.
+No `sorryAx`, `native_decide`, or `Lean.trustCompiler` in those lemmas. The general `n ≥ 1` identity is not yet proved. `per(M-J) = a n` is proved and `per M` equals the even-cycle Cayley sum. Paper Σ1 and Σ2 at a distinguished point are proved. Hamiltonian Cayley sums depend only on cardinality for injective assignments on types of cardinality at least 3. Paper (3.5) for `k ≥ 2`, `s_1 = -1`, the sum of long even cycles through a point, She–Sun–Xia Lemma 3.1 (`per(A_n)=0`), the card-2 vanishing base, the even-cycle binomial expansion at a zero coordinate, and the remainder split of `cayleySum` are proved. Complementary terms in Σ3 for `n>1`, (3.9), and recurrence (4.8) remain, so `per M = per(M-J)` remains.
 
 ## Boundary
 
