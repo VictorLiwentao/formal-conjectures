@@ -28,9 +28,11 @@ Command:
 LEAN_NUM_THREADS=2 lake env lean -DwarningAsError=true research/batches/b01/workers/cursor-05/targets/A063880/A063880.lean
 ```
 
-Result on 2026-09-13T00:44Z: exit code 0, no warnings, no `sorry` declaration in this file.
+Result on 2026-09-13T01:06Z: exit code 0, no warnings, no `sorry` declaration in this file.
 
 This is **not** a compile of the frozen theorems. The frozen `sorry` theorems in `FormalConjectures/OEIS/63880.lean` were not used as proof steps.
+
+New lemmas compiled in this checkpoint include `padicValNat_three_lt_two_of_A_of_val_two_ge_three`, `not_seven_sigma_of_unique_sq_prime_ge_five`, and `padicValNat_lt_two_of_twelve_thousand_le_113`.
 
 No `#print axioms` audit of a completed target theorem exists, because those theorems are not proved.
 

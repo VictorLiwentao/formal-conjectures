@@ -755,6 +755,49 @@ lemma padicValNat_three_lt_two_of_A_eight_mul {m : ℕ} (hm : Odd m) (hA : A (8 
   have hover := six_usigma_lt_five_sigma_three_pow hk
   omega
 
+/-- For leftover `6/5`, every `5^k` with `k ≥ 3` overshoots. -/
+lemma six_usigma_lt_five_sigma_five_pow {k : ℕ} (hk : 3 ≤ k) :
+    6 * usigma (5 ^ k) < 5 * σ 1 (5 ^ k) := by
+  have hk0 : 0 < k := by omega
+  have hu : usigma (5 ^ k) = 1 + 5 ^ k := usigma_prime_pow Nat.prime_five hk0
+  have hσ : σ 1 (5 ^ k) = (5 ^ (k + 1) - 1) / 4 := sigma_prime_pow_div Nat.prime_five
+  have hdiv : 4 ∣ 5 ^ (k + 1) - 1 := sub_one_dvd_pow_sub_one (p := 5)
+  have h125 : 125 ≤ 5 ^ k := by
+    have : 5 ^ 3 = 125 := by decide
+    exact this ▸ Nat.pow_le_pow_right (by decide : 1 ≤ 5) hk
+  have hsucc : 5 ^ (k + 1) = 5 * 5 ^ k := by rw [Nat.pow_succ']
+  have hmain : 24 * (1 + 5 ^ k) < 5 * (5 ^ (k + 1) - 1) := by
+    rw [hsucc]
+    have : 29 < 5 ^ k := by nlinarith
+    have : 24 + 24 * 5 ^ k + 5 < 25 * 5 ^ k := by nlinarith
+    have : 24 + 24 * 5 ^ k < 25 * 5 ^ k - 5 := by omega
+    convert this using 1
+    · ring
+    · omega
+  rw [hu, hσ]
+  have hN : 5 * ((5 ^ (k + 1) - 1) / 4) = 5 * (5 ^ (k + 1) - 1) / 4 :=
+    (Nat.mul_div_assoc 5 hdiv).symm
+  rw [hN]
+  have h4N : 4 ∣ 5 * (5 ^ (k + 1) - 1) := hdiv.mul_left 5
+  have hcancel : 4 * (5 * (5 ^ (k + 1) - 1) / 4) = 5 * (5 ^ (k + 1) - 1) :=
+    Nat.mul_div_cancel' h4N
+  refine Nat.lt_of_mul_lt_mul_left (a := 4) ?_
+  rw [hcancel]
+  convert hmain using 1
+  ring
+
+lemma padicValNat_five_lt_three_of_A_eight_mul {m : ℕ} (hm : Odd m) (hA : A (8 * m)) :
+    padicValNat 5 m < 3 := by
+  have h := five_sigma_eq_six_usigma_of_A_eight_mul hm hA
+  by_contra! hk
+  have hm0 : m ≠ 0 := Nat.pos_iff_ne_zero.mp hm.pos
+  have hproj : ordProj[5] m = 5 ^ padicValNat 5 m := by
+    simp [Nat.factorization_def m Nat.prime_five]
+  have hle := mul_sigma_ordProj_le Nat.prime_five hm0 h
+  rw [hproj] at hle
+  have hover := six_usigma_lt_five_sigma_five_pow hk
+  omega
+
 lemma usigma_five_pow_two : usigma (5 ^ 2) = 26 := by
   simpa using usigma_prime_pow Nat.prime_five (by decide : 0 < 2)
 
@@ -803,6 +846,381 @@ lemma not_squarefree_ordCompl_of_eight_mul_val_five_two {m : ℕ} (hm : Odd m)
     exact sigma_pos_iff.mpr hpos
   have : 155 = 156 := Nat.eq_of_mul_eq_mul_right hpos' heq
   contradiction
+
+lemma sigma_two_pow (a : ℕ) : σ 1 (2 ^ a) = 2 ^ (a + 1) - 1 := by
+  rw [sigma_prime_pow_div Nat.prime_two, Nat.div_one]
+
+lemma usigma_two_pow {a : ℕ} (ha : 0 < a) : usigma (2 ^ a) = 1 + 2 ^ a :=
+  usigma_prime_pow Nat.prime_two ha
+
+/-- Split `A n` across the 2-power and the odd part. -/
+lemma sigma_eq_two_usigma_odd_part {n : ℕ} (hA : A n) :
+    σ 1 (ordProj[2] n) * σ 1 (ordCompl[2] n) =
+      2 * usigma (ordProj[2] n) * usigma (ordCompl[2] n) := by
+  have hn : n ≠ 0 := hA.1.ne'
+  have hdecomp : ordProj[2] n * ordCompl[2] n = n :=
+    Nat.ordProj_mul_ordCompl_eq_self n 2
+  have hc : Coprime (ordProj[2] n) (ordCompl[2] n) :=
+    (Nat.coprime_ordCompl Nat.prime_two hn).pow_left (n.factorization 2)
+  have := hA.2
+  rw [← hdecomp, sigma_mul_of_coprime hc, usigma_mul hc] at this
+  convert this using 1
+  ring
+
+lemma padicValNat_three_ordCompl_two {n : ℕ} :
+    padicValNat 3 (ordCompl[2] n) = padicValNat 3 n := by
+  rw [← Nat.factorization_def (ordCompl[2] n) Nat.prime_three,
+    ← Nat.factorization_def n Nat.prime_three, Nat.factorization_ordCompl]
+  simp [Finsupp.erase_ne (by decide : (3 : ℕ) ≠ 2)]
+
+/-- `3 + 6A + 7T < 2AT` for `A ≥ 8` and `T ≥ 9`. -/
+lemma add_six_mul_add_seven_mul_lt {A T : ℕ} (hA : 8 ≤ A) (hT : 9 ≤ T) :
+    3 + 6 * A + 7 * T < 2 * A * T := by
+  have hA' : (8 : ℤ) ≤ A := Int.ofNat_le.mpr hA
+  have hT' : (9 : ℤ) ≤ T := Int.ofNat_le.mpr hT
+  have h : (3 : ℤ) + 6 * (A : ℤ) + 7 * (T : ℤ) < 2 * (A : ℤ) * (T : ℤ) := by
+    nlinarith
+  exact_mod_cast h
+
+/-- `4(1+A)(1+T) < (2A-1)(3T-1)` for `A ≥ 8` and `T ≥ 9`. -/
+lemma four_mul_succ_two_three_lt {A T : ℕ} (hA : 8 ≤ A) (hT : 9 ≤ T) :
+    4 * (1 + A) * (1 + T) < (2 * A - 1) * (3 * T - 1) := by
+  have h2A : 1 ≤ 2 * A := by nlinarith
+  have h3T : 1 ≤ 3 * T := by nlinarith
+  have hA' : (8 : ℤ) ≤ A := Int.ofNat_le.mpr hA
+  have hT' : (9 : ℤ) ≤ T := Int.ofNat_le.mpr hT
+  have hL : ((4 * (1 + A) * (1 + T) : ℕ) : ℤ) =
+      4 * (1 + (A : ℤ)) * (1 + (T : ℤ)) := by push_cast; rfl
+  have hR : (((2 * A - 1) * (3 * T - 1) : ℕ) : ℤ) =
+      (2 * (A : ℤ) - 1) * (3 * (T : ℤ) - 1) := by
+    rw [Nat.cast_mul, Nat.cast_sub h2A, Nat.cast_sub h3T]
+    push_cast; rfl
+  have hint : (4 : ℤ) * (1 + (A : ℤ)) * (1 + (T : ℤ)) <
+      (2 * (A : ℤ) - 1) * (3 * (T : ℤ) - 1) := by
+    nlinarith
+  exact Nat.cast_lt.mp (by rw [hL, hR]; exact hint)
+
+/-- `ρ(2^a) ρ(3^k) > 2` whenever `a ≥ 3` and `k ≥ 2`. -/
+lemma two_pow_ge_three_three_pow_overshoot {a k : ℕ} (ha : 3 ≤ a) (hk : 2 ≤ k) :
+    2 * usigma (2 ^ a) * usigma (3 ^ k) < σ 1 (2 ^ a) * σ 1 (3 ^ k) := by
+  have ha0 : 0 < a := by omega
+  have hk0 : 0 < k := by omega
+  have hA : 8 ≤ 2 ^ a := by
+    have : 2 ^ 3 = 8 := by decide
+    exact this ▸ Nat.pow_le_pow_right (by decide : 1 ≤ 2) ha
+  have hT : 9 ≤ 3 ^ k := by
+    have : 3 ^ 2 = 9 := by decide
+    exact this ▸ Nat.pow_le_pow_right (by decide : 1 ≤ 3) hk
+  have hu2 : usigma (2 ^ a) = 1 + 2 ^ a := usigma_two_pow ha0
+  have hu3 : usigma (3 ^ k) = 1 + 3 ^ k := usigma_prime_pow Nat.prime_three hk0
+  have hσ2 : σ 1 (2 ^ a) = 2 ^ (a + 1) - 1 := sigma_two_pow a
+  have hσ3 : σ 1 (3 ^ k) = (3 ^ (k + 1) - 1) / 2 := sigma_prime_pow_div Nat.prime_three
+  have hdiv : 2 ∣ 3 ^ (k + 1) - 1 := sub_one_dvd_pow_sub_one (p := 3)
+  have hsucc2 : 2 ^ (a + 1) = 2 * 2 ^ a := by rw [Nat.pow_succ']
+  have hsucc3 : 3 ^ (k + 1) = 3 * 3 ^ k := by rw [Nat.pow_succ']
+  have hmain := four_mul_succ_two_three_lt (A := 2 ^ a) (T := 3 ^ k) hA hT
+  rw [hu2, hu3, hσ2, hσ3, hsucc2, hsucc3]
+  have hdiv' : 2 ∣ 3 * 3 ^ k - 1 := by simpa [hsucc3] using hdiv
+  have hR : (2 * 2 ^ a - 1) * ((3 * 3 ^ k - 1) / 2) =
+      (2 * 2 ^ a - 1) * (3 * 3 ^ k - 1) / 2 :=
+    (Nat.mul_div_assoc _ hdiv').symm
+  rw [hR]
+  refine Nat.lt_of_mul_lt_mul_left (a := 2) ?_
+  have hcancel :
+      2 * ((2 * 2 ^ a - 1) * (3 * 3 ^ k - 1) / 2) =
+        (2 * 2 ^ a - 1) * (3 * 3 ^ k - 1) :=
+    Nat.mul_div_cancel' (hdiv'.mul_left _)
+  rw [hcancel]
+  convert hmain using 1
+  ring
+
+lemma padicValNat_three_lt_two_of_A_of_val_two_ge_three {n : ℕ} (hA : A n)
+    (h2 : 3 ≤ padicValNat 2 n) : padicValNat 3 n < 2 := by
+  have hn : n ≠ 0 := hA.1.ne'
+  have hsplit := sigma_eq_two_usigma_odd_part hA
+  have hproj2 : ordProj[2] n = 2 ^ padicValNat 2 n := by
+    simp [Nat.factorization_def n Nat.prime_two]
+  rw [hproj2] at hsplit
+  have hm0 : ordCompl[2] n ≠ 0 := (Nat.ordCompl_pos 2 hn).ne'
+  by_contra! hk
+  have hle :=
+    mul_sigma_ordProj_le (A := σ 1 (2 ^ padicValNat 2 n))
+      (B := 2 * usigma (2 ^ padicValNat 2 n)) Nat.prime_three hm0 hsplit
+  have hproj3 : ordProj[3] (ordCompl[2] n) =
+      3 ^ padicValNat 3 (ordCompl[2] n) := by
+    simp [Nat.factorization_def (ordCompl[2] n) Nat.prime_three]
+  rw [hproj3] at hle
+  have hk3 : 2 ≤ padicValNat 3 (ordCompl[2] n) := by
+    rwa [padicValNat_three_ordCompl_two]
+  have hover :=
+    two_pow_ge_three_three_pow_overshoot (a := padicValNat 2 n)
+      (k := padicValNat 3 (ordCompl[2] n)) h2 hk3
+  omega
+
+/-- Every prime `p ≥ 5` undershoots leftover `10/7`. -/
+lemma seven_sigma_lt_ten_usigma_prime_pow_ge_five {p k : ℕ}
+    (hp : p.Prime) (hp5 : 5 ≤ p) (hk : 0 < k) :
+    7 * σ 1 (p ^ k) < 10 * usigma (p ^ k) := by
+  have hu : usigma (p ^ k) = 1 + p ^ k := usigma_prime_pow hp hk
+  have hσ : σ 1 (p ^ k) = (p ^ (k + 1) - 1) / (p - 1) := sigma_prime_pow_div hp
+  have hdiv : p - 1 ∣ p ^ (k + 1) - 1 := sub_one_dvd_pow_sub_one
+  have hsucc : p ^ (k + 1) = p * p ^ k := by rw [Nat.pow_succ']
+  have hpos : 1 ≤ p * p ^ k :=
+    Nat.succ_le_of_lt (Nat.mul_pos hp.pos (Nat.pow_pos hp.pos))
+  have hp1 : 1 ≤ p := hp.one_le
+  have hmain : 7 * (p * p ^ k - 1) < 10 * (p - 1) * (1 + p ^ k) := by
+    have hp' : (5 : ℤ) ≤ p := Int.ofNat_le.mpr hp5
+    have hpk : (1 : ℤ) ≤ p ^ k := by
+      exact_mod_cast (Nat.one_le_pow k p hp.pos : 1 ≤ p ^ k)
+    have hL : ((7 * (p * p ^ k - 1) : ℕ) : ℤ) =
+        7 * ((p : ℤ) * p ^ k - 1) := by
+      rw [Nat.cast_mul, Nat.cast_sub hpos]
+      push_cast; rfl
+    have hR : ((10 * (p - 1) * (1 + p ^ k) : ℕ) : ℤ) =
+        10 * ((p : ℤ) - 1) * (1 + p ^ k) := by
+      rw [Nat.cast_mul, Nat.cast_mul, Nat.cast_sub hp1]
+      push_cast; rfl
+    have hint : (7 : ℤ) * ((p : ℤ) * p ^ k - 1) <
+        10 * ((p : ℤ) - 1) * (1 + p ^ k) := by
+      nlinarith
+    exact Nat.cast_lt.mp (by rw [hL, hR]; exact hint)
+  rw [hu, hσ]
+  have hN : 7 * ((p ^ (k + 1) - 1) / (p - 1)) = 7 * (p ^ (k + 1) - 1) / (p - 1) :=
+    (Nat.mul_div_assoc 7 hdiv).symm
+  rw [hN, hsucc]
+  refine Nat.lt_of_mul_lt_mul_left (a := p - 1) ?_
+  have hcancel :
+      (p - 1) * (7 * (p * p ^ k - 1) / (p - 1)) = 7 * (p * p ^ k - 1) :=
+    Nat.mul_div_cancel' (by simpa [hsucc] using hdiv.mul_left 7)
+  rw [hcancel]
+  convert hmain using 1
+  ring
+
+lemma not_seven_sigma_eq_ten_usigma_prime_pow_ge_five {p k : ℕ}
+    (hp : p.Prime) (hp5 : 5 ≤ p) (hk : 0 < k) :
+    ¬ 7 * σ 1 (p ^ k) = 10 * usigma (p ^ k) := by
+  intro h
+  have := seven_sigma_lt_ten_usigma_prime_pow_ge_five hp hp5 hk
+  omega
+
+/-- A squarefree leftover cannot satisfy `7 σ = 10 usigma`. -/
+lemma not_squarefree_of_seven_sigma {m : ℕ} (hm : 0 < m)
+    (h : 7 * σ 1 m = 10 * usigma m) : ¬ Squarefree m := by
+  intro hs
+  have hσu := (sigma_eq_usigma_iff_squarefree hm).mpr hs
+  rw [hσu] at h
+  have hpos : 0 < usigma m := by
+    rw [← hσu]
+    exact sigma_pos_iff.mpr hm
+  have : 7 = 10 := Nat.eq_of_mul_eq_mul_right hpos h
+  contradiction
+
+/-- Caps of `{5, 11}` cannot reach leftover `10/7`. -/
+lemma five_eleven_cap_lt_ten_seven : 5 * 11 * 7 < 10 * 4 * 10 := by decide
+
+/-- Caps of `{7, 11}` cannot reach leftover `10/7`. -/
+lemma seven_eleven_cap_lt_ten_seven : 7 * 11 * 7 < 10 * 6 * 10 := by decide
+
+/-- `ρ(25) · 7/6 < 10/7`. -/
+lemma twenty_five_seven_cap_lt_ten_seven : 31 * 7 * 7 < 10 * 26 * 6 := by decide
+
+/-- `5/4 · ρ(49) < 10/7`. -/
+lemma five_cap_forty_nine_lt_ten_seven : 5 * 57 * 7 < 10 * 4 * 50 := by decide
+
+/-- `ρ(125) ρ(343) > 10/7`. -/
+lemma five_pow_three_seven_pow_three_overshoot :
+    10 * usigma (5 ^ 3) * usigma (7 ^ 3) < 7 * σ 1 (5 ^ 3) * σ 1 (7 ^ 3) := by
+  have hu5 : usigma (5 ^ 3) = 1 + 5 ^ 3 :=
+    usigma_prime_pow Nat.prime_five (by decide : 0 < 3)
+  have hu7 : usigma (7 ^ 3) = 1 + 7 ^ 3 :=
+    usigma_prime_pow (by decide : Nat.Prime 7) (by decide : 0 < 3)
+  have hσ5 : σ 1 (5 ^ 3) = (5 ^ 4 - 1) / 4 := sigma_prime_pow_div Nat.prime_five
+  have hσ7 : σ 1 (7 ^ 3) = (7 ^ 4 - 1) / 6 :=
+    sigma_prime_pow_div (by decide : Nat.Prime 7)
+  rw [hu5, hu7, hσ5, hσ7]
+  norm_num
+
+lemma sigma_prime_pow_two {p : ℕ} (hp : p.Prime) :
+    σ 1 (p ^ 2) = 1 + p + p ^ 2 := by
+  rw [sigma_one_apply_prime_pow hp, sum_range_succ, sum_range_succ, sum_range_succ]
+  simp [pow_zero, pow_one, pow_two]
+
+/-- `97(p^2+1) < 12103 p` for `13 ≤ p ≤ 113`. -/
+lemma ninety_seven_mul_sq_succ_lt {p : ℕ} (hp : 13 ≤ p) (hp' : p ≤ 113) :
+    97 * (p ^ 2 + 1) < 12103 * p := by
+  have hsq : p ^ 2 ≤ 113 * p := by
+    rw [pow_two, mul_comm 113]
+    exact Nat.mul_le_mul_left p hp'
+  have hle : 97 * (p ^ 2 + 1) ≤ 97 * (113 * p + 1) :=
+    Nat.mul_le_mul_left 97 (Nat.add_le_add_right hsq 1)
+  have hcoeff : 97 * 113 = 10961 := by decide
+  have h1142 : 10961 + 1142 = 12103 := by decide
+  have h97 : 97 < 1142 * p := by
+    have : 1142 * 13 = 14846 := by decide
+    nlinarith
+  have hlin : 97 * (113 * p + 1) < 12103 * p := by
+    have hex : 97 * (113 * p + 1) = 10961 * p + 97 := by
+      rw [mul_add, ← mul_assoc, hcoeff]
+    rw [hex]
+    have : 10961 * p + 97 < 10961 * p + 1142 * p := Nat.add_lt_add_left h97 _
+    have hsum : 10961 * p + 1142 * p = 12103 * p := by
+      rw [← add_mul, h1142]
+    omega
+  omega
+
+lemma twelve_two_usigma_lt_sigma_sq {p : ℕ} (hp : 13 ≤ p) (hp' : p ≤ 113) :
+    12200 * (1 + p ^ 2) < 12103 * (1 + p + p ^ 2) := by
+  have h := ninety_seven_mul_sq_succ_lt hp hp'
+  nlinarith
+
+lemma twelve_two_usigma_lt_sigma_pow_two {p : ℕ} (hp : p.Prime)
+    (h13 : 13 ≤ p) (h113 : p ≤ 113) :
+    12200 * usigma (p ^ 2) < 12103 * σ 1 (p ^ 2) := by
+  have hu : usigma (p ^ 2) = 1 + p ^ 2 := usigma_prime_pow hp (by decide : 0 < 2)
+  rw [hu, sigma_prime_pow_two hp]
+  exact twelve_two_usigma_lt_sigma_sq h13 h113
+
+/-- Closed form of leftover `12200/12103` overshoot for `13 ≤ p ≤ 113` and `k ≥ 2`. -/
+lemma twelve_two_usigma_lt_sigma_prime_pow {p k : ℕ} (hp : p.Prime)
+    (h13 : 13 ≤ p) (h113 : p ≤ 113) (hk : 2 ≤ k) :
+    12200 * usigma (p ^ k) < 12103 * σ 1 (p ^ k) := by
+  have hk0 : 0 < k := by omega
+  have hu : usigma (p ^ k) = 1 + p ^ k := usigma_prime_pow hp hk0
+  have hσ : σ 1 (p ^ k) = (p ^ (k + 1) - 1) / (p - 1) := sigma_prime_pow_div hp
+  have hdiv : p - 1 ∣ p ^ (k + 1) - 1 := sub_one_dvd_pow_sub_one
+  have hP : p ^ 2 ≤ p ^ k := Nat.pow_le_pow_right hp.one_le hk
+  have hsucc : p ^ (k + 1) = p * p ^ k := by rw [Nat.pow_succ']
+  have hpos : 1 ≤ p * p ^ k :=
+    Nat.succ_le_of_lt (Nat.mul_pos hp.pos (Nat.pow_pos hp.pos))
+  have hp1 : 1 ≤ p := hp.one_le
+  have hmain : 12200 * (p - 1) * (1 + p ^ k) < 12103 * (p * p ^ k - 1) := by
+    have hp13' : (13 : ℤ) ≤ p := Int.ofNat_le.mpr h13
+    have hp113' : (p : ℤ) ≤ 113 := Int.ofNat_le.mpr h113
+    have hP' : (p : ℤ) ^ 2 ≤ (p : ℤ) ^ k := by exact_mod_cast hP
+    have hL : ((12200 * (p - 1) * (1 + p ^ k) : ℕ) : ℤ) =
+        12200 * ((p : ℤ) - 1) * (1 + p ^ k) := by
+      rw [Nat.cast_mul, Nat.cast_mul, Nat.cast_sub hp1]
+      push_cast; rfl
+    have hR : ((12103 * (p * p ^ k - 1) : ℕ) : ℤ) =
+        12103 * ((p : ℤ) * p ^ k - 1) := by
+      rw [Nat.cast_mul, Nat.cast_sub hpos]
+      push_cast; rfl
+    have hint : (12200 : ℤ) * ((p : ℤ) - 1) * (1 + p ^ k) <
+        12103 * ((p : ℤ) * p ^ k - 1) := by
+      nlinarith
+    exact Nat.cast_lt.mp (by rw [hL, hR]; exact hint)
+  rw [hu, hσ]
+  have hN : 12103 * ((p ^ (k + 1) - 1) / (p - 1)) =
+      12103 * (p ^ (k + 1) - 1) / (p - 1) :=
+    (Nat.mul_div_assoc 12103 hdiv).symm
+  rw [hN, hsucc]
+  refine Nat.lt_of_mul_lt_mul_left (a := p - 1) ?_
+  have hcancel :
+      (p - 1) * (12103 * (p * p ^ k - 1) / (p - 1)) =
+        12103 * (p * p ^ k - 1) :=
+    Nat.mul_div_cancel' (by simpa [hsucc] using hdiv.mul_left 12103)
+  rw [hcancel]
+  convert hmain using 1
+  ring
+
+lemma padicValNat_lt_two_of_twelve_thousand_le_113 {u p : ℕ} (hu : u ≠ 0)
+    (hp : p.Prime) (h13 : 13 ≤ p) (h113 : p ≤ 113)
+    (h : 12103 * σ 1 u = 12200 * usigma u) :
+    padicValNat p u < 2 := by
+  by_contra! hk
+  have hproj : ordProj[p] u = p ^ padicValNat p u := by
+    simp [Nat.factorization_def u hp]
+  have hle := mul_sigma_ordProj_le hp hu h
+  rw [hproj] at hle
+  have hover := twelve_two_usigma_lt_sigma_prime_pow hp h13 h113 hk
+  omega
+
+/-- `127/126 < 12200/12103`, hence every prime `p ≥ 127` has cap below leftover. -/
+lemma cap_lt_twelve_thousand {p : ℕ} (hp : 127 ≤ p) :
+    12103 * p < 12200 * (p - 1) := by
+  have hp1 : 1 ≤ p := by omega
+  have hsub : 12200 * (p - 1) = 12200 * p - 12200 :=
+    Nat.mul_sub_left_distrib 12200 p 1
+  have h97 : 12200 < 97 * p := by
+    have : 97 * 127 = 12319 := by decide
+    nlinarith
+  have hadd : 12103 * p + 12200 < 12200 * p := by
+    have : 12103 * p + 97 * p = 12200 * p := by
+      rw [← add_mul, show (12103 + 97 : ℕ) = 12200 by decide]
+    have : 12103 * p + 12200 < 12103 * p + 97 * p := Nat.add_lt_add_left h97 _
+    omega
+  have hle : 12200 ≤ 12200 * p := Nat.le_mul_of_pos_right 12200 (by omega)
+  rw [hsub]
+  exact Nat.lt_sub_of_add_lt hadd
+
+/-- `ρ(p^k) < p/(p-1)` for `k > 0`. -/
+lemma sigma_lt_cap_usigma {p k : ℕ} (hp : p.Prime) (hk : 0 < k) :
+    (p - 1) * σ 1 (p ^ k) < p * usigma (p ^ k) := by
+  have hu : usigma (p ^ k) = 1 + p ^ k := usigma_prime_pow hp hk
+  have hσ : σ 1 (p ^ k) = (p ^ (k + 1) - 1) / (p - 1) := sigma_prime_pow_div hp
+  have hdiv : p - 1 ∣ p ^ (k + 1) - 1 := sub_one_dvd_pow_sub_one
+  have hp1 : 1 ≤ p := hp.one_le
+  have hsucc : p ^ (k + 1) = p * p ^ k := by rw [Nat.pow_succ']
+  have hpos : 1 ≤ p * p ^ k :=
+    Nat.succ_le_of_lt (Nat.mul_pos hp.pos (Nat.pow_pos hp.pos))
+  rw [hu, hσ, Nat.mul_div_cancel' hdiv, hsucc]
+  have : p * p ^ k - 1 < p * (1 + p ^ k) := by
+    have hL : ((p * p ^ k - 1 : ℕ) : ℤ) = (p : ℤ) * p ^ k - 1 := by
+      rw [Nat.cast_sub hpos]; push_cast; rfl
+    have hR : ((p * (1 + p ^ k) : ℕ) : ℤ) = (p : ℤ) * (1 + p ^ k) := by
+      push_cast; rfl
+    have : (p : ℤ) * p ^ k - 1 < p * (1 + p ^ k) := by nlinarith
+    exact Nat.cast_lt.mp (by rw [hL, hR]; exact this)
+  exact this
+
+/-- If the `p`-free part is squarefree, leftover `10/7` is concentrated on `p^k`. -/
+lemma seven_sigma_eq_ten_of_squarefree_ordCompl {m p : ℕ} (hm : m ≠ 0)
+    (hp : p.Prime) (h : 7 * σ 1 m = 10 * usigma m)
+    (hs : Squarefree (ordCompl[p] m)) :
+    7 * σ 1 (ordProj[p] m) = 10 * usigma (ordProj[p] m) := by
+  have hdecomp : ordProj[p] m * ordCompl[p] m = m :=
+    Nat.ordProj_mul_ordCompl_eq_self m p
+  have hc : Coprime (ordProj[p] m) (ordCompl[p] m) :=
+    (Nat.coprime_ordCompl hp hm).pow_left (m.factorization p)
+  have hmul : 7 * σ 1 (ordProj[p] m) * σ 1 (ordCompl[p] m) =
+      10 * usigma (ordProj[p] m) * usigma (ordCompl[p] m) := by
+    have := h
+    rw [← hdecomp, sigma_mul_of_coprime hc, usigma_mul hc] at this
+    simpa [mul_assoc, mul_left_comm, mul_comm] using this
+  have hσu := (sigma_eq_usigma_iff_squarefree (Nat.ordCompl_pos p hm)).mpr hs
+  rw [hσu] at hmul
+  have hpos : 0 < usigma (ordCompl[p] m) := by
+    rw [← hσu]
+    exact sigma_pos_iff.mpr (Nat.ordCompl_pos p hm)
+  exact Nat.eq_of_mul_eq_mul_right hpos hmul
+
+/-- Leftover `10/7` cannot be a single prime power `p^k` with `p ≥ 5`. -/
+lemma not_seven_sigma_of_unique_sq_prime_ge_five {m p : ℕ} (hm : m ≠ 0)
+    (hp : p.Prime) (hp5 : 5 ≤ p) (h : 7 * σ 1 m = 10 * usigma m)
+    (hk : 0 < padicValNat p m) (hs : Squarefree (ordCompl[p] m)) : False := by
+  have heq := seven_sigma_eq_ten_of_squarefree_ordCompl hm hp h hs
+  have hproj : ordProj[p] m = p ^ padicValNat p m := by
+    simp [Nat.factorization_def m hp]
+  rw [hproj] at heq
+  exact not_seven_sigma_eq_ten_usigma_prime_pow_ge_five hp hp5 hk heq
+
+lemma six_sigma_lt_seven_usigma {k : ℕ} (hk : 0 < k) :
+    6 * σ 1 (7 ^ k) < 7 * usigma (7 ^ k) :=
+  sigma_lt_cap_usigma (by decide : Nat.Prime 7) hk
+
+lemma four_sigma_lt_five_usigma {k : ℕ} (hk : 0 < k) :
+    4 * σ 1 (5 ^ k) < 5 * usigma (5 ^ k) :=
+  sigma_lt_cap_usigma Nat.prime_five hk
+
+lemma not_nine_dvd_of_A_of_val_two_ge_three {n : ℕ} (hA : A n)
+    (h2 : 3 ≤ padicValNat 2 n) : ¬ 9 ∣ n := by
+  intro h9
+  have hn : n ≠ 0 := hA.1.ne'
+  have : 2 ≤ padicValNat 3 n :=
+    (pow_dvd_iff_le_padicValNat (by decide : (3 : ℕ) ≠ 1) hn (k := 2)).mp
+      (by simpa using h9)
+  have := padicValNat_three_lt_two_of_A_of_val_two_ge_three hA h2
+  omega
 
 end Unitary
 

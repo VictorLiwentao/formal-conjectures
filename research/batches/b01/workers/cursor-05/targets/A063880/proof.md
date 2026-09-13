@@ -27,8 +27,11 @@ In `A063880.lean`, compiled with `lake env lean -DwarningAsError=true`:
 - If also `padicValNat 3 m = 3`, then `σ` and `usigma` agree on the 3-free part of `m`.
 - `σ 1 n = usigma n` iff `n` is squarefree, for `n > 0`. Combined with the previous item, `v₃(m) = 3` on leftover `10/7` forces the 3-free part of `m` to be squarefree.
 - CRT plus the two valuations is recorded as `mod_216_of_A_of_valuations`: if `A n`, `v₂(n) = 2`, and `v₃(n) ≥ 3`, then `n % 216 = 108`. This is not yet the frozen theorem, because those valuations are not forced.
-- If leftover `10/7` has `v₃ = 2`, the 3-free part `t` satisfies `91 σ(t) = 100 usigma(t)`. On that equation, `v₅(t) < 2`, `v₇(t) < 2`, and `v₁₁(t) < 3`. If also `v₁₁(t) = 2`, the 11-free part is not squarefree, and `v₁₃` of that part is `< 2`.
-- If `8m` is in `A` with `m` odd (so `v₂ = 3`), then `5 σ(m) = 6 usigma(m)` and `v₃(m) < 2`. In particular `9` cannot divide the odd part of a term with `v₂ = 3`. If also `v₅(m) = 2`, the 5-free part is not squarefree.
+- If leftover `10/7` has `v₃ = 2`, the 3-free part `t` satisfies `91 σ(t) = 100 usigma(t)`. On that equation, `v₅(t) < 2`, `v₇(t) < 2`, and `v₁₁(t) < 3`. If also `v₁₁(t) = 2`, the 11-free part is not squarefree, and `v₁₃` of that part is `< 2`. After `11^2`, every prime `13 ≤ p ≤ 113` has `v_p < 2` on leftover `12200/12103`, and every `p ≥ 127` has cap `p/(p-1) ≤ 127/126 < 12200/12103`.
+- If `8m` is in `A` with `m` odd (so `v₂ = 3`), then `5 σ(m) = 6 usigma(m)` and `v₃(m) < 2`. In particular `9` cannot divide the odd part of a term with `v₂ = 3`. Also `v₅(m) < 3`. If `v₅(m) = 2`, the 5-free part is not squarefree.
+- If `A n` and `v₂(n) ≥ 3`, then `v₃(n) < 2`. Equivalently, `9` cannot divide such an `n`. This uses `ρ(8)ρ(9) = 13/6 > 2` and monotonicity in the two exponents.
+- Every prime `p ≥ 5` undershoots leftover `10/7`: `ρ(p^k) < p/(p-1) ≤ 5/4 < 10/7`. So leftover `10/7` cannot be a single prime power `p^k` with `p ≥ 5` times a squarefree coprime factor.
+- Caps: `{5,11}` and `{7,11}` cannot reach `10/7`. The only two-prime cap product that can reach `10/7` without `3` is `{5,7}`. Algebraically `ρ(125)ρ(343) > 10/7`. The rays `ρ(25)ρ(7^k)` and `ρ(5^k)ρ(49)` stay strictly below `10/7` (checked by cap comparison; not yet a full Lean exclusion of every `{5,7}` exponent pair).
 
 These lemmas are infrastructure and partial case analysis. They do not decide the open statements.
 
@@ -62,6 +65,8 @@ A broader recursive search (`experiments/leftover_search.py`) was written and is
 - No Lean proof that `ρ(K) = 2` forces `v₂ = 2` and `v₃ ≥ 3`.
 - No Lean proof that the only squareful kernel is 108.
 - No independent proof yet of `powerful_of_isPrimitiveTerm` or `exists_primitive_of_a`.
-- Odd kernels (`leftover 2`) and high `2`-powers are not ruled out by a complete finite case tree in Lean.
+- Odd kernels (`leftover 2`) and the remaining `v₂ ≥ 3` leftovers (`6/5` without `9`, `34/31`, …) are not ruled out by a complete finite case tree in Lean.
+- Leftover `10/7` without `9` still allows ω≥2 with `{5,7}` and ω≥3 with larger primes.
+- Leftover `100/91` after `11^2` still allows ω≥2 with primes `≥ 127`. Without `11^2`, the smallest squareful prime may be `≥ 13`.
 
 A claimed completion still requires the exact frozen types, a sorry-free compile, and `#print axioms` in `{propext, Classical.choice, Quot.sound}`.
