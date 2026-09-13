@@ -11,8 +11,8 @@ Incomplete research session. No exact proof or disproof. Do not treat this as a 
 - source baseline: `a2f4a1bb12a28e04a969da78feefac7d1ce49565`
 - source SHA-256: `b50d00e13735613cbe37bd3a25c19130874e8f036ca2a0e3c1aceb177a33c683`
 - original kickoff (UTC): 2026-09-12T23:12Z
-- this checkpoint (UTC): 2026-09-13T04:11Z
-- final commit SHA: `7f7427081439bfbe96ec2e2fbe8d699e23b97d3f`
+- this checkpoint (UTC): 2026-09-13T04:17Z
+- final commit SHA: `5b01b53c57cecb068933d0ec5d89dfd3822d0ac8`
 
 ## Reproduction
 
@@ -41,6 +41,7 @@ Do not run a full `lake build`, `lake clean`, or `lake update`.
 ## Proved this checkpoint (infrastructure only)
 
 - Leftover `6/5` `{11,13,p}` is glued for every prime `p ≥ 17`.
+- Leftover `6/5` `{13,17,p}` is glued for every prime `p ≥ 19`.
 - Previous checkpoint still holds: leftover `10/7` closed at ω=3; leftover `10/7` ω=4 last prime `≥ 41` glued; leftover `6/5` closed at ω≤2; `{11,17,p}` glued for every `p ≥ 19`; `{11,19,p}` glued for `p ≥ 31`; `{7,q,r}` glued for `71 ≤ q < r`; triples `q ≥ 23` with smallest prime `≥ 11` glued; triples `q ≥ 19` with smallest prime `≥ 13` glued; `{5^2,q,r}` glued for `313 ≤ q < r`; CRT reduction; `v₂≥3 ⇒ v₃<2`.
 
 ## Next step
