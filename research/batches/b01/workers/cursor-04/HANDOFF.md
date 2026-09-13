@@ -31,8 +31,8 @@ python3 research/batches/b01/control/check_assignments.py --repo . --worker curs
 
 - Closed form of `a`, dichotomy at primes, first-entry criterion `p | x(p-1) ↔ a(p-3)=p-2` for `p ≥ 5`.
 - McEachen for `p=2,3` and all primes `p ≥ 7` with `p ≡ 2 (mod 3)`.
-- Injected-factor families (`5,7,11,13,17,19,23,29`) and remaining McEachen when `lpf(p-2) ≤ 29`.
-- McEachen when some prime factor of `p-2` is a larger twin `≥ 13` (`conjecture_of_larger_twin_dvd`). Combined: `conjecture_of_minFac_le_twenty_nine_or_twin`.
+- Injected-factor families (`5,7,11,13,17,19,23,29,37,41,47,53,59`) and remaining McEachen when `lpf(p-2) ≤ 59` or a larger-twin least factor.
+- McEachen when some prime factor of `p-2` is a larger twin `≥ 13` (`conjecture_of_larger_twin_dvd`). Combined: `conjecture_of_minFac_le_fifty_nine_or_twin`.
 - General prime-index injector `q_dvd_x_of_prime_index` (the index need only be `≡ 2 (mod 3)`).
 - Cloitre 6.7 as `cloitre_valuation_barrier`.
 - Unconditional twin inhibition for pairs with smaller member `≥ 11` (Cloitre 6.3 without `C₁`).
@@ -44,9 +44,9 @@ python3 research/batches/b01/control/check_assignments.py --repo . --worker curs
 
 ## Gap
 
-See `proof.md`. Remaining McEachen primes have `lpf(p-2) ≥ 37` not a larger twin, and need a first-entry bound. Dirichlet, Linnik `L=5`, and the usual GRH bound do not give `r ≤ q(q+2)-1`. Finite scans are not a proof.
+See `proof.md`. Remaining McEachen primes have `lpf(p-2) ≥ 67` not a larger twin, and need a first-entry bound. Dirichlet, Linnik `L=5`, and the usual GRH bound do not give `r ≤ q(q+2)-1`. Finite scans are not a proof.
 
 ## Commit SHA
 
-Research commit: `c147f864`
+Research commit: pending after this commit
 Branch: `cursor/a135508-lcm-primes-770d`

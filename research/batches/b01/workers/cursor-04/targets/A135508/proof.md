@@ -43,9 +43,13 @@ Hence McEachen at `p` is equivalent to `gcd(x (p-3), p-2) > 1`, i.e. some prime 
    - `17 ∣ x n` for `n ≥ 83` (`5·17-2 = 83` prime).
    - `23 ∣ x n` for `n ≥ 113` (`5·23-2 = 113` prime).
    - `29 ∣ x n` for `n ≥ 317` (`11·29-2 = 317` prime).
+   - `37 ∣ x n` for `n ≥ 257` (`7·37-2 = 257` prime).
+   - `41 ∣ x n` for `n ≥ 449` (`11·41-2 = 449` prime).
+   - `47 ∣ x n` for `n ≥ 233` (`5·47-2 = 233` prime).
+   - `53 ∣ x n` for `n ≥ 263`.
+   - `59 ∣ x n` for `n ≥ 293`.
    The general form is `conjecture_of_injected` / `conjecture_of_prime_injector` / `conjecture_of_prime_index` / `conjecture_of_five_prime_injector`.
-5. Remaining primes with `lpf(p-2) ≤ 29` (`conjecture_of_minFac_le_twenty_nine`). The window `q(q+2) ≤ p-2` supplies the entry-index bounds.
-6. If some prime factor of `p-2` is a larger twin `≥ 13`, then that factor already divides `x(q-1)` (`conjecture_of_larger_twin_dvd`). Combined: `conjecture_of_minFac_le_twenty_nine_or_twin`.
+5. Remaining primes with `lpf(p-2) ≤ 29` (`conjecture_of_minFac_le_twenty_nine`), and `lpf(p-2) ≤ 59` or a larger-twin least factor (`conjecture_of_minFac_le_fifty_nine_or_twin`).
 
 ## Twin primes without `C₁` (proved)
 
@@ -62,7 +66,7 @@ This is not McEachen (McEachen excludes `p-2` prime). It is the twin-detection h
 
 ## Remaining gap (not proved)
 
-The leftover primes are `p ≡ 1 (mod 3)` with `p-2` composite, `lpf(p-2) ≥ 31`, and that least factor not a larger twin (so `lpf ≥ 37`). Then `p-2 ≡ 2 (mod 3)`, so some prime factor `q` of `p-2` is `≡ 2 (mod 3)` (`exists_remaining_factor`). If `q = 5` we are done. If `q ≥ 11`, the mod-3 theorem gives `a(q-1)=q`, so `q` does **not** divide `x(q-1)`. One needs a later injection: some index `r ≤ p-3` with `q ∣ a(r-1)+2`.
+The leftover primes are `p ≡ 1 (mod 3)` with `p-2` composite, `lpf(p-2) ≥ 61`, and that least factor not a larger twin (so `lpf ≥ 67`). Then `p-2 ≡ 2 (mod 3)`, so some prime factor `q` of `p-2` is `≡ 2 (mod 3)` (`exists_remaining_factor`). If `q = 5` we are done. If `q ≥ 11`, the mod-3 theorem gives `a(q-1)=q`, so `q` does **not** divide `x(q-1)`. One needs a later injection: some index `r ≤ p-3` with `q ∣ a(r-1)+2`.
 
 `q_dvd_x_of_prime_index` injects any factor of `p-2` at a prime `kq-2 ≡ 2 (mod 3)`, including factors `≡ 1 (mod 3)` that are not twins. Cloitre Lemma 6.7 is now `cloitre_valuation_barrier`. If `3 ∣ n+1` and `n ≥ 4` then `gcd(x n, n+1) > 1`.
 

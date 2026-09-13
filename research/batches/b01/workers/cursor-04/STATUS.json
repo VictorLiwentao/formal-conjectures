@@ -11,7 +11,7 @@
   "novelty_status": "no_exact_public_solution_found_in_checked_sources",
   "statement_audit": "matches_intended_mceachen_statement",
   "oeis_editability": "unknown",
-  "last_updated_utc": "2026-09-13T01:33:14Z",
+  "last_updated_utc": "2026-09-13T01:38:03Z",
   "session_kickoff_utc": "2026-09-12T23:12:00Z",
   "session_hard_stop_utc": "2026-09-13T07:12:00Z",
   "proof_declarations": [
@@ -41,7 +41,8 @@
     "OeisA135508.q_dvd_x_of_coprime_shift",
     "OeisA135508.conjecture_of_minFac_le_twentythree",
     "OeisA135508.conjecture_of_minFac_le_twenty_nine",
-    "OeisA135508.conjecture_of_minFac_le_twenty_nine_or_twin",
+    "OeisA135508.conjecture_of_minFac_le_fifty_nine_or_twin",
+    "OeisA135508.conjecture_of_thirty_seven_dvd",
     "OeisA135508.conjecture_of_larger_twin_dvd",
     "OeisA135508.larger_twin_dvd_x",
     "OeisA135508.q_dvd_x_of_prime_index",
@@ -63,12 +64,12 @@
   ],
   "unresolved_gaps": [
     "Frozen OeisA135508.conjecture is still sorry.",
-    "Remaining class: primes p ≡ 1 (mod 3) with p-2 composite, lpf(p-2) ≥ 37, and that least factor not a larger twin.",
+    "Remaining class: primes p ≡ 1 (mod 3) with p-2 composite, lpf(p-2) ≥ 67, and that least factor not a larger twin.",
     "Even k and k ≡ 1 (mod 3) cannot be prime injectors for q ≡ 2 (mod 3). Those candidates are k ≡ 5 (mod 6). Factors ≡ 1 (mod 3) that are not twins use k ≡ 1 (mod 6) via q_dvd_x_of_prime_index.",
     "Need a prime r = kq-2 with k ≡ 5 (mod 6) and r ≤ q(q+2)-1, or gcd(x(kq-3), kq-2)=1 in that range.",
     "Dirichlet, Linnik L=5, and the usual GRH bound do not give r ≤ q(q+2)-1. Finite injector checks are not a proof.",
     "Cloitre C1 and Cor. 6.6 are not used and are not an unconditional solution."
   ],
   "next_step": "Prove an unconditional first-entry bound q | x(q(q+2)-1) for primes q ≡ 2 (mod 3), or find a different invariant. Do not claim completion. Continue until an exact candidate, a verified prior solution, a defective-target report, or the original 8-hour kickoff limit.",
-  "handoff_research_commit": "c147f864"
+  "handoff_research_commit": "pending_after_commit"
 }

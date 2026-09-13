@@ -1003,6 +1003,66 @@ theorem conjecture_of_twenty_nine_dvd {p : ℕ} (hp : p.Prime) (hp320 : 320 ≤ 
   conjecture_of_factor_dvd_x hp (by omega) (by decide : 1 < 29) h29
     (twenty_nine_dvd_x (by omega : 317 ≤ p - 3))
 
+lemma thirty_seven_dvd_x_257 : 37 ∣ x 257 :=
+  q_dvd_x_of_prime_index (k := 7) (q := 37)
+    (by norm_num) (by decide) (by decide)
+
+lemma thirty_seven_dvd_x {n : ℕ} (hn : 257 ≤ n) : 37 ∣ x n :=
+  thirty_seven_dvd_x_257.trans (x_dvd_of_le (by decide : 0 < 257) hn)
+
+theorem conjecture_of_thirty_seven_dvd {p : ℕ} (hp : p.Prime) (hp260 : 260 ≤ p)
+    (h37 : 37 ∣ p - 2) : a (p - 1) = p :=
+  conjecture_of_factor_dvd_x hp (by omega) (by decide : 1 < 37) h37
+    (thirty_seven_dvd_x (by omega : 257 ≤ p - 3))
+
+lemma forty_one_dvd_x_449 : 41 ∣ x 449 :=
+  q_dvd_x_of_prime_index (k := 11) (q := 41)
+    (by norm_num) (by decide) (by decide)
+
+lemma forty_one_dvd_x {n : ℕ} (hn : 449 ≤ n) : 41 ∣ x n :=
+  forty_one_dvd_x_449.trans (x_dvd_of_le (by decide : 0 < 449) hn)
+
+theorem conjecture_of_forty_one_dvd {p : ℕ} (hp : p.Prime) (hp452 : 452 ≤ p)
+    (h41 : 41 ∣ p - 2) : a (p - 1) = p :=
+  conjecture_of_factor_dvd_x hp (by omega) (by decide : 1 < 41) h41
+    (forty_one_dvd_x (by omega : 449 ≤ p - 3))
+
+lemma forty_seven_dvd_x_233 : 47 ∣ x 233 :=
+  q_dvd_x_of_prime_index (k := 5) (q := 47)
+    (by norm_num) (by decide) (by decide)
+
+lemma forty_seven_dvd_x {n : ℕ} (hn : 233 ≤ n) : 47 ∣ x n :=
+  forty_seven_dvd_x_233.trans (x_dvd_of_le (by decide : 0 < 233) hn)
+
+theorem conjecture_of_forty_seven_dvd {p : ℕ} (hp : p.Prime) (hp236 : 236 ≤ p)
+    (h47 : 47 ∣ p - 2) : a (p - 1) = p :=
+  conjecture_of_factor_dvd_x hp (by omega) (by decide : 1 < 47) h47
+    (forty_seven_dvd_x (by omega : 233 ≤ p - 3))
+
+lemma fifty_three_dvd_x_263 : 53 ∣ x 263 :=
+  q_dvd_x_of_prime_index (k := 5) (q := 53)
+    (by norm_num) (by decide) (by decide)
+
+lemma fifty_three_dvd_x {n : ℕ} (hn : 263 ≤ n) : 53 ∣ x n :=
+  fifty_three_dvd_x_263.trans (x_dvd_of_le (by decide : 0 < 263) hn)
+
+theorem conjecture_of_fifty_three_dvd {p : ℕ} (hp : p.Prime) (hp266 : 266 ≤ p)
+    (h53 : 53 ∣ p - 2) : a (p - 1) = p :=
+  conjecture_of_factor_dvd_x hp (by omega) (by decide : 1 < 53) h53
+    (fifty_three_dvd_x (by omega : 263 ≤ p - 3))
+
+lemma fifty_nine_dvd_x_293 : 59 ∣ x 293 :=
+  q_dvd_x_of_prime_index (k := 5) (q := 59)
+    (by norm_num) (by decide) (by decide)
+
+lemma fifty_nine_dvd_x {n : ℕ} (hn : 293 ≤ n) : 59 ∣ x n :=
+  fifty_nine_dvd_x_293.trans (x_dvd_of_le (by decide : 0 < 293) hn)
+
+theorem conjecture_of_fifty_nine_dvd {p : ℕ} (hp : p.Prime) (hp296 : 296 ≤ p)
+    (h59 : 59 ∣ p - 2) : a (p - 1) = p :=
+  conjecture_of_factor_dvd_x hp (by omega) (by decide : 1 < 59) h59
+    (fifty_nine_dvd_x (by omega : 293 ≤ p - 3))
+
 lemma remaining_minFac_ge_five {p : ℕ} (hp : p.Prime) (hp7 : 7 ≤ p)
     (hmod : p % 3 = 1) : 5 ≤ Nat.minFac (p - 2) := by
   have hn : 1 < p - 2 := by omega
@@ -1146,6 +1206,91 @@ theorem conjecture_of_minFac_le_twenty_nine_or_twin {p : ℕ} (hp : p.Prime)
       have hd : Nat.minFac (p - 2) ∣ p - 2 := Nat.minFac_dvd _
       have h13 : 13 ≤ Nat.minFac (p - 2) := by omega
       exact conjecture_of_larger_twin_dvd hp (by omega) hcomp hpr h13 htwin hd
+
+lemma remaining_prime_le_fifty_nine {q : ℕ} (hq : q.Prime) (h30 : 30 ≤ q) (h59 : q ≤ 59)
+    (hnotwin : ¬ (q - 2).Prime) :
+    q = 37 ∨ q = 41 ∨ q = 47 ∨ q = 53 ∨ q = 59 := by
+  interval_cases q
+  · exact ((by decide : ¬ Nat.Prime 30) hq).elim
+  · exact (hnotwin (by decide : Nat.Prime 29)).elim
+  · exact ((by decide : ¬ Nat.Prime 32) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 33) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 34) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 35) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 36) hq).elim
+  · exact Or.inl rfl
+  · exact ((by decide : ¬ Nat.Prime 38) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 39) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 40) hq).elim
+  · exact Or.inr (Or.inl rfl)
+  · exact ((by decide : ¬ Nat.Prime 42) hq).elim
+  · exact (hnotwin (by decide : Nat.Prime 41)).elim
+  · exact ((by decide : ¬ Nat.Prime 44) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 45) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 46) hq).elim
+  · exact Or.inr (Or.inr (Or.inl rfl))
+  · exact ((by decide : ¬ Nat.Prime 48) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 49) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 50) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 51) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 52) hq).elim
+  · exact Or.inr (Or.inr (Or.inr (Or.inl rfl)))
+  · exact ((by decide : ¬ Nat.Prime 54) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 55) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 56) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 57) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 58) hq).elim
+  · exact Or.inr (Or.inr (Or.inr (Or.inr rfl)))
+
+/-- Remaining McEachen if `lpf(p-2) ≤ 59` or that least factor is a larger twin. -/
+theorem conjecture_of_minFac_le_fifty_nine_or_twin {p : ℕ} (hp : p.Prime)
+    (hp7 : 7 ≤ p) (hmod : p % 3 = 1) (hcomp : ¬ (p - 2).Prime)
+    (h : Nat.minFac (p - 2) ≤ 59 ∨ (Nat.minFac (p - 2) - 2).Prime) :
+    a (p - 1) = p := by
+  have hpr : (Nat.minFac (p - 2)).Prime :=
+    Nat.minFac_prime (by omega : p - 2 ≠ 1)
+  have hd : Nat.minFac (p - 2) ∣ p - 2 := Nat.minFac_dvd _
+  have hbound := remaining_minFac_mul_add_two_le hp hp7 hmod hcomp
+  rcases h with h59 | htwin
+  · by_cases ht : (Nat.minFac (p - 2) - 2).Prime
+    · by_cases h13 : 13 ≤ Nat.minFac (p - 2)
+      · exact conjecture_of_larger_twin_dvd hp (by omega) hcomp hpr h13 ht hd
+      · have : Nat.minFac (p - 2) ≤ 29 := by omega
+        exact conjecture_of_minFac_le_twenty_nine hp hp7 hmod hcomp this
+    · by_cases h29 : Nat.minFac (p - 2) ≤ 29
+      · exact conjecture_of_minFac_le_twenty_nine hp hp7 hmod hcomp h29
+      · have h30 : 30 ≤ Nat.minFac (p - 2) := by omega
+        have hcases := remaining_prime_le_fifty_nine hpr h30 h59 ht
+        rcases hcases with h | h | h | h | h
+        · have hd37 : 37 ∣ p - 2 := by rwa [h] at hd
+          have hp260 : 260 ≤ p := by
+            rw [h] at hbound
+            omega
+          exact conjecture_of_thirty_seven_dvd hp hp260 hd37
+        · have hd41 : 41 ∣ p - 2 := by rwa [h] at hd
+          have hp452 : 452 ≤ p := by
+            rw [h] at hbound
+            omega
+          exact conjecture_of_forty_one_dvd hp hp452 hd41
+        · have hd47 : 47 ∣ p - 2 := by rwa [h] at hd
+          have hp236 : 236 ≤ p := by
+            rw [h] at hbound
+            omega
+          exact conjecture_of_forty_seven_dvd hp hp236 hd47
+        · have hd53 : 53 ∣ p - 2 := by rwa [h] at hd
+          have hp266 : 266 ≤ p := by
+            rw [h] at hbound
+            omega
+          exact conjecture_of_fifty_three_dvd hp hp266 hd53
+        · have hd59 : 59 ∣ p - 2 := by rwa [h] at hd
+          have hp296 : 296 ≤ p := by
+            rw [h] at hbound
+            omega
+          exact conjecture_of_fifty_nine_dvd hp hp296 hd59
+  · by_cases h13 : 13 ≤ Nat.minFac (p - 2)
+    · exact conjecture_of_larger_twin_dvd hp (by omega) hcomp hpr h13 htwin hd
+    · have : Nat.minFac (p - 2) ≤ 29 := by omega
+      exact conjecture_of_minFac_le_twenty_nine hp hp7 hmod hcomp this
 
 private instance : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
 
@@ -1512,6 +1657,14 @@ lemma v2_x_two_four_pow_pred (k : ℕ) :
 #print axioms conjecture_of_twenty_nine_dvd
 #print axioms conjecture_of_minFac_le_twenty_nine
 #print axioms conjecture_of_minFac_le_twenty_nine_or_twin
+#print axioms thirty_seven_dvd_x_257
+#print axioms conjecture_of_thirty_seven_dvd
+#print axioms forty_one_dvd_x_449
+#print axioms forty_seven_dvd_x_233
+#print axioms fifty_three_dvd_x_263
+#print axioms fifty_nine_dvd_x_293
+#print axioms remaining_prime_le_fifty_nine
+#print axioms conjecture_of_minFac_le_fifty_nine_or_twin
 #print axioms a_eq_prime_padic_succ
 #print axioms cloitre_valuation_barrier
 

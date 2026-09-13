@@ -65,7 +65,8 @@ conjecture_of_minFac_le_twentythree / twenty_nine / twenty_nine_or_twin : propex
 conjecture_of_larger_twin_dvd / larger_twin_dvd_x : propext, Classical.choice, Quot.sound
 q_dvd_x_of_prime_index / conjecture_of_prime_index : propext, Classical.choice, Quot.sound
 cloitre_valuation_barrier / a_eq_prime_padic_succ : propext, Classical.choice, Quot.sound
-gcd_gt_one_of_three_dvd_succ : propext, Quot.sound
+conjecture_of_minFac_le_fifty_nine_or_twin / remaining_prime_le_fifty_nine : propext, Classical.choice, Quot.sound
+conjecture_of_thirty_seven_dvd / forty_one / forty_seven / fifty_three / fifty_nine : propext, Classical.choice, Quot.sound
 ```
 
 No `sorryAx`, `native_decide`, or `Lean.trustCompiler` on these declarations. `Classical.choice` enters through `Nat.find` in `exists_least_dvd` and through Mathlib `decide` instances. Full log: `experiments/a135508_axioms.log`.
