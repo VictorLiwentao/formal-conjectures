@@ -5051,7 +5051,382 @@ lemma cayleyHamConst_binom_sum_rewrite {n : ℕ} (hn : 1 ≤ n) :
     ring
   rw [this]
 
+lemma cayleySum_fin_two_of_zero {x : Fin 2 → ℂ} (h0 : x 0 = 0) (h1 : x 1 ≠ 0) :
+    cayleySum x = 0 := by
+  rw [cayleySum_fin_two, cayleyWeight_swap_of_zero x Fin.zero_ne_one h0 h1]
+  simp
 
+lemma sameCycle_permCongr {α β : Type*} (e : α ≃ β) {σ : Perm α} {a x : α} :
+    (e.permCongr σ).SameCycle (e a) (e x) ↔ σ.SameCycle a x := by
+  constructor
+  · rintro ⟨i, hi⟩
+    refine ⟨i, ?_⟩
+    simpa [permCongr_zpow, permCongr_apply] using congrArg e.symm hi
+  · rintro ⟨i, hi⟩
+    refine ⟨i, ?_⟩
+    simp [permCongr_zpow, permCongr_apply, hi]
+
+open scoped Classical in
+lemma cycleOf_permCongr {α β : Type*} [DecidableEq α] [DecidableEq β]
+    (e : α ≃ β) (σ : Perm α) (a : α) :
+    (e.permCongr σ).cycleOf (e a) = e.permCongr (σ.cycleOf a) := by
+  ext b
+  obtain ⟨x, rfl⟩ := e.surjective b
+  have hL := Equiv.Perm.cycleOf_apply (e.permCongr σ) (e a) (e x)
+  have hR := Equiv.Perm.cycleOf_apply σ a x
+  have hS := sameCycle_permCongr (e := e) (σ := σ) (a := a) (x := x)
+  change (e.permCongr σ).cycleOf (e a) (e x) = e.permCongr (σ.cycleOf a) (e x)
+  rw [hL, permCongr_apply, Equiv.symm_apply_apply, permCongr_apply, Equiv.symm_apply_apply]
+  rw [hR]
+  simp only [hS]
+  split_ifs <;> rfl
+
+lemma support_cycleOf_permCongr {α β : Type*}
+    [Fintype α] [Fintype β] [DecidableEq α] [DecidableEq β]
+    (e : α ≃ β) (σ : Perm α) (a : α) :
+    ((e.permCongr σ).cycleOf (e a)).support =
+      (σ.cycleOf a).support.map e.toEmbedding := by
+  ext b
+  constructor
+  · intro hb
+    obtain ⟨x, rfl⟩ := e.surjective b
+    rw [mem_map]
+    refine ⟨x, ?_, rfl⟩
+    rw [Equiv.Perm.mem_support_cycleOf_iff] at hb ⊢
+    refine ⟨(sameCycle_permCongr (e := e) (σ := σ) (a := a) (x := x)).1 hb.1, ?_⟩
+    have hsup : e a ∈ (e.permCongr σ).support := hb.2
+    rw [support_permCongr, mem_map] at hsup
+    obtain ⟨a', ha', hea⟩ := hsup
+    exact (e.injective hea).symm ▸ ha'
+  · intro hb
+    rw [mem_map] at hb
+    obtain ⟨x, hx, rfl⟩ := hb
+    rw [Equiv.Perm.mem_support_cycleOf_iff] at hx ⊢
+    refine ⟨(sameCycle_permCongr (e := e) (σ := σ) (a := a) (x := x)).2 hx.1, ?_⟩
+    rw [support_permCongr, mem_map]
+    exact ⟨a, hx.2, rfl⟩
+
+lemma oddLongPoints_permCongr_nonempty_iff {α β : Type*}
+    [Fintype α] [Fintype β] [DecidableEq α] [DecidableEq β]
+    (e : α ≃ β) (σ : Perm α) :
+    (oddLongPoints (e.permCongr σ)).Nonempty ↔ (oddLongPoints σ).Nonempty := by
+  constructor
+  · intro ⟨b, hb⟩
+    obtain ⟨a, rfl⟩ := e.surjective b
+    have hb' : Odd ((σ.cycleOf a).support.card) := by
+      rw [mem_oddLongPoints, support_cycleOf_permCongr, card_map] at hb
+      exact hb
+    exact ⟨a, mem_oddLongPoints.mpr hb'⟩
+  · intro ⟨a, ha⟩
+    refine ⟨e a, mem_oddLongPoints.mpr ?_⟩
+    have hb : Odd ((σ.cycleOf a).support.card) := mem_oddLongPoints.mp ha
+    rw [support_cycleOf_permCongr, card_map]
+    exact hb
+
+lemma cayleySum_permCongr {α β : Type*} [Fintype α] [Fintype β]
+    [DecidableEq α] [DecidableEq β] [LinearOrder α] [LinearOrder β]
+    (e : α ≃ β) (y : β → ℂ) :
+    cayleySum (y ∘ e) = cayleySum y := by
+  unfold cayleySum
+  refine Fintype.sum_equiv e.permCongr
+    (fun σ => if (oddLongPoints σ).Nonempty then (0 : ℂ) else cayleyWeight (y ∘ e) σ)
+    (fun ρ => if (oddLongPoints ρ).Nonempty then 0 else cayleyWeight y ρ) fun σ => ?_
+  rw [cayleyWeight_permCongr]
+  by_cases h : (oddLongPoints σ).Nonempty
+  · have h' : (oddLongPoints (e.permCongr σ)).Nonempty :=
+      (oddLongPoints_permCongr_nonempty_iff e σ).2 h
+    simp [h, h']
+  · have h' : ¬ (oddLongPoints (e.permCongr σ)).Nonempty := fun hne =>
+      h ((oddLongPoints_permCongr_nonempty_iff e σ).1 hne)
+    simp [h, h']
+
+def pairSubtypeEquiv {α : Type*} [DecidableEq α] {p q : α} (hpq : p ≠ q) :
+    Fin 2 ≃ {a // a ∈ ({p, q} : Finset α)} where
+  toFun i := if i = 0 then ⟨p, by simp⟩ else ⟨q, by simp⟩
+  invFun a := if a.1 = p then 0 else 1
+  left_inv i := by
+    fin_cases i
+    · simp
+    · simp [hpq.symm]
+  right_inv a := by
+    have hmem : a.1 = p ∨ a.1 = q := by
+      have := a.2
+      simp only [mem_insert, mem_singleton] at this
+      exact this
+    rcases hmem with h | h
+    · simp [h]
+      exact Subtype.ext h.symm
+    · have hq : q ≠ p := hpq.symm
+      simp [h, hq]
+      exact Subtype.ext h.symm
+
+lemma cayleySumOn_pair {α : Type*} [Fintype α] [DecidableEq α] [LinearOrder α]
+    {p q : α} (hpq : p ≠ q) (x : α → ℂ) (hxp : x p = 0) (hxq : x q ≠ 0) :
+    cayleySumOn ({p, q} : Finset α) x = 0 := by
+  let e := pairSubtypeEquiv hpq
+  have hy : cayleySum (fun a : {a // a ∈ ({p, q} : Finset α)} => x a.1) =
+      cayleySum ((fun a : {a // a ∈ ({p, q} : Finset α)} => x a.1) ∘ e) :=
+    (cayleySum_permCongr e (fun a => x a.1)).symm
+  rw [cayleySumOn, hy]
+  have h0 : ((fun a : {a // a ∈ ({p, q} : Finset α)} => x a.1) ∘ e) 0 = 0 := by
+    simp [e, pairSubtypeEquiv, hxp]
+  have h1 : ((fun a : {a // a ∈ ({p, q} : Finset α)} => x a.1) ∘ e) 1 ≠ 0 := by
+    simp [e, pairSubtypeEquiv, hxq]
+  exact cayleySum_fin_two_of_zero h0 h1
+
+lemma eq_swap_of_isCycle_card_two {α : Type*} [Fintype α] [DecidableEq α]
+    {σ : Perm α} {p : α} (hσ : σ.IsCycle) (hp : p ∈ σ.support)
+    (h2 : σ.support.card = 2) :
+    σ = Equiv.swap p (σ p) := by
+  have hcy : σ.cycleOf p = σ :=
+    Equiv.Perm.IsCycle.cycleOf_eq hσ (Equiv.Perm.mem_support.mp hp)
+  have hcard : (σ.cycleOf p).support.card = 2 := by rw [hcy, h2]
+  have hswap := cycleOf_eq_swap_of_card_two hcard
+  rwa [hcy] at hswap
+
+lemma isCycle_swap_mem_card_two {α : Type*} [Fintype α] [DecidableEq α]
+    {p q : α} (hpq : p ≠ q) :
+    (Equiv.swap p q).IsCycle ∧ p ∈ (Equiv.swap p q).support ∧
+      (Equiv.swap p q).support.card = 2 := by
+  refine ⟨Equiv.Perm.isCycle_swap hpq, ?_, ?_⟩
+  · simp [Equiv.Perm.support_swap hpq]
+  · rw [Equiv.Perm.support_swap hpq, card_insert_of_notMem (by simp [hpq]),
+      card_singleton]
+
+open scoped Classical in
+lemma sum_cayleyWeight_transpositions_through {α : Type*} [Fintype α] [DecidableEq α]
+    (x : α → ℂ) (p : α) :
+    (∑ σ : Perm α,
+        if σ.IsCycle ∧ p ∈ σ.support ∧ σ.support.card = 2 then
+          cayleyWeight x σ else 0) =
+      ∑ q : α, if q = p then 0 else cayleyWeight x (Equiv.swap p q) := by
+  have hsplit : ∀ σ : Perm α,
+      (if σ.IsCycle ∧ p ∈ σ.support ∧ σ.support.card = 2 then
+        cayleyWeight x σ else 0) =
+        ∑ q : α, if q = p then 0 else
+          if σ = Equiv.swap p q then cayleyWeight x σ else 0 := by
+    intro σ
+    by_cases h : σ.IsCycle ∧ p ∈ σ.support ∧ σ.support.card = 2
+    · have hsw : σ = Equiv.swap p (σ p) :=
+        eq_swap_of_isCycle_card_two h.1 h.2.1 h.2.2
+      have hp : σ p ≠ p := Equiv.Perm.mem_support.mp h.2.1
+      rw [if_pos h]
+      have hsum :
+          (∑ q : α, if q = p then (0 : ℂ) else
+            if σ = Equiv.swap p q then cayleyWeight x σ else 0) =
+            if σ p = p then 0 else
+              if σ = Equiv.swap p (σ p) then cayleyWeight x σ else 0 :=
+        Fintype.sum_eq_single (σ p) fun q hq => by
+          by_cases hqp : q = p
+          · simp [hqp]
+          · have hne : σ ≠ Equiv.swap p q := by
+              intro hf
+              apply hq
+              have hcongr :=
+                congr_fun (congr_arg (fun f : Perm α => (f : α → α)) (hsw.symm.trans hf)) p
+              simpa [swap_apply_left] using hcongr.symm
+            simp [hqp, hne]
+      rw [hsum, if_neg hp, if_pos hsw]
+    · rw [if_neg h]
+      refine (sum_eq_zero fun q _ => ?_).symm
+      by_cases hqp : q = p
+      · simp [hqp]
+      · have hpq : p ≠ q := fun heq => hqp heq.symm
+        simp only [hqp, ↓reduceIte]
+        by_cases hsw : σ = Equiv.swap p q
+        · exact (h (by rw [hsw]; exact isCycle_swap_mem_card_two hpq)).elim
+        · simp [hsw]
+  refine (Fintype.sum_congr _ _ hsplit).trans ?_
+  rw [sum_comm]
+  refine Fintype.sum_congr _ _ fun q => ?_
+  by_cases hqp : q = p
+  · simp [hqp]
+  · simp only [hqp, ↓reduceIte]
+    rw [sum_ite_eq' (s := univ) (a := Equiv.swap p q)]
+    simp
+
+open scoped Classical in
+lemma sum_cayleyWeight_transpositions_through_of_zero {α : Type*}
+    [Fintype α] [DecidableEq α] (x : α → ℂ) (p : α)
+    (hx : Function.Injective x) (hxp : x p = 0) :
+    (∑ σ : Perm α,
+        if σ.IsCycle ∧ p ∈ σ.support ∧ σ.support.card = 2 then
+          cayleyWeight x σ else 0) =
+      -((Fintype.card α - 1 : ℕ) : ℂ) := by
+  rw [sum_cayleyWeight_transpositions_through]
+  have hterm : ∀ q : α,
+      (if q = p then (0 : ℂ) else cayleyWeight x (Equiv.swap p q)) =
+        if q = p then 0 else -1 := by
+    intro q
+    by_cases hqp : q = p
+    · simp [hqp]
+    · have hpq : p ≠ q := fun heq => hqp heq.symm
+      have hxq : x q ≠ 0 := fun hxq => hpq (hx (by rw [hxp, hxq]))
+      simp [hqp, cayleyWeight_swap_of_zero x hpq hxp hxq]
+  simp_rw [hterm]
+  rw [sum_ite, sum_const, sum_const, nsmul_eq_mul, nsmul_eq_mul]
+  have hpos : #(univ.filter (fun q : α => q = p)) = 1 := by
+    simp [filter_eq']
+  have hneg : #(univ.filter (fun q : α => ¬ q = p)) = Fintype.card α - 1 := by
+    have hdis := card_filter_add_card_filter_not (s := univ) (p := fun q : α => q = p)
+    have : #(univ.filter (fun q : α => q = p)) +
+        #(univ.filter (fun q : α => ¬ q = p)) = Fintype.card α := by
+      simpa [card_univ] using hdis
+    omega
+  rw [hpos, hneg]
+  simp
+
+open scoped Classical in
+noncomputable def evenCycleSumThrough {α : Type*} [Fintype α] [DecidableEq α]
+    (p : α) (x : α → ℂ) : ℂ :=
+  ∑ σ : Perm α,
+    if σ.IsCycle ∧ p ∈ σ.support ∧ Even σ.support.card then
+      cayleyWeight x σ else 0
+
+open scoped Classical in
+lemma evenCycleSumThrough_split {α : Type*} [Fintype α] [DecidableEq α]
+    (p : α) (x : α → ℂ) :
+    evenCycleSumThrough p x =
+      (∑ σ : Perm α,
+          if σ.IsCycle ∧ p ∈ σ.support ∧ σ.support.card = 2 then
+            cayleyWeight x σ else 0) +
+      (∑ σ : Perm α,
+          if σ.IsCycle ∧ p ∈ σ.support ∧ 4 ≤ σ.support.card ∧ Even σ.support.card then
+            cayleyWeight x σ else 0) := by
+  unfold evenCycleSumThrough
+  rw [← sum_add_distrib]
+  refine Fintype.sum_congr _ _ fun σ => ?_
+  by_cases hcy : σ.IsCycle ∧ p ∈ σ.support ∧ Even σ.support.card
+  · have hparity : σ.support.card = 2 ∨ 4 ≤ σ.support.card := by
+      have he : Even σ.support.card := hcy.2.2
+      have hpos : 0 < σ.support.card := card_pos.mpr ⟨p, hcy.2.1⟩
+      have hne1 : σ.support.card ≠ 1 := by
+        intro h1
+        have hodd : Odd σ.support.card := ⟨0, by simp [h1]⟩
+        exact Nat.not_even_iff_odd.mpr hodd he
+      have hne3 : σ.support.card ≠ 3 := by
+        intro h3
+        have hodd : Odd σ.support.card := ⟨1, by simp [h3]⟩
+        exact Nat.not_even_iff_odd.mpr hodd he
+      omega
+    rcases hparity with h2 | h4
+    · have h2' : σ.IsCycle ∧ p ∈ σ.support ∧ σ.support.card = 2 :=
+        ⟨hcy.1, hcy.2.1, h2⟩
+      have h4' : ¬ (σ.IsCycle ∧ p ∈ σ.support ∧ 4 ≤ σ.support.card ∧ Even σ.support.card) := by
+        intro h
+        omega
+      rw [if_pos hcy, if_pos h2', if_neg h4']
+      simp
+    · have h2' : ¬ (σ.IsCycle ∧ p ∈ σ.support ∧ σ.support.card = 2) := by
+        intro h
+        omega
+      have h4' : σ.IsCycle ∧ p ∈ σ.support ∧ 4 ≤ σ.support.card ∧ Even σ.support.card :=
+        ⟨hcy.1, hcy.2.1, h4, hcy.2.2⟩
+      rw [if_pos hcy, if_neg h2', if_pos h4']
+      simp
+  · have h2' : ¬ (σ.IsCycle ∧ p ∈ σ.support ∧ σ.support.card = 2) := by
+      intro h2
+      exact hcy ⟨h2.1, h2.2.1, by simp [h2.2.2]⟩
+    have h4' : ¬ (σ.IsCycle ∧ p ∈ σ.support ∧ 4 ≤ σ.support.card ∧ Even σ.support.card) :=
+      fun h4 => hcy ⟨h4.1, h4.2.1, h4.2.2.2⟩
+    rw [if_neg hcy, if_neg h2', if_neg h4']
+    simp
+
+open scoped Classical in
+lemma evenCycleSumThrough_eq_binom {α : Type*} [Fintype α] [DecidableEq α]
+    (x : α → ℂ) (hx : Function.Injective x) (p : α) (hxp : x p = 0) :
+    evenCycleSumThrough p x =
+      ∑ k ∈ Icc (1 : ℕ) (Fintype.card α / 2),
+        ((Fintype.card α - 1).choose (2 * k - 1) : ℂ) * cayleyHamConst k := by
+  rw [evenCycleSumThrough_split, sum_cayleyWeight_transpositions_through_of_zero x p hx hxp,
+    sum_cayleyWeight_long_even_cycles_through x hx p]
+  by_cases hI : 1 ≤ Fintype.card α / 2
+  · have hsplit : Icc (1 : ℕ) (Fintype.card α / 2) =
+        insert 1 (Icc (2 : ℕ) (Fintype.card α / 2)) := by
+      ext k
+      simp [mem_Icc]
+      omega
+    have h1 : 1 ∉ Icc (2 : ℕ) (Fintype.card α / 2) := by simp [mem_Icc]
+    rw [hsplit, sum_insert h1]
+    have hcho : ((Fintype.card α - 1).choose (2 * 1 - 1) : ℂ) * cayleyHamConst 1 =
+        -((Fintype.card α - 1 : ℕ) : ℂ) := by
+      rw [cayleyHamConst_one]
+      simp
+    rw [hcho]
+  · have h0 : Fintype.card α / 2 = 0 := by omega
+    have hIcc2 : Icc (2 : ℕ) (Fintype.card α / 2) = ∅ := by
+      simp [h0]
+    have hIcc1 : Icc (1 : ℕ) (Fintype.card α / 2) = ∅ := by
+      simp [h0]
+    have hcard : Fintype.card α - 1 = 0 := by
+      have : Fintype.card α ≤ 1 := by omega
+      omega
+    simp [hIcc1, hIcc2, hcard]
+
+lemma remainder_fixes_cycle_base {α : Type*} [Fintype α] [DecidableEq α]
+    (σ : Perm α) (p : α) :
+    (σ * (σ.cycleOf p)⁻¹) p = p := by
+  by_cases hp : σ p = p
+  · have h1 : σ.cycleOf p = 1 := (Equiv.Perm.cycleOf_eq_one_iff σ).mpr hp
+    simp [h1, hp]
+  · have hc : σ.cycleOf p ∈ σ.cycleFactorsFinset :=
+      (Equiv.Perm.cycleOf_mem_cycleFactorsFinset_iff).2 (Equiv.Perm.mem_support.mpr hp)
+    have hmem : p ∈ (σ.cycleOf p).support :=
+      Equiv.Perm.mem_support.mpr (by
+        rw [Equiv.Perm.cycleOf_apply_self]
+        exact hp)
+    exact remainder_apply_eq_self_of_mem hc hmem
+
+lemma disjoint_cycleOf_remainder {α : Type*} [Fintype α] [DecidableEq α]
+    (σ : Perm α) (p : α) :
+    Equiv.Perm.Disjoint (σ.cycleOf p) (σ * (σ.cycleOf p)⁻¹) := by
+  by_cases hp : σ p = p
+  · have h1 : σ.cycleOf p = 1 := (Equiv.Perm.cycleOf_eq_one_iff σ).mpr hp
+    rw [h1]
+    exact Equiv.Perm.disjoint_one_left _
+  · have hc : σ.cycleOf p ∈ σ.cycleFactorsFinset :=
+      (Equiv.Perm.cycleOf_mem_cycleFactorsFinset_iff).2 (Equiv.Perm.mem_support.mpr hp)
+    exact (Equiv.Perm.disjoint_mul_inv_of_mem_cycleFactorsFinset hc).symm
+
+lemma eq_cycleOf_mul_remainder {α : Type*} [Fintype α] [DecidableEq α]
+    (σ : Perm α) (p : α) :
+    σ = σ.cycleOf p * (σ * (σ.cycleOf p)⁻¹) := by
+  by_cases hp : σ p = p
+  · have h1 : σ.cycleOf p = 1 := (Equiv.Perm.cycleOf_eq_one_iff σ).mpr hp
+    simp [h1]
+  · exact eq_mul_remainder_of_mem_cycleFactorsFinset
+      ((Equiv.Perm.cycleOf_mem_cycleFactorsFinset_iff).2 (Equiv.Perm.mem_support.mpr hp))
+
+lemma oddLongPoints_mul_disjoint {α : Type*} [Fintype α] [DecidableEq α]
+    {σ τ : Perm α} (h : Equiv.Perm.Disjoint σ τ) :
+    (oddLongPoints (σ * τ)).Nonempty ↔
+      (oddLongPoints σ).Nonempty ∨ (oddLongPoints τ).Nonempty := by
+  rw [oddLongPoints_nonempty_iff, oddLongPoints_nonempty_iff, oddLongPoints_nonempty_iff,
+    h.cycleFactorsFinset_mul_eq_union]
+  constructor
+  · rintro ⟨c, hc, hodd⟩
+    rw [mem_union] at hc
+    rcases hc with hσ | hτ
+    · exact Or.inl ⟨c, hσ, hodd⟩
+    · exact Or.inr ⟨c, hτ, hodd⟩
+  · rintro (⟨c, hc, hodd⟩ | ⟨c, hc, hodd⟩)
+    · exact ⟨c, mem_union.mpr (Or.inl hc), hodd⟩
+    · exact ⟨c, mem_union.mpr (Or.inr hc), hodd⟩
+
+lemma cayleyWeight_cycleOf_mul_remainder {α : Type*} [Fintype α] [DecidableEq α]
+    (x : α → ℂ) (σ : Perm α) (p : α) :
+    cayleyWeight x σ =
+      cayleyWeight x (σ.cycleOf p) * cayleyWeight x (σ * (σ.cycleOf p)⁻¹) := by
+  nth_rw 1 [eq_cycleOf_mul_remainder σ p]
+  exact cayleyWeight_mul_disjoint x (disjoint_cycleOf_remainder σ p)
+
+lemma oddLongPoints_cycleOf_mul_remainder {α : Type*} [Fintype α] [DecidableEq α]
+    (σ : Perm α) (p : α) :
+    (oddLongPoints σ).Nonempty ↔
+      (oddLongPoints (σ.cycleOf p)).Nonempty ∨
+        (oddLongPoints (σ * (σ.cycleOf p)⁻¹)).Nonempty := by
+  nth_rw 1 [eq_cycleOf_mul_remainder σ p]
+  exact oddLongPoints_mul_disjoint (disjoint_cycleOf_remainder σ p)
 
 #check (OeisA1818.conjecture1 :
     ∀ (n : ℕ), 1 ≤ n → ∀ (ζ : ℂ), IsPrimitiveRoot ζ (2 * n) →
@@ -5186,5 +5561,12 @@ lemma cayleyHamConst_binom_sum_rewrite {n : ℕ} (hn : 1 ≤ n) :
 #print axioms permanent_signMatrix
 #print axioms cayleyWeight_swap_of_zero
 #print axioms cayleyHamConst_binom_sum_rewrite
+#print axioms cayleySum_fin_two_of_zero
+#print axioms cayleySum_permCongr
+#print axioms cayleySumOn_pair
+#print axioms sum_cayleyWeight_transpositions_through_of_zero
+#print axioms evenCycleSumThrough_eq_binom
+#print axioms cayleyWeight_cycleOf_mul_remainder
+#print axioms oddLongPoints_cycleOf_mul_remainder
 
 end A001818C1
