@@ -6,7 +6,7 @@
   "coordination_commit": "238f78bdd5701ae4c97a0d70d4e22e2d45770d7a",
   "current_status": "partial",
   "novelty_status": "provisional_no_public_solution_found",
-  "last_updated_utc": "2026-09-13T04:45:00Z",
+  "last_updated_utc": "2026-09-13T04:51:00Z",
   "kickoff_utc": "2026-09-12T23:10:00Z",
   "session_limit_utc": "2026-09-13T07:10:00Z",
   "proof_declarations": [
@@ -43,12 +43,13 @@
     "OeisA108081.XWord.of_cons_zero_head_le_zero",
     "OeisA108081.XWord.of_cons_zero_head_neg_one",
     "OeisA108081.LeftWord.concat_one_append_rIrreducible",
-    "OeisA108081.not_xWord_cons_zero_zero"
+    "OeisA108081.not_xWord_cons_zero_zero",
+    "OeisA108081.ncard_iN_ge_sum_catalan_iN_add_concat_one"
   ],
   "unresolved_gaps": [
     "The quantified identity |X_n| = a(n-1) is not proved.",
     "|X_n| = ∑_k |I_k| H_{n-k} is proved. Left-gluing and 01-gluing give extra I-words, and C_{n-1} ≤ |I_n| ≤ H_{n-1}, but |I_n| = A081696(n-1) is not proved.",
-    "The 01 extra P-factors Left++[1] give I when glued to every I-remainder. The 11 slice (every PWord s++[1]), stability of G_k in the remainder, and |G_k|=2 C_{k-1} are not proved.",
+    "The 01 extra P-factors Left++[1] give I when glued to every I-remainder, and contribute the extra lower bound ∑ C_{k-2} |I_{n-k}|. The 11 slice (every PWord s++[1]), stability of G_k in the remainder, and |G_k|=2 C_{k-1} are not proved.",
     "Paul Barry's gf is H(x)F(x); that algebraic identity is unproved from Lean's Fibonacci-binomial a.",
     "Partial lemmas and n<=8 (or public n<=14) counts are not a resolution."
   ],

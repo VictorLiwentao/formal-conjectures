@@ -4081,6 +4081,158 @@ lemma ncard_iN_ge_sum_catalan_iN (n : ℕ) (hn : 2 ≤ n) :
     rw [← ncard_leftN_eq_card, ncard_leftN_eq_catalan hk1, ncard_iN_eq_card]
   omega
 
+lemma concat_one_injective :
+    Function.Injective (fun p : Word => p ++ [(1 : ℤ)]) := by
+  intro a b h
+  simpa [dropLast_concat] using congrArg List.dropLast h
+
+noncomputable def leftConcatOneNFinset (n : ℕ) : Finset Word :=
+  (leftNFinset (n - 1)).image (fun p => p ++ [(1 : ℤ)])
+
+lemma mem_leftConcatOneNFinset {n : ℕ} {w : Word} (_hn : 2 ≤ n) :
+    w ∈ leftConcatOneNFinset n ↔
+      ∃ p, p ∈ leftN (n - 1) ∧ w = p ++ [1] := by
+  constructor
+  · intro h
+    have h' : ∃ p ∈ leftN (n - 1), p ++ [1] = w := by
+      simpa [leftConcatOneNFinset, Finset.mem_image, mem_leftNFinset] using h
+    obtain ⟨p, hp, heq⟩ := h'
+    exact ⟨p, hp, heq.symm⟩
+  · rintro ⟨p, hp, rfl⟩
+    exact Finset.mem_image.mpr ⟨p, mem_leftNFinset.mpr hp, rfl⟩
+
+lemma card_leftConcatOneNFinset (n : ℕ) (hn : 2 ≤ n) :
+    (leftConcatOneNFinset n).card = catalan (n - 2) := by
+  have hinj : Set.InjOn (fun p : Word => p ++ [(1 : ℤ)])
+      (leftNFinset (n - 1) : Set Word) :=
+    fun _ _ _ _ h => concat_one_injective h
+  rw [leftConcatOneNFinset, Finset.card_image_of_injOn hinj,
+    ← ncard_leftN_eq_card]
+  have hpos : 1 ≤ n - 1 := by omega
+  have hcat := ncard_leftN_eq_catalan hpos
+  have : n - 1 - 1 = n - 2 := by omega
+  simpa [this] using hcat
+
+lemma leftConcatOneN_subset_pN {n : ℕ} (hn : 2 ≤ n) :
+    (leftConcatOneNFinset n : Set Word) ⊆ pN n := by
+  intro w hw
+  obtain ⟨p, hp, rfl⟩ := (mem_leftConcatOneNFinset hn).mp hw
+  exact ⟨LeftWord.concat_one_pWord hp.1, by simp [hp.2]; omega⟩
+
+lemma disjoint_leftConcatOneNFinset_iN_product {i j k l : ℕ}
+    (hi : 2 ≤ i) (hj : 2 ≤ j) (hij : i ≠ j) :
+    Disjoint (leftConcatOneNFinset i ×ˢ iNFinset k)
+      (leftConcatOneNFinset j ×ˢ iNFinset l) := by
+  refine Finset.disjoint_iff_ne.mpr ?_
+  intro p hp q hq hpeq
+  have hi' : p.1.length = i := by
+    obtain ⟨s, hs, hps⟩ :=
+      (mem_leftConcatOneNFinset (n := i) hi).mp (Finset.mem_product.mp hp).1
+    simp [hps, hs.2]
+    omega
+  have hj' : q.1.length = j := by
+    obtain ⟨s, hs, hqs⟩ :=
+      (mem_leftConcatOneNFinset (n := j) hj).mp (Finset.mem_product.mp hq).1
+    simp [hqs, hs.2]
+    omega
+  have : p.1.length = q.1.length := congrArg List.length (congrArg Prod.fst hpeq)
+  omega
+
+noncomputable def leftConcatOneIPairs (n : ℕ) : Finset (Word × Word) :=
+  (Finset.Icc 2 (n - 1)).biUnion fun k =>
+    leftConcatOneNFinset k ×ˢ iNFinset (n - k)
+
+lemma mem_leftConcatOneIPairs {n : ℕ} {p : Word × Word} :
+    p ∈ leftConcatOneIPairs n ↔
+      ∃ k ∈ Finset.Icc 2 (n - 1),
+        p.1 ∈ leftConcatOneNFinset k ∧ p.2 ∈ iN (n - k) := by
+  simp [leftConcatOneIPairs, Finset.mem_biUnion, Finset.mem_product,
+    mem_iNFinset]
+
+lemma leftConcatOneIPairs_subset_goodPairs (n : ℕ) :
+    leftConcatOneIPairs n ⊆ goodPairs n := by
+  intro p hp
+  obtain ⟨k, hk, hC, hv⟩ := mem_leftConcatOneIPairs.mp hp
+  have hk2 : 2 ≤ k := (Finset.mem_Icc.mp hk).1
+  obtain ⟨s, hs, hw⟩ := (mem_leftConcatOneNFinset hk2).mp hC
+  have hkIcc : k ∈ Finset.Icc 1 (n - 1) := by
+    have := Finset.mem_Icc.mp hk
+    simp [Finset.mem_Icc]
+    omega
+  refine mem_goodPairs.mpr ⟨⟨k, hkIcc, ?_, hv⟩, ?_⟩
+  · simpa [hw] using leftConcatOneN_subset_pN hk2 hC
+  · simpa [hw] using LeftWord.concat_one_append_rIrreducible hs.1 hv.1
+
+lemma card_leftConcatOneIPairs (n : ℕ) :
+    (leftConcatOneIPairs n).card =
+      ∑ k ∈ Finset.Icc 2 (n - 1),
+        (leftConcatOneNFinset k).card * (iNFinset (n - k)).card := by
+  have hdisj : (Finset.Icc 2 (n - 1) : Set ℕ).PairwiseDisjoint
+      (fun k => leftConcatOneNFinset k ×ˢ iNFinset (n - k)) := by
+    intro i hi j hj hij
+    have hi2 : 2 ≤ i := (Finset.mem_Icc.mp hi).1
+    have hj2 : 2 ≤ j := (Finset.mem_Icc.mp hj).1
+    exact disjoint_leftConcatOneNFinset_iN_product hi2 hj2 hij
+  rw [leftConcatOneIPairs, Finset.card_biUnion hdisj]
+  simp [Finset.card_product]
+
+lemma disjoint_leftIPairs_leftConcatOneIPairs (n : ℕ) :
+    Disjoint (leftIPairs n) (leftConcatOneIPairs n) := by
+  refine Finset.disjoint_iff_ne.mpr ?_
+  intro p hp q hq hpeq
+  obtain ⟨k, _, hL, _⟩ := mem_leftIPairs.mp hp
+  obtain ⟨k', hk', hC, _⟩ := mem_leftConcatOneIPairs.mp hq
+  have hk2 : 2 ≤ k' := (Finset.mem_Icc.mp hk').1
+  obtain ⟨s, _, hqs⟩ := (mem_leftConcatOneNFinset hk2).mp hC
+  have hw : p.1 = q.1 := congrArg Prod.fst hpeq
+  have h0 : p.1.getLast? = some (0 : ℤ) := hL.1.2
+  have h1 : q.1.getLast? = some (1 : ℤ) := by
+    rw [hqs]
+    exact getLast?_concat
+  have : (0 : ℤ) = 1 := by
+    have h01 : some (0 : ℤ) = some (1 : ℤ) := by
+      calc
+        some (0 : ℤ) = p.1.getLast? := h0.symm
+        _ = q.1.getLast? := by rw [hw]
+        _ = some (1 : ℤ) := h1
+    exact Option.some.inj h01
+  simp at this
+
+lemma ncard_iN_ge_sum_catalan_iN_add_concat_one (n : ℕ) (hn : 2 ≤ n) :
+    ∑ k ∈ Finset.Icc 1 (n - 1), catalan (k - 1) * (iN (n - k)).ncard +
+        ∑ k ∈ Finset.Icc 2 (n - 1), catalan (k - 2) * (iN (n - k)).ncard ≤
+      (iN n).ncard := by
+  have hdisj := disjoint_leftIPairs_leftConcatOneIPairs n
+  have hle :
+      (leftIPairs n).card + (leftConcatOneIPairs n).card ≤
+        (goodPairs n).card := by
+    have hsub :
+        leftIPairs n ∪ leftConcatOneIPairs n ⊆ goodPairs n :=
+      Finset.union_subset (leftIPairs_subset_goodPairs n)
+        (leftConcatOneIPairs_subset_goodPairs n)
+    have hcard := Finset.card_le_card hsub
+    simpa [Finset.card_union_of_disjoint hdisj] using hcard
+  have hI : (iN n).ncard = (goodPairs n).card := ncard_iN_eq_card_goodPairs n hn
+  have hsumL := card_leftIPairs n
+  have hsumC := card_leftConcatOneIPairs n
+  have hrewL :
+      (leftIPairs n).card =
+        ∑ k ∈ Finset.Icc 1 (n - 1), catalan (k - 1) * (iN (n - k)).ncard := by
+    rw [hsumL]
+    refine Finset.sum_congr rfl ?_
+    intro k hk
+    have hk1 : 1 ≤ k := (Finset.mem_Icc.mp hk).1
+    rw [← ncard_leftN_eq_card, ncard_leftN_eq_catalan hk1, ncard_iN_eq_card]
+  have hrewC :
+      (leftConcatOneIPairs n).card =
+        ∑ k ∈ Finset.Icc 2 (n - 1), catalan (k - 2) * (iN (n - k)).ncard := by
+    rw [hsumC]
+    refine Finset.sum_congr rfl ?_
+    intro k hk
+    have hk2 : 2 ≤ k := (Finset.mem_Icc.mp hk).1
+    rw [card_leftConcatOneNFinset k hk2, ncard_iN_eq_card]
+  omega
+
 #print axioms ncard_xN_one
 #print axioms ncard_xN_two
 #print axioms ncard_xN_three
@@ -4151,6 +4303,8 @@ lemma ncard_iN_ge_sum_catalan_iN (n : ℕ) (hn : 2 ≤ n) :
 #print axioms LeftWord.xword_of_l_append_prefix
 #print axioms LeftWord.append_rIrreducible
 #print axioms ncard_iN_ge_sum_catalan_iN
+#print axioms ncard_iN_ge_sum_catalan_iN_add_concat_one
+#print axioms LeftWord.concat_one_append_rIrreducible
 #print axioms LeftWord.l_mem_neg
 #print axioms LeftWord.concat_one_pWord
 #print axioms LeftWord.concat_one_l_append_zero_rIrreducible

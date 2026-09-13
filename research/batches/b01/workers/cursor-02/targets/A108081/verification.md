@@ -153,6 +153,8 @@ Guard: PASS (worker path only). Source SHA-256 matches.
 -- [propext, Classical.choice, Quot.sound]
 #print axioms LeftWord.concat_one_append_rIrreducible
 -- [propext, Classical.choice, Quot.sound]
+#print axioms ncard_iN_ge_sum_catalan_iN_add_concat_one
+-- [propext, Classical.choice, Quot.sound]
 #print axioms xN_finite
 -- [propext, Classical.choice, Quot.sound]
 ```
