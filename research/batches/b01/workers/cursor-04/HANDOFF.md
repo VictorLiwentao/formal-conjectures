@@ -44,5 +44,6 @@ See `proof.md`. Remaining McEachen primes need a first-entry bound for some fact
 
 ## Commit SHA
 
-Research commit: pending after this commit
+Research commit: `2d25e3dc`
+Previous structural commit: `fa641c9d`
 Branch: `cursor/a135508-lcm-primes-770d`
