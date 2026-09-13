@@ -103,9 +103,12 @@ which type-checks. The original `a` is used. The admitted `OeisA1818.conjecture1
 'A001818C1.card_powersetCard_mem' depends on axioms: [propext, Classical.choice, Quot.sound]
 'A001818C1.sum_cayleyWeight_even_cycles_through' depends on axioms: [propext, Classical.choice, Quot.sound]
 'A001818C1.cayleyHamConst_one' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.oddLongPoints_isCycle' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.cayleySum_term_isCycle' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.sum_cayleyWeight_long_even_cycles_through' depends on axioms: [propext, Classical.choice, Quot.sound]
 ```
 
-No `sorryAx`, `native_decide`, or `Lean.trustCompiler` in those lemmas. The general `n ≥ 1` identity is not yet proved. `per(M-J) = a n` is proved and `per M` equals the even-cycle Cayley sum. Paper Σ1 and Σ2 at a distinguished point are proved. Hamiltonian Cayley sums depend only on cardinality for injective assignments on types of cardinality at least 3. Paper (3.5) for `k ≥ 2` and `s_1 = -1` are proved. Σ3, (3.9), and recurrence (4.8) remain, so `per M = per(M-J)` remains.
+No `sorryAx`, `native_decide`, or `Lean.trustCompiler` in those lemmas. The general `n ≥ 1` identity is not yet proved. `per(M-J) = a n` is proved and `per M` equals the even-cycle Cayley sum. Paper Σ1 and Σ2 at a distinguished point are proved. Hamiltonian Cayley sums depend only on cardinality for injective assignments on types of cardinality at least 3. Paper (3.5) for `k ≥ 2`, `s_1 = -1`, and the sum of long even cycles through a point are proved. Complementary terms in Σ3, (3.9), and recurrence (4.8) remain, so `per M = per(M-J)` remains.
 
 ## Boundary
 

@@ -4637,6 +4637,115 @@ lemma cayleyHamConst_one : cayleyHamConst 1 = -1 := by
   rw [if_neg h1, if_pos hsw, cayleyWeight_swap_sq _ Fin.zero_ne_one]
   norm_num
 
+lemma oddLongPoints_isCycle {α : Type*} [Fintype α] [DecidableEq α]
+    {σ : Perm α} (hσ : σ.IsCycle) :
+    (oddLongPoints σ).Nonempty ↔ Odd σ.support.card := by
+  constructor
+  · intro hne
+    obtain ⟨c, hc, hodd⟩ := (oddLongPoints_nonempty_iff (σ := σ)).mp hne
+    have hcσ : c = σ := by
+      simpa [hσ.cycleFactorsFinset_eq_singleton] using hc
+    rwa [hcσ] at hodd
+  · intro hodd
+    refine (oddLongPoints_nonempty_iff (σ := σ)).mpr ⟨σ, ?_, hodd⟩
+    simp [hσ.cycleFactorsFinset_eq_singleton]
+
+lemma cayleySum_term_isCycle {α : Type*} [Fintype α] [DecidableEq α] [LinearOrder α]
+    (x : α → ℂ) {σ : Perm α} (hσ : σ.IsCycle) :
+    (if (oddLongPoints σ).Nonempty then (0 : ℂ) else cayleyWeight x σ) =
+      if Odd σ.support.card then 0 else cayleyWeight x σ := by
+  by_cases h : Odd σ.support.card
+  · have hne : (oddLongPoints σ).Nonempty := (oddLongPoints_isCycle hσ).mpr h
+    simp [hne, h]
+  · have hne : ¬ (oddLongPoints σ).Nonempty :=
+      fun h' => h ((oddLongPoints_isCycle hσ).mp h')
+    simp [hne, h]
+
+open scoped Classical in
+lemma sum_cayleyWeight_long_even_cycles_through {α : Type*} [Fintype α] [DecidableEq α]
+    (x : α → ℂ) (hx : Function.Injective x) (p : α) :
+    (∑ σ : Perm α,
+        if σ.IsCycle ∧ p ∈ σ.support ∧ 4 ≤ σ.support.card ∧ Even σ.support.card then
+          cayleyWeight x σ else 0) =
+      ∑ k ∈ Icc (2 : ℕ) (Fintype.card α / 2),
+        ((Fintype.card α - 1).choose (2 * k - 1) : ℂ) * cayleyHamConst k := by
+  have hswap :
+      (∑ σ : Perm α, ∑ k ∈ Icc (2 : ℕ) (Fintype.card α / 2),
+          if σ.IsCycle ∧ p ∈ σ.support ∧ σ.support.card = 2 * k then
+            cayleyWeight x σ else 0) =
+        ∑ k ∈ Icc (2 : ℕ) (Fintype.card α / 2), ∑ σ : Perm α,
+          if σ.IsCycle ∧ p ∈ σ.support ∧ σ.support.card = 2 * k then
+            cayleyWeight x σ else 0 :=
+    sum_comm
+  have hfiber : ∀ σ : Perm α,
+      (∑ k ∈ Icc (2 : ℕ) (Fintype.card α / 2),
+          if σ.IsCycle ∧ p ∈ σ.support ∧ σ.support.card = 2 * k then
+            cayleyWeight x σ else 0) =
+        if σ.IsCycle ∧ p ∈ σ.support ∧ 4 ≤ σ.support.card ∧ Even σ.support.card then
+          cayleyWeight x σ else 0 := by
+    intro σ
+    by_cases hP : σ.IsCycle ∧ p ∈ σ.support
+    · have hsum :
+          (∑ k ∈ Icc (2 : ℕ) (Fintype.card α / 2),
+              if σ.IsCycle ∧ p ∈ σ.support ∧ σ.support.card = 2 * k then
+                cayleyWeight x σ else 0) =
+            ∑ k ∈ Icc (2 : ℕ) (Fintype.card α / 2),
+              if σ.support.card = 2 * k then cayleyWeight x σ else 0 :=
+        sum_congr rfl fun k _ => by simp only [hP, true_and]
+      rw [hsum]
+      by_cases hE : Even σ.support.card
+      · have hiff : ∀ k : ℕ, σ.support.card = 2 * k ↔ k = σ.support.card / 2 := by
+          intro k
+          constructor
+          · intro hk
+            have : 2 * (σ.support.card / 2) = σ.support.card :=
+              Nat.two_mul_div_two_of_even hE
+            omega
+          · intro hk
+            rw [hk, Nat.two_mul_div_two_of_even hE]
+        simp_rw [hiff]
+        rw [sum_ite_eq' (Icc (2 : ℕ) (Fintype.card α / 2)) (σ.support.card / 2)
+          (fun _ => cayleyWeight x σ)]
+        have hmem :
+            σ.support.card / 2 ∈ Icc (2 : ℕ) (Fintype.card α / 2) ↔
+              4 ≤ σ.support.card := by
+          simp only [mem_Icc]
+          have hle : σ.support.card / 2 ≤ Fintype.card α / 2 := by
+            have : σ.support.card ≤ Fintype.card α := Finset.card_le_univ _
+            omega
+          constructor
+          · intro h
+            omega
+          · intro h4
+            exact ⟨by omega, hle⟩
+        simp [hP, hE, hmem]
+      · have hnone : ∀ k : ℕ, ¬ σ.support.card = 2 * k := by
+          intro k hk
+          exact hE (by rw [hk]; exact even_two_mul k)
+        have hR : ¬ (σ.IsCycle ∧ p ∈ σ.support ∧ 4 ≤ σ.support.card ∧ Even σ.support.card) :=
+          fun h => hE h.2.2.2
+        rw [sum_eq_zero fun k _ => if_neg (hnone k), if_neg hR]
+    · have hnone : ∀ k : ℕ,
+          ¬ (σ.IsCycle ∧ p ∈ σ.support ∧ σ.support.card = 2 * k) := by
+        intro k h
+        exact hP ⟨h.1, h.2.1⟩
+      have hR : ¬ (σ.IsCycle ∧ p ∈ σ.support ∧ 4 ≤ σ.support.card ∧ Even σ.support.card) :=
+        fun h => hP ⟨h.1, h.2.1⟩
+      rw [sum_eq_zero fun k _ => if_neg (hnone k), if_neg hR]
+  have hleft :
+      (∑ σ : Perm α,
+          if σ.IsCycle ∧ p ∈ σ.support ∧ 4 ≤ σ.support.card ∧ Even σ.support.card then
+            cayleyWeight x σ else 0) =
+        ∑ k ∈ Icc (2 : ℕ) (Fintype.card α / 2), ∑ σ : Perm α,
+          if σ.IsCycle ∧ p ∈ σ.support ∧ σ.support.card = 2 * k then
+            cayleyWeight x σ else 0 := by
+    rw [← hswap]
+    exact Fintype.sum_congr _ _ fun σ => (hfiber σ).symm
+  rw [hleft]
+  refine sum_congr rfl fun k hk => ?_
+  have hk2 : 2 ≤ k := (mem_Icc.mp hk).1
+  exact sum_cayleyWeight_even_cycles_through x hx p hk2
+
 #check (OeisA1818.conjecture1 :
     ∀ (n : ℕ), 1 ≤ n → ∀ (ζ : ℂ), IsPrimitiveRoot ζ (2 * n) →
       (sunMatrix n ζ).permanent = (a n : ℂ))
@@ -4761,5 +4870,8 @@ lemma cayleyHamConst_one : cayleyHamConst 1 = -1 := by
 #print axioms card_powersetCard_mem
 #print axioms sum_cayleyWeight_even_cycles_through
 #print axioms cayleyHamConst_one
+#print axioms oddLongPoints_isCycle
+#print axioms cayleySum_term_isCycle
+#print axioms sum_cayleyWeight_long_even_cycles_through
 
 end A001818C1
