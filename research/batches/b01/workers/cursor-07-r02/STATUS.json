@@ -10,14 +10,20 @@
   "mathematical_novelty": "known_mathematics",
   "formalization_novelty": "candidate_new_lean_implementation_pending_coordinator_audit",
   "novelty_status": "known_mathematics_formalization_candidate",
-  "last_updated_utc": "2026-09-13T01:42:00Z",
+  "last_updated_utc": "2026-09-13T01:43:00Z",
   "session_kickoff_utc": "2026-09-13T01:23:02Z",
   "session_limit_hours": 8,
   "session_deadline_utc": "2026-09-13T09:23:02Z",
-  "proof_declarations": ["WOWII101.conjecture101"],
+  "proof_declarations": [
+    "WOWII101.conjecture101"
+  ],
   "proof_file": "research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean",
   "proof_sha256": "5018f7ba7f2ec8b63d4334b606d8936db097e635f9c959c3d2877ae9dee8e34a",
-  "axioms": ["propext", "Classical.choice", "Quot.sound"],
+  "axioms": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
   "independently_verified": false,
   "unresolved_gaps": [
     "Coordinator independent audit is pending.",
@@ -33,5 +39,6 @@
   "publication_policy": "Push only this worker branch to VictorLiwentao/formal-conjectures. No PR.",
   "timer_subscription": null,
   "further_target_work": "stopped",
-  "classification": "known_mathematics_formalization"
+  "classification": "known_mathematics_formalization",
+  "proof_commit": "c2b193948afde6a5c6d34324590a830743350ed1"
 }

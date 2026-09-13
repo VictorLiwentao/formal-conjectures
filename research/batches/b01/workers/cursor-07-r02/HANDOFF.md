@@ -37,6 +37,6 @@ LEAN_NUM_THREADS=2 lake env lean -DwarningAsError=true research/batches/b01/work
 Expected axioms: `propext`, `Classical.choice`, `Quot.sound`.
 
 Proof SHA-256: `5018f7ba7f2ec8b63d4334b606d8936db097e635f9c959c3d2877ae9dee8e34a`.
-Final commit SHA is recorded after the commit that contains this handoff.
+Final commit SHA: .
 
 See `STATUS.json` and `targets/WOWII101/{proof,literature,verification}.md`.
