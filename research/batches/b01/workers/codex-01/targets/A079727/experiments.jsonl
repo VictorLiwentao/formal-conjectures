@@ -1,0 +1,79 @@
+{"validation": "direct_integer_crosscheck", "cases": 95}
+{"p": 3, "c123_residuals": [0, 0, 0]}
+{"p": 5, "c123_residuals": [0, 0, 0]}
+{"p": 13, "c123_residuals": [0, 0, 0]}
+{"p": 17, "c123_residuals": [0, 0, 0]}
+{"p": 19, "c123_residuals": [0, 0, 0]}
+{"p": 31, "c123_residuals": [0, 0, 0]}
+{"p": 41, "c123_residuals": [0, 0, 0]}
+{"p": 47, "c123_residuals": [0, 0, 0]}
+{"p": 59, "c123_residuals": [0, 0, 0]}
+{"p": 61, "c123_residuals": [0, 0, 0]}
+{"p": 73, "c123_residuals": [0, 0, 0]}
+{"p": 83, "c123_residuals": [0, 0, 0]}
+{"p": 89, "c123_residuals": [0, 0, 0]}
+{"p": 97, "c123_residuals": [0, 0, 0]}
+{"p": 101, "c123_residuals": [0, 0, 0]}
+{"p": 103, "c123_residuals": [0, 0, 0]}
+{"p": 131, "c123_residuals": [0, 0, 0]}
+{"p": 139, "c123_residuals": [0, 0, 0]}
+{"p": 157, "c123_residuals": [0, 0, 0]}
+{"p": 167, "c123_residuals": [0, 0, 0]}
+{"p": 173, "c123_residuals": [0, 0, 0]}
+{"p": 181, "c123_residuals": [0, 0, 0]}
+{"p": 199, "c123_residuals": [0, 0, 0]}
+{"p": 223, "c123_residuals": [0, 0, 0]}
+{"p": 227, "c123_residuals": [0, 0, 0]}
+{"p": 229, "c123_residuals": [0, 0, 0]}
+{"p": 241, "c123_residuals": [0, 0, 0]}
+{"p": 251, "c123_residuals": [0, 0, 0]}
+{"p": 257, "c123_residuals": [0, 0, 0]}
+{"p": 269, "c123_residuals": [0, 0, 0]}
+{"p": 271, "c123_residuals": [0, 0, 0]}
+{"p": 283, "c123_residuals": [0, 0, 0]}
+{"p": 293, "c123_residuals": [0, 0, 0]}
+{"p": 307, "c123_residuals": [0, 0, 0]}
+{"p": 311, "c123_residuals": [0, 0, 0]}
+{"p": 313, "c123_residuals": [0, 0, 0]}
+{"p": 349, "c123_residuals": [0, 0, 0]}
+{"p": 353, "c123_residuals": [0, 0, 0]}
+{"p": 367, "c123_residuals": [0, 0, 0]}
+{"p": 383, "c123_residuals": [0, 0, 0]}
+{"p": 397, "c123_residuals": [0, 0, 0]}
+{"p": 409, "c123_residuals": [0, 0, 0]}
+{"p": 419, "c123_residuals": [0, 0, 0]}
+{"p": 433, "c123_residuals": [0, 0, 0]}
+{"p": 439, "c123_residuals": [0, 0, 0]}
+{"p": 461, "c123_residuals": [0, 0, 0]}
+{"p": 467, "c123_residuals": [0, 0, 0]}
+{"p": 479, "c123_residuals": [0, 0, 0]}
+{"p": 503, "c123_residuals": [0, 0, 0]}
+{"c4_set": [3, 5], "rejected_parse_index": 4, "rejected_parse_residue": 0, "intended_index": 7, "intended_residue": 0}
+{"c4_set": [3, 13], "rejected_parse_index": 12, "rejected_parse_residue": 676, "intended_index": 19, "intended_residue": 0}
+{"c4_set": [3, 17], "rejected_parse_index": 16, "rejected_parse_residue": 0, "intended_index": 25, "intended_residue": 0}
+{"c4_set": [3, 19], "rejected_parse_index": 18, "rejected_parse_residue": 0, "intended_index": 28, "intended_residue": 0}
+{"c4_set": [3, 31], "rejected_parse_index": 30, "rejected_parse_residue": 3844, "intended_index": 46, "intended_residue": 0}
+{"c4_set": [5, 13], "rejected_parse_index": 24, "rejected_parse_residue": 0, "intended_index": 32, "intended_residue": 0}
+{"c4_set": [5, 17], "rejected_parse_index": 32, "rejected_parse_residue": 0, "intended_index": 42, "intended_residue": 0}
+{"c4_set": [5, 19], "rejected_parse_index": 36, "rejected_parse_residue": 4332, "intended_index": 47, "intended_residue": 0}
+{"c4_set": [5, 31], "rejected_parse_index": 60, "rejected_parse_residue": 5766, "intended_index": 77, "intended_residue": 0}
+{"c4_set": [13, 17], "rejected_parse_index": 96, "rejected_parse_residue": 0, "intended_index": 110, "intended_residue": 0}
+{"c4_set": [13, 19], "rejected_parse_index": 108, "rejected_parse_residue": 0, "intended_index": 123, "intended_residue": 0}
+{"c4_set": [13, 31], "rejected_parse_index": 180, "rejected_parse_residue": 0, "intended_index": 201, "intended_residue": 0}
+{"c4_set": [17, 19], "rejected_parse_index": 144, "rejected_parse_residue": 0, "intended_index": 161, "intended_residue": 0}
+{"c4_set": [17, 31], "rejected_parse_index": 240, "rejected_parse_residue": 0, "intended_index": 263, "intended_residue": 0}
+{"c4_set": [19, 31], "rejected_parse_index": 270, "rejected_parse_residue": 0, "intended_index": 294, "intended_residue": 0}
+{"block": {"p": 5, "S0_mod_p2": 0, "D_mod_p": 0, "M1_mod_p": 0, "M2_mod_p": 2, "D_over_p_mod_p": 1, "E_mod_p": 3, "rhs_mod_p3": 25, "actual_mod_p3": 25, "expansion_agrees": true}}
+{"block": {"p": 13, "S0_mod_p2": 0, "D_mod_p": 0, "M1_mod_p": 0, "M2_mod_p": 7, "D_over_p_mod_p": 8, "E_mod_p": 2, "rhs_mod_p3": 169, "actual_mod_p3": 169, "expansion_agrees": true}}
+{"block": {"p": 17, "S0_mod_p2": 0, "D_mod_p": 0, "M1_mod_p": 0, "M2_mod_p": 9, "D_over_p_mod_p": 11, "E_mod_p": 2, "rhs_mod_p3": 289, "actual_mod_p3": 289, "expansion_agrees": true}}
+{"block": {"p": 19, "S0_mod_p2": 0, "D_mod_p": 0, "M1_mod_p": 0, "M2_mod_p": 11, "D_over_p_mod_p": 13, "E_mod_p": 7, "rhs_mod_p3": 361, "actual_mod_p3": 361, "expansion_agrees": true}}
+{"block": {"p": 31, "S0_mod_p2": 0, "D_mod_p": 0, "M1_mod_p": 0, "M2_mod_p": 22, "D_over_p_mod_p": 7, "E_mod_p": 24, "rhs_mod_p3": 961, "actual_mod_p3": 961, "expansion_agrees": true}}
+{"block": {"p": 41, "S0_mod_p2": 0, "D_mod_p": 0, "M1_mod_p": 0, "M2_mod_p": 37, "D_over_p_mod_p": 3, "E_mod_p": 10, "rhs_mod_p3": 1681, "actual_mod_p3": 1681, "expansion_agrees": true}}
+{"block": {"p": 47, "S0_mod_p2": 0, "D_mod_p": 0, "M1_mod_p": 0, "M2_mod_p": 45, "D_over_p_mod_p": 33, "E_mod_p": 23, "rhs_mod_p3": 2209, "actual_mod_p3": 2209, "expansion_agrees": true}}
+{"block": {"p": 59, "S0_mod_p2": 0, "D_mod_p": 0, "M1_mod_p": 0, "M2_mod_p": 36, "D_over_p_mod_p": 17, "E_mod_p": 41, "rhs_mod_p3": 3481, "actual_mod_p3": 3481, "expansion_agrees": true}}
+{"block": {"p": 61, "S0_mod_p2": 0, "D_mod_p": 0, "M1_mod_p": 0, "M2_mod_p": 28, "D_over_p_mod_p": 51, "E_mod_p": 24, "rhs_mod_p3": 3721, "actual_mod_p3": 3721, "expansion_agrees": true}}
+{"block": {"p": 73, "S0_mod_p2": 0, "D_mod_p": 0, "M1_mod_p": 0, "M2_mod_p": 64, "D_over_p_mod_p": 12, "E_mod_p": 8, "rhs_mod_p3": 5329, "actual_mod_p3": 5329, "expansion_agrees": true}}
+{"block": {"p": 83, "S0_mod_p2": 0, "D_mod_p": 0, "M1_mod_p": 0, "M2_mod_p": 77, "D_over_p_mod_p": 1, "E_mod_p": 69, "rhs_mod_p3": 6889, "actual_mod_p3": 6889, "expansion_agrees": true}}
+{"block": {"p": 89, "S0_mod_p2": 0, "D_mod_p": 0, "M1_mod_p": 0, "M2_mod_p": 55, "D_over_p_mod_p": 38, "E_mod_p": 34, "rhs_mod_p3": 7921, "actual_mod_p3": 7921, "expansion_agrees": true}}
+{"block": {"p": 97, "S0_mod_p2": 0, "D_mod_p": 0, "M1_mod_p": 0, "M2_mod_p": 75, "D_over_p_mod_p": 32, "E_mod_p": 22, "rhs_mod_p3": 9409, "actual_mod_p3": 9409, "expansion_agrees": true}}
+{"block": {"p": 101, "S0_mod_p2": 0, "D_mod_p": 0, "M1_mod_p": 0, "M2_mod_p": 60, "D_over_p_mod_p": 1, "E_mod_p": 32, "rhs_mod_p3": 10201, "actual_mod_p3": 10201, "expansion_agrees": true}}

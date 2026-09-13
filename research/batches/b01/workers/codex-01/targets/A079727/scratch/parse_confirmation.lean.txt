@@ -1,0 +1,7 @@
+import Mathlib.Data.Nat.Prime.Basic
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import Mathlib.Data.Finset.Insert
+open scoped BigOperators
+#eval ((∏ p ∈ ({3,13} : Finset ℕ), p - 1) / 2)
+#eval (((∏ p ∈ ({3,13} : Finset ℕ), p) - 1) / 2)
+example (S : Finset ℕ) : (∏ p ∈ S, p - 1) / 2 = (S.prod id - 1) / 2 := by rfl

@@ -1,0 +1,2 @@
+'A079727Bilinear.deriv_pairing' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A079727Bilinear.pairing_conserved' depends on axioms: [propext, Classical.choice, Quot.sound]

@@ -1,0 +1,2 @@
+PASS: 9 distinct workers, 13 declarations, 11 reserved sequence IDs, 4 exclusive source prefixes; pinned hashes match.
+This checks explicit assignments and file scope; it cannot detect unknown mathematical equivalences or establish novelty.

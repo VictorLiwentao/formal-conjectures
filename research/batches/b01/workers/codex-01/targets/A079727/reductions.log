@@ -1,0 +1,6 @@
+'A079727Reduction.prime_dvd_central_binom' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A079727Reduction.tail_mod_eq' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A079727Reduction.conjecture2_iff_half_sum' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A079727Reduction.conjecture3_implies_conjecture2' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A079727Reduction.a_succ' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A079727Reduction.conjecture1_iff_half_sum' depends on axioms: [propext, Classical.choice, Quot.sound]

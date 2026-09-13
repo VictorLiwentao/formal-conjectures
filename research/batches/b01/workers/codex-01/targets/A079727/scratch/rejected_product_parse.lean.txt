@@ -1,0 +1,69 @@
+/- REJECTED SCRATCH: This attempted disproof does not compile. Its product parsing is false.
+The frozen conjecture uses index 19, not 12, for {3,13}. Do not treat any
+declaration below as a proved result. See proof.md and the paired failure log. -/
+
+/-
+Copyright 2026 The Formal Conjectures Authors.
+Copyright 2026 Wentao Li.
+
+Original Lean formalization: The Formal Conjectures Authors.
+New proof development and write-up: Wentao Li.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-/
+
+import FormalConjectures.OEIS.«79727»
+
+/-!
+# A finite witness for the frozen product formula
+
+*References:*
+- [A079727](https://oeis.org/A079727), conjectured by Peter Bala in 2024.
+-/
+
+namespace A079727Audit
+
+/-- Both members of $\{3,13\}$ belong to A003625. -/
+theorem witness_admissible : ∀ p ∈ ({3, 13} : Finset ℕ), OeisA3625.A p := by
+  intro p hp
+  simp only [Finset.mem_insert, Finset.mem_singleton] at hp
+  rcases hp with rfl | rfl <;> norm_num [OeisA3625.A]
+
+/-- The product-of-differences index for $\{3,13\}$ is $12$. -/
+theorem witness_index : (∏ p ∈ ({3, 13} : Finset ℕ), p - 1) / 2 = 12 := by
+  norm_num
+
+/-- The exact value at the witness index. -/
+theorem witness_value : OeisA79727.a 12 = 20131502573232075025 := by
+  norm_num [OeisA79727.a, Finset.sum_range_succ, Nat.choose]
+
+/-- The value at $12$ has remainder $676$ modulo $39^2$. -/
+theorem witness_remainder : OeisA79727.a 12 % 39 ^ 2 = 676 := by
+  rw [witness_value]
+  norm_num
+
+/-- The frozen universally quantified fourth proposition is false. -/
+theorem not_conjecture4 :
+    ¬ (∀ (S : Finset ℕ), (∀ p ∈ S, OeisA3625.A p) →
+      (∏ p ∈ S, p) ^ 2 ∣ OeisA79727.a ((∏ p ∈ S, p - 1) / 2)) := by
+  intro h
+  have hw := h {3, 13} witness_admissible
+  norm_num [Finset.prod_insert, witness_value] at hw
+
+#print axioms witness_admissible
+#print axioms witness_index
+#print axioms witness_value
+#print axioms witness_remainder
+#print axioms not_conjecture4
+
+end A079727Audit

@@ -1,0 +1,15 @@
+PASS: conjecture4_parsing audits the complete frozen conjecture4 type.
+PASS: conjecture3_implies_conjecture2 connects the complete frozen types.
+PASS: A079727Reduction.conjecture1_iff_half_sum has the exact applied frozen assertion as its left side.
+PASS: A079727Reduction.conjecture2_iff_half_sum has the exact applied frozen assertion as its left side.
+PASS: A079727Product.odd_multiple_implies_conjecture4 concludes the complete frozen conjecture4 type.
+PASS: A079727Product.blocks_implies_conjecture4 concludes the complete frozen conjecture4 type.
+FROZEN TYPE OeisA79727.conjecture1: ∀ (p : ℕ), OeisA3625.A p → OeisA79727.a (p ^ 2) ≡ 8 + p ^ 2 [MOD p ^ 3]
+FROZEN TYPE OeisA79727.conjecture2: ∀ (p : ℕ), OeisA3625.A p → OeisA79727.a (p * (p - 1)) ≡ p ^ 2 [MOD p ^ 3]
+FROZEN TYPE OeisA79727.conjecture3: ∀ (p : ℕ), OeisA3625.A p → OeisA79727.a ((p ^ 2 - 1) / 2) ≡ p ^ 2 [MOD p ^ 4]
+FROZEN TYPE OeisA79727.conjecture4: ∀ (S : Finset ℕ),
+  (∀ p ∈ S, OeisA3625.A p) → (∏ p ∈ S, p) ^ 2 ∣ OeisA79727.a ((∏ p ∈ S, p - 1) / 2)
+'A079727Audit.conjecture4_parsing' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A079727Reduction.conjecture3_implies_conjecture2' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A079727Reduction.conjecture1_iff_half_sum' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A079727Product.blocks_implies_conjecture4' depends on axioms: [propext, Classical.choice, Quot.sound]

@@ -1,0 +1,84 @@
+[
+  {
+    "sha": "1bb238f2be65a7d796fb29a15f1c89f764062515",
+    "node_id": "C_kwDOOogmB9oAKDFiYjIzOGYyYmU2NWE3ZDc5NmZiMjlhMTVmMWM4OWY3NjQwNjI1MTU",
+    "commit": {
+      "author": {
+        "name": "codrut3",
+        "email": "codrut@google.com",
+        "date": "2026-08-20T12:06:05Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-08-20T12:06:05Z"
+      },
+      "message": "Add more conjectures from AutoOeis to formal-conjectures (#5016)\n\nPlease review in particular:\n- 145062.lean and 181830.lean, which define an axiom for the\nformalisation;\n- 145355.lean: the conjecture is not fully explained on the OEIS page.\n\nI included 5153.lean and 3625.lean since these sequences are used in the\ndefinition of other sequences.",
+      "tree": {
+        "sha": "65c1947a73b476f8397874001d9aafc974ca0b9e",
+        "url": "https://api.github.com/repos/google-deepmind/formal-conjectures/git/trees/65c1947a73b476f8397874001d9aafc974ca0b9e"
+      },
+      "url": "https://api.github.com/repos/google-deepmind/formal-conjectures/git/commits/1bb238f2be65a7d796fb29a15f1c89f764062515",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqhu29CRC1aQ7uu5UhlAAAQdYQAAyyQ6/hu+F3yVDPa9GC6ec2\n6dUqloG9eGXrRGMb4/z0NFq8rcc3hlw9dkgklhJgXid+9XKGU9/si6OdfOWBGjwK\nydTT+eBAqlKO5/Kh0JCTJhzQMka8E9k3dqUZ/kL7GeGlXlxhVPxNGraUkXUo3aNO\njnxSQvBog4/4gofNcr7rf2DVjgeaeqbf8PU/6Eif6bhyiy6gnXl0Gyd6ofTJZ9Dg\nqaMzzTLidgdVBO8BLoIwVdOlC2B/p/n1N4Sdh4tP1x1t7xUSQropmlzy4KBnXo3j\nHGZT2zZI4HrNT9T8a1W2VhKE4I/1kfK50xvFhxb+RCORdiKLXG4jZylw/rCHX6qF\nlsATYvBFmQLUJZ+1AyFSbalR4nsnVjHNdzAWecwHXs9VDRgjLZK0PcemaQ5hMLpi\nh5JiXDRngrHcmz725NyrC5+kqo2hAIz15C65Va0cZ6s+gq2nSkh2P+TIzqo6jC3m\nrXedwc+Y4Q5u1l/SQ8e6g5qelbp5O/h7/EpJiqTMcoC75BMvpQJjsynnZimJRYGd\n8uKL6cEiPf2mWJ8ZaqLLxExZdQ7JgYHtDrOM3bAVXYErHjDH7Hb6TpHvrexIgb5u\nNm6XkKadd88tsQDM4UKANjPbPNR+zEQipDk5XZSz7+UtubvehlnwYTbGsK1NZIb1\nU4lqq0jC0ftVaw69s9Db\n=4oO+\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree 65c1947a73b476f8397874001d9aafc974ca0b9e\nparent a3c8c01f4f3e76c3a01ed7c2d4dfafa0bc59655f\nauthor codrut3 <codrut@google.com> 1787227565 +0000\ncommitter GitHub <noreply@github.com> 1787227565 +0000\n\nAdd more conjectures from AutoOeis to formal-conjectures (#5016)\n\nPlease review in particular:\n- 145062.lean and 181830.lean, which define an axiom for the\nformalisation;\n- 145355.lean: the conjecture is not fully explained on the OEIS page.\n\nI included 5153.lean and 3625.lean since these sequences are used in the\ndefinition of other sequences.",
+        "verified_at": "2026-08-20T12:06:21Z"
+      }
+    },
+    "url": "https://api.github.com/repos/google-deepmind/formal-conjectures/commits/1bb238f2be65a7d796fb29a15f1c89f764062515",
+    "html_url": "https://github.com/google-deepmind/formal-conjectures/commit/1bb238f2be65a7d796fb29a15f1c89f764062515",
+    "comments_url": "https://api.github.com/repos/google-deepmind/formal-conjectures/commits/1bb238f2be65a7d796fb29a15f1c89f764062515/comments",
+    "author": {
+      "login": "codrut3",
+      "id": 10788581,
+      "node_id": "MDQ6VXNlcjEwNzg4NTgx",
+      "avatar_url": "https://avatars.githubusercontent.com/u/10788581?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/codrut3",
+      "html_url": "https://github.com/codrut3",
+      "followers_url": "https://api.github.com/users/codrut3/followers",
+      "following_url": "https://api.github.com/users/codrut3/following{/other_user}",
+      "gists_url": "https://api.github.com/users/codrut3/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/codrut3/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/codrut3/subscriptions",
+      "organizations_url": "https://api.github.com/users/codrut3/orgs",
+      "repos_url": "https://api.github.com/users/codrut3/repos",
+      "events_url": "https://api.github.com/users/codrut3/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/codrut3/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "a3c8c01f4f3e76c3a01ed7c2d4dfafa0bc59655f",
+        "url": "https://api.github.com/repos/google-deepmind/formal-conjectures/commits/a3c8c01f4f3e76c3a01ed7c2d4dfafa0bc59655f",
+        "html_url": "https://github.com/google-deepmind/formal-conjectures/commit/a3c8c01f4f3e76c3a01ed7c2d4dfafa0bc59655f"
+      }
+    ]
+  }
+]

@@ -1,0 +1,2 @@
+'A079727Polynomial.coeff_eq_zero_of_derivative_eq_zero' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A079727Polynomial.eq_constant_add_top_of_derivative_eq_zero' depends on axioms: [propext, Classical.choice, Quot.sound]

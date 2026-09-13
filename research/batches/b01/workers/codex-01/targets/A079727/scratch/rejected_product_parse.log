@@ -1,0 +1,11 @@
+research/batches/b01/workers/codex-01/targets/A079727/A079727.lean:39:72: error: unsolved goals
+⊢ False
+research/batches/b01/workers/codex-01/targets/A079727/A079727.lean:54:65: error: unsolved goals
+h : ∀ (S : Finset ℕ), (∀ p ∈ S, OeisA3625.A p) → (∏ p ∈ S, p) ^ 2 ∣ OeisA79727.a ((∏ p ∈ S, p - 1) / 2)
+hw : 1521 ∣ OeisA79727.a 19
+⊢ False
+'A079727Audit.witness_admissible' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A079727Audit.witness_index' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]
+'A079727Audit.witness_value' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A079727Audit.witness_remainder' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A079727Audit.not_conjecture4' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]

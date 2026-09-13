@@ -1,0 +1,30 @@
+[
+  {
+    "repository": "google-deepmind/formal-conjectures",
+    "checked_utc": "2026-09-12T23:58:24.172149+00:00",
+    "exit_code": 0,
+    "head": "a2f4a1bb12a28e04a969da78feefac7d1ce49565",
+    "error": null
+  },
+  {
+    "repository": "google-deepmind/alphaproof-nexus-results",
+    "checked_utc": "2026-09-12T23:58:24.978644+00:00",
+    "exit_code": 0,
+    "head": "0647711a71183c1ea492ad60860776617ce1ea88",
+    "error": null
+  },
+  {
+    "repository": "epoch-research/LeanOpenProblems",
+    "checked_utc": "2026-09-12T23:58:25.498685+00:00",
+    "exit_code": 0,
+    "head": "30d502f684fa2fc2dcfc0a933f3648421ba75e8d",
+    "error": null
+  },
+  {
+    "repository": "epoch-research/LeanOpenProblems-results",
+    "checked_utc": "2026-09-12T23:58:26.545865+00:00",
+    "exit_code": 0,
+    "head": "8669ff224d86543fcc3ce192b2768ce175b734dd",
+    "error": null
+  }
+]

@@ -1,0 +1,5 @@
+'A079727Coefficients.pow_dvd_coeff_pow_below' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A079727Coefficients.pow_dvd_coeff_pow_boundary' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A079727Coefficients.dvd_coeff_mul_boundary' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A079727Coefficients.square_dvd_numerator_sub_coeff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A079727Coefficients.fourth_power_dvd_square_sub' depends on axioms: [propext, Quot.sound]

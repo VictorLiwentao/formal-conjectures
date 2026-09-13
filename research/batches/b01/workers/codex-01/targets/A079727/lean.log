@@ -1,0 +1,5 @@
+'A079727Audit.witness_admissible' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A079727Audit.product_index' depends on axioms: [propext, Quot.sound]
+'A079727Audit.witness_index' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A079727Audit.witness_divisibility' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A079727Audit.conjecture4_parsing' depends on axioms: [propext, Classical.choice, Quot.sound]

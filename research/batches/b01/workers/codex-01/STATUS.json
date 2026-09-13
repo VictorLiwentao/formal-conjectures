@@ -1,0 +1,62 @@
+{
+  "worker_id": "codex-01",
+  "target_id": "A079727",
+  "actual_branch": "codex/b01-codex-01",
+  "baseline_commit": "a2f4a1bb12a28e04a969da78feefac7d1ce49565",
+  "seed_commit": "238f78bdd5701ae4c97a0d70d4e22e2d45770d7a",
+  "current_status": "partial",
+  "novelty_status": "no_exact_prior_solution_found_in_bounded_search; general_theorem_coverage_unresolved",
+  "last_updated_utc": "2026-09-13T00:03:45.371348+00:00",
+  "proof_declarations": [
+    "A079727Audit.witness_admissible",
+    "A079727Audit.product_index",
+    "A079727Audit.witness_index",
+    "A079727Audit.witness_divisibility",
+    "A079727Audit.conjecture4_parsing",
+    "A079727Reduction.prime_dvd_central_binom",
+    "A079727Reduction.tail_mod_eq",
+    "A079727Reduction.conjecture2_iff_half_sum",
+    "A079727Reduction.conjecture3_implies_conjecture2",
+    "A079727Reduction.a_succ",
+    "A079727Reduction.conjecture1_iff_half_sum",
+    "A079727Bilinear.deriv_pairing",
+    "A079727Bilinear.pairing_conserved",
+    "A079727Polynomial.coeff_eq_zero_of_derivative_eq_zero",
+    "A079727Polynomial.eq_constant_add_top_of_derivative_eq_zero",
+    "A079727Blocks.sum_blocks",
+    "A079727Blocks.dvd_prefix_of_blocks",
+    "A079727Blocks.odd_multiple_index",
+    "A079727Product.square_prod_dvd",
+    "A079727Product.admissible_odd",
+    "A079727Product.odd_multiple_implies_conjecture4",
+    "A079727Product.blocks_implies_conjecture4",
+    "A079727Coefficients.pow_dvd_coeff_pow_below",
+    "A079727Coefficients.pow_dvd_coeff_pow_boundary",
+    "A079727Coefficients.dvd_coeff_mul_boundary",
+    "A079727Coefficients.square_dvd_numerator_sub_coeff",
+    "A079727Coefficients.fourth_power_dvd_square_sub"
+  ],
+  "unresolved_gaps": [
+    "No complete Lean proof or disproof of any of the four exact frozen conjectures.",
+    "The binomial block expansion and published Sun prime-level input are not formalized here.",
+    "The finite-field bilinear family construction and moment evaluation are not formalized here.",
+    "C3 has a proposed Jacobi formal-group route; its geometric descent, integral normalization, supersingular reduction and Clausen comparison require proof and independent review.",
+    "The full Landweber and Yui chapters were inaccessible; novelty and coverage by older general theorems remain unresolved."
+  ],
+  "next_step": "Independently review the detailed informal routes and inspect the inaccessible literature before claiming a full proof; then formalize the remaining input and block/geometric lemmas.",
+  "proof_declaration_scope": "supporting_lemmas_and_conditional_reductions_only",
+  "exact_target_resolutions": [],
+  "verification": {
+    "compiled_source_files": 8,
+    "supporting_theorems": 27,
+    "printed_axiom_checks": 31,
+    "allowed_axioms": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "independent_review": "not_performed",
+    "reproduction": "bash research/batches/b01/workers/codex-01/verify.sh"
+  },
+  "statement_audit": "No mismatch identified. The initial C4 product-of-differences reading and a later whitespace explanation were rejected; Lean verifies the intended product-minus-one form."
+}
