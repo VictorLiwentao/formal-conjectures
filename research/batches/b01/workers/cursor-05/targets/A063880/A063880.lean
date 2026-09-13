@@ -2578,6 +2578,342 @@ lemma five_seven_eleven_mul_overshoot {a b c n : ℕ}
       (by simpa [mul_assoc] using hover)
   simpa [mul_assoc] using h
 
+lemma seven_mul_five_cube_eleven_twenty_three_cap :
+    7 * 11 * 23 * 156 ≤ 10 * 10 * 22 * 126 := by decide
+
+/-- `ρ(125) cap(11) cap(23) < 10/7`. -/
+lemma seven_sigma_lt_ten_usigma_five_cube_eleven_twenty_three {b c : ℕ}
+    (hb : 0 < b) (hc : 0 < c) :
+    7 * σ 1 (5 ^ 3) * σ 1 (11 ^ b) * σ 1 (23 ^ c) <
+      10 * usigma (5 ^ 3) * usigma (11 ^ b) * usigma (23 ^ c) := by
+  have hp23 : Nat.Prime 23 := by decide
+  rw [sigma_five_pow_three, usigma_five_pow_three]
+  have h11 := sigma_lt_cap_usigma (by decide : Nat.Prime 11) hb
+  have h23 := sigma_lt_cap_usigma hp23 hc
+  have hu11 : 0 < usigma (11 ^ b) := by
+    rw [usigma_prime_pow (by decide : Nat.Prime 11) hb]
+    exact Nat.add_pos_left (by decide : 0 < 1) _
+  have hcap := seven_mul_five_cube_eleven_twenty_three_cap
+  have hlt := seven_ten_of_two_caps_times_const (A := 10) (B := 11)
+    (X := σ 1 (11 ^ b)) (Y := usigma (11 ^ b)) (C := 22) (D := 23)
+    (P := σ 1 (23 ^ c)) (Q := usigma (23 ^ c)) (S := 126) (T := 156)
+    h11 h23 hcap (by decide : 0 < 11) hu11 (by decide : 0 < 156)
+  have hL : 7 * 156 * σ 1 (11 ^ b) * σ 1 (23 ^ c) =
+      7 * σ 1 (11 ^ b) * σ 1 (23 ^ c) * 156 := by ring
+  have hR : 10 * 126 * usigma (11 ^ b) * usigma (23 ^ c) =
+      10 * usigma (11 ^ b) * usigma (23 ^ c) * 126 := by ring
+  rw [hL, hR]
+  exact hlt
+
+lemma seven_mul_five_eleven_sq_twenty_three_cap :
+    7 * 5 * 23 * 133 ≤ 10 * 4 * 22 * 122 := by decide
+
+/-- `ρ(5^a) ρ(121) ρ(23^c) < 10/7`. -/
+lemma seven_sigma_lt_ten_usigma_five_eleven_sq_twenty_three {a c : ℕ}
+    (ha : 0 < a) (hc : 0 < c) :
+    7 * σ 1 (5 ^ a) * σ 1 (11 ^ 2) * σ 1 (23 ^ c) <
+      10 * usigma (5 ^ a) * usigma (11 ^ 2) * usigma (23 ^ c) := by
+  have hp23 : Nat.Prime 23 := by decide
+  rw [sigma_eleven_pow_two, usigma_eleven_pow_two]
+  have h5 := four_sigma_lt_five_usigma ha
+  have h23 := sigma_lt_cap_usigma hp23 hc
+  have hu5 : 0 < usigma (5 ^ a) := by
+    rw [usigma_prime_pow Nat.prime_five ha]
+    exact Nat.add_pos_left (by decide : 0 < 1) _
+  have hcap := seven_mul_five_eleven_sq_twenty_three_cap
+  have hlt := seven_ten_of_two_caps_times_const (A := 4) (B := 5)
+    (X := σ 1 (5 ^ a)) (Y := usigma (5 ^ a)) (C := 22) (D := 23)
+    (P := σ 1 (23 ^ c)) (Q := usigma (23 ^ c)) (S := 122) (T := 133)
+    h5 h23 hcap (by decide : 0 < 5) hu5 (by decide : 0 < 133)
+  have hL : 7 * σ 1 (5 ^ a) * 133 * σ 1 (23 ^ c) =
+      7 * σ 1 (5 ^ a) * σ 1 (23 ^ c) * 133 := by ring
+  have hR : 10 * usigma (5 ^ a) * 122 * usigma (23 ^ c) =
+      10 * usigma (5 ^ a) * usigma (23 ^ c) * 122 := by ring
+  rw [hL, hR]
+  exact hlt
+
+lemma five_fourth_eleven_cube_twenty_three_sq_overshoot :
+    10 * usigma (5 ^ 4) * usigma (11 ^ 3) * usigma (23 ^ 2) <
+      7 * σ 1 (5 ^ 4) * σ 1 (11 ^ 3) * σ 1 (23 ^ 2) := by
+  have hp11 : Nat.Prime 11 := by decide
+  have hp23 : Nat.Prime 23 := by decide
+  have hu5 : usigma (5 ^ 4) = 1 + 5 ^ 4 :=
+    usigma_prime_pow Nat.prime_five (by decide : 0 < 4)
+  have hσ5 : σ 1 (5 ^ 4) = (5 ^ 5 - 1) / 4 := sigma_prime_pow_div Nat.prime_five
+  have hu11 : usigma (11 ^ 3) = 1 + 11 ^ 3 :=
+    usigma_prime_pow hp11 (by decide : 0 < 3)
+  have hσ11 : σ 1 (11 ^ 3) = (11 ^ 4 - 1) / 10 := sigma_prime_pow_div hp11
+  rw [hu5, hσ5, hu11, hσ11, usigma_prime_pow hp23 (by decide : 0 < 2),
+    sigma_prime_pow_two hp23]
+  norm_num
+
+/-- `{5, 11, 23}` cannot fill leftover `10/7`. -/
+lemma not_seven_sigma_eq_ten_usigma_five_eleven_twenty_three {a b c : ℕ}
+    (ha : 2 ≤ a) (hb : 2 ≤ b) (hc : 2 ≤ c) :
+    ¬ 7 * σ 1 (5 ^ a) * σ 1 (11 ^ b) * σ 1 (23 ^ c) =
+        10 * usigma (5 ^ a) * usigma (11 ^ b) * usigma (23 ^ c) := by
+  intro heq
+  rcases eq_or_lt_of_le ha with ha2 | ha3
+  · rw [← ha2] at heq
+    exact (seven_sigma_lt_ten_usigma_five_sq_eleven_large
+      (by decide : Nat.Prime 23) (by decide : 13 ≤ 23) (by omega) (by omega)).ne heq
+  · have ha3' : 3 ≤ a := Nat.succ_le_of_lt ha3
+    rcases eq_or_lt_of_le ha3' with ha3eq | ha4
+    · rw [← ha3eq] at heq
+      exact (seven_sigma_lt_ten_usigma_five_cube_eleven_twenty_three
+        (by omega) (by omega)).ne heq
+    · rcases eq_or_lt_of_le hb with hb2 | hb3
+      · rw [← hb2] at heq
+        exact (seven_sigma_lt_ten_usigma_five_eleven_sq_twenty_three
+          (by omega) (by omega)).ne heq
+      · have hover := ten_seven_overshoot_mono_three Nat.prime_five
+            (by decide : Nat.Prime 11) (by decide : Nat.Prime 23)
+            (by decide : 0 < 4) (by decide : 0 < 3) (by decide : 0 < 2)
+            (Nat.succ_le_of_lt ha4) (Nat.succ_le_of_lt hb3) hc
+            five_fourth_eleven_cube_twenty_three_sq_overshoot
+        rw [← heq] at hover
+        exact lt_irrefl _ hover
+
+lemma seven_mul_twenty_five_thirteen_seventeen_cap :
+    7 * 13 * 17 * 31 ≤ 10 * 12 * 16 * 26 := by decide
+
+/-- `{5^2, 13^b, 17^c}` undershoots leftover `10/7`. -/
+lemma seven_sigma_lt_ten_usigma_five_sq_thirteen_seventeen {b c : ℕ}
+    (hb : 0 < b) (hc : 0 < c) :
+    7 * σ 1 (5 ^ 2) * σ 1 (13 ^ b) * σ 1 (17 ^ c) <
+      10 * usigma (5 ^ 2) * usigma (13 ^ b) * usigma (17 ^ c) := by
+  have hp13 : Nat.Prime 13 := by decide
+  have hp17 : Nat.Prime 17 := by decide
+  have hσ5 : σ 1 (5 ^ 2) = 31 := by
+    rw [sigma_prime_pow_two Nat.prime_five]
+    decide
+  have hu5 : usigma (5 ^ 2) = 26 := usigma_five_pow_two
+  rw [hσ5, hu5]
+  have h13 := sigma_lt_cap_usigma hp13 hb
+  have h17 := sigma_lt_cap_usigma hp17 hc
+  have hu13 : 0 < usigma (13 ^ b) := by
+    rw [usigma_prime_pow hp13 hb]
+    exact Nat.add_pos_left (by decide : 0 < 1) _
+  have hcap := seven_mul_twenty_five_thirteen_seventeen_cap
+  have hlt := seven_ten_of_two_caps_times_const (A := 12) (B := 13)
+    (X := σ 1 (13 ^ b)) (Y := usigma (13 ^ b)) (C := 16) (D := 17)
+    (P := σ 1 (17 ^ c)) (Q := usigma (17 ^ c)) (S := 26) (T := 31)
+    h13 h17 hcap (by decide : 0 < 13) hu13 (by decide : 0 < 31)
+  have hL : 7 * 31 * σ 1 (13 ^ b) * σ 1 (17 ^ c) =
+      7 * σ 1 (13 ^ b) * σ 1 (17 ^ c) * 31 := by ring
+  have hR : 10 * 26 * usigma (13 ^ b) * usigma (17 ^ c) =
+      10 * usigma (13 ^ b) * usigma (17 ^ c) * 26 := by ring
+  rw [hL, hR]
+  exact hlt
+
+lemma seven_mul_five_cube_thirteen_seventeen_cap :
+    7 * 13 * 17 * 156 ≤ 10 * 12 * 16 * 126 := by decide
+
+/-- `{5^3, 13^b, 17^c}` undershoots leftover `10/7`. -/
+lemma seven_sigma_lt_ten_usigma_five_cube_thirteen_seventeen {b c : ℕ}
+    (hb : 0 < b) (hc : 0 < c) :
+    7 * σ 1 (5 ^ 3) * σ 1 (13 ^ b) * σ 1 (17 ^ c) <
+      10 * usigma (5 ^ 3) * usigma (13 ^ b) * usigma (17 ^ c) := by
+  have hp13 : Nat.Prime 13 := by decide
+  have hp17 : Nat.Prime 17 := by decide
+  rw [sigma_five_pow_three, usigma_five_pow_three]
+  have h13 := sigma_lt_cap_usigma hp13 hb
+  have h17 := sigma_lt_cap_usigma hp17 hc
+  have hu13 : 0 < usigma (13 ^ b) := by
+    rw [usigma_prime_pow hp13 hb]
+    exact Nat.add_pos_left (by decide : 0 < 1) _
+  have hcap := seven_mul_five_cube_thirteen_seventeen_cap
+  have hlt := seven_ten_of_two_caps_times_const (A := 12) (B := 13)
+    (X := σ 1 (13 ^ b)) (Y := usigma (13 ^ b)) (C := 16) (D := 17)
+    (P := σ 1 (17 ^ c)) (Q := usigma (17 ^ c)) (S := 126) (T := 156)
+    h13 h17 hcap (by decide : 0 < 13) hu13 (by decide : 0 < 156)
+  have hL : 7 * 156 * σ 1 (13 ^ b) * σ 1 (17 ^ c) =
+      7 * σ 1 (13 ^ b) * σ 1 (17 ^ c) * 156 := by ring
+  have hR : 10 * 126 * usigma (13 ^ b) * usigma (17 ^ c) =
+      10 * usigma (13 ^ b) * usigma (17 ^ c) * 126 := by ring
+  rw [hL, hR]
+  exact hlt
+
+lemma seven_mul_five_thirteen_sq_seventeen_sq_cap :
+    7 * 5 * 183 * 307 ≤ 10 * 4 * 170 * 290 := by
+  norm_num
+
+/-- `ρ(5^a) ρ(169) ρ(289) < 10/7`. -/
+lemma seven_sigma_lt_ten_usigma_five_thirteen_seventeen_sq {a : ℕ}
+    (ha : 0 < a) :
+    7 * σ 1 (5 ^ a) * σ 1 (13 ^ 2) * σ 1 (17 ^ 2) <
+      10 * usigma (5 ^ a) * usigma (13 ^ 2) * usigma (17 ^ 2) := by
+  have hp13 : Nat.Prime 13 := by decide
+  have hp17 : Nat.Prime 17 := by decide
+  have hσ13 : σ 1 (13 ^ 2) = 183 := by
+    rw [sigma_prime_pow_two hp13]
+    norm_num
+  have hu13 : usigma (13 ^ 2) = 170 := by
+    simpa using usigma_prime_pow hp13 (by decide : 0 < 2)
+  have hσ17 : σ 1 (17 ^ 2) = 307 := by
+    rw [sigma_prime_pow_two hp17]
+    norm_num
+  have hu17 : usigma (17 ^ 2) = 290 := by
+    simpa using usigma_prime_pow hp17 (by decide : 0 < 2)
+  rw [hσ13, hu13, hσ17, hu17]
+  have h5 := four_sigma_lt_five_usigma ha
+  have hpos : 0 < 7 * 183 * 307 := by norm_num
+  have hprod : 4 * σ 1 (5 ^ a) * (7 * 183 * 307) <
+      5 * usigma (5 ^ a) * (7 * 183 * 307) :=
+    Nat.mul_lt_mul_of_pos_right h5 hpos
+  have hnum := seven_mul_five_thirteen_sq_seventeen_sq_cap
+  have h10 : 5 * usigma (5 ^ a) * (7 * 183 * 307) ≤
+      4 * usigma (5 ^ a) * (10 * 170 * 290) := by
+    have := Nat.mul_le_mul_right (usigma (5 ^ a)) hnum
+    have hL : 7 * 5 * 183 * 307 * usigma (5 ^ a) =
+        5 * usigma (5 ^ a) * (7 * 183 * 307) := by ring
+    have hR : 10 * 4 * 170 * 290 * usigma (5 ^ a) =
+        4 * usigma (5 ^ a) * (10 * 170 * 290) := by ring
+    have hthis : 7 * 5 * 183 * 307 * usigma (5 ^ a) ≤
+        10 * 4 * 170 * 290 * usigma (5 ^ a) := by
+      simpa [mul_assoc, mul_left_comm, mul_comm] using this
+    rw [hL, hR] at hthis
+    exact hthis
+  have hlt : 4 * σ 1 (5 ^ a) * (7 * 183 * 307) <
+      4 * usigma (5 ^ a) * (10 * 170 * 290) :=
+    lt_of_lt_of_le hprod h10
+  have hcancel : 4 * (7 * σ 1 (5 ^ a) * 183 * 307) <
+      4 * (10 * usigma (5 ^ a) * 170 * 290) := by
+    have h1 : 4 * (7 * σ 1 (5 ^ a) * 183 * 307) =
+        4 * σ 1 (5 ^ a) * (7 * 183 * 307) := by ring
+    have h2 : 4 * (10 * usigma (5 ^ a) * 170 * 290) =
+        4 * usigma (5 ^ a) * (10 * 170 * 290) := by ring
+    rw [h1, h2]
+    exact hlt
+  exact Nat.lt_of_mul_lt_mul_left hcancel
+
+lemma sigma_five_pow_four : σ 1 (5 ^ 4) = 781 := by
+  rw [sigma_prime_pow_div Nat.prime_five]
+  norm_num
+
+lemma usigma_five_pow_four : usigma (5 ^ 4) = 626 := by
+  rw [usigma_prime_pow Nat.prime_five (by decide : 0 < 4)]
+  decide
+
+lemma seven_mul_five_fourth_thirteen_sq_seventeen_cap :
+    7 * 781 * 183 * 17 ≤ 10 * 626 * 170 * 16 := by
+  norm_num
+
+/-- `ρ(625) ρ(169) ρ(17^c) < 10/7`. -/
+lemma seven_sigma_lt_ten_usigma_five_fourth_thirteen_sq_seventeen {c : ℕ}
+    (hc : 0 < c) :
+    7 * σ 1 (5 ^ 4) * σ 1 (13 ^ 2) * σ 1 (17 ^ c) <
+      10 * usigma (5 ^ 4) * usigma (13 ^ 2) * usigma (17 ^ c) := by
+  have hp13 : Nat.Prime 13 := by decide
+  have hp17 : Nat.Prime 17 := by decide
+  have hσ13 : σ 1 (13 ^ 2) = 183 := by
+    rw [sigma_prime_pow_two hp13]
+    decide
+  have hu13 : usigma (13 ^ 2) = 170 := by
+    simpa using usigma_prime_pow hp13 (by decide : 0 < 2)
+  rw [sigma_five_pow_four, usigma_five_pow_four, hσ13, hu13]
+  have h17 := sigma_lt_cap_usigma hp17 hc
+  have hnum := seven_mul_five_fourth_thirteen_sq_seventeen_cap
+  have hprod : 16 * σ 1 (17 ^ c) * (7 * 781 * 183) <
+      17 * usigma (17 ^ c) * (7 * 781 * 183) :=
+    Nat.mul_lt_mul_of_pos_right h17 (by norm_num : 0 < 7 * 781 * 183)
+  have h10 : 17 * usigma (17 ^ c) * (7 * 781 * 183) ≤
+      16 * usigma (17 ^ c) * (10 * 626 * 170) := by
+    have := Nat.mul_le_mul_right (usigma (17 ^ c)) hnum
+    have hL : 7 * 781 * 183 * 17 * usigma (17 ^ c) =
+        17 * usigma (17 ^ c) * (7 * 781 * 183) := by ring
+    have hR : 10 * 626 * 170 * 16 * usigma (17 ^ c) =
+        16 * usigma (17 ^ c) * (10 * 626 * 170) := by ring
+    have hthis : 7 * 781 * 183 * 17 * usigma (17 ^ c) ≤
+        10 * 626 * 170 * 16 * usigma (17 ^ c) := by
+      simpa [mul_assoc, mul_left_comm, mul_comm] using this
+    rw [hL, hR] at hthis
+    exact hthis
+  have hlt : 16 * σ 1 (17 ^ c) * (7 * 781 * 183) <
+      16 * usigma (17 ^ c) * (10 * 626 * 170) :=
+    lt_of_lt_of_le hprod h10
+  have hcancel : 16 * (7 * 781 * 183 * σ 1 (17 ^ c)) <
+      16 * (10 * 626 * 170 * usigma (17 ^ c)) := by
+    have h1 : 16 * (7 * 781 * 183 * σ 1 (17 ^ c)) =
+        16 * σ 1 (17 ^ c) * (7 * 781 * 183) := by ring
+    have h2 : 16 * (10 * 626 * 170 * usigma (17 ^ c)) =
+        16 * usigma (17 ^ c) * (10 * 626 * 170) := by ring
+    rw [h1, h2]
+    exact hlt
+  exact Nat.lt_of_mul_lt_mul_left hcancel
+
+lemma five_fourth_thirteen_cube_seventeen_sq_overshoot :
+    10 * usigma (5 ^ 4) * usigma (13 ^ 3) * usigma (17 ^ 2) <
+      7 * σ 1 (5 ^ 4) * σ 1 (13 ^ 3) * σ 1 (17 ^ 2) := by
+  have hp13 : Nat.Prime 13 := by decide
+  have hp17 : Nat.Prime 17 := by decide
+  have hu13 : usigma (13 ^ 3) = 1 + 13 ^ 3 :=
+    usigma_prime_pow hp13 (by decide : 0 < 3)
+  have hσ13 : σ 1 (13 ^ 3) = (13 ^ 4 - 1) / 12 := sigma_prime_pow_div hp13
+  rw [usigma_five_pow_four, sigma_five_pow_four, hu13, hσ13,
+    usigma_prime_pow hp17 (by decide : 0 < 2), sigma_prime_pow_two hp17]
+  norm_num
+
+lemma five_fifth_thirteen_sq_seventeen_cube_overshoot :
+    10 * usigma (5 ^ 5) * usigma (13 ^ 2) * usigma (17 ^ 3) <
+      7 * σ 1 (5 ^ 5) * σ 1 (13 ^ 2) * σ 1 (17 ^ 3) := by
+  have hp13 : Nat.Prime 13 := by decide
+  have hp17 : Nat.Prime 17 := by decide
+  have hu5 : usigma (5 ^ 5) = 1 + 5 ^ 5 :=
+    usigma_prime_pow Nat.prime_five (by decide : 0 < 5)
+  have hσ5 : σ 1 (5 ^ 5) = (5 ^ 6 - 1) / 4 := sigma_prime_pow_div Nat.prime_five
+  have hu13 : usigma (13 ^ 2) = 170 := by
+    simpa using usigma_prime_pow hp13 (by decide : 0 < 2)
+  have hσ13 : σ 1 (13 ^ 2) = 183 := by
+    rw [sigma_prime_pow_two hp13]
+    decide
+  have hu17 : usigma (17 ^ 3) = 1 + 17 ^ 3 :=
+    usigma_prime_pow hp17 (by decide : 0 < 3)
+  have hσ17 : σ 1 (17 ^ 3) = (17 ^ 4 - 1) / 16 := sigma_prime_pow_div hp17
+  rw [hu5, hσ5, hu13, hσ13, hu17, hσ17]
+  norm_num
+
+/-- `{5, 13, 17}` cannot fill leftover `10/7`. -/
+lemma not_seven_sigma_eq_ten_usigma_five_thirteen_seventeen {a b c : ℕ}
+    (ha : 2 ≤ a) (hb : 2 ≤ b) (hc : 2 ≤ c) :
+    ¬ 7 * σ 1 (5 ^ a) * σ 1 (13 ^ b) * σ 1 (17 ^ c) =
+        10 * usigma (5 ^ a) * usigma (13 ^ b) * usigma (17 ^ c) := by
+  intro heq
+  rcases eq_or_lt_of_le ha with ha2 | ha3
+  · rw [← ha2] at heq
+    exact (seven_sigma_lt_ten_usigma_five_sq_thirteen_seventeen
+      (by omega) (by omega)).ne heq
+  · have ha3' : 3 ≤ a := Nat.succ_le_of_lt ha3
+    rcases eq_or_lt_of_le ha3' with ha3eq | ha4
+    · rw [← ha3eq] at heq
+      exact (seven_sigma_lt_ten_usigma_five_cube_thirteen_seventeen
+        (by omega) (by omega)).ne heq
+    · have ha4' : 4 ≤ a := Nat.succ_le_of_lt ha4
+      rcases eq_or_lt_of_le hb with hb2 | hb3
+      · rw [← hb2] at heq
+        rcases eq_or_lt_of_le hc with hc2 | hc3
+        · rw [← hc2] at heq
+          exact (seven_sigma_lt_ten_usigma_five_thirteen_seventeen_sq
+            (by omega)).ne heq
+        · rcases eq_or_lt_of_le ha4' with ha4eq | ha5
+          · rw [← ha4eq] at heq
+            exact (seven_sigma_lt_ten_usigma_five_fourth_thirteen_sq_seventeen
+              (by omega)).ne heq
+          · have hover := ten_seven_overshoot_mono_three Nat.prime_five
+                (by decide : Nat.Prime 13) (by decide : Nat.Prime 17)
+                (by decide : 0 < 5) (by decide : 0 < 2) (by decide : 0 < 3)
+                (Nat.succ_le_of_lt ha5) (le_refl _) (Nat.succ_le_of_lt hc3)
+                five_fifth_thirteen_sq_seventeen_cube_overshoot
+            rw [← heq] at hover
+            exact lt_irrefl _ hover
+      · have hover := ten_seven_overshoot_mono_three Nat.prime_five
+            (by decide : Nat.Prime 13) (by decide : Nat.Prime 17)
+            (by decide : 0 < 4) (by decide : 0 < 3) (by decide : 0 < 2)
+            ha4' (Nat.succ_le_of_lt hb3) hc
+            five_fourth_thirteen_cube_seventeen_sq_overshoot
+        rw [← heq] at hover
+        exact lt_irrefl _ hover
+
 lemma not_nine_dvd_of_A_of_val_two_ge_three {n : ℕ} (hA : A n)
     (h2 : 3 ≤ padicValNat 2 n) : ¬ 9 ∣ n := by
   intro h9
