@@ -8077,6 +8077,289 @@ lemma not_five_sigma_of_three_sq_primes_eleven_thirteen {m p : ℕ}
                   exact not_five_sigma_of_three_sq_primes_eleven_thirteen_large
                     hm hp hp149 h hk11 hk13 hkp hs
 
+lemma five_thirteen_seventeen_cap {p : ℕ} (hp : 29 ≤ p) :
+    5 * 13 * 17 * p ≤ 6 * 12 * 16 * (p - 1) := by
+  have hp1 : 1 ≤ p := by omega
+  have hp' : (29 : ℤ) ≤ p := Int.ofNat_le.mpr hp
+  have hL : ((5 * 13 * 17 * p : ℕ) : ℤ) =
+      (5 : ℤ) * 13 * 17 * p := by
+    rw [Nat.cast_mul, Nat.cast_mul, Nat.cast_mul]; rfl
+  have hR : ((6 * 12 * 16 * (p - 1) : ℕ) : ℤ) =
+      (6 : ℤ) * 12 * 16 * ((p : ℤ) - 1) := by
+    rw [Nat.cast_mul, Nat.cast_mul, Nat.cast_mul, Nat.cast_sub hp1]
+    rfl
+  have : (5 : ℤ) * 13 * 17 * p ≤ 6 * 12 * 16 * (p - 1) := by nlinarith
+  exact Nat.cast_le.mp (by rw [hL, hR]; exact this)
+
+/-- `{13, 17, p}` with `p ≥ 29` cannot fill leftover `6/5`. -/
+lemma five_sigma_lt_six_usigma_thirteen_seventeen_large {p a b c : ℕ}
+    (hp : p.Prime) (hp29 : 29 ≤ p) (ha : 0 < a) (hb : 0 < b) (hc : 0 < c) :
+    5 * σ 1 (13 ^ a) * σ 1 (17 ^ b) * σ 1 (p ^ c) <
+      6 * usigma (13 ^ a) * usigma (17 ^ b) * usigma (p ^ c) := by
+  have h13 := sigma_lt_cap_usigma (by decide : Nat.Prime 13) ha
+  have h17 := sigma_lt_cap_usigma (by decide : Nat.Prime 17) hb
+  have hpcap := sigma_lt_cap_usigma hp hc
+  have hu13 : 0 < usigma (13 ^ a) := by
+    rw [usigma_prime_pow (by decide : Nat.Prime 13) ha]
+    exact Nat.add_pos_left (by decide : 0 < 1) _
+  have hu17 : 0 < usigma (17 ^ b) := by
+    rw [usigma_prime_pow (by decide : Nat.Prime 17) hb]
+    exact Nat.add_pos_left (by decide : 0 < 1) _
+  have hcap := five_thirteen_seventeen_cap hp29
+  have := six_five_of_three_caps (A := 12) (B := 13) (X := σ 1 (13 ^ a))
+    (Y := usigma (13 ^ a)) (C := 16) (D := 17) (P := σ 1 (17 ^ b))
+    (Q := usigma (17 ^ b)) (E := p - 1) (F := p) (R := σ 1 (p ^ c))
+    (S := usigma (p ^ c)) h13 h17 hpcap hcap (by decide : 0 < 13) hu13
+    (by decide : 0 < 17) hu17
+  simpa [mul_assoc] using this
+
+/-- Leftover `6/5` cannot be three squareful primes `13,17,p` with
+`p ≥ 29` times a squarefree coprime factor. -/
+lemma not_five_sigma_of_three_sq_primes_thirteen_seventeen_large {m p : ℕ}
+    (hm : m ≠ 0) (hp : p.Prime) (hp29 : 29 ≤ p)
+    (h : 5 * σ 1 m = 6 * usigma m)
+    (hk13 : 2 ≤ padicValNat 13 m) (hk17 : 2 ≤ padicValNat 17 m)
+    (hkp : 2 ≤ padicValNat p m)
+    (hs : Squarefree (ordCompl[p] (ordCompl[17] (ordCompl[13] m)))) : False := by
+  have hp13 : Nat.Prime 13 := by decide
+  have hp17 : Nat.Prime 17 := by decide
+  have hpq_ne : (13 : ℕ) ≠ 17 := by decide
+  have hpr_ne : (13 : ℕ) ≠ p :=
+    Nat.ne_of_lt (lt_of_lt_of_le (by decide : 13 < 29) hp29)
+  have hqr_ne : (17 : ℕ) ≠ p :=
+    Nat.ne_of_lt (lt_of_lt_of_le (by decide : 17 < 29) hp29)
+  have heq := five_sigma_eq_six_of_three_squareful hm hp13 hp17 hp hpq_ne hpr_ne
+    hqr_ne h hs
+  have hproj_p : ordProj[13] m = 13 ^ padicValNat 13 m := by
+    simp [Nat.factorization_def m hp13]
+  have hproj_q : ordProj[17] (ordCompl[13] m) =
+      17 ^ padicValNat 17 (ordCompl[13] m) := by
+    simp [Nat.factorization_def (ordCompl[13] m) hp17]
+  have hproj_r : ordProj[p] (ordCompl[17] (ordCompl[13] m)) =
+      p ^ padicValNat p (ordCompl[17] (ordCompl[13] m)) := by
+    simp [Nat.factorization_def (ordCompl[17] (ordCompl[13] m)) hp]
+  rw [hproj_r, padicValNat_ordCompl_of_ne hp hqr_ne,
+    padicValNat_ordCompl_of_ne hp hpr_ne, hproj_q,
+    padicValNat_ordCompl_of_ne hp17 hpq_ne, hproj_p] at heq
+  exact (five_sigma_lt_six_usigma_thirteen_seventeen_large hp hp29
+    (by omega) (by omega) (by omega)).ne heq
+
+lemma usigma_nineteen_pow_two : usigma (19 ^ 2) = 362 := by
+  rw [usigma_prime_pow (by decide : Nat.Prime 19) (by decide : 0 < 2)]
+  decide
+
+lemma sigma_nineteen_pow_two : σ 1 (19 ^ 2) = 381 := by
+  rw [sigma_prime_pow_two (by decide : Nat.Prime 19)]
+  decide
+
+lemma thirteen_seventeen_nineteen_sq_under :
+    5 * σ 1 (13 ^ 2) * σ 1 (17 ^ 2) * σ 1 (19 ^ 2) <
+      6 * usigma (13 ^ 2) * usigma (17 ^ 2) * usigma (19 ^ 2) := by
+  rw [sigma_thirteen_pow_two, usigma_thirteen_pow_two,
+    sigma_seventeen_pow_two, usigma_seventeen_pow_two,
+    sigma_nineteen_pow_two, usigma_nineteen_pow_two]
+  decide
+
+lemma thirteen_cube_seventeen_sq_nineteen_sq_overshoot :
+    6 * usigma (13 ^ 3) * usigma (17 ^ 2) * usigma (19 ^ 2) <
+      5 * σ 1 (13 ^ 3) * σ 1 (17 ^ 2) * σ 1 (19 ^ 2) := by
+  rw [usigma_thirteen_pow_three, sigma_thirteen_pow_three,
+    usigma_seventeen_pow_two, sigma_seventeen_pow_two,
+    usigma_nineteen_pow_two, sigma_nineteen_pow_two]
+  decide
+
+lemma thirteen_sq_seventeen_cube_nineteen_sq_overshoot :
+    6 * usigma (13 ^ 2) * usigma (17 ^ 3) * usigma (19 ^ 2) <
+      5 * σ 1 (13 ^ 2) * σ 1 (17 ^ 3) * σ 1 (19 ^ 2) := by
+  rw [usigma_thirteen_pow_two, sigma_thirteen_pow_two,
+    usigma_seventeen_pow_three, sigma_seventeen_pow_three,
+    usigma_nineteen_pow_two, sigma_nineteen_pow_two]
+  decide
+
+lemma thirteen_sq_seventeen_sq_nineteen_cube_overshoot :
+    6 * usigma (13 ^ 2) * usigma (17 ^ 2) * usigma (19 ^ 3) <
+      5 * σ 1 (13 ^ 2) * σ 1 (17 ^ 2) * σ 1 (19 ^ 3) := by
+  rw [usigma_thirteen_pow_two, sigma_thirteen_pow_two,
+    usigma_seventeen_pow_two, sigma_seventeen_pow_two,
+    usigma_nineteen_pow_three, sigma_nineteen_pow_three]
+  decide
+
+/-- Leftover `6/5` cannot be three squareful primes `13,17,19` times a
+squarefree coprime factor. -/
+lemma not_five_sigma_of_three_sq_primes_thirteen_seventeen_nineteen {m : ℕ}
+    (hm : m ≠ 0) (h : 5 * σ 1 m = 6 * usigma m)
+    (hk13 : 2 ≤ padicValNat 13 m) (hk17 : 2 ≤ padicValNat 17 m)
+    (hk19 : 2 ≤ padicValNat 19 m)
+    (hs : Squarefree (ordCompl[19] (ordCompl[17] (ordCompl[13] m)))) :
+    False := by
+  have hp13 : Nat.Prime 13 := by decide
+  have hp17 : Nat.Prime 17 := by decide
+  have hp19 : Nat.Prime 19 := by decide
+  have hpq_ne : (13 : ℕ) ≠ 17 := by decide
+  have hpr_ne : (13 : ℕ) ≠ 19 := by decide
+  have hqr_ne : (17 : ℕ) ≠ 19 := by decide
+  have heq := five_sigma_eq_six_of_three_squareful hm hp13 hp17 hp19 hpq_ne
+    hpr_ne hqr_ne h hs
+  have hproj_p : ordProj[13] m = 13 ^ padicValNat 13 m := by
+    simp [Nat.factorization_def m hp13]
+  have hproj_q : ordProj[17] (ordCompl[13] m) =
+      17 ^ padicValNat 17 (ordCompl[13] m) := by
+    simp [Nat.factorization_def (ordCompl[13] m) hp17]
+  have hproj_r : ordProj[19] (ordCompl[17] (ordCompl[13] m)) =
+      19 ^ padicValNat 19 (ordCompl[17] (ordCompl[13] m)) := by
+    simp [Nat.factorization_def (ordCompl[17] (ordCompl[13] m)) hp19]
+  rw [hproj_r, padicValNat_ordCompl_of_ne hp19 hqr_ne,
+    padicValNat_ordCompl_of_ne hp19 hpr_ne, hproj_q,
+    padicValNat_ordCompl_of_ne hp17 hpq_ne, hproj_p] at heq
+  rcases eq_or_lt_of_le hk13 with h13eq | h13
+  · rw [← h13eq] at heq
+    rcases eq_or_lt_of_le hk17 with h17eq | h17
+    · rw [← h17eq] at heq
+      rcases eq_or_lt_of_le hk19 with h19eq | h19
+      · rw [← h19eq] at heq
+        exact thirteen_seventeen_nineteen_sq_under.ne heq
+      · have hover := six_five_overshoot_mono_three hp13 hp17 hp19
+          (by decide : 0 < 2) (by decide : 0 < 2) (by decide : 0 < 3)
+          (le_refl _) (le_refl _) (Nat.succ_le_of_lt h19)
+          thirteen_sq_seventeen_sq_nineteen_cube_overshoot
+        rw [← heq] at hover
+        exact lt_irrefl _ hover
+    · have hover := six_five_overshoot_mono_three hp13 hp17 hp19
+        (by decide : 0 < 2) (by decide : 0 < 3) (by decide : 0 < 2)
+        (le_refl _) (Nat.succ_le_of_lt h17) hk19
+        thirteen_sq_seventeen_cube_nineteen_sq_overshoot
+      rw [← heq] at hover
+      exact lt_irrefl _ hover
+  · have hover := six_five_overshoot_mono_three hp13 hp17 hp19
+      (by decide : 0 < 3) (by decide : 0 < 2) (by decide : 0 < 2)
+      (Nat.succ_le_of_lt h13) hk17 hk19
+      thirteen_cube_seventeen_sq_nineteen_sq_overshoot
+    rw [← heq] at hover
+    exact lt_irrefl _ hover
+
+lemma five_mul_thirteen_sq_seventeen_twenty_three_cap :
+    5 * 17 * 23 * 183 ≤ 6 * 16 * 22 * 170 := by
+  decide
+
+lemma five_mul_seventeen_sq_thirteen_twenty_three_cap :
+    5 * 13 * 23 * 307 ≤ 6 * 12 * 22 * 290 := by
+  decide
+
+/-- `{13^2, 17^b, 23^k}` undershoots leftover `6/5`. -/
+lemma five_sigma_lt_six_usigma_thirteen_sq_seventeen_twenty_three {b k : ℕ}
+    (hb : 0 < b) (hk : 0 < k) :
+    5 * σ 1 (13 ^ 2) * σ 1 (17 ^ b) * σ 1 (23 ^ k) <
+      6 * usigma (13 ^ 2) * usigma (17 ^ b) * usigma (23 ^ k) := by
+  rw [sigma_thirteen_pow_two, usigma_thirteen_pow_two]
+  have h17 := sigma_lt_cap_usigma (by decide : Nat.Prime 17) hb
+  have h23 := sigma_lt_cap_usigma (by decide : Nat.Prime 23) hk
+  have hu17 : 0 < usigma (17 ^ b) := by
+    rw [usigma_prime_pow (by decide : Nat.Prime 17) hb]
+    exact Nat.add_pos_left (by decide : 0 < 1) _
+  have hthis := six_five_of_two_caps_times_const (A := 16) (B := 17)
+    (X := σ 1 (17 ^ b)) (Y := usigma (17 ^ b)) (C := 22) (D := 23)
+    (P := σ 1 (23 ^ k)) (Q := usigma (23 ^ k)) (S := 170) (T := 183)
+    h17 h23 five_mul_thirteen_sq_seventeen_twenty_three_cap
+    (by decide : 0 < 17) hu17 (by decide : 0 < 183)
+  convert hthis using 1 <;> ring
+
+/-- `{13^a, 17^2, 23^k}` undershoots leftover `6/5`. -/
+lemma five_sigma_lt_six_usigma_seventeen_sq_thirteen_twenty_three {a k : ℕ}
+    (ha : 0 < a) (hk : 0 < k) :
+    5 * σ 1 (13 ^ a) * σ 1 (17 ^ 2) * σ 1 (23 ^ k) <
+      6 * usigma (13 ^ a) * usigma (17 ^ 2) * usigma (23 ^ k) := by
+  rw [sigma_seventeen_pow_two, usigma_seventeen_pow_two]
+  have h13 := sigma_lt_cap_usigma (by decide : Nat.Prime 13) ha
+  have h23 := sigma_lt_cap_usigma (by decide : Nat.Prime 23) hk
+  have hu13 : 0 < usigma (13 ^ a) := by
+    rw [usigma_prime_pow (by decide : Nat.Prime 13) ha]
+    exact Nat.add_pos_left (by decide : 0 < 1) _
+  have hthis := six_five_of_two_caps_times_const (A := 12) (B := 13)
+    (X := σ 1 (13 ^ a)) (Y := usigma (13 ^ a)) (C := 22) (D := 23)
+    (P := σ 1 (23 ^ k)) (Q := usigma (23 ^ k)) (S := 290) (T := 307)
+    h13 h23 five_mul_seventeen_sq_thirteen_twenty_three_cap
+    (by decide : 0 < 13) hu13 (by decide : 0 < 307)
+  convert hthis using 1 <;> ring
+
+lemma thirteen_cube_seventeen_cube_twenty_three_sq_overshoot :
+    6 * usigma (13 ^ 3) * usigma (17 ^ 3) * usigma (23 ^ 2) <
+      5 * σ 1 (13 ^ 3) * σ 1 (17 ^ 3) * σ 1 (23 ^ 2) := by
+  rw [usigma_thirteen_pow_three, sigma_thirteen_pow_three,
+    usigma_seventeen_pow_three, sigma_seventeen_pow_three]
+  have hσ : σ 1 (23 ^ 2) = 553 := by
+    rw [sigma_prime_pow_two (by decide : Nat.Prime 23)]
+    decide
+  have hu : usigma (23 ^ 2) = 530 := by
+    rw [usigma_prime_pow (by decide : Nat.Prime 23) (by decide : 0 < 2)]
+    decide
+  rw [hσ, hu]
+  decide
+
+/-- Leftover `6/5` cannot be three squareful primes `13,17,23` times a
+squarefree coprime factor. -/
+lemma not_five_sigma_of_three_sq_primes_thirteen_seventeen_twenty_three {m : ℕ}
+    (hm : m ≠ 0) (h : 5 * σ 1 m = 6 * usigma m)
+    (hk13 : 2 ≤ padicValNat 13 m) (hk17 : 2 ≤ padicValNat 17 m)
+    (hk23 : 2 ≤ padicValNat 23 m)
+    (hs : Squarefree (ordCompl[23] (ordCompl[17] (ordCompl[13] m)))) :
+    False := by
+  have hp13 : Nat.Prime 13 := by decide
+  have hp17 : Nat.Prime 17 := by decide
+  have hp23 : Nat.Prime 23 := by decide
+  have hpq_ne : (13 : ℕ) ≠ 17 := by decide
+  have hpr_ne : (13 : ℕ) ≠ 23 := by decide
+  have hqr_ne : (17 : ℕ) ≠ 23 := by decide
+  have heq := five_sigma_eq_six_of_three_squareful hm hp13 hp17 hp23 hpq_ne
+    hpr_ne hqr_ne h hs
+  have hproj_p : ordProj[13] m = 13 ^ padicValNat 13 m := by
+    simp [Nat.factorization_def m hp13]
+  have hproj_q : ordProj[17] (ordCompl[13] m) =
+      17 ^ padicValNat 17 (ordCompl[13] m) := by
+    simp [Nat.factorization_def (ordCompl[13] m) hp17]
+  have hproj_r : ordProj[23] (ordCompl[17] (ordCompl[13] m)) =
+      23 ^ padicValNat 23 (ordCompl[17] (ordCompl[13] m)) := by
+    simp [Nat.factorization_def (ordCompl[17] (ordCompl[13] m)) hp23]
+  rw [hproj_r, padicValNat_ordCompl_of_ne hp23 hqr_ne,
+    padicValNat_ordCompl_of_ne hp23 hpr_ne, hproj_q,
+    padicValNat_ordCompl_of_ne hp17 hpq_ne, hproj_p] at heq
+  rcases eq_or_lt_of_le hk13 with h13eq | h13
+  · rw [← h13eq] at heq
+    exact (five_sigma_lt_six_usigma_thirteen_sq_seventeen_twenty_three
+      (by omega) (by omega)).ne heq
+  · rcases eq_or_lt_of_le hk17 with h17eq | h17
+    · rw [← h17eq] at heq
+      exact (five_sigma_lt_six_usigma_seventeen_sq_thirteen_twenty_three
+        (by omega) (by omega)).ne heq
+    · have hover := six_five_overshoot_mono_three hp13 hp17 hp23
+        (by decide : 0 < 3) (by decide : 0 < 3) (by decide : 0 < 2)
+        (Nat.succ_le_of_lt h13) (Nat.succ_le_of_lt h17) hk23
+        thirteen_cube_seventeen_cube_twenty_three_sq_overshoot
+      rw [← heq] at hover
+      exact lt_irrefl _ hover
+
+/-- Leftover `6/5` cannot be three squareful primes `13,17,p` with
+`p ≥ 19` times a squarefree coprime factor. -/
+lemma not_five_sigma_of_three_sq_primes_thirteen_seventeen {m p : ℕ}
+    (hm : m ≠ 0) (hp : p.Prime) (hp19 : 19 ≤ p)
+    (h : 5 * σ 1 m = 6 * usigma m)
+    (hk13 : 2 ≤ padicValNat 13 m) (hk17 : 2 ≤ padicValNat 17 m)
+    (hkp : 2 ≤ padicValNat p m)
+    (hs : Squarefree (ordCompl[p] (ordCompl[17] (ordCompl[13] m)))) : False := by
+  rcases le_or_gt p 19 with h19 | h20
+  · have hp19eq : p = 19 := le_antisymm h19 hp19
+    subst p
+    exact not_five_sigma_of_three_sq_primes_thirteen_seventeen_nineteen hm h
+      hk13 hk17 hkp hs
+  · have hp23 : 23 ≤ p := prime_ge_twenty_ge_twenty_three hp (by omega)
+    rcases le_or_gt p 23 with h23 | h24
+    · have hp23eq : p = 23 := le_antisymm h23 hp23
+      subst p
+      exact not_five_sigma_of_three_sq_primes_thirteen_seventeen_twenty_three
+        hm h hk13 hk17 hkp hs
+    · have hp29 : 29 ≤ p := prime_ge_twenty_four_ge_twenty_nine hp (by omega)
+      exact not_five_sigma_of_three_sq_primes_thirteen_seventeen_large hm hp
+        hp29 h hk13 hk17 hkp hs
+
 end Unitary
 
 section Congruence
