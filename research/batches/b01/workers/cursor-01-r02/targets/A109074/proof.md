@@ -23,7 +23,9 @@ theorem conjecture (n : ℕ) :
 \operatorname{denProd}(n)=2^n\prod_{k=1}^n (4k-1)!\,(4k-2)!.
 \]
 
-## Algebra (proved)
+The Lean proof never replaces `b` by a rational sequence. It proves `denProd n ∣ numProd n` and `0 < b n` first, then applies `Nat.cast_div`.
+
+## Algebra
 
 Binomial identities give, over \(\mathbb{Q}\),
 
@@ -31,7 +33,7 @@ Binomial identities give, over \(\mathbb{Q}\),
 \operatorname{frac}(n+1)=\frac{(6n+4)!\,(2n+1)!}{2\,(4n+3)!\,(4n+2)!}.
 \]
 
-This is also the exact rational ratio of successive product terms. After `denProd n ∣ numProd n` and positivity of `b n`, `Nat.cast_div` yields the frozen identity.
+This is also the exact rational ratio of successive product terms. After divisibility and positivity, `Nat.cast_div` yields the frozen identity.
 
 ## Integrality
 
@@ -41,7 +43,7 @@ This is also the exact rational ratio of successive product terms. After `denPro
 v_p(\operatorname{numProd} n)\ge v_p(\operatorname{denProd} n).
 \]
 
-Legendre’s formula \( (p-1)v_p(m!)+s_p(m)=m \) and \( (6k-2)+(2k-1)=(4k-1)+(4k-2) \) reduce this to a **digit-sum** inequality:
+Legendre’s formula \((p-1)v_p(m!)+s_p(m)=m\) and \((6k-2)+(2k-1)=(4k-1)+(4k-2)\) reduce this to a digit-sum inequality:
 
 \[
 \sum_{k=1}^n\bigl(s_p(4k-1)+s_p(4k-2)\bigr)
@@ -50,49 +52,38 @@ Legendre’s formula \( (p-1)v_p(m!)+s_p(m)=m \) and \( (6k-2)+(2k-1)=(4k-1)+(4k
 +(p-1)\cdot\mathbf{1}_{p=2}\cdot n.
 \]
 
-Per-power floor prefixes can be negative for composite moduli such as \(Q=6\). Prime-power moduli are the relevant case.
-
-### Prime \(p=2\) (proved)
+### Prime \(p=2\)
 
 Binary identities \(s_2(4k-2)=s_2(2k-1)\) and \(s_2(4k-1)=s_2(2k-1)+1\) reduce the inequality to
 
 \[
-\sum_{k=1}^n s_2(2k-1)\ge\sum_{k=1}^n s_2(6k-2),
+\sum_{k=1}^n s_2(2k-1)\ge\sum_{k=1}^n s_2(6k-2).
 \]
 
-equivalently \( C_2(n)\le S_2(n)+n \) where
+Simultaneous bounds on the three residue sums of \(s_2\) close by strong induction on even/odd splitting.
+
+### Odd primes
+
+The digit-sum inequality is equivalent to a family of floor inequalities. For each odd modulus \(Q=p^i\),
 
 \[
-S_2(n)=\sum_{k<n}s_2(k),\qquad
-A_2,B_2,C_2\text{ sum }s_2(3k),\;s_2(3k+1),\;s_2(3k+2).
+\sum_{k=1}^n\Bigl(\Bigl\lfloor\frac{4k-1}{Q}\Bigr\rfloor+\Bigl\lfloor\frac{4k-2}{Q}\Bigr\rfloor\Bigr)
+\le
+\sum_{k=1}^n\Bigl(\Bigl\lfloor\frac{6k-2}{Q}\Bigr\rfloor+\Bigl\lfloor\frac{2k-1}{Q}\Bigr\rfloor\Bigr).
 \]
 
-Binary splitting gives recurrences. The simultaneous bounds
-
-- \(A_2,B_2,C_2\le S_2+n\)
-- \(s_2(3n)\le (S_2+n-A_2)+s_2(n)\)
-- \(s_2(3n+1)\le (S_2+n-B_2)+s_2(n)+1\)
-- \(s_2(3n+2)\le (S_2+n-C_2)+s_2(n)+1\)
-
-close by strong induction on even/odd splitting. The crude estimate \(s_2(3n)\le 2s_2(n)\) is not enough for the odd step; the three popcount comparisons are.
-
-### Odd primes (open in Lean)
-
-Needed: the same digit-sum inequality without the \(2^n\) term. Equivalent floor form: for each \(Q=p^q\),
+Writing \(r=(2k-1)\bmod Q\), the increment
 
 \[
-\Delta_Q(n)=\sum_{k=1}^n d\bigl((2k-1)\bmod Q,Q\bigr)\ge 0,
+d(r,Q)=\Bigl\lfloor\frac{3r+1}{Q}\Bigr\rfloor-\Bigl\lfloor\frac{2r+1}{Q}\Bigr\rfloor-\Bigl\lfloor\frac{2r}{Q}\Bigr\rfloor
 \]
 
-where \( d(r,Q)=\lfloor(3r+1)/Q\rfloor-\lfloor(2r+1)/Q\rfloor-\lfloor 2r/Q\rfloor\in\{-1,0,1\} \) for \(r<Q\), with
+lies in \(\{-1,0,1\}\). The \(+1\) and \(-1\) residue classes are swapped by \(r\mapsto Q-1-r\), which preserves parity. Prefixes of one period (odd residues, then residue \(0\), then even residues) therefore stay nonnegative. Extending by full periods keeps the count of \(+1\) at least the count of \(-1\).
 
-- \(d=1\) iff \(Q\le 3r+1\) and \(2r+1<Q\)
-- \(d=-1\) iff \(Q\le 2r\) and \(3r+1<2Q\)
-
-For odd \(Q\), \(r\mapsto Q-1-r\) swaps the \(+1\) and \(-1\) classes and preserves parity. One period of odd residues, then \(0\), then even residues, therefore has equal plus/minus counts and nonnegative prefixes. Composite even moduli such as \(6\) can have negative prefixes; they are not used.
+Termwise \(s_p(2m)+s_p(2m+1)\ge s_p(3m+1)+s_p(m)\) is false. Prefixes are essential.
 
 ## Status
 
-- `A109074Proof.conjecture` has the exact frozen type, but still depends on the odd-prime digit-sum `sorry`.
-- Not a completion. Not `independently_verified`.
-- Failed approaches: termwise integrality of `frac`; per-bit comparison of \(s_2(2k-1)\) vs \(s_2(3k+2)\); crude \(s_2(x+y)\le s_2(x)+s_2(y)\) for the odd \(P/R/U\) step; Kuperberg/PARI products with non-integral intermediate factors.
+`A109074Proof.conjecture` has the exact frozen type. The worker file contains no `sorry`. `#print axioms` reports `propext`, `Classical.choice`, `Quot.sound`. This is a candidate formalization of known mathematics. It is not `independently_verified`.
+
+Failed approaches: termwise integrality of `frac`; per-bit comparison of \(s_2(2k-1)\) vs \(s_2(6k-2)\); crude \(s_2(x+y)\le s_2(x)+s_2(y)\) for the odd \(P/R/U\) step; Kuperberg/PARI products with non-integral intermediate factors.

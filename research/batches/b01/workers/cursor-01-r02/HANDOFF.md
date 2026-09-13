@@ -15,31 +15,32 @@ Follow-ups do not restart this clock.
 
 ```bash
 export LEAN_NUM_THREADS=2
-lake env lean research/batches/b01/workers/cursor-01-r02/targets/A109074/A109074.lean
+lake env lean -DwarningAsError=true research/batches/b01/workers/cursor-01-r02/targets/A109074/A109074.lean
 python3 research/batches/b01/control/check_assignments.py --repo . --worker cursor-01-r02 --against 1107856a264a066e316c3cba7b5339be475f6304
 ```
 
 Public push: only `origin` `cursor/b01-cursor-01-r02-0918` on `https://github.com/VictorLiwentao/formal-conjectures.git`.
 No PRs. No other branches. No subagents.
 
-Final commit SHA: recorded after the commit that contains this handoff.
+Final commit SHA: update immediately after the candidate commit on this branch.
 
 ## Status
 
-`researching` / `partial`.
+`candidate_proof`.
 Novelty: `known_mathematics_formalization_candidate`.
-No exact public completed Lean proof of the frozen statement was located in the bounded audit.
+No exact public completed Lean proof of the frozen statement was located in the bounded repeat audit.
+
+`A109074Proof.conjecture` compiles with axioms `{propext, Classical.choice, Quot.sound}`.
+Natural-division integrality (`den_dvd_num`) and positivity (`b_pos`) are proved before rational cancellation.
+Self-review cannot set `independently_verified`.
 
 ## Proved in `targets/A109074/A109074.lean`
 
 - Algebraic identity `frac_succ`
 - Factorization reduction of `den_dvd_num` to `digitSum_ineq`
-- Full 2-adic digit-sum inequality (`two_adic_core`, `two_adic_pop_ineq`, `digitSum_ineq_two`)
-- Conditional `b_pos`, `b_cast_div`, `b_succ_ratio`, and exact-type `conjecture` assuming `digitSum_ineq`
-
-## Remaining gap
-
-Odd-prime `digitSum_ineq`. Planned: for odd `Q=p^q`, the floor increment \(d(r,Q)\) is \(+1/-1\) on complementary classes swapped by \(r\mapsto Q-1-r\), and prefixes along the odd-then-even residue order stay nonnegative.
+- 2-adic digit-sum inequality
+- Odd-prime digit-sum inequality via floor increments on odd moduli \(Q=p^i\)
+- `b_pos`, `b_cast_div`, `b_succ_ratio`, exact-type `conjecture`
 
 Do not replace `b` by a rational sequence. Do not start A237271 or any other assignment.
 

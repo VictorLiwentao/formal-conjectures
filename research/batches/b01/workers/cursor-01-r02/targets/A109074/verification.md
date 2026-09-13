@@ -14,12 +14,16 @@ Compile the worker proof (not a lake target; file lives outside `FormalConjectur
 
 ```bash
 export LEAN_NUM_THREADS=2
-lake env lean research/batches/b01/workers/cursor-01-r02/targets/A109074/A109074.lean
+lake env lean -DwarningAsError=true research/batches/b01/workers/cursor-01-r02/targets/A109074/A109074.lean
 ```
 
-2026-09-13T00:50Z class compile: exit 0 with one `sorry` warning, on `digitSum_ineq` for odd primes.
+2026-09-13T01:59:47Z: exit 0. Output:
 
-`--wfail` is not claimed. A `sorry` warning would fail CI-style `--wfail`.
+```
+'A109074Proof.conjecture' depends on axioms: [propext, Classical.choice, Quot.sound]
+```
+
+No `sorryAx`, `native_decide`, extra axioms, or `Lean.trustCompiler`.
 
 Assignment scope:
 
@@ -28,7 +32,9 @@ python3 research/batches/b01/control/check_assignments.py --repo . --worker curs
 python3 research/batches/b01/control/check_assignments.py --repo . --worker cursor-01-r02 --against 1107856a264a066e316c3cba7b5339be475f6304
 ```
 
-Numerical checks (supporting only):
+Both: PASS.
+
+Numerical checks (supporting only; not a proof):
 
 ```bash
 python3 research/batches/b01/workers/cursor-01-r02/targets/A109074/experiments/check_ratio.py
@@ -39,27 +45,32 @@ python3 research/batches/b01/workers/cursor-01-r02/targets/A109074/experiments/c
 
 `check_invariants.py`: `P,R,U` nonnegative on `[0,4096)`; odd-step deltas nonnegative; odd-prime digit-sum prefixes nonnegative for `p=3,5,7,11,13` through `n=800`.
 
-## Exact-type audit (not a completion)
+## Exact-type audit
 
-Frozen:
+Frozen `OeisA109074.conjecture`:
 
 ```lean
 theorem conjecture (n : ℕ) :
     frac (n + 1) = (b (n + 1) : ℚ) / (b n : ℚ)
 ```
 
-Worker theorem `A109074Proof.conjecture` has this type. It must **not** be treated as proved while `digitSum_ineq` uses `sorry`.
+Worker theorem `A109074Proof.conjecture` has this type, compiled separately. The file also contains
 
-Do not use `OeisA109074.conjecture` (sorry) as a proof. Import is definitions only.
+```lean
+example : ∀ n : ℕ, frac (n + 1) = (b (n + 1) : ℚ) / (b n : ℚ) :=
+  conjecture
+```
+
+Do not use `OeisA109074.conjecture` (`sorry`) as a proof. The import is definitions only. `#print axioms` does not include `sorryAx`.
 
 `native_decide` appears only in the upstream tests `a_0`–`a_4`. The worker file does not depend on those theorems.
 
-`#print axioms A109074Proof.conjecture` is **not** claimed. It would currently include `sorryAx`.
-
 ## Formalization audit
 
-- Quantifier: all `n : ℕ`, including `n=0` (`frac 1 = b 1 / b 0 = 1/1`)
-- `b` remains Nat division; no silent rational replacement
-- Empty products: `b 0 = 1`
-- Nonvacuity: `b n > 0` is proved from `den_dvd_num`, which is still conditional on odd primes
-- Indexing matches PR #5231, not the old Fuss–Catalan source
+- Quantifier: all `n : ℕ`, including `n=0` (`frac 1 = b 1 / b 0 = 1/1`).
+- `b` remains Nat division. Integrality is `den_dvd_num`; positivity is `b_pos`; then `b_cast_div`.
+- Empty products: `b 0 = 1`.
+- Indexing matches PR #5231, not the old Fuss–Catalan source.
+- `frac n` need not be an integer (`frac 3 = 26/3`). The theorem is a rational identity.
+
+Self-review cannot set `independently_verified`.

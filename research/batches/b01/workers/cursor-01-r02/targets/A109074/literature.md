@@ -69,8 +69,15 @@ Searches: `A109074 Lean`, `OeisA109074.conjecture`, `A005156 Lean proof`, GitHub
 - A public “Lean proof of A109074” associated with an old Fuss–Catalan formalization is a proof/disproof of a **different** statement
 - WOWII / `Kuberwastaken` repositories found in a `c5-k4` search are unrelated graph certificates
 
+## Repeat screen before candidate claim (2026-09-13T01:58Z)
+
+- Web search for `OeisA109074.conjecture`, `A109074 Lean`, and Epoch/AlphaProof A109074 hits returned unrelated factorial-ratio work (A211420, A364176) and other OEIS IDs. No completed Lean proof of the frozen statement.
+- Listed `APNOutputs/OEIS` (38 files) and `NaturalLanguageProofs/OEIS` on `google-deepmind/alphaproof-nexus-results`. No filename containing `109074`, `005156`, or `134357`.
+- GitHub code search API returned HTTP 429 during this pass; the contents listing above is the AlphaProof check.
+- Upstream still has `FormalConjectures/OEIS/109074.lean` with `sorry` on `OeisA109074.conjecture`.
+
 Status remains `known_mathematics_formalization_candidate`.
-No independently verified exact public Lean proof of the frozen theorem was located.
+No independently verified exact public Lean proof of the frozen theorem was located. This worker file is a candidate, not a certified prior solution.
 
 ## Formalization notes
 
