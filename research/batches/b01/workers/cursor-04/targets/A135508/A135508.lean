@@ -27,6 +27,9 @@ These results do not import or use the `sorry` placeholder for `conjecture`.
 They prove the closed form of `a`, the prime-index dichotomy, the first-entry
 criterion, and the conjecture for every prime `p ≥ 7` with `3 ∣ p - 2`
 (equivalently `p ≡ 2 (mod 3)`), together with the primes `2` and `3`.
+They also prove Cloitre's 2-adic staircase `a(2 · 4^k - 1) = 2`, the
+remaining-class factor `q ≡ 2 (mod 3)` of `p-2`, and injection of `q` when
+some `kq-2` is prime.
 -/
 
 namespace OeisA135508
@@ -457,6 +460,267 @@ theorem conjecture_of_nineteen_dvd {p : ℕ} (hp : p.Prime) (hp20 : 20 ≤ p)
   conjecture_of_factor_dvd_x hp (by omega) (by decide : 1 < 19) h19
     (nineteen_dvd_x (by omega : 17 ≤ p - 3))
 
+lemma a_eq_succ_iff {n : ℕ} (hn : 0 < n) :
+    a n = n + 1 ↔ Nat.gcd (x n) (n + 1) = 1 := by
+  have hmul := a_mul_gcd hn
+  constructor
+  · intro h
+    rw [h] at hmul
+    exact Nat.eq_of_mul_eq_mul_left (Nat.succ_pos n) (by simpa using hmul)
+  · intro h
+    rw [a_eq hn, h, Nat.div_one]
+
+/-- If `gcd(x n, n+1) = 1`, then `n+3` enters `x` at the next index. -/
+lemma dvd_add_three_of_coprime {n : ℕ} (hn : 0 < n)
+    (hc : Nat.gcd (x n) (n + 1) = 1) : n + 3 ∣ x (n + 1) := by
+  have hstep := x_succ_a hn
+  have ha : a n = n + 1 := (a_eq_succ_iff hn).2 hc
+  rw [hstep, ha]
+  have : n + 1 + 2 = n + 3 := by omega
+  rw [this]
+  exact dvd_mul_left _ _
+
+/-- Composite injection: if `gcd(x(kq-3), kq-2) = 1`, then `kq` divides `x(kq-2)`.
+This does not require `kq-2` to be prime. -/
+lemma dvd_x_of_coprime_shift {k q : ℕ} (hpos : 0 < k * q - 3)
+    (hc : Nat.gcd (x (k * q - 3)) (k * q - 2) = 1) :
+    k * q ∣ x (k * q - 2) := by
+  have hidx : k * q - 3 + 1 = k * q - 2 := by omega
+  have hc' : Nat.gcd (x (k * q - 3)) (k * q - 3 + 1) = 1 := by
+    rwa [hidx]
+  have ha : a (k * q - 3) = k * q - 2 := by
+    have h := (a_eq_succ_iff hpos).2 hc'
+    rwa [hidx] at h
+  have hstep := x_succ_a hpos
+  rw [hidx, ha] at hstep
+  have : k * q - 2 + 2 = k * q := by omega
+  rw [hstep, this]
+  exact dvd_mul_left _ _
+
+lemma q_dvd_x_of_coprime_shift {k q : ℕ} (hpos : 0 < k * q - 3)
+    (hc : Nat.gcd (x (k * q - 3)) (k * q - 2) = 1) :
+    q ∣ x (k * q - 2) :=
+  (Nat.dvd_mul_left q k).trans (dvd_x_of_coprime_shift hpos hc)
+
+/-- A number `≡ 2 (mod 3)` has a prime factor `≡ 2 (mod 3)`. -/
+lemma exists_prime_factor_mod_three (n : ℕ) :
+    1 < n → n % 3 = 2 → ∃ q, q.Prime ∧ q ∣ n ∧ q % 3 = 2 := by
+  induction n using Nat.strong_induction_on with
+  | h n ih =>
+    intro hn hmod
+    have hminp : (Nat.minFac n).Prime := Nat.minFac_prime (ne_of_gt hn)
+    have hdvd : Nat.minFac n ∣ n := Nat.minFac_dvd n
+    have hne3 : Nat.minFac n ≠ 3 := by
+      intro heq
+      have : 3 ∣ n := by rwa [heq] at hdvd
+      have : n % 3 = 0 := Nat.mod_eq_zero_of_dvd this
+      omega
+    have hmodp : Nat.minFac n % 3 = 1 ∨ Nat.minFac n % 3 = 2 := by
+      have h2 : 2 ≤ Nat.minFac n := hminp.two_le
+      have hcases : Nat.minFac n % 3 = 0 ∨ Nat.minFac n % 3 = 1 ∨
+          Nat.minFac n % 3 = 2 := by omega
+      rcases hcases with h0 | h | h
+      · have : 3 ∣ Nat.minFac n := Nat.dvd_of_mod_eq_zero h0
+        have heq : Nat.minFac n = 3 :=
+          ((Nat.prime_dvd_prime_iff_eq Nat.prime_three hminp).1 this).symm
+        exact (hne3 heq).elim
+      · exact Or.inl h
+      · exact Or.inr h
+    rcases hmodp with h1 | h2
+    · by_cases hpr : n.Prime
+      · have : Nat.minFac n = n := hpr.minFac_eq
+        have : n % 3 = 1 := by rwa [this] at h1
+        omega
+      · set m := n / Nat.minFac n
+        have hmul : Nat.minFac n * m = n := Nat.mul_div_cancel' hdvd
+        have hm1 : 1 < m := by
+          have hge : Nat.minFac n ≤ m :=
+            Nat.minFac_le_div (Nat.zero_lt_of_lt hn) hpr
+          have : 2 ≤ Nat.minFac n := hminp.two_le
+          omega
+        have hmmod : m % 3 = 2 := by
+          have hprod : (Nat.minFac n * m) % 3 = n % 3 := by rw [hmul]
+          rw [Nat.mul_mod, h1, hmod] at hprod
+          have hm3 : m % 3 = 0 ∨ m % 3 = 1 ∨ m % 3 = 2 := by omega
+          rcases hm3 with hm0 | hm1' | hm2
+          · simp [hm0] at hprod
+          · simp [hm1'] at hprod
+          · exact hm2
+        have hmlt : m < n := by
+          have hge : 2 ≤ Nat.minFac n := hminp.two_le
+          have hmpos : 0 < m := Nat.zero_lt_of_lt hm1
+          have hlt : m < Nat.minFac n * m := by
+            have : 1 * m < Nat.minFac n * m :=
+              Nat.mul_lt_mul_of_pos_right (Nat.lt_of_succ_le hge) hmpos
+            rwa [Nat.one_mul] at this
+          rwa [hmul] at hlt
+        obtain ⟨q, hq, hdq, hqmod⟩ := ih m hmlt hm1 hmmod
+        exact ⟨q, hq, hmul ▸ dvd_mul_of_dvd_right hdq (Nat.minFac n), hqmod⟩
+    · exact ⟨n.minFac, hminp, hdvd, h2⟩
+
+lemma p_sub_two_mod {p : ℕ} (hp4 : 4 ≤ p) (h : p % 3 = 1) : (p - 2) % 3 = 2 := by
+  have hrep : p = 3 * (p / 3) + 1 := by
+    simpa [Nat.mul_comm, h] using (Nat.div_add_mod p 3).symm
+  omega
+
+lemma exists_remaining_factor {p : ℕ} (hp : p.Prime) (hp7 : 7 ≤ p)
+    (hmod : p % 3 = 1) :
+    ∃ q, q.Prime ∧ q ∣ p - 2 ∧ q % 3 = 2 ∧ 5 ≤ q := by
+  have hn : 1 < p - 2 := by omega
+  have hpm : (p - 2) % 3 = 2 :=
+    p_sub_two_mod (le_trans (by decide : 4 ≤ 7) hp7) hmod
+  obtain ⟨q, hq, hd, hqmod⟩ := exists_prime_factor_mod_three (p - 2) hn hpm
+  refine ⟨q, hq, hd, hqmod, ?_⟩
+  have hq2 : q ≠ 2 := by
+    intro h2
+    have hd2 : 2 ∣ p - 2 := by rwa [h2] at hd
+    have hpeq : p = p - 2 + 2 := by omega
+    have hd2p : 2 ∣ p := by
+      rw [hpeq]
+      exact Nat.dvd_add hd2 (by decide)
+    have : p = 2 := ((Nat.prime_dvd_prime_iff_eq Nat.prime_two hp).1 hd2p).symm
+    omega
+  have hq3 : q ≠ 3 := by
+    intro h3
+    have : 3 ∣ p - 2 := by rwa [h3] at hd
+    have : (p - 2) % 3 = 0 := Nat.mod_eq_zero_of_dvd this
+    omega
+  have : 2 ≤ q := hq.two_le
+  omega
+
+/-- For odd composite `n ≡ 2 (mod 3)`, the least prime factor satisfies
+`q(q+2) ≤ n`. Squares are `≡ 1 (mod 3)`, so the cofactor is at least `q+2`. -/
+lemma sq_mod_three_of_ne_three {q : ℕ} (hq : q.Prime) (h3 : q ≠ 3) :
+    (q * q) % 3 = 1 := by
+  have h2 : 2 ≤ q := hq.two_le
+  have hmod : q % 3 = 1 ∨ q % 3 = 2 := by
+    have hcases : q % 3 = 0 ∨ q % 3 = 1 ∨ q % 3 = 2 := by omega
+    rcases hcases with h0 | h | h
+    · have : 3 ∣ q := Nat.dvd_of_mod_eq_zero h0
+      have heq : q = 3 :=
+        ((Nat.prime_dvd_prime_iff_eq Nat.prime_three hq).1 this).symm
+      exact (h3 heq).elim
+    · exact Or.inl h
+    · exact Or.inr h
+  rw [Nat.mul_mod]
+  cases hmod with
+  | inl h => simp [h]
+  | inr h => simp [h]
+
+lemma minFac_mul_add_two_le {n : ℕ} (hn : 1 < n) (hnp : ¬ n.Prime)
+    (hmod : n % 3 = 2) (hodd : n % 2 = 1) :
+    Nat.minFac n * (Nat.minFac n + 2) ≤ n := by
+  have hminp : (Nat.minFac n).Prime := Nat.minFac_prime (ne_of_gt hn)
+  have hd : Nat.minFac n ∣ n := Nat.minFac_dvd n
+  have hq2 : Nat.minFac n ≠ 2 := by
+    intro h
+    have : 2 ∣ n := by
+      rw [← Nat.minFac_eq_two_iff]
+      exact h
+    have : n % 2 = 0 := Nat.mod_eq_zero_of_dvd this
+    omega
+  have hq3 : Nat.minFac n ≠ 3 := by
+    intro h
+    have : 3 ∣ n := by rwa [h] at hd
+    have : n % 3 = 0 := Nat.mod_eq_zero_of_dvd this
+    omega
+  have hq5 : 5 ≤ Nat.minFac n := by
+    have h2 : 2 ≤ Nat.minFac n := hminp.two_le
+    have hgt2 : 2 < Nat.minFac n := lt_of_le_of_ne h2 hq2.symm
+    have hge3 : 3 ≤ Nat.minFac n := hgt2
+    have hgt3 : 3 < Nat.minFac n := lt_of_le_of_ne hge3 hq3.symm
+    have hge4 : 4 ≤ Nat.minFac n := hgt3
+    have hne4 : Nat.minFac n ≠ 4 := by
+      intro h4
+      rw [h4] at hminp
+      exact (by decide : ¬ Nat.Prime 4) hminp
+    omega
+  set q := Nat.minFac n
+  set m := n / q
+  have hmul : q * m = n := Nat.mul_div_cancel' hd
+  have hmge : q ≤ m := Nat.minFac_le_div (Nat.zero_lt_of_lt hn) hnp
+  have hne : m ≠ q := by
+    intro hmeq
+    have hn' : n = q * q := by rw [← hmul, hmeq]
+    have : n % 3 = 1 := by
+      rw [hn']
+      exact sq_mod_three_of_ne_three hminp hq3
+    omega
+  have hoddq : q % 2 = 1 := by
+    have h2 : 2 ≤ q := hminp.two_le
+    have hcases : q % 2 = 0 ∨ q % 2 = 1 := by omega
+    rcases hcases with h | h
+    · have : 2 ∣ q := Nat.dvd_of_mod_eq_zero h
+      have heq : q = 2 :=
+        ((Nat.prime_dvd_prime_iff_eq Nat.prime_two hminp).1 this).symm
+      exact (hq2 heq).elim
+    · exact h
+  have hoddm : m % 2 = 1 := by
+    have : (q * m) % 2 = n % 2 := by rw [hmul]
+    rw [Nat.mul_mod, hoddq, hodd] at this
+    have hm2 : m % 2 = 0 ∨ m % 2 = 1 := by omega
+    rcases hm2 with h0 | h1
+    · simp [h0] at this
+    · exact h1
+  have hm2 : q + 2 ≤ m := by
+    have : q + 1 ≤ m := by omega
+    have hpar : (q + 1) % 2 = 0 := by omega
+    have : m ≠ q + 1 := by
+      intro hmeq
+      have : m % 2 = 0 := by rw [hmeq]; exact hpar
+      omega
+    omega
+  have : q * (q + 2) ≤ q * m := Nat.mul_le_mul_left q hm2
+  rwa [hmul] at this
+
+lemma remaining_minFac_mul_add_two_le {p : ℕ} (hp : p.Prime) (hp7 : 7 ≤ p)
+    (hmod : p % 3 = 1) (hcomp : ¬ (p - 2).Prime) :
+    Nat.minFac (p - 2) * (Nat.minFac (p - 2) + 2) ≤ p - 2 := by
+  have hn : 1 < p - 2 := by omega
+  have hodd : (p - 2) % 2 = 1 := by
+    have hpodd : p % 2 = 1 := by
+      have hcases : p % 2 = 0 ∨ p % 2 = 1 := by omega
+      rcases hcases with h0 | h1
+      · have : 2 ∣ p := Nat.dvd_of_mod_eq_zero h0
+        have : p = 2 :=
+          ((Nat.prime_dvd_prime_iff_eq Nat.prime_two hp).1 this).symm
+        omega
+      · exact h1
+    omega
+  have hpm : (p - 2) % 3 = 2 :=
+    p_sub_two_mod (le_trans (by decide : 4 ≤ 7) hp7) hmod
+  exact minFac_mul_add_two_le hn hcomp hpm hodd
+
+lemma mul_sub_two_mod_three {k q : ℕ} (hk : k % 3 = 2) (hq : q % 3 = 2)
+    (h4 : 4 ≤ k * q) : (k * q - 2) % 3 = 2 := by
+  have hmul : (k * q) % 3 = 1 := by
+    rw [Nat.mul_mod, hk, hq]
+  have hrep : k * q = 3 * (k * q / 3) + 1 := by
+    simpa [Nat.mul_comm, hmul] using (Nat.div_add_mod (k * q) 3).symm
+  omega
+
+/-- If `r = kq - 2` is an odd prime `≡ 2 (mod 3)`, then `q` enters `x` at index `r`. -/
+lemma q_dvd_x_of_prime_injector {k q : ℕ} (hmodk : k % 3 = 2) (hmodq : q % 3 = 2)
+    (hpr : (k * q - 2).Prime) (h7 : 7 ≤ k * q - 2) :
+    q ∣ x (k * q - 2) := by
+  have h4 : 4 ≤ k * q := by omega
+  have hmod := mul_sub_two_mod_three hmodk hmodq h4
+  have hx := add_two_dvd_x_of_mod_three hpr h7 hmod
+  have : k * q - 2 + 2 = k * q := by omega
+  rw [this] at hx
+  exact (Nat.dvd_mul_left q k).trans hx
+
+/-- McEachen at `p` if some factor `q` of `p-2` is injected by a prime `kq-2 ≤ p-3`. -/
+theorem conjecture_of_prime_injector {p k q : ℕ} (hp : p.Prime) (hp5 : 5 ≤ p)
+    (hmodk : k % 3 = 2) (hmodq : q % 3 = 2)
+    (hpr : (k * q - 2).Prime) (h7 : 7 ≤ k * q - 2)
+    (hle : k * q - 2 ≤ p - 3) (hqp : q ∣ p - 2) (hq1 : 1 < q) :
+    a (p - 1) = p := by
+  have hx := q_dvd_x_of_prime_injector hmodk hmodq hpr h7
+  have hpos : 0 < k * q - 2 := by omega
+  have hx2 : q ∣ x (p - 3) := hx.trans (x_dvd_of_le hpos hle)
+  exact conjecture_of_factor_dvd_x hp hp5 hq1 hqp hx2
+
 private instance : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
 
 lemma a_pos {n : ℕ} (hn : 0 < n) : 0 < a n :=
@@ -523,6 +787,44 @@ lemma v2_x_two : padicValNat 2 (x 2) = 2 := by
   have : x 2 = 4 := by decide
   rw [this, show (4 : ℕ) = 2 ^ 2 from rfl, padicValNat.prime_pow]
 
+lemma v2_x_one : padicValNat 2 (x 1) = 0 :=
+  padicValNat_one_right 2
+
+/-- If `a` divides a power of two and `v₂(a) = 1`, then `a = 2`. -/
+lemma eq_two_of_dvd_two_pow {a t : ℕ}
+    (hd : a ∣ 2 ^ t) (hv : padicValNat 2 a = 1) : a = 2 := by
+  obtain ⟨k, _hk, rfl⟩ := (Nat.dvd_prime_pow Nat.prime_two).1 hd
+  have hk1 : k = 1 := by
+    simpa [padicValNat.prime_pow] using hv
+  simp [hk1]
+
+lemma four_pow_pred_div_two {k : ℕ} (_hk : 1 ≤ k) :
+    (2 * 4 ^ k - 1) / 2 = 4 ^ k - 1 := by
+  have hpow : 1 ≤ 4 ^ k := Nat.pow_pos (by decide)
+  have h : 2 * (4 ^ k - 1) + 1 = 2 * 4 ^ k - 1 := by omega
+  rw [← h, show 2 * (4 ^ k - 1) + 1 = 1 + 2 * (4 ^ k - 1) by omega]
+  rw [Nat.add_mul_div_left 1 (4 ^ k - 1) (by decide : 0 < 2)]
+  simp
+
+lemma log4_four_pow_pred {k : ℕ} (hk : 1 ≤ k) :
+    Nat.log 4 (4 ^ k - 1) = k - 1 := by
+  have hpos : 0 < 4 ^ k := Nat.pow_pos (by decide)
+  have hpred : 0 < 4 ^ (k - 1) := Nat.pow_pos (by decide)
+  have hle : 4 ^ (k - 1) ≤ 4 ^ k - 1 := by
+    have hmul : 4 ^ k = 4 ^ (k - 1 + 1) := by
+      rw [Nat.sub_add_cancel hk]
+    rw [hmul, pow_succ]
+    have : 4 ^ (k - 1) ≤ 4 ^ (k - 1) * 4 - 1 := by
+      have : 1 ≤ 4 ^ (k - 1) * 3 := by
+        have : 1 ≤ 4 ^ (k - 1) := hpred
+        omega
+      omega
+    simpa [Nat.mul_succ, mul_comm] using this
+  have hlt : 4 ^ k - 1 < 4 ^ k := Nat.sub_lt hpos (by decide)
+  have hlt' : 4 ^ k - 1 < 4 ^ (k - 1 + 1) := by
+    rwa [Nat.sub_add_cancel hk]
+  exact Nat.log_eq_of_pow_le_of_lt_pow hle hlt'
+
 lemma log4_block {n : ℕ} (hn : 2 ≤ n) :
     2 * 4 ^ Nat.log 4 (n / 2) ≤ n ∧ n ≤ 2 * 4 ^ (Nat.log 4 (n / 2) + 1) - 1 := by
   have hb : 1 < (4 : ℕ) := by decide
@@ -541,8 +843,137 @@ lemma exists_block {n : ℕ} (hn : 2 ≤ n) :
     ∃ k, 2 * 4 ^ k ≤ n ∧ n ≤ 2 * 4 ^ (k + 1) - 1 :=
   ⟨Nat.log 4 (n / 2), log4_block hn⟩
 
-/-- Cloitre's 2-adic identity in Lean indexing at the first staircase step. -/
-theorem a_two_four_pow_zero : a (2 * 4 ^ 0 - 1) = 2 := a_1
+/-- Cloitre's 2-adic staircase: `v₂(x n) = 2 k + 2` on the block
+`2 · 4^k ≤ n ≤ 2 · 4^{k+1} - 1`. -/
+lemma v2_x_stay {N k : ℕ} (hNpos : 0 < N)
+    (hvN : padicValNat 2 (x N) = 2 * k + 2)
+    (hv2le : padicValNat 2 (N + 1) ≤ 2 * k + 2) :
+    padicValNat 2 (x (N + 1)) = 2 * k + 2 := by
+  have hle : padicValNat 2 (N + 1) ≤ padicValNat 2 (x N) := by
+    rwa [hvN]
+  rw [v2_x_succ_eq_of_le hNpos hle, hvN]
+
+lemma v2_x_ge_two (n : ℕ) :
+    2 ≤ n → padicValNat 2 (x n) = 2 * Nat.log 4 (n / 2) + 2 := by
+  induction n using Nat.strong_induction_on with
+  | h n ih =>
+    intro hn
+    match n with
+    | 0 => omega
+    | 1 => omega
+    | 2 =>
+      have : Nat.log 4 (2 / 2) = 0 := Nat.log_one_right 4
+      simp [this, v2_x_two]
+    | m + 3 =>
+      have hm : 2 ≤ m + 2 := by omega
+      have hlt : m + 2 < m + 3 := Nat.lt_succ_self _
+      have ihv := ih (m + 2) hlt hm
+      set N := m + 2
+      have hNpos : 0 < N := by omega
+      have hblk := log4_block hm
+      set k := Nat.log 4 (N / 2)
+      have hleft : 2 * 4 ^ k ≤ N := by simpa [k, N] using hblk.1
+      have hright : N ≤ 2 * 4 ^ (k + 1) - 1 := by simpa [k, N] using hblk.2
+      have hvN : padicValNat 2 (x N) = 2 * k + 2 := by
+        simpa [k, N] using ihv
+      have hpow : 2 * 4 ^ (k + 1) = 2 ^ (2 * (k + 1) + 1) := two_mul_four_pow (k + 1)
+      have hposb : 0 < 2 * 4 ^ (k + 1) :=
+        Nat.mul_pos (by decide) (Nat.pow_pos (by decide))
+      by_cases hlast : N = 2 * 4 ^ (k + 1) - 1
+      · have hsucc : N + 1 = 2 * 4 ^ (k + 1) := by omega
+        have hv2 : padicValNat 2 (N + 1) = 2 * (k + 1) + 1 := by
+          rw [hsucc, hpow, padicValNat.prime_pow]
+        have hva : padicValNat 2 (a N) = 1 := by
+          rw [v2_a hNpos, hvN, hv2]
+          have hmin : min (2 * k + 2) (2 * (k + 1) + 1) = 2 * k + 2 := by omega
+          rw [hmin]
+          omega
+        have hdvd : a N ∣ 2 ^ (2 * (k + 1) + 1) := by
+          have hd := a_dvd hNpos
+          rwa [hsucc, hpow] at hd
+        have haeq : a N = 2 := eq_two_of_dvd_two_pow hdvd hva
+        have hvnext : padicValNat 2 (x (N + 1)) = 2 * k + 4 := by
+          rw [v2_x_succ hNpos, haeq, hvN]
+          have : padicValNat 2 (2 + 2) = 2 := by
+            rw [show (2 + 2 : ℕ) = 2 ^ 2 from rfl, padicValNat.prime_pow]
+          omega
+        have hlog : Nat.log 4 ((N + 1) / 2) = k + 1 := by
+          have : (N + 1) / 2 = 4 ^ (k + 1) := by
+            rw [hsucc, Nat.mul_div_right _ (by decide : 0 < 2)]
+          rw [this, Nat.log_pow (by decide : 1 < (4 : ℕ))]
+        have hidx : N + 1 = m + 3 := by omega
+        rw [← hidx, hvnext, hlog]
+        omega
+      · have hsucc_lt : N + 1 < 2 * 4 ^ (k + 1) := by omega
+        have hsucc_lt_pow : N + 1 < 2 ^ (2 * (k + 1) + 1) := by
+          rwa [← hpow]
+        have hv2le : padicValNat 2 (N + 1) ≤ 2 * k + 2 := by
+          have heq : 2 * (k + 1) + 1 = 2 * k + 2 + 1 := by omega
+          exact v2_lt_pow (Nat.succ_ne_zero N) (heq ▸ hsucc_lt_pow)
+        have hvstay : padicValNat 2 (x (N + 1)) = 2 * k + 2 :=
+          v2_x_stay hNpos hvN hv2le
+        have hlog : Nat.log 4 ((N + 1) / 2) = k := by
+          refine Nat.log_eq_of_pow_le_of_lt_pow ?hle ?hlt
+          · have : 4 ^ k * 2 ≤ N + 1 := by
+              have h' : 2 * 4 ^ k ≤ N + 1 := hleft.trans (Nat.le_succ N)
+              rwa [mul_comm] at h'
+            rwa [Nat.le_div_iff_mul_le (by decide : 0 < 2)]
+          · rw [Nat.div_lt_iff_lt_mul (by decide : 0 < 2), mul_comm]
+            exact hsucc_lt
+        have hidx : N + 1 = m + 3 := by omega
+        rw [← hidx, hvstay, hlog]
+
+/-- Cloitre Proposition 6.5 in Lean indexing: `a(2 · 4^k - 1) = 2`. -/
+theorem a_two_four_pow (k : ℕ) : a (2 * 4 ^ k - 1) = 2 := by
+  cases k with
+  | zero => exact a_1
+  | succ k =>
+    set n := 2 * 4 ^ (k + 1) - 1
+    have hn2 : 2 ≤ n := by
+      have hpow : 4 ≤ 4 ^ (k + 1) :=
+        Nat.pow_le_pow_right (by decide : 0 < 4) (Nat.succ_le_succ (Nat.zero_le _))
+      have : 8 ≤ 2 * 4 ^ (k + 1) := by omega
+      omega
+    have hv := v2_x_ge_two n hn2
+    have hdiv := four_pow_pred_div_two (Nat.succ_le_succ (Nat.zero_le k))
+    have hlog : Nat.log 4 (n / 2) = k := by
+      rw [hdiv]
+      simpa using log4_four_pow_pred (Nat.succ_le_succ (Nat.zero_le k))
+    have hv' : padicValNat 2 (x n) = 2 * k + 2 := by
+      rw [hv, hlog]
+    have hnpos : 0 < n := by omega
+    have hsum : n + 1 = 2 * 4 ^ (k + 1) := by omega
+    have hv2n : padicValNat 2 (n + 1) = 2 * (k + 1) + 1 := by
+      rw [hsum, two_mul_four_pow (k + 1), padicValNat.prime_pow]
+    have hva : padicValNat 2 (a n) = 1 := by
+      rw [v2_a hnpos, hv', hv2n]
+      have hmin : min (2 * k + 2) (2 * (k + 1) + 1) = 2 * k + 2 := by omega
+      rw [hmin]
+      omega
+    have hdvd : a n ∣ 2 ^ (2 * (k + 1) + 1) := by
+      have hd := a_dvd hnpos
+      rwa [hsum, two_mul_four_pow (k + 1)] at hd
+    exact eq_two_of_dvd_two_pow hdvd hva
+
+theorem a_two_four_pow_zero : a (2 * 4 ^ 0 - 1) = 2 :=
+  a_two_four_pow 0
+
+lemma v2_x_two_four_pow_pred (k : ℕ) :
+    padicValNat 2 (x (2 * 4 ^ k - 1)) = 2 * k := by
+  cases k with
+  | zero => simpa using v2_x_one
+  | succ k =>
+    have hn2 : 2 ≤ 2 * 4 ^ (k + 1) - 1 := by
+      have hpow : 4 ≤ 4 ^ (k + 1) :=
+        Nat.pow_le_pow_right (by decide : 0 < 4) (Nat.succ_le_succ (Nat.zero_le _))
+      omega
+    have hv := v2_x_ge_two (2 * 4 ^ (k + 1) - 1) hn2
+    have hdiv := four_pow_pred_div_two (Nat.succ_le_succ (Nat.zero_le k))
+    have hlog : Nat.log 4 ((2 * 4 ^ (k + 1) - 1) / 2) = k := by
+      rw [hdiv]
+      simpa using log4_four_pow_pred (Nat.succ_le_succ (Nat.zero_le k))
+    rw [hv, hlog]
+    omega
 
 #print axioms conjecture_of_mod_three
 #print axioms twin_pair_inhibition
@@ -560,6 +991,16 @@ theorem a_two_four_pow_zero : a (2 * 4 ^ 0 - 1) = 2 := a_1
 #print axioms a_pos
 #print axioms v2_a
 #print axioms v2_x_succ
+#print axioms a_two_four_pow
 #print axioms a_two_four_pow_zero
+#print axioms v2_x_two_four_pow_pred
+#print axioms exists_prime_factor_mod_three
+#print axioms exists_remaining_factor
+#print axioms minFac_mul_add_two_le
+#print axioms remaining_minFac_mul_add_two_le
+#print axioms q_dvd_x_of_prime_injector
+#print axioms conjecture_of_prime_injector
+#print axioms q_dvd_x_of_coprime_shift
+#print axioms v2_x_ge_two
 
 end OeisA135508

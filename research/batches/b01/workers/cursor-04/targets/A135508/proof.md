@@ -57,21 +57,23 @@ This is not McEachen (McEachen excludes `p-2` prime). It is the twin-detection h
 
 ## Remaining gap (not proved)
 
-The leftover primes are `p ≡ 1 (mod 3)` with `p-2` composite. Then `p-2 ≡ 2 (mod 3)`, so some prime factor `q` of `p-2` is `≡ 2 (mod 3)`. If `q = 5` we are done. If `q ≥ 11`, the mod-3 theorem gives `a(q-1)=q`, so `q` does **not** divide `x(q-1)`. One needs a later injection: some index `r ≤ p-3` with `q ∣ a(r-1)+2`.
+The leftover primes are `p ≡ 1 (mod 3)` with `p-2` composite. Then `p-2 ≡ 2 (mod 3)`, so some prime factor `q` of `p-2` is `≡ 2 (mod 3)` (`exists_remaining_factor`). If `q = 5` we are done. If `q ≥ 11`, the mod-3 theorem gives `a(q-1)=q`, so `q` does **not** divide `x(q-1)`. One needs a later injection: some index `r ≤ p-3` with `q ∣ a(r-1)+2`.
 
-If `r` itself is a prime `≡ 2 (mod 3)`, then `r ≡ -2 (mod q)` and `r ≤ p-3` suffices. For `lpf(p-2)=q` one has `p-2 ≥ q(q+2)` (the square `p = q^2+2` is never an odd prime for `q > 3`, since it is `0 (mod 3)`). So a prime
+If `r` itself is a prime `≡ 2 (mod 3)`, then `r ≡ -2 (mod q)` and `r ≤ p-3` suffices (`q_dvd_x_of_prime_injector`, `conjecture_of_prime_injector`). For `lpf(p-2)=q` one has `p-2 ≥ q(q+2)` (`remaining_minFac_mul_add_two_le`). The square `p = q^2+2` is never an odd prime for `q > 3`. So a prime
 
 `r = kq - 2 ≤ q(q+2)-1` with `k ≡ 2 (mod 3)` and `r ≥ 7`
 
-would finish McEachen. Existence of such an `r` is a Linnik-type statement in a fixed residue class modulo `3q`. Current Linnik exponents (`L = 5`) are larger than `2`, so this is not an elementary bound. It was **not** assumed.
+would finish McEachen. Existence of such an `r` is a Linnik-type statement in a fixed residue class modulo `3q`. Mathlib has Dirichlet’s theorem (`Nat.forall_exists_prime_gt_and_eq_mod`), which gives infinitely many primes in that class but no bound `r ≤ q(q+2)-1`. Current Linnik exponents (`L = 5`) are larger than `2`. The bound was **not** assumed.
+
+Composite injection is also available: if `gcd(x(kq-3), kq-2)=1`, then `q` enters even when `kq-2` is composite (`q_dvd_x_of_coprime_shift`). When `kq-2` is prime the gcd is 1 by the mod-3 theorem. No uniform proof that some `k` in range has gcd `1` was obtained.
 
 Deterministic experiment (`injector_bound.py`): for every prime `q ≡ 2 (mod 3)` with `11 ≤ q ≤ 5000`, such an `r` exists and is `≤ q(q+2)-1`. A factorization scan to `n = 50000` found no McEachen failure. Finite checks are not a resolution.
 
 Cloitre’s route (assume `C₁`, then Theorem 6.2) was not used. `C₁` is stronger than McEachen and remains open.
 
-## 2-adic helpers (partial Cloitre 6.5)
+## 2-adic staircase (Cloitre 6.5, proved)
 
-Proved: `v2(gcd)`, `v2(a n)`, `v2(x(n+1))`, odd-increment stability, dyadic blocks `exists_block`, and `a(2·4^0-1)=2`. The full staircase `a(2·4^k-1)=2` for every `k` is Cloitre Prop. 6.5 and is not yet formalized for `k>0`.
+Proved: `v2(gcd)`, `v2(a n)`, `v2(x(n+1))`, odd-increment stability, dyadic blocks `exists_block`, the block formula `v2(x n) = 2 k + 2` on `2·4^k ≤ n ≤ 2·4^{k+1}-1` (`v2_x_ge_two`), and Cloitre’s identity `a(2·4^k-1)=2` for every `k` (`a_two_four_pow`). This is Cloitre Proposition 6.5 in Lean indexing. It does not by itself prove McEachen.
 
 ## Methods that did not finish the exact type
 
@@ -79,6 +81,7 @@ Proved: `v2(gcd)`, `v2(a n)`, `v2(x(n+1))`, odd-increment stability, dyadic bloc
 - Claiming Cloitre Cor. 6.6 (needs `C₁`).
 - Proving `q ∣ x(q^2-1)` in full generality (Epoch’s closest attempt; still open).
 - Using `native_decide` or the frozen `sorry`.
+- Using Mathlib Dirichlet without a Linnik bound.
 
 ## Status
 

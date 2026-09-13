@@ -40,7 +40,7 @@ Benoit Cloitre, *Primes in LCM recurrences*, arXiv:2510.18891v3 (18 Oct 2025 / 2
 - https://arxiv.org/abs/2510.18891
 - https://arxiv.org/html/2510.18891v3
 
-Unconditional in that paper: inhibition (Lemma 6.1); 2-adic staircase (Prop 6.5), which proves `c_{2·4^k}=2`.
+Unconditional in that paper: inhibition (Lemma 6.1); 2-adic staircase (Prop 6.5), which proves `c_{2·4^k}=2`. Worker cursor-04 formalized Prop. 6.5 as `a_two_four_pow` (Lean `a(2·4^k-1)=2`) without using Cloitre’s `C₁`. That identity is not McEachen.
 
 Conditional on hypothesis `C₁` (`c_n ∈ {1} ∪ primes` for all `n`):
 - Theorem 6.2: `c_q = 1` for prime `q ≥ 5` implies `q-2` prime.
