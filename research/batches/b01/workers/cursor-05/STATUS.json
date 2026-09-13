@@ -1,0 +1,20 @@
+{
+  "worker_id": "cursor-05",
+  "target_id": "A063880",
+  "actual_branch": "cursor/b01-cursor-05-cb88",
+  "baseline_commit": "238f78bdd5701ae4c97a0d70d4e22e2d45770d7a",
+  "source_baseline": "a2f4a1bb12a28e04a969da78feefac7d1ce49565",
+  "source_file": "FormalConjectures/OEIS/63880.lean",
+  "source_sha256": "b50d00e13735613cbe37bd3a25c19130874e8f036ca2a0e3c1aceb177a33c683",
+  "current_status": "partial",
+  "novelty_status": "no_public_solution_found_in_checked_sources",
+  "last_updated_utc": "2026-09-13T00:18:00Z",
+  "proof_declarations": [],
+  "unresolved_gaps": [
+    "OeisA63880.mod_216_of_a not proved",
+    "OeisA63880.unique_primitive_108 not proved",
+    "Need independent proofs of sorry helpers if used: powerful_of_isPrimitiveTerm, exists_primitive_of_a",
+    "Leftover cases other than the known 4*27 kernel are not ruled out in Lean"
+  ],
+  "next_step": "Prove that a squareful kernel with rho=2 must have v2=2 and v3>=3, using the CRT lemma already in A063880.lean; then uniqueness of kernel 108 if reachable."
+}
