@@ -8,7 +8,7 @@ claim is made.
 - Authorized public fork: `VictorLiwentao/formal-conjectures`.
 - Frozen source baseline: `a2f4a1bb12a28e04a969da78feefac7d1ce49565`.
 - Coordinator seed: `238f78bdd5701ae4c97a0d70d4e22e2d45770d7a`.
-- Research content commit: recorded below after the scoped commit.
+- Research content commit: `ec2ba7b9ee153d368c0922438c3d5d712d9ff2e3`. The subsequent commit only records this handoff reference.
 - Final branch-tip SHA is reported with the completion message. Resolve it
   locally with `git rev-parse codex/b01-codex-01`.
 
