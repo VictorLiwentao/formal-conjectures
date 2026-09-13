@@ -17,7 +17,9 @@ Dirichlet existence of some prime injector is proved (`exists_prime_index_inject
 
 `conjecture_of_square_window` proves the frozen type *assuming* every prime `q ≥ 5` divides `x(q(q+2)-1)`. The window hypothesis is not proved. Miller–Rabin found no window failures for primes `q ≡ 2 (mod 3)` up to `1000000`.
 
-If `n ≥ 7` and `3 ∣ a n` then `729 ∣ n+1`. That is not McEachen.
+If `n ≥ 7` and `3 ∣ a n` then `729 ∣ n+1`. If `n ≥ 9` then `2187 ∣ n+1`. Those are not McEachen.
+
+Remaining McEachen holds if one of `5q-2`, `7q-2`, `5s-2`, `7s-2` is prime (`conjecture_of_paired_injectors`). A scan of remaining primes `p < 200000` found 332 of 466 covered by that pairing. That is a proper subfamily, not a `∀p` proof.
 
 A first-order union bound on injector candidates `k ≡ 5 (mod 6)`, `k ≤ q` is negative. Mathlib Selberg is an upper-bound sieve only. That does not finish the window.
 
@@ -45,12 +47,15 @@ python3 research/batches/b01/control/check_assignments.py --repo . --worker curs
 - Composite shifts are not coprime injectors once that least factor has entered (`gcd_gt_one_of_composite_shift`).
 - General prime-index injector `q_dvd_x_of_prime_index` (the index need only be `≡ 2 (mod 3)`).
 - Dirichlet: some (unbounded) prime injector `kq-2 ≡ 2 (mod 3)` exists for every prime `q ≡ 2 (mod 3)` (`k ≡ 5 (mod 6)`) and every prime `q ≡ 1 (mod 3)` with `q ≥ 7` (`k ≡ 1 (mod 6)`). Hence those primes eventually divide `x`.
-- If `n ≥ 3` and `3 ∣ a n`, then `9 ∣ n+1`. If `n ≥ 6`, then `81 ∣ n+1`. If `n ≥ 7`, then `729 ∣ n+1`. Also `a 6 = 7`, `a 7 = 2`, `a 8 = 1`, `243 ∣ x n` for `n ≥ 7`.
+- If `n ≥ 3` and `3 ∣ a n`, then `9 ∣ n+1`. If `n ≥ 6`, then `81 ∣ n+1`. If `n ≥ 7`, then `729 ∣ n+1`. If `n ≥ 9`, then `2187 ∣ n+1`. Also `a 6 = 7`, `a 7 = 2`, `a 8 = 1`, `243 ∣ x n` for `n ≥ 7`, `729 ∣ x n` for `n ≥ 9`.
 - `conjecture_of_square_window`: frozen type follows from `q ∣ x(q(q+2)-1)` for every prime `q ≥ 5`. Hypothesis not proved. Window holds for `q=5`, `q=7`, and larger twins.
 - `prime_of_no_prime_dvd_lt` / `q_dvd_x_window_of_no_small_factor`: for `q ≡ 2 (mod 3)`, a `k ≡ 5 (mod 6)` with `k ≤ q` and no prime factor of `kq-2` below `q` is a prime injector in the window.
 - `conjecture_of_C1`: Cloitre Cor. 6.6 as an implication from `C₁` on positive indices. Not a resolution.
 - `conjecture_of_cofactor_seven`: remaining McEachen if a cofactor `s ≡ 1 (mod 3)` of `p-2` has `7s-2` prime and the complementary factor is at least `7`.
-- `conjecture_of_minFac_seven`: remaining McEachen if `7·lpf(p-2)-2` is prime (usable when that least factor is `≡ 1 (mod 3)`).
+- `conjecture_of_cofactor_five`: remaining McEachen if a cofactor `s ≡ 2 (mod 3)` has `5s-2` prime and the complementary factor is at least `5`.
+- `conjecture_of_minFac_five` / `eleven` / `thirteen` / `seven`: remaining McEachen if the corresponding `k·lpf(p-2)-2` is a prime in the square window.
+- `conjecture_of_paired_injectors`: remaining McEachen if one of `5q-2`, `7q-2`, `5s-2`, `7s-2` is prime.
+- If `n ≥ 9` and `3 ∣ a n`, then `2187 ∣ n+1`. Also `729 ∣ x n` for `n ≥ 9`.
 - Cloitre 6.7 as `cloitre_valuation_barrier`.
 - Unconditional twin inhibition for pairs with smaller member `≥ 11` (Cloitre 6.3 without `C₁`).
 - Cloitre 2-adic staircase `a(2·4^k-1)=2` for every `k`.

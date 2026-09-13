@@ -34,10 +34,12 @@ remaining-class factor `q ≡ 2 (mod 3)` of `p-2`, injection of a factor of
 when `lpf(p-2) ≤ 101` or that least factor is a larger twin, Dirichlet
 existence of some (unbounded) prime injector for every prime `q ≥ 5`,
 that `3 ∣ a n` for `n ≥ 3` forces `9 ∣ n+1`, that `3 ∣ a n` for `n ≥ 6`
-forces `81 ∣ n+1`, that `3 ∣ a n` for `n ≥ 7` forces `729 ∣ n+1`, Cloitre
-Corollary 6.6 as an implication from `C₁`, and that the frozen statement
-follows from first-entry of every prime `q ≥ 5` by the square-window index
-`q(q+2)-1`.
+forces `81 ∣ n+1`, that `3 ∣ a n` for `n ≥ 7` forces `729 ∣ n+1`, that
+`3 ∣ a n` for `n ≥ 9` forces `2187 ∣ n+1`, Cloitre Corollary 6.6 as an
+implication from `C₁`, remaining McEachen if a first aligned injector of
+`lpf(p-2)` or of a complementary cofactor is prime, and that the frozen
+statement follows from first-entry of every prime `q ≥ 5` by the
+square-window index `q(q+2)-1`.
 -/
 
 namespace OeisA135508
@@ -992,6 +994,144 @@ lemma q_dvd_x_square_window_of_seven {q : ℕ} (hpr : (7 * q - 2).Prime)
   exact q_dvd_x_square_window_of_prime_index hpr h7r hmod
     (seven_mul_sub_two_le_square h7)
 
+/-- `5q-2` lies in the square window once `q ≥ 5`. -/
+lemma five_mul_sub_two_le_square {q : ℕ} (h5 : 5 ≤ q) :
+    5 * q - 2 ≤ q * (q + 2) - 1 := by
+  have h1 : 5 * q ≤ q * q := Nat.mul_le_mul_right q h5
+  have h2 : q * q ≤ q * (q + 2) := Nat.mul_le_mul_left q (Nat.le_add_right q 2)
+  have h3 : 5 * q ≤ q * (q + 2) := h1.trans h2
+  exact (Nat.sub_le_sub_right h3 2).trans
+    (Nat.sub_le_sub_left (by decide : 1 ≤ 2) (q * (q + 2)))
+
+lemma five_mul_sub_two_mod_of_two {q : ℕ} (h2 : q % 3 = 2) :
+    (5 * q) % 3 = 1 := by
+  have h5 : (5 : ℕ) % 3 = 2 := by decide
+  calc
+    (5 * q) % 3 = (5 % 3 * (q % 3)) % 3 := Nat.mul_mod _ _ 3
+    _ = (2 * 2) % 3 := by rw [h5, h2]
+    _ = 1 := by decide
+
+lemma five_mul_sub_two_mod_three {q : ℕ} (h2 : q % 3 = 2) (_h : 2 ≤ 5 * q) :
+    (5 * q - 2) % 3 = 2 := by
+  have hmul := five_mul_sub_two_mod_of_two h2
+  have hrep : 5 * q = 3 * (5 * q / 3) + 1 := by
+    have := (Nat.div_add_mod (5 * q) 3).symm
+    rwa [hmul] at this
+  omega
+
+/-- A prime `5q-2 ≡ 2 (mod 3)` injects `q` inside the square window.
+Usable when `q ≡ 2 (mod 3)`; if `q ≡ 1 (mod 3)` then `3 ∣ 5q-2`. -/
+lemma q_dvd_x_square_window_of_five {q : ℕ} (hpr : (5 * q - 2).Prime)
+    (h5 : 5 ≤ q) (hmod : (5 * q - 2) % 3 = 2) :
+    q ∣ x (q * (q + 2) - 1) := by
+  have h7r : 7 ≤ 5 * q - 2 := by
+    have : 25 ≤ 5 * q := Nat.mul_le_mul_left 5 h5
+    exact le_trans (by decide : 7 ≤ 23) (Nat.sub_le_sub_right this 2)
+  exact q_dvd_x_square_window_of_prime_index hpr h7r hmod
+    (five_mul_sub_two_le_square h5)
+
+/-- `11q-2` lies in the square window once `q ≥ 11`. -/
+lemma eleven_mul_sub_two_le_square {q : ℕ} (h11 : 11 ≤ q) :
+    11 * q - 2 ≤ q * (q + 2) - 1 := by
+  have h1 : 11 * q ≤ q * q := Nat.mul_le_mul_right q h11
+  have h2 : q * q ≤ q * (q + 2) := Nat.mul_le_mul_left q (Nat.le_add_right q 2)
+  have h3 : 11 * q ≤ q * (q + 2) := h1.trans h2
+  exact (Nat.sub_le_sub_right h3 2).trans
+    (Nat.sub_le_sub_left (by decide : 1 ≤ 2) (q * (q + 2)))
+
+lemma eleven_mul_sub_two_mod_of_two {q : ℕ} (h2 : q % 3 = 2) :
+    (11 * q) % 3 = 1 := by
+  have h11 : (11 : ℕ) % 3 = 2 := by decide
+  calc
+    (11 * q) % 3 = (11 % 3 * (q % 3)) % 3 := Nat.mul_mod _ _ 3
+    _ = (2 * 2) % 3 := by rw [h11, h2]
+    _ = 1 := by decide
+
+lemma eleven_mul_sub_two_mod_three {q : ℕ} (h2 : q % 3 = 2) (_h : 2 ≤ 11 * q) :
+    (11 * q - 2) % 3 = 2 := by
+  have hmul := eleven_mul_sub_two_mod_of_two h2
+  have hrep : 11 * q = 3 * (11 * q / 3) + 1 := by
+    have := (Nat.div_add_mod (11 * q) 3).symm
+    rwa [hmul] at this
+  omega
+
+lemma q_dvd_x_square_window_of_eleven {q : ℕ} (hpr : (11 * q - 2).Prime)
+    (h11 : 11 ≤ q) (hmod : (11 * q - 2) % 3 = 2) :
+    q ∣ x (q * (q + 2) - 1) := by
+  have h7r : 7 ≤ 11 * q - 2 := by
+    have : 121 ≤ 11 * q := Nat.mul_le_mul_left 11 h11
+    exact le_trans (by decide : 7 ≤ 119) (Nat.sub_le_sub_right this 2)
+  exact q_dvd_x_square_window_of_prime_index hpr h7r hmod
+    (eleven_mul_sub_two_le_square h11)
+
+/-- `13q-2` lies in the square window once `q ≥ 13`. -/
+lemma thirteen_mul_sub_two_le_square {q : ℕ} (h13 : 13 ≤ q) :
+    13 * q - 2 ≤ q * (q + 2) - 1 := by
+  have h1 : 13 * q ≤ q * q := Nat.mul_le_mul_right q h13
+  have h2 : q * q ≤ q * (q + 2) := Nat.mul_le_mul_left q (Nat.le_add_right q 2)
+  have h3 : 13 * q ≤ q * (q + 2) := h1.trans h2
+  exact (Nat.sub_le_sub_right h3 2).trans
+    (Nat.sub_le_sub_left (by decide : 1 ≤ 2) (q * (q + 2)))
+
+lemma thirteen_mul_sub_two_mod_of_one {q : ℕ} (h1 : q % 3 = 1) :
+    (13 * q) % 3 = 1 := by
+  rw [Nat.mul_mod]
+  have : (13 : ℕ) % 3 = 1 := by decide
+  rw [this, h1]
+
+lemma thirteen_mul_sub_two_mod_three {q : ℕ} (h1 : q % 3 = 1) (_h : 2 ≤ 13 * q) :
+    (13 * q - 2) % 3 = 2 := by
+  have hmul := thirteen_mul_sub_two_mod_of_one h1
+  have hrep : 13 * q = 3 * (13 * q / 3) + 1 := by
+    have := (Nat.div_add_mod (13 * q) 3).symm
+    rwa [hmul] at this
+  omega
+
+lemma q_dvd_x_square_window_of_thirteen {q : ℕ} (hpr : (13 * q - 2).Prime)
+    (h13 : 13 ≤ q) (hmod : (13 * q - 2) % 3 = 2) :
+    q ∣ x (q * (q + 2) - 1) := by
+  have h7r : 7 ≤ 13 * q - 2 := by
+    have : 169 ≤ 13 * q := Nat.mul_le_mul_left 13 h13
+    exact le_trans (by decide : 7 ≤ 167) (Nat.sub_le_sub_right this 2)
+  exact q_dvd_x_square_window_of_prime_index hpr h7r hmod
+    (thirteen_mul_sub_two_le_square h13)
+
+/-- If `k ≤ q`, then the cofactor injector `ks-2` is at most `p-3`. -/
+lemma cofactor_injector_le {p q s k : ℕ}
+    (hqs : p - 2 = q * s) (hp2 : 2 ≤ p) (hk : k ≤ q) :
+    k * s - 2 ≤ p - 3 := by
+  have hpqs : p = q * s + 2 := (Nat.sub_eq_iff_eq_add hp2).1 hqs
+  have hmul : k * s ≤ q * s := Nat.mul_le_mul_right s hk
+  have hleft : k * s - 2 ≤ q * s - 2 := Nat.sub_le_sub_right hmul 2
+  have heq : q * s - 2 = p - 4 := by
+    rw [hpqs]
+    have hdecomp : q * s + 2 - 4 = q * s + 2 - 2 - 2 := by
+      rw [show (4 : ℕ) = 2 + 2 from rfl, Nat.sub_add_eq]
+    rw [hdecomp, Nat.add_sub_cancel]
+  have h34 : p - 4 ≤ p - 3 := Nat.sub_le_sub_left (by decide : 3 ≤ 4) p
+  exact hleft.trans (heq ▸ h34)
+
+/-- Remaining McEachen if a cofactor `s ≡ 2 (mod 3)` of `p-2` is injected at `5s-2`.
+The bound `5s-2 ≤ p-3` holds once the complementary factor is at least `5`.
+This is the `k=5` injector for cofactors `≡ 2 (mod 3)`, i.e. when
+`lpf(p-2) ≡ 1 (mod 3)`. -/
+theorem conjecture_of_cofactor_five {p q s : ℕ} (hp : p.Prime) (hp7 : 7 ≤ p)
+    (hqs : p - 2 = q * s) (hq5 : 5 ≤ q) (hs1 : 1 < s) (hsmod : s % 3 = 2)
+    (hpr : (5 * s - 2).Prime) : a (p - 1) = p := by
+  have hp5 : 5 ≤ p := le_trans (by decide : 5 ≤ 7) hp7
+  have hs2 : 2 ≤ s := hs1
+  have h7r : 7 ≤ 5 * s - 2 := by
+    have : 10 ≤ 5 * s := Nat.mul_le_mul_left 5 hs2
+    exact le_trans (by decide : 7 ≤ 8) (Nat.sub_le_sub_right this 2)
+  have hmod : (5 * s - 2) % 3 = 2 :=
+    five_mul_sub_two_mod_three hsmod
+      (le_trans (by decide : 2 ≤ 10) (Nat.mul_le_mul_left 5 hs2))
+  have hle : 5 * s - 2 ≤ p - 3 :=
+    cofactor_injector_le hqs (le_trans (by decide : 2 ≤ 7) hp7)
+      (le_trans (by decide : 5 ≤ 5) hq5)
+  exact conjecture_of_prime_index hp hp5 hpr h7r hmod hle
+    (hqs ▸ Nat.dvd_mul_left s q) hs1
+
 lemma odd_of_prime_mod_three_two {q : ℕ} (hq : q.Prime) (h7 : 7 ≤ q)
     (_hmod : q % 3 = 2) : q % 2 = 1 := by
   rcases hq.eq_two_or_odd with h2 | hodd
@@ -1657,6 +1797,305 @@ theorem conjecture_of_minFac_seven {p : ℕ} (hp : p.Prime) (hp7 : 7 ≤ p)
   exact conjecture_of_minFac_entered hp hp7 hmod hcomp
     (q_dvd_x_square_window_of_seven hpr h7q hmod3)
 
+/-- Remaining McEachen if a prime injector `k·lpf(p-2)-2` lies in the
+square window. This packages `conjecture_of_minFac_entered`. -/
+theorem conjecture_of_minFac_prime_index {p k : ℕ} (hp : p.Prime) (hp7 : 7 ≤ p)
+    (hmod : p % 3 = 1) (hcomp : ¬ (p - 2).Prime)
+    (hpr : (k * Nat.minFac (p - 2) - 2).Prime)
+    (h7 : 7 ≤ k * Nat.minFac (p - 2) - 2)
+    (hrmod : (k * Nat.minFac (p - 2) - 2) % 3 = 2)
+    (hle : k * Nat.minFac (p - 2) - 2 ≤
+      Nat.minFac (p - 2) * (Nat.minFac (p - 2) + 2) - 1) :
+    a (p - 1) = p :=
+  conjecture_of_minFac_entered hp hp7 hmod hcomp
+    (q_dvd_x_square_window_of_prime_index hpr h7 hrmod hle)
+
+/-- Remaining McEachen if `5·lpf(p-2)-2` is prime. For `lpf ≡ 2 (mod 3)`
+this is the first remaining injector and always fits in the square window.
+If `lpf ≡ 1 (mod 3)` then `3 ∣ 5q-2`, so the hypothesis fails. -/
+theorem conjecture_of_minFac_five {p : ℕ} (hp : p.Prime) (hp7 : 7 ≤ p)
+    (hmod : p % 3 = 1) (hcomp : ¬ (p - 2).Prime)
+    (hpr : (5 * Nat.minFac (p - 2) - 2).Prime) : a (p - 1) = p := by
+  have hq5 := remaining_minFac_ge_five hp hp7 hmod
+  have hne1 : p - 2 ≠ 1 := by
+    intro h
+    have h2le : 2 ≤ p := le_trans (by decide : 2 ≤ 7) hp7
+    have hcancel := Nat.sub_add_cancel h2le
+    rw [h] at hcancel
+    have hp3 : p = 3 := hcancel.symm
+    exact Nat.ne_of_lt (lt_of_lt_of_le (by decide : 3 < 7) hp7) hp3.symm
+  have hminp : (Nat.minFac (p - 2)).Prime := Nat.minFac_prime hne1
+  have hmod3 : (5 * Nat.minFac (p - 2) - 2) % 3 = 2 := by
+    have hcases : Nat.minFac (p - 2) % 3 = 0 ∨
+        Nat.minFac (p - 2) % 3 = 1 ∨ Nat.minFac (p - 2) % 3 = 2 := by omega
+    rcases hcases with h0 | h1 | h2
+    · have h3 : 3 ∣ Nat.minFac (p - 2) := Nat.dvd_of_mod_eq_zero h0
+      have heq : Nat.minFac (p - 2) = 3 :=
+        ((Nat.prime_dvd_prime_iff_eq Nat.prime_three hminp).1 h3).symm
+      exact False.elim (Nat.ne_of_lt (lt_of_lt_of_le (by decide : 3 < 5) hq5) heq.symm)
+    · have hmul : (5 * Nat.minFac (p - 2)) % 3 = 2 := by
+        rw [Nat.mul_mod]
+        have : (5 : ℕ) % 3 = 2 := by decide
+        rw [this, h1]
+      have hrep : 5 * Nat.minFac (p - 2) =
+          3 * (5 * Nat.minFac (p - 2) / 3) + 2 := by
+        have := (Nat.div_add_mod (5 * Nat.minFac (p - 2)) 3).symm
+        rwa [hmul] at this
+      have h0 : (5 * Nat.minFac (p - 2) - 2) % 3 = 0 := by omega
+      have h3d : 3 ∣ 5 * Nat.minFac (p - 2) - 2 := Nat.dvd_of_mod_eq_zero h0
+      have hgt : 3 < 5 * Nat.minFac (p - 2) - 2 := by
+        have : 25 ≤ 5 * Nat.minFac (p - 2) := Nat.mul_le_mul_left 5 hq5
+        exact lt_of_lt_of_le (by decide : 3 < 23) (Nat.sub_le_sub_right this 2)
+      have heq : 5 * Nat.minFac (p - 2) - 2 = 3 :=
+        ((Nat.prime_dvd_prime_iff_eq Nat.prime_three hpr).1 h3d).symm
+      exact False.elim (Nat.ne_of_lt hgt heq.symm)
+    · exact five_mul_sub_two_mod_three h2
+        (le_trans (by decide : 2 ≤ 25) (Nat.mul_le_mul_left 5 hq5))
+  exact conjecture_of_minFac_entered hp hp7 hmod hcomp
+    (q_dvd_x_square_window_of_five hpr hq5 hmod3)
+
+/-- Remaining McEachen if `11·lpf(p-2)-2` is prime and that least factor is
+at least `11`. Usable when `lpf ≡ 2 (mod 3)`. -/
+theorem conjecture_of_minFac_eleven {p : ℕ} (hp : p.Prime) (hp7 : 7 ≤ p)
+    (hmod : p % 3 = 1) (hcomp : ¬ (p - 2).Prime)
+    (h11 : 11 ≤ Nat.minFac (p - 2))
+    (hpr : (11 * Nat.minFac (p - 2) - 2).Prime) : a (p - 1) = p := by
+  have hne1 : p - 2 ≠ 1 := by
+    intro h
+    have h2le : 2 ≤ p := le_trans (by decide : 2 ≤ 7) hp7
+    have hcancel := Nat.sub_add_cancel h2le
+    rw [h] at hcancel
+    have hp3 : p = 3 := hcancel.symm
+    exact Nat.ne_of_lt (lt_of_lt_of_le (by decide : 3 < 7) hp7) hp3.symm
+  have hminp : (Nat.minFac (p - 2)).Prime := Nat.minFac_prime hne1
+  have hmod3 : (11 * Nat.minFac (p - 2) - 2) % 3 = 2 := by
+    have hcases : Nat.minFac (p - 2) % 3 = 0 ∨
+        Nat.minFac (p - 2) % 3 = 1 ∨ Nat.minFac (p - 2) % 3 = 2 := by omega
+    rcases hcases with h0 | h1 | h2
+    · have h3 : 3 ∣ Nat.minFac (p - 2) := Nat.dvd_of_mod_eq_zero h0
+      have heq : Nat.minFac (p - 2) = 3 :=
+        ((Nat.prime_dvd_prime_iff_eq Nat.prime_three hminp).1 h3).symm
+      exact False.elim (Nat.ne_of_lt (lt_of_lt_of_le (by decide : 3 < 11) h11) heq.symm)
+    · have hmul : (11 * Nat.minFac (p - 2)) % 3 = 2 := by
+        rw [Nat.mul_mod]
+        have : (11 : ℕ) % 3 = 2 := by decide
+        rw [this, h1]
+      have hrep : 11 * Nat.minFac (p - 2) =
+          3 * (11 * Nat.minFac (p - 2) / 3) + 2 := by
+        have := (Nat.div_add_mod (11 * Nat.minFac (p - 2)) 3).symm
+        rwa [hmul] at this
+      have h0 : (11 * Nat.minFac (p - 2) - 2) % 3 = 0 := by omega
+      have h3d : 3 ∣ 11 * Nat.minFac (p - 2) - 2 := Nat.dvd_of_mod_eq_zero h0
+      have hgt : 3 < 11 * Nat.minFac (p - 2) - 2 := by
+        have : 121 ≤ 11 * Nat.minFac (p - 2) := Nat.mul_le_mul_left 11 h11
+        exact lt_of_lt_of_le (by decide : 3 < 119) (Nat.sub_le_sub_right this 2)
+      have heq : 11 * Nat.minFac (p - 2) - 2 = 3 :=
+        ((Nat.prime_dvd_prime_iff_eq Nat.prime_three hpr).1 h3d).symm
+      exact False.elim (Nat.ne_of_lt hgt heq.symm)
+    · exact eleven_mul_sub_two_mod_three h2
+        (le_trans (by decide : 2 ≤ 121) (Nat.mul_le_mul_left 11 h11))
+  exact conjecture_of_minFac_entered hp hp7 hmod hcomp
+    (q_dvd_x_square_window_of_eleven hpr h11 hmod3)
+
+/-- Remaining McEachen if `13·lpf(p-2)-2` is prime and that least factor is
+at least `13`. Usable when `lpf ≡ 1 (mod 3)`. -/
+theorem conjecture_of_minFac_thirteen {p : ℕ} (hp : p.Prime) (hp7 : 7 ≤ p)
+    (hmod : p % 3 = 1) (hcomp : ¬ (p - 2).Prime)
+    (h13 : 13 ≤ Nat.minFac (p - 2))
+    (hpr : (13 * Nat.minFac (p - 2) - 2).Prime) : a (p - 1) = p := by
+  have hne1 : p - 2 ≠ 1 := by
+    intro h
+    have h2le : 2 ≤ p := le_trans (by decide : 2 ≤ 7) hp7
+    have hcancel := Nat.sub_add_cancel h2le
+    rw [h] at hcancel
+    have hp3 : p = 3 := hcancel.symm
+    exact Nat.ne_of_lt (lt_of_lt_of_le (by decide : 3 < 7) hp7) hp3.symm
+  have hminp : (Nat.minFac (p - 2)).Prime := Nat.minFac_prime hne1
+  have hmod3 : (13 * Nat.minFac (p - 2) - 2) % 3 = 2 := by
+    have hcases : Nat.minFac (p - 2) % 3 = 0 ∨
+        Nat.minFac (p - 2) % 3 = 1 ∨ Nat.minFac (p - 2) % 3 = 2 := by omega
+    rcases hcases with h0 | h1 | h2
+    · have h3 : 3 ∣ Nat.minFac (p - 2) := Nat.dvd_of_mod_eq_zero h0
+      have heq : Nat.minFac (p - 2) = 3 :=
+        ((Nat.prime_dvd_prime_iff_eq Nat.prime_three hminp).1 h3).symm
+      exact False.elim (Nat.ne_of_lt (lt_of_lt_of_le (by decide : 3 < 13) h13) heq.symm)
+    · exact thirteen_mul_sub_two_mod_three h1
+        (le_trans (by decide : 2 ≤ 169) (Nat.mul_le_mul_left 13 h13))
+    · have hmul : (13 * Nat.minFac (p - 2)) % 3 = 2 := by
+        rw [Nat.mul_mod]
+        have : (13 : ℕ) % 3 = 1 := by decide
+        rw [this, h2]
+      have hrep : 13 * Nat.minFac (p - 2) =
+          3 * (13 * Nat.minFac (p - 2) / 3) + 2 := by
+        have := (Nat.div_add_mod (13 * Nat.minFac (p - 2)) 3).symm
+        rwa [hmul] at this
+      have h0 : (13 * Nat.minFac (p - 2) - 2) % 3 = 0 := by omega
+      have h3d : 3 ∣ 13 * Nat.minFac (p - 2) - 2 := Nat.dvd_of_mod_eq_zero h0
+      have hgt : 3 < 13 * Nat.minFac (p - 2) - 2 := by
+        have : 169 ≤ 13 * Nat.minFac (p - 2) := Nat.mul_le_mul_left 13 h13
+        exact lt_of_lt_of_le (by decide : 3 < 167) (Nat.sub_le_sub_right this 2)
+      have heq : 13 * Nat.minFac (p - 2) - 2 = 3 :=
+        ((Nat.prime_dvd_prime_iff_eq Nat.prime_three hpr).1 h3d).symm
+      exact False.elim (Nat.ne_of_lt hgt heq.symm)
+  exact conjecture_of_minFac_entered hp hp7 hmod hcomp
+    (q_dvd_x_square_window_of_thirteen hpr h13 hmod3)
+
+/-- If `qs ≡ 2 (mod 3)`, the factors are `1` and `2` modulo `3` in either order. -/
+lemma mul_mod_three_eq_two {q s : ℕ} (h : (q * s) % 3 = 2) :
+    (q % 3 = 1 ∧ s % 3 = 2) ∨ (q % 3 = 2 ∧ s % 3 = 1) := by
+  have hmul : (q % 3 * (s % 3)) % 3 = 2 := by
+    rwa [← Nat.mul_mod]
+  have hql : q % 3 < 3 := Nat.mod_lt q (by decide)
+  have hsl : s % 3 < 3 := Nat.mod_lt s (by decide)
+  revert hmul
+  interval_cases q % 3
+  · intro hmul
+    rw [Nat.zero_mul, Nat.zero_mod] at hmul
+    exact False.elim ((by decide : ¬ (0 : ℕ) = 2) hmul)
+  · intro hmul
+    revert hmul
+    interval_cases s % 3
+    · intro hmul
+      change (1 * 0) % 3 = 2 at hmul
+      exact False.elim ((by decide : ¬ (0 : ℕ) = 2) hmul)
+    · intro hmul
+      change (1 * 1) % 3 = 2 at hmul
+      exact False.elim ((by decide : ¬ (1 : ℕ) = 2) hmul)
+    · intro _hmul
+      exact Or.inl ⟨rfl, rfl⟩
+  · intro hmul
+    revert hmul
+    interval_cases s % 3
+    · intro hmul
+      change (2 * 0) % 3 = 2 at hmul
+      exact False.elim ((by decide : ¬ (0 : ℕ) = 2) hmul)
+    · intro _hmul
+      exact Or.inr ⟨rfl, rfl⟩
+    · intro hmul
+      change (2 * 2) % 3 = 2 at hmul
+      exact False.elim ((by decide : ¬ (1 : ℕ) = 2) hmul)
+
+lemma not_prime_five_mul_sub_two_of_mod_one {s : ℕ} (hs2 : 2 ≤ s)
+    (hs1 : s % 3 = 1) : ¬ (5 * s - 2).Prime := by
+  have hmul : (5 * s) % 3 = 2 := by
+    have h5 : (5 : ℕ) % 3 = 2 := by decide
+    calc
+      (5 * s) % 3 = (5 % 3 * (s % 3)) % 3 := Nat.mul_mod _ _ 3
+      _ = (2 * 1) % 3 := by rw [h5, hs1]
+      _ = 2 := by decide
+  have hrep : 5 * s = 3 * (5 * s / 3) + 2 := by
+    have := (Nat.div_add_mod (5 * s) 3).symm
+    rwa [hmul] at this
+  have hsub : 5 * s - 2 = 3 * (5 * s / 3) := by
+    conv_lhs => rw [hrep]
+    exact Nat.add_sub_cancel _ 2
+  have h3d : 3 ∣ 5 * s - 2 := by
+    rw [hsub]
+    exact Nat.dvd_mul_right _ _
+  have hgt : 3 < 5 * s - 2 := by
+    have : 10 ≤ 5 * s := Nat.mul_le_mul_left 5 hs2
+    exact lt_of_lt_of_le (by decide : 3 < 8) (Nat.sub_le_sub_right this 2)
+  intro hpr
+  have heq : 5 * s - 2 = 3 :=
+    ((Nat.prime_dvd_prime_iff_eq Nat.prime_three hpr).1 h3d).symm
+  exact Nat.ne_of_lt hgt heq.symm
+
+lemma not_prime_seven_mul_sub_two_of_mod_two {s : ℕ} (hs2 : 2 ≤ s)
+    (hs2mod : s % 3 = 2) : ¬ (7 * s - 2).Prime := by
+  have hmul : (7 * s) % 3 = 2 := by
+    have h7 : (7 : ℕ) % 3 = 1 := by decide
+    calc
+      (7 * s) % 3 = (7 % 3 * (s % 3)) % 3 := Nat.mul_mod _ _ 3
+      _ = (1 * 2) % 3 := by rw [h7, hs2mod]
+      _ = 2 := by decide
+  have hrep : 7 * s = 3 * (7 * s / 3) + 2 := by
+    have := (Nat.div_add_mod (7 * s) 3).symm
+    rwa [hmul] at this
+  have hsub : 7 * s - 2 = 3 * (7 * s / 3) := by
+    conv_lhs => rw [hrep]
+    exact Nat.add_sub_cancel _ 2
+  have h3d : 3 ∣ 7 * s - 2 := by
+    rw [hsub]
+    exact Nat.dvd_mul_right _ _
+  have hgt : 3 < 7 * s - 2 := by
+    have : 14 ≤ 7 * s := Nat.mul_le_mul_left 7 hs2
+    exact lt_of_lt_of_le (by decide : 3 < 12) (Nat.sub_le_sub_right this 2)
+  intro hpr
+  have heq : 7 * s - 2 = 3 :=
+    ((Nat.prime_dvd_prime_iff_eq Nat.prime_three hpr).1 h3d).symm
+  exact Nat.ne_of_lt hgt heq.symm
+
+lemma eq_five_of_prime_ge_five_lt_seven {q : ℕ} (hq : q.Prime) (h5 : 5 ≤ q)
+    (h7 : q < 7) : q = 5 := by
+  have hle6 : q ≤ 6 := Nat.lt_succ_iff.mp h7
+  interval_cases q
+  · rfl
+  · exact ((by decide : ¬ Nat.Prime 6) hq).elim
+
+/-- Remaining McEachen if one of the first aligned injectors of `lpf(p-2)`
+or of the complementary cofactor is prime. This is a proper subfamily. -/
+theorem conjecture_of_paired_injectors {p : ℕ} (hp : p.Prime) (hp7 : 7 ≤ p)
+    (hmod : p % 3 = 1) (hcomp : ¬ (p - 2).Prime)
+    (hor : (5 * Nat.minFac (p - 2) - 2).Prime ∨
+      (7 * Nat.minFac (p - 2) - 2).Prime ∨
+      (5 * ((p - 2) / Nat.minFac (p - 2)) - 2).Prime ∨
+      (7 * ((p - 2) / Nat.minFac (p - 2)) - 2).Prime) :
+    a (p - 1) = p := by
+  have hq5 := remaining_minFac_ge_five hp hp7 hmod
+  have hne1 : p - 2 ≠ 1 := by
+    intro h
+    have h2le : 2 ≤ p := le_trans (by decide : 2 ≤ 7) hp7
+    have hcancel := Nat.sub_add_cancel h2le
+    rw [h] at hcancel
+    have hp3 : p = 3 := hcancel.symm
+    exact Nat.ne_of_lt (lt_of_lt_of_le (by decide : 3 < 7) hp7) hp3.symm
+  have hminp : (Nat.minFac (p - 2)).Prime := Nat.minFac_prime hne1
+  have hd : Nat.minFac (p - 2) ∣ p - 2 := Nat.minFac_dvd _
+  have hqs : p - 2 = Nat.minFac (p - 2) * ((p - 2) / Nat.minFac (p - 2)) :=
+    (Nat.mul_div_cancel' hd).symm
+  have hs1 : 1 < (p - 2) / Nat.minFac (p - 2) := by
+    have hne0 : (p - 2) / Nat.minFac (p - 2) ≠ 0 := by
+      intro h
+      rw [h, mul_zero] at hqs
+      have h2le : 2 ≤ p := le_trans (by decide : 2 ≤ 7) hp7
+      have : p = 2 := by
+        have := Nat.sub_add_cancel h2le
+        rw [hqs] at this
+        exact this.symm
+      exact Nat.ne_of_lt (lt_of_lt_of_le (by decide : 2 < 7) hp7) this.symm
+    have hge1 : 1 ≤ (p - 2) / Nat.minFac (p - 2) :=
+      Nat.pos_iff_ne_zero.mpr hne0
+    have hne1s : (p - 2) / Nat.minFac (p - 2) ≠ 1 := by
+      intro h
+      rw [h, mul_one] at hqs
+      exact hcomp (hqs ▸ hminp)
+    exact lt_of_le_of_ne hge1 hne1s.symm
+  have hs2 : 2 ≤ (p - 2) / Nat.minFac (p - 2) := hs1
+  have hpm : (p - 2) % 3 = 2 :=
+    p_sub_two_mod (le_trans (by decide : 4 ≤ 7) hp7) hmod
+  have hqsmod : (Nat.minFac (p - 2) * ((p - 2) / Nat.minFac (p - 2))) % 3 = 2 := by
+    rwa [← hqs]
+  have hsplit := mul_mod_three_eq_two hqsmod
+  rcases hor with h5 | h7 | h5s | h7s
+  · exact conjecture_of_minFac_five hp hp7 hmod hcomp h5
+  · exact conjecture_of_minFac_seven hp hp7 hmod hcomp h7
+  · have hsmod : ((p - 2) / Nat.minFac (p - 2)) % 3 = 2 := by
+      rcases hsplit with h12 | h21
+      · exact h12.2
+      · exact False.elim (not_prime_five_mul_sub_two_of_mod_one hs2 h21.2 h5s)
+    exact conjecture_of_cofactor_five hp hp7 hqs hq5 hs1 hsmod h5s
+  · by_cases h7q : 7 ≤ Nat.minFac (p - 2)
+    · have hsmod : ((p - 2) / Nat.minFac (p - 2)) % 3 = 1 := by
+        rcases hsplit with h12 | h21
+        · exact False.elim (not_prime_seven_mul_sub_two_of_mod_two hs2 h12.2 h7s)
+        · exact h21.2
+      exact conjecture_of_cofactor_seven hp hp7 hqs h7q hs1 hsmod h7s
+    · have hlt : Nat.minFac (p - 2) < 7 := Nat.not_le.mp h7q
+      have hqeq : Nat.minFac (p - 2) = 5 :=
+        eq_five_of_prime_ge_five_lt_seven hminp hq5 hlt
+      have hd5 : 5 ∣ p - 2 := by rwa [hqeq] at hd
+      exact conjecture_of_five_dvd hp hp7 hd5
+
 /-- The frozen McEachen statement, assuming every prime `q ≥ 5` divides
 `x` by the square-window index `q(q+2)-1`. Larger twins already satisfy
 that bound via `larger_twin_dvd_x`. This does not prove the window. -/
@@ -2259,6 +2698,34 @@ lemma not_three_dvd_a_of_not_seven_hundred_twenty_nine {n : ℕ} (hn : 7 ≤ n)
     (h729 : ¬ 729 ∣ n + 1) : ¬ 3 ∣ a n :=
   fun h => h729 (seven_hundred_twenty_nine_dvd_succ_of_three_dvd_a hn h)
 
+lemma seven_hundred_twenty_nine_dvd_x_nine : 729 ∣ x 9 := by
+  have hx : x 9 = x 8 * (a 8 + 2) := x_succ_a (by decide : 0 < (8 : ℕ))
+  rw [hx, a_8, show (1 : ℕ) + 2 = 3 from rfl]
+  have h243 : 243 ∣ x 8 := two_hundred_forty_three_dvd_x (by decide : 7 ≤ 8)
+  exact Nat.mul_dvd_mul_right h243 3
+
+lemma seven_hundred_twenty_nine_dvd_x {n : ℕ} (hn : 9 ≤ n) : 729 ∣ x n :=
+  seven_hundred_twenty_nine_dvd_x_nine.trans
+    (x_dvd_of_le (by decide : 0 < 9) hn)
+
+/-- If `n ≥ 9` and `3 ∣ a n`, then `2187 ∣ n+1`. -/
+lemma two_thousand_one_hundred_eighty_seven_dvd_succ_of_three_dvd_a
+    {n : ℕ} (hn : 9 ≤ n) (h3 : 3 ∣ a n) : 2187 ∣ n + 1 := by
+  have hn0 : 0 < n := lt_of_lt_of_le (by decide : 0 < 9) hn
+  have hx : 3 ∣ x n := three_dvd_x (le_trans (by decide : 4 ≤ 9) hn)
+  have hv := prime_dvd_a_padic hn0 hx h3
+  have h729 : 729 ∣ x n := seven_hundred_twenty_nine_dvd_x hn
+  have hpow : (3 : ℕ) ^ 6 = 729 := by decide
+  have hge : 6 ≤ padicValNat 3 (x n) :=
+    (padicValNat_dvd_iff_le (x_pos hn0).ne').1 (hpow ▸ h729)
+  have : 7 ≤ padicValNat 3 (n + 1) :=
+    (show 6 + 1 ≤ padicValNat 3 (x n) + 1 from Nat.add_le_add_right hge 1).trans hv
+  exact (padicValNat_dvd_iff_le (Nat.succ_ne_zero n)).2 this
+
+lemma not_three_dvd_a_of_not_two_thousand_one_hundred_eighty_seven
+    {n : ℕ} (hn : 9 ≤ n) (h2187 : ¬ 2187 ∣ n + 1) : ¬ 3 ∣ a n :=
+  fun h => h2187 (two_thousand_one_hundred_eighty_seven_dvd_succ_of_three_dvd_a hn h)
+
 /-- If `a n` equals a prime `ℓ` that already divides `x n`, then
 `ℓ^{v_ℓ(x n)+1} ∣ n+1`. This is Cloitre Lemma 6.7 at a single index. -/
 lemma a_eq_prime_padic_succ {ℓ n : ℕ} (hℓ : ℓ.Prime) (hn : 0 < n)
@@ -2639,5 +3106,21 @@ lemma v2_x_two_four_pow_pred (k : ℕ) :
 #print axioms conjecture_of_minFac_seven
 #print axioms q_dvd_x_square_window_of_seven
 #print axioms seven_mul_sub_two_le_square
+#print axioms five_mul_sub_two_le_square
+#print axioms q_dvd_x_square_window_of_five
+#print axioms eleven_mul_sub_two_le_square
+#print axioms q_dvd_x_square_window_of_eleven
+#print axioms thirteen_mul_sub_two_le_square
+#print axioms q_dvd_x_square_window_of_thirteen
+#print axioms cofactor_injector_le
+#print axioms conjecture_of_cofactor_five
+#print axioms conjecture_of_minFac_prime_index
+#print axioms conjecture_of_minFac_five
+#print axioms conjecture_of_minFac_eleven
+#print axioms conjecture_of_minFac_thirteen
+#print axioms mul_mod_three_eq_two
+#print axioms conjecture_of_paired_injectors
+#print axioms seven_hundred_twenty_nine_dvd_x
+#print axioms two_thousand_one_hundred_eighty_seven_dvd_succ_of_three_dvd_a
 
 end OeisA135508

@@ -28,6 +28,7 @@ python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/first
 python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/injector_window.py
 python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/window_miller.py 1000000
 python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/cofactor_seven.py
+python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/paired_injectors.py
 ```
 
 No `lake clean`, `lake update`, or full default `lake build`.
@@ -85,6 +86,9 @@ conjecture_of_cofactor_seven / seven_dvd_x_square_window : propext, Classical.ch
 five_dvd_x_square_window : propext, Quot.sound
 k_mod_three_of_six_five / k_ge_five_of_mod_six_five : propext
 two_hundred_forty_three_dvd_x / a_8 / a_7 / seven_hundred_twenty_nine_dvd_succ_of_three_dvd_a / not_three_dvd_a_of_not_seven_hundred_twenty_nine : propext, Classical.choice, Quot.sound
+conjecture_of_minFac_seven / q_dvd_x_square_window_of_seven / seven_mul_sub_two_le_square : propext, Classical.choice, Quot.sound (square bound: propext)
+five_mul_sub_two_le_square / eleven_mul_sub_two_le_square / thirteen_mul_sub_two_le_square / cofactor_injector_le / mul_mod_three_eq_two : propext
+q_dvd_x_square_window_of_five / eleven / thirteen / conjecture_of_cofactor_five / conjecture_of_minFac_five / eleven / thirteen / conjecture_of_minFac_prime_index / conjecture_of_paired_injectors / seven_hundred_twenty_nine_dvd_x / two_thousand_one_hundred_eighty_seven_dvd_succ_of_three_dvd_a : propext, Classical.choice, Quot.sound
 ```
 
 No `sorryAx`, `native_decide`, or `Lean.trustCompiler` on these declarations. `Classical.choice` enters through `Nat.find` in `exists_least_dvd` and through Mathlib `decide` instances. Full log: `experiments/a135508_axioms.log`.
