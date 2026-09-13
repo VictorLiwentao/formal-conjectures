@@ -12,7 +12,7 @@ Incomplete research session. No exact proof or disproof. Do not treat this as a 
 - source SHA-256: `b50d00e13735613cbe37bd3a25c19130874e8f036ca2a0e3c1aceb177a33c683`
 - original kickoff (UTC): 2026-09-12T23:12Z
 - this checkpoint (UTC): 2026-09-13T03:00Z
-- final commit SHA: (recorded after commit)
+- final commit SHA: `b5a8fe51c86d6bcfda67a3c013ba27b44e0f645f`
 
 ## Reproduction
 
