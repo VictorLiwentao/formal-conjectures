@@ -16,15 +16,19 @@
     "Cursor03R02.A069004.conjecture2"
   ],
   "unresolved_gaps": [
-    "Full 284-chunk and 26 count-block kernel compile not yet finished",
+    "Independent kernel compile of remaining C* and Count* chunks in progress",
     "Glued theorems, TypeMatch.lean, and #print axioms pending"
   ],
-  "next_step": "Compile remaining C* and Count* oleans into targets/A069004/lean, then GlueCert, GlueCount, A069004.lean, TypeMatch.lean",
-  "last_commit": "1e5b8ff846abc69a758eb2ec9a2bf9d0db7cf14f",
-  "last_updated_utc": "2026-09-13T00:36:00Z",
+  "next_step": "Wait for compile_chunks.py to finish with fails 0, then compile_glue.py and axiom audit",
+  "last_commit": "b142c424",
+  "last_updated_utc": "2026-09-13T00:42:30Z",
+  "continuation_timer": "sub_84acaa59-b875-485b-91f7-9526de466583",
+  "compile_progress": "10/309 OK at 00:42Z; C1 skipped; oleans under targets/A069004/lean",
   "pilot": {
     "Pilot.lean": "one Pratt certificate, decide +kernel, 4s, success",
-    "C0.lean": "150 certificates, 22s, success",
-    "CountPilot.lean": "countRange 0 1000 = 168, 11s, success"
+    "C0.lean": "150 certificates, kernel, success",
+    "C1.lean": "150 certificates, kernel, success",
+    "CountPilot.lean": "countRange 0 1000 = 168, 11s, success",
+    "ExactType.lean": "frozen types compiled 2026-09-13T00:35Z"
   }
 }
