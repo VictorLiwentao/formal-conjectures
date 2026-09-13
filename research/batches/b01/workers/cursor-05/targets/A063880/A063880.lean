@@ -6479,6 +6479,82 @@ lemma not_seven_sigma_of_four_sq_primes_ge_seven {m p q r s : ℕ} (hm : m ≠ 0
   exact (seven_sigma_lt_ten_usigma_four_large hp hq hr hs hp7 hq11 hr13 hs41
     (by omega) (by omega) (by omega) (by omega)).ne heq
 
+lemma five_mul_eleven_sq_thirteen_cap {p : ℕ} (hp : 67 ≤ p) (hp1 : 1 ≤ p) :
+    5 * 13 * p * 133 ≤ 6 * 12 * (p - 1) * 122 := by
+  have hp' : (67 : ℤ) ≤ p := Int.ofNat_le.mpr hp
+  have hL : ((5 * 13 * p * 133 : ℕ) : ℤ) =
+      (5 : ℤ) * 13 * p * 133 := by
+    rw [Nat.cast_mul, Nat.cast_mul, Nat.cast_mul]; rfl
+  have hR : ((6 * 12 * (p - 1) * 122 : ℕ) : ℤ) =
+      (6 : ℤ) * 12 * ((p : ℤ) - 1) * 122 := by
+    rw [Nat.cast_mul, Nat.cast_mul, Nat.cast_mul, Nat.cast_sub hp1]
+    rfl
+  have : (5 : ℤ) * 13 * p * 133 ≤ 6 * 12 * (p - 1) * 122 := by nlinarith
+  exact Nat.cast_le.mp (by rw [hL, hR]; exact this)
+
+/-- `{11^2, 13^b, p^k}` undershoots leftover `6/5` for `p ≥ 67`. -/
+lemma five_sigma_lt_six_usigma_eleven_sq_thirteen_large {p b k : ℕ}
+    (hp : p.Prime) (hp67 : 67 ≤ p) (hb : 0 < b) (hk : 0 < k) :
+    5 * σ 1 (11 ^ 2) * σ 1 (13 ^ b) * σ 1 (p ^ k) <
+      6 * usigma (11 ^ 2) * usigma (13 ^ b) * usigma (p ^ k) := by
+  rw [sigma_eleven_pow_two, usigma_eleven_pow_two]
+  have h13 := sigma_lt_cap_usigma (by decide : Nat.Prime 13) hb
+  have hpcap := sigma_lt_cap_usigma hp hk
+  have hu13 : 0 < usigma (13 ^ b) := by
+    rw [usigma_prime_pow (by decide : Nat.Prime 13) hb]
+    exact Nat.add_pos_left (by decide : 0 < 1) _
+  have hcap := five_mul_eleven_sq_thirteen_cap hp67 hp.one_le
+  have hthis := six_five_of_two_caps_times_const (A := 12) (B := 13)
+    (X := σ 1 (13 ^ b)) (Y := usigma (13 ^ b)) (C := p - 1) (D := p)
+    (P := σ 1 (p ^ k)) (Q := usigma (p ^ k)) (S := 122) (T := 133)
+    h13 hpcap hcap (by decide : 0 < 13) hu13 (by decide : 0 < 133)
+  have hL : 5 * σ 1 (13 ^ b) * σ 1 (p ^ k) * 133 =
+      5 * 133 * σ 1 (13 ^ b) * σ 1 (p ^ k) := by ring
+  have hR : 6 * usigma (13 ^ b) * usigma (p ^ k) * 122 =
+      6 * 122 * usigma (13 ^ b) * usigma (p ^ k) := by ring
+  rw [← hL, ← hR]
+  exact hthis
+
+lemma prime_ge_sixty_four_ge_sixty_seven {p : ℕ} (hp : p.Prime)
+    (h : 64 ≤ p) : 67 ≤ p := by
+  have hmem : p = 64 ∨ p = 65 ∨ p = 66 ∨ 67 ≤ p := by omega
+  rcases hmem with rfl | rfl | rfl | h67
+  · exact False.elim ((by decide : ¬ Nat.Prime 64) hp)
+  · exact False.elim ((by decide : ¬ Nat.Prime 65) hp)
+  · exact False.elim ((by decide : ¬ Nat.Prime 66) hp)
+  · exact h67
+
+/-- Leftover `6/5` cannot be three squareful primes `11^2, 13, p` with
+`p ≥ 67` times a squarefree coprime factor. -/
+lemma not_five_sigma_of_three_sq_primes_eleven_sq_thirteen_large {m p : ℕ}
+    (hm : m ≠ 0) (hp : p.Prime) (hp67 : 67 ≤ p)
+    (h : 5 * σ 1 m = 6 * usigma m)
+    (hk11 : padicValNat 11 m = 2) (hk13 : 2 ≤ padicValNat 13 m)
+    (hkp : 2 ≤ padicValNat p m)
+    (hs : Squarefree (ordCompl[p] (ordCompl[13] (ordCompl[11] m)))) : False := by
+  have hp11 : Nat.Prime 11 := by decide
+  have hp13 : Nat.Prime 13 := by decide
+  have hpq_ne : (11 : ℕ) ≠ 13 := by decide
+  have hpr_ne : (11 : ℕ) ≠ p :=
+    Nat.ne_of_lt (lt_of_lt_of_le (by decide : 11 < 67) hp67)
+  have hqr_ne : (13 : ℕ) ≠ p :=
+    Nat.ne_of_lt (lt_of_lt_of_le (by decide : 13 < 67) hp67)
+  have heq := five_sigma_eq_six_of_three_squareful hm hp11 hp13 hp hpq_ne hpr_ne
+    hqr_ne h hs
+  have hproj_p : ordProj[11] m = 11 ^ padicValNat 11 m := by
+    simp [Nat.factorization_def m hp11]
+  have hproj_q : ordProj[13] (ordCompl[11] m) =
+      13 ^ padicValNat 13 (ordCompl[11] m) := by
+    simp [Nat.factorization_def (ordCompl[11] m) hp13]
+  have hproj_r : ordProj[p] (ordCompl[13] (ordCompl[11] m)) =
+      p ^ padicValNat p (ordCompl[13] (ordCompl[11] m)) := by
+    simp [Nat.factorization_def (ordCompl[13] (ordCompl[11] m)) hp]
+  rw [hproj_r, padicValNat_ordCompl_of_ne hp hqr_ne,
+    padicValNat_ordCompl_of_ne hp hpr_ne, hproj_q,
+    padicValNat_ordCompl_of_ne hp13 hpq_ne, hproj_p, hk11] at heq
+  exact (five_sigma_lt_six_usigma_eleven_sq_thirteen_large hp hp67
+    (by omega) (by omega)).ne heq
+
 end Unitary
 
 section Congruence
