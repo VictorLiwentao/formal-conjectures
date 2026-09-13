@@ -457,6 +457,89 @@ theorem conjecture_of_nineteen_dvd {p : ℕ} (hp : p.Prime) (hp20 : 20 ≤ p)
   conjecture_of_factor_dvd_x hp (by omega) (by decide : 1 < 19) h19
     (nineteen_dvd_x (by omega : 17 ≤ p - 3))
 
+private instance : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+
+lemma a_pos {n : ℕ} (hn : 0 < n) : 0 < a n :=
+  Nat.pos_of_dvd_of_pos (a_dvd hn) (Nat.succ_pos n)
+
+lemma v2_gcd {m n : ℕ} (hm : 0 < m) (hn : 0 < n) :
+    padicValNat 2 (Nat.gcd m n) = min (padicValNat 2 m) (padicValNat 2 n) := by
+  have hg : Nat.gcd m n ≠ 0 := (Nat.gcd_pos_of_pos_left n hm).ne'
+  have hm0 : m ≠ 0 := hm.ne'
+  have hn0 : n ≠ 0 := hn.ne'
+  apply le_antisymm
+  · refine le_min ?_ ?_
+    · exact (padicValNat_dvd_iff_le hm0).1 <|
+        pow_padicValNat_dvd.trans (Nat.gcd_dvd_left m n)
+    · exact (padicValNat_dvd_iff_le hn0).1 <|
+        pow_padicValNat_dvd.trans (Nat.gcd_dvd_right m n)
+  · have hpow : 2 ^ min (padicValNat 2 m) (padicValNat 2 n) ∣ Nat.gcd m n :=
+      Nat.dvd_gcd ((padicValNat_dvd_iff_le hm0).2 (min_le_left _ _))
+        ((padicValNat_dvd_iff_le hn0).2 (min_le_right _ _))
+    exact (padicValNat_dvd_iff_le hg).1 hpow
+
+lemma v2_a {n : ℕ} (hn : 0 < n) :
+    padicValNat 2 (a n) =
+      padicValNat 2 (n + 1) - min (padicValNat 2 (x n)) (padicValNat 2 (n + 1)) := by
+  have hx := x_pos hn
+  rw [a_eq hn, padicValNat.div_of_dvd (Nat.gcd_dvd_right _ _), v2_gcd hx (Nat.succ_pos n)]
+
+lemma v2_x_succ {n : ℕ} (hn : 0 < n) :
+    padicValNat 2 (x (n + 1)) = padicValNat 2 (x n) + padicValNat 2 (a n + 2) := by
+  have hx := x_pos hn
+  have ha : a n + 2 ≠ 0 := by omega
+  rw [x_succ_a hn, padicValNat.mul hx.ne' ha]
+
+lemma v2_a_eq_zero_of_le {n : ℕ} (hn : 0 < n)
+    (h : padicValNat 2 (n + 1) ≤ padicValNat 2 (x n)) : padicValNat 2 (a n) = 0 := by
+  rw [v2_a hn, min_eq_right h, Nat.sub_self]
+
+lemma v2_add_two_of_v2_a_zero {n : ℕ} (hn : 0 < n)
+    (h : padicValNat 2 (a n) = 0) : padicValNat 2 (a n + 2) = 0 := by
+  have hnot : ¬ 2 ∣ a n := by
+    intro hd
+    have := one_le_padicValNat_of_dvd (a_pos hn).ne' hd
+    omega
+  have hiff : 2 ∣ a n + 2 ↔ 2 ∣ a n := by
+    rw [add_comm]
+    exact (Nat.dvd_add_iff_right (dvd_rfl : 2 ∣ 2)).symm
+  exact padicValNat.eq_zero_of_not_dvd (hiff.not.mpr hnot)
+
+lemma v2_x_succ_eq_of_le {n : ℕ} (hn : 0 < n)
+    (h : padicValNat 2 (n + 1) ≤ padicValNat 2 (x n)) :
+    padicValNat 2 (x (n + 1)) = padicValNat 2 (x n) := by
+  rw [v2_x_succ hn, v2_add_two_of_v2_a_zero hn (v2_a_eq_zero_of_le hn h), add_zero]
+
+lemma v2_lt_pow {t n : ℕ} (hn : n ≠ 0) (h : n < 2 ^ (t + 1)) : padicValNat 2 n ≤ t := by
+  by_contra hne
+  have hlt : t < padicValNat 2 n := Nat.lt_of_not_ge hne
+  have : 2 ^ (t + 1) ∣ n := (padicValNat_dvd_iff_le hn).2 (Nat.succ_le_iff.2 hlt)
+  exact (Nat.le_of_dvd (Nat.pos_of_ne_zero hn) this).not_gt h
+
+lemma two_mul_four_pow (k : ℕ) : 2 * 4 ^ k = 2 ^ (2 * k + 1) := by
+  rw [show (4 : ℕ) = 2 ^ 2 from rfl, ← pow_mul, Nat.mul_comm 2 k, pow_succ, mul_comm]
+
+lemma v2_x_two : padicValNat 2 (x 2) = 2 := by
+  have : x 2 = 4 := by decide
+  rw [this, show (4 : ℕ) = 2 ^ 2 from rfl, padicValNat.prime_pow]
+
+lemma exists_block {n : ℕ} (hn : 2 ≤ n) :
+    ∃ k, 2 * 4 ^ k ≤ n ∧ n ≤ 2 * 4 ^ (k + 1) - 1 := by
+  have hb : 1 < (4 : ℕ) := by decide
+  have hpos : 0 < n / 2 := Nat.div_pos (le_trans (by decide : 2 ≤ 2) hn) (by decide)
+  refine ⟨Nat.log 4 (n / 2), ?_, ?_⟩
+  · have hle : 4 ^ Nat.log 4 (n / 2) ≤ n / 2 := Nat.pow_log_le_self 4 hpos.ne'
+    have : 2 * 4 ^ Nat.log 4 (n / 2) ≤ 2 * (n / 2) := Nat.mul_le_mul_left 2 hle
+    exact this.trans (Nat.mul_div_le n 2)
+  · have hlt : n / 2 < 4 ^ (Nat.log 4 (n / 2) + 1) := Nat.lt_pow_succ_log_self hb (n / 2)
+    have hlt' : n < 2 * 4 ^ (Nat.log 4 (n / 2) + 1) := by
+      have h := (Nat.div_lt_iff_lt_mul (by decide : 0 < 2)).1 hlt
+      rwa [mul_comm] at h
+    exact Nat.le_sub_one_of_lt hlt'
+
+/-- Cloitre's 2-adic identity in Lean indexing at the first staircase step. -/
+theorem a_two_four_pow_zero : a (2 * 4 ^ 0 - 1) = 2 := a_1
+
 #print axioms conjecture_of_mod_three
 #print axioms twin_pair_inhibition
 #print axioms larger_twin_eq_one
@@ -470,5 +553,9 @@ theorem conjecture_of_nineteen_dvd {p : ℕ} (hp : p.Prime) (hp20 : 20 ≤ p)
 #print axioms conjecture_of_five_dvd
 #print axioms conjecture_two
 #print axioms conjecture_three
+#print axioms a_pos
+#print axioms v2_a
+#print axioms v2_x_succ
+#print axioms a_two_four_pow_zero
 
 end OeisA135508

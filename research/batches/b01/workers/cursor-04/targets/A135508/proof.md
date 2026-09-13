@@ -69,6 +69,10 @@ Deterministic experiment (`injector_bound.py`): for every prime `q ≡ 2 (mod 3)
 
 Cloitre’s route (assume `C₁`, then Theorem 6.2) was not used. `C₁` is stronger than McEachen and remains open.
 
+## 2-adic helpers (partial Cloitre 6.5)
+
+Proved: `v2(gcd)`, `v2(a n)`, `v2(x(n+1))`, odd-increment stability, dyadic blocks `exists_block`, and `a(2·4^0-1)=2`. The full staircase `a(2·4^k-1)=2` for every `k` is Cloitre Prop. 6.5 and is not yet formalized for `k>0`.
+
 ## Methods that did not finish the exact type
 
 - Brute-force evaluation of `x n` (values explode; factorization tracking of `a n` is used instead).

@@ -11,7 +11,7 @@
   "novelty_status": "no_exact_public_solution_found_in_checked_sources",
   "statement_audit": "matches_intended_mceachen_statement",
   "oeis_editability": "unknown",
-  "last_updated_utc": "2026-09-13T00:03:06Z",
+  "last_updated_utc": "2026-09-13T00:11:00Z",
   "session_kickoff_utc": "2026-09-12T23:12:00Z",
   "session_hard_stop_utc": "2026-09-13T07:12:00Z",
   "proof_declarations": [
@@ -28,7 +28,12 @@
     "OeisA135508.twin_pair_inhibition",
     "OeisA135508.larger_twin_eq_one",
     "OeisA135508.conjecture_of_factor_dvd_x",
-    "OeisA135508.conjecture_of_injected"
+    "OeisA135508.conjecture_of_injected",
+    "OeisA135508.a_pos",
+    "OeisA135508.v2_a",
+    "OeisA135508.v2_x_succ",
+    "OeisA135508.exists_block",
+    "OeisA135508.a_two_four_pow_zero"
   ],
   "unresolved_gaps": [
     "Frozen OeisA135508.conjecture is still sorry.",
