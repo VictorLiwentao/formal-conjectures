@@ -212,7 +212,7 @@
       "platform": "Cursor Cloud",
       "requested_model": "Cursor Grok 4.6 Extra High",
       "branch": "codex/b01-cursor-01-r04",
-      "status": "reserved_for_replacement",
+      "status": "researching_goal_active",
       "novelty_status": "known_mathematics_formalization_candidate",
       "reserved_sequence_groups": [
         "A001818-C1",
@@ -242,7 +242,7 @@
       "platform": "Cursor Cloud",
       "requested_model": "Cursor Grok 4.6 Extra High",
       "branch": "codex/b01-cursor-07-r04",
-      "status": "reserved_for_replacement",
+      "status": "researching_goal_active",
       "novelty_status": "known_mathematics_formalization_candidate",
       "reserved_sequence_groups": [
         "WOWII20"

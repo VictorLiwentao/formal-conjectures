@@ -2,15 +2,15 @@
   "automation_id": "maintain-seven-cursor-math-workers",
   "interval_minutes": 15,
   "target_cursor_slots": 7,
-  "updated_at_utc": "2026-09-13T02:51:08.955945+00:00",
+  "updated_at_utc": "2026-09-13T02:55:50.300006+00:00",
   "accept_known_informal_proofs_for_new_lean_formalization": true,
-  "note": "A051903-C2 and Green66 independently verified; successors A001818-C1 and WOWII20 atomically reserved. Four original workers active; A069004 held for independent long certificate rebuild.",
+  "note": "A051903-C2 and Green66 independently verified; A001818-C1 and WOWII20 replacements have verified active goals. Six Cursor research workers active. A069004 slot held for detached independent317-command certificate rebuild; monitor existingPID/status rather than launch duplicate.",
   "slots": [
     {
       "slot": "cursor-01",
       "run_id": "cursor-01-r04",
-      "agent_url": null,
-      "state": "reserved_for_replacement",
+      "agent_url": "https://cursor.com/agents/bc-6d5121fc-3484-43b6-b32f-ddc4257f6ddf",
+      "state": "researching",
       "actual_branch": null,
       "replacements": [
         {
@@ -22,10 +22,15 @@
           "run_id": "cursor-01-r03",
           "agent_url": "https://cursor.com/agents/bc-086084d4-c701-4b95-8414-97eb6d9d2609",
           "launched_at_utc": "2026-09-13T02:21:46.023650+00:00"
+        },
+        {
+          "run_id": "cursor-01-r04",
+          "agent_url": "https://cursor.com/agents/bc-6d5121fc-3484-43b6-b32f-ddc4257f6ddf",
+          "launched_at_utc": "2026-09-13T02:54:22.021545+00:00"
         }
       ],
-      "last_checked_at_utc": "2026-09-13T02:51:08.955945+00:00",
-      "progress_note": "cursor-01-r03 independently verified and stopped; A001818-C1 screened and reserved, one launch pending.",
+      "last_checked_at_utc": "2026-09-13T02:55:50.300006+00:00",
+      "progress_note": "A001818-C1 replacement Goal active and prepared Environment ready verified; Used create-goal. One launch only, own8-hour clock.",
       "history": [
         {
           "run_id": "cursor-01",
@@ -53,11 +58,11 @@
         }
       ],
       "predecessor": "cursor-01-r03",
-      "starting_commit": null,
-      "launch_verified_at_utc": null,
-      "goal_command_submitted": false,
-      "goal_active_verified": false,
-      "goal_verified_at_utc": null,
+      "starting_commit": "7a37b78ee539aab88ebbb77a2579f838e9fcc7a6",
+      "launch_verified_at_utc": "2026-09-13T02:54:22.021545+00:00",
+      "goal_command_submitted": true,
+      "goal_active_verified": true,
+      "goal_verified_at_utc": "2026-09-13T02:55:50.300006+00:00",
       "environment_build": "bld-20260912-716b23c3-d124-4da8-ab69-743e1fb16843",
       "model": "Cursor Grok 4.6 Extra High"
     },
@@ -149,8 +154,8 @@
     {
       "slot": "cursor-07",
       "run_id": "cursor-07-r04",
-      "agent_url": null,
-      "state": "reserved_for_replacement",
+      "agent_url": "https://cursor.com/agents/bc-c73732d3-698e-44e1-93e8-b6aeb3ef9d2b",
+      "state": "researching",
       "actual_branch": null,
       "replacements": [
         {
@@ -162,12 +167,17 @@
           "run_id": "cursor-07-r03",
           "agent_url": "https://cursor.com/agents/bc-be46998d-e41e-4257-9875-c9644cc7ceef",
           "launched_at_utc": "2026-09-13T02:07:39.445788+00:00"
+        },
+        {
+          "run_id": "cursor-07-r04",
+          "agent_url": "https://cursor.com/agents/bc-c73732d3-698e-44e1-93e8-b6aeb3ef9d2b",
+          "launched_at_utc": "2026-09-13T02:52:47.668172+00:00"
         }
       ],
-      "last_checked_at_utc": "2026-09-13T02:51:08.955945+00:00",
-      "progress_note": "cursor-07-r03 independently verified and stopped; WOWII20 screened and reserved, one launch pending.",
-      "goal_active_verified": false,
-      "goal_verified_at_utc": null,
+      "last_checked_at_utc": "2026-09-13T02:54:57.246826+00:00",
+      "progress_note": "WOWII20 Goal active and prepared Environment ready verified. Goal explicitly uses correct full research/batches/b01/workers/cursor-07-r04 path; source/seed gates passed.",
+      "goal_active_verified": true,
+      "goal_verified_at_utc": "2026-09-13T02:54:57.246826+00:00",
       "history": [
         {
           "run_id": "cursor-07",
@@ -195,20 +205,21 @@
         }
       ],
       "predecessor": "cursor-07-r03",
-      "starting_commit": null,
-      "launch_verified_at_utc": null,
-      "goal_command_submitted": false,
+      "starting_commit": "7a37b78ee539aab88ebbb77a2579f838e9fcc7a6",
+      "launch_verified_at_utc": "2026-09-13T02:52:47.668172+00:00",
+      "goal_command_submitted": true,
       "model": "Cursor Grok 4.6 Extra High",
       "environment_build": "bld-20260912-716b23c3-d124-4da8-ab69-743e1fb16843"
     }
   ],
   "last_heartbeat": {
-    "scheduled_at_utc": "2026-09-13T01:57:48.815Z",
-    "completed_at_utc": "2026-09-13T02:23:05.042739+00:00",
+    "scheduled_at_utc": "2026-09-13T02:38:19.117Z",
+    "completed_at_utc": "2026-09-13T02:55:50.300006+00:00",
     "occupied_slots": 6,
     "audit_pending_slots": 1,
     "replacements": 2,
     "resumes": 0,
+    "documentation_followups": 1,
     "notifications": 1
   }
 }

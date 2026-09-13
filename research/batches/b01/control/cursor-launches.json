@@ -109,6 +109,28 @@
       "checked_at_utc": "2026-09-13T02:23:05.042739+00:00",
       "model": "Cursor Grok 4.6 Extra High",
       "environment_build": "bld-20260912-716b23c3-d124-4da8-ab69-743e1fb16843"
+    },
+    {
+      "worker_id": "cursor-07-r04",
+      "slot": "cursor-07",
+      "agent_url": "https://cursor.com/agents/bc-c73732d3-698e-44e1-93e8-b6aeb3ef9d2b",
+      "starting_commit": "7a37b78ee539aab88ebbb77a2579f838e9fcc7a6",
+      "launch_verified": true,
+      "goal_active_verified": true,
+      "checked_at_utc": "2026-09-13T02:54:57.246826+00:00",
+      "model": "Cursor Grok 4.6 Extra High",
+      "environment_build": "bld-20260912-716b23c3-d124-4da8-ab69-743e1fb16843"
+    },
+    {
+      "worker_id": "cursor-01-r04",
+      "slot": "cursor-01",
+      "agent_url": "https://cursor.com/agents/bc-6d5121fc-3484-43b6-b32f-ddc4257f6ddf",
+      "starting_commit": "7a37b78ee539aab88ebbb77a2579f838e9fcc7a6",
+      "launch_verified": true,
+      "goal_active_verified": true,
+      "checked_at_utc": "2026-09-13T02:55:50.300006+00:00",
+      "model": "Cursor Grok 4.6 Extra High",
+      "environment_build": "bld-20260912-716b23c3-d124-4da8-ab69-743e1fb16843"
     }
   ]
 }
