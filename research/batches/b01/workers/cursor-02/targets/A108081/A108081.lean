@@ -111,6 +111,20 @@ lemma getLast_r {w : Word} (h : w ≠ []) :
     (r w).getLast (r_ne_nil h) = w.head h + 1 := by
   simp [r, getLast_eq_head_reverse]
 
+lemma head_r {w : Word} (h : w ≠ []) :
+    (r w).head (r_ne_nil h) = w.getLast h + 1 := by
+  simp [r, head_reverse]
+
+lemma head_eq_of_eq {l₁ l₂ : Word} (h : l₁ = l₂) (h1 : l₁ ≠ []) (h2 : l₂ ≠ []) :
+    l₁.head h1 = l₂.head h2 := by
+  subst h
+  rfl
+
+lemma getLast_eq_of_eq {l₁ l₂ : Word} (h : l₁ = l₂) (h1 : l₁ ≠ []) (h2 : l₂ ≠ []) :
+    l₁.getLast h1 = l₂.getLast h2 := by
+  subst h
+  rfl
+
 -- Nonempty words and endpoints
 
 lemma XWord.ne_nil {w : Word} (hw : XWord w) : w ≠ [] :=
@@ -3612,6 +3626,168 @@ lemma LeftWord.append_rIrreducible {p v : Word}
       ⟨r q, hbpre⟩ (hu_eq ▸ hparse.1)
   exact hv.2 (v.take k) q ⟨hb, hparse.2.1, hbpre.symm⟩
 
+lemma LeftWord.l_mem_neg {p : Word} (hp : LeftWord p) {x : ℤ}
+    (hx : x ∈ l p) : x < 0 := by
+  have hx' : x + 1 ∈ p := mem_l_iff.mp hx
+  have hidx := hp.idxOf_zero
+  obtain ⟨i, hi, hwi⟩ := List.mem_iff_getElem.mp hx'
+  have htri : i = p.idxOf 0 ∨ i < p.idxOf 0 ∨ p.idxOf 0 < i := by omega
+  rcases htri with hi0 | hlt | hgt
+  · have : p[i] = 0 := hi0 ▸ PWord.getElem_idxOf_zero hp.pWord
+    omega
+  · have := PWord.getElem_neg_of_lt_idxOf hp.pWord hlt
+    omega
+  · omega
+
+lemma LeftWord.concat_one_pWord {p : Word} (hp : LeftWord p) :
+    PWord (p ++ [1]) := by
+  refine ⟨XWord.concat_one hp.xWord, ?_⟩
+  simp [count_append, hp.pWord.2]
+
+lemma LeftWord.concat_one_l_append_zero_rIrreducible {p : Word}
+    (hp : LeftWord p) : RIrreducible (l (p ++ [1]) ++ [0]) := by
+  have hp1 : XWord (p ++ [1]) := XWord.concat_one hp.xWord
+  refine ⟨XWord.step_left hp1 XWord.base, fun u q hparse => ?_⟩
+  have hw : l (p ++ [1]) ++ [0] = (0 :: l p) ++ [0] := by
+    simp [l_concat_one]
+  have hule : u.length ≤ p.length + 1 := by
+    have := hparse.length_add
+    have := hparse.pos_right
+    have : (l (p ++ [1]) ++ [0]).length = p.length + 2 := by
+      simp [length_l]
+    omega
+  have hpre : u.length ≤ (0 :: l p).length := by
+    simp [length_cons, length_l]
+    omega
+  have hu_eq : u = (0 :: l p).take u.length := by
+    have htk := hparse.take
+    have htk' : ((0 :: l p) ++ [0]).take u.length = (0 :: l p).take u.length :=
+      take_append_of_le_length hpre
+    have : (l (p ++ [1]) ++ [0]).take u.length = (0 :: l p).take u.length :=
+      hw ▸ htk'
+    exact htk.symm.trans this
+  by_cases h1 : u.length = 1
+  · have hu0 : u = [0] := XWord.eq_base_of_length_one hparse.1 h1
+    have hr : r q = l p ++ [0] := by
+      have hsplit := hparse.2.2
+      rw [hw, hu0] at hsplit
+      simp [cons_append] at hsplit
+      exact hsplit.symm
+    have hne_lp : l p ≠ [] := l_ne_nil hp.xWord.ne_nil
+    have hhead_app : (l p ++ [0]).head (append_ne_nil_of_left_ne_nil hne_lp _) =
+        (l p).head hne_lp :=
+      head_append_of_ne_nil (l := l p) (l' := [0])
+        (w₁ := append_ne_nil_of_left_ne_nil hne_lp _) hne_lp
+    have hhead_rq : (r q).head (r_ne_nil hparse.2.1.ne_nil) = -1 := by
+      have hneg := hp.head_l_eq_neg_one
+      have hne_rq : r q ≠ [] := r_ne_nil hparse.2.1.ne_nil
+      have hne_app : l p ++ [0] ≠ [] := append_ne_nil_of_left_ne_nil hne_lp _
+      have hheads := head_eq_of_eq hr hne_rq hne_app
+      omega
+    have : q.getLast hparse.2.1.ne_nil + 1 = -1 := by
+      have := head_r hparse.2.1.ne_nil
+      omega
+    have := hparse.2.1.getLast_eq_zero_or_one
+    omega
+  · have hgt : 1 < u.length := by
+      have := hparse.pos_left
+      omega
+    let k := u.length - 1
+    have hsucc : u.length = Nat.succ k := by omega
+    have hu' : u = 0 :: (l p).take k := by
+      have : (0 :: l p).take u.length = 0 :: (l p).take k := by
+        rw [hsucc, take_succ_cons]
+      exact hu_eq.trans this
+    have htail_ne : (l p).take k ≠ [] := by
+      have hpos : 0 < k := by omega
+      have hlp : l p ≠ [] := l_ne_nil hp.xWord.ne_nil
+      simp [take_eq_nil_iff]
+      exact ⟨Nat.ne_of_gt hpos, hlp⟩
+    have hlast : u.getLast hparse.1.ne_nil =
+        ((l p).take k).getLast htail_ne := by
+      have hcons := getLast_cons (a := (0 : ℤ)) htail_ne
+      have hne0 : 0 :: (l p).take k ≠ [] := cons_ne_nil _ _
+      exact (getLast_eq_of_eq hu' hparse.1.ne_nil hne0).trans hcons
+    have hmem : u.getLast hparse.1.ne_nil ∈ l p :=
+      mem_of_mem_take (hlast.symm ▸ getLast_mem htail_ne)
+    have hneg := hp.l_mem_neg hmem
+    have := hparse.1.getLast_eq_zero_or_one
+    omega
+
+lemma not_xWord_zero_zero : ¬ XWord [0, 0] := by
+  intro h
+  have := XWord.eq_of_length_two h (by simp)
+  simp at this
+
+lemma not_xWord_zero_neg_one : ¬ XWord [0, -1] := by
+  intro h
+  have := XWord.eq_of_length_two h (by simp)
+  simp at this
+
+lemma XWord.dropLast_of_getLast_eq_one_of_penultimate_eq_zero {w : Word}
+    (hw : XWord w) (hlen : 2 ≤ w.length)
+    (hlast : w.getLast hw.ne_nil = 1)
+    (hpen : w[w.length - 2]'(by omega) = 0) :
+    XWord w.dropLast := by
+  obtain ⟨u, v, hparse, hmin⟩ :=
+    exists_shortest_right_parse (exists_right_parse_of_getLast_eq_one hw hlast)
+  have hvP : PWord v := XWord.of_isRightParse_shortest hparse hmin
+  have hvlen : v.length = 1 := by
+    by_contra hne
+    have hge : 2 ≤ v.length := by
+      have := hparse.2.1.length_pos
+      omega
+    have hw_eq : w = u ++ r v := hparse.2.2
+    have hsum := hparse.length_add
+    have hulen : u.length ≤ w.length - 2 := by omega
+    have i_lt : w.length - 2 < w.length := by omega
+    have hget : (u ++ r v)[w.length - 2]'(by
+          rw [← hw_eq]
+          exact i_lt) =
+        (r v)[w.length - 2 - u.length]'(by
+          simp [length_r]
+          omega) :=
+      getElem_append_right hulen
+    have hww : w[w.length - 2]'(i_lt) =
+        (u ++ r v)[w.length - 2]'(by
+          rw [← hw_eq]
+          exact i_lt) := by
+      simp [hw_eq]
+    have hidx : w.length - 2 - u.length = v.length - 2 := by omega
+    have hrget : (r v)[v.length - 2]'(by simp [length_r]; omega) =
+        v[1]'(by omega) + 1 := by
+      have hri := getElem_r (v := v) (i := v.length - 2)
+        (by simp [length_r]; omega)
+      have hsub : v.length - 1 - (v.length - 2) = 1 := by omega
+      simpa [hsub] using hri
+    have hne_r := r_ne_nil hparse.2.1.ne_nil
+    have hgl := getLast_append_of_right_ne_nil (l₁ := u) (l₂ := r v) hne_r
+    have hglw : w.getLast hw.ne_nil =
+        (u ++ r v).getLast (append_ne_nil_of_right_ne_nil _ hne_r) :=
+      getLast_eq_of_eq hw_eq hw.ne_nil (append_ne_nil_of_right_ne_nil _ hne_r)
+    have hvhead : v.head hparse.2.1.ne_nil = 0 := by
+      have := getLast_r hparse.2.1.ne_nil
+      omega
+    have hidx0 : v.idxOf 0 = 0 :=
+      PWord.idxOf_eq_zero_of_head_eq_zero hvP hvhead
+    have hpos : 0 < v[1]'(by omega) :=
+      PWord.getElem_pos_of_gt_idxOf hvP (by omega) (by omega)
+    have : w[w.length - 2]'(i_lt) = v[1]'(by omega) + 1 := by
+      calc
+        w[w.length - 2]'(i_lt)
+            = (u ++ r v)[w.length - 2]'(by rw [← hw_eq]; exact i_lt) := hww
+        _ = (r v)[w.length - 2 - u.length]'(by simp [length_r]; omega) := hget
+        _ = (r v)[v.length - 2]'(by simp [length_r]; omega) := by simp [hidx]
+        _ = v[1]'(by omega) + 1 := hrget
+    omega
+  have hv0 : v = [0] := XWord.eq_base_of_length_one hparse.2.1 hvlen
+  have hw_eq : w = u ++ [1] := by
+    simpa [hv0, r_zero] using hparse.2.2
+  have hdrop : w.dropLast = u := by
+    rw [hw_eq]
+    exact dropLast_concat (l₁ := u) (b := (1 : ℤ))
+  exact hdrop ▸ hparse.1
+
 noncomputable def leftNFinset (n : ℕ) : Finset Word :=
   (leftN_finite n).toFinset
 
@@ -3749,5 +3925,11 @@ lemma ncard_iN_ge_sum_catalan_iN (n : ℕ) (hn : 2 ≤ n) :
 #print axioms LeftWord.xword_of_l_append_prefix
 #print axioms LeftWord.append_rIrreducible
 #print axioms ncard_iN_ge_sum_catalan_iN
+#print axioms LeftWord.l_mem_neg
+#print axioms LeftWord.concat_one_pWord
+#print axioms LeftWord.concat_one_l_append_zero_rIrreducible
+#print axioms not_xWord_zero_zero
+#print axioms not_xWord_zero_neg_one
+#print axioms XWord.dropLast_of_getLast_eq_one_of_penultimate_eq_zero
 
 end OeisA108081

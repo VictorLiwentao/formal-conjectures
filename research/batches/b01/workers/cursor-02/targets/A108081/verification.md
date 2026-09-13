@@ -45,13 +45,16 @@ python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/pword
 python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/right_pword_factor.py
 python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/iword_left_factors.py
 python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/left_prefix_any_xia.py
+python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/gword_dropLast.py
+python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/gword_penultimate.py
+python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/cons_zero_converse.py
 ```
 
 Guard: PASS (worker path only). Source SHA-256 matches.
 
 ## Lean axioms
 
-`lake --wfail env lean` on `A108081.lean` succeeded on 2026-09-13.
+`lake --wfail env lean` on `A108081.lean` succeeded on 2026-09-13 04:21Z.
 
 ```
 #print axioms ncard_xN_one
@@ -135,6 +138,10 @@ Guard: PASS (worker path only). Source SHA-256 matches.
 #print axioms LeftWord.append_rIrreducible
 -- [propext, Classical.choice, Quot.sound]
 #print axioms ncard_iN_ge_sum_catalan_iN
+-- [propext, Classical.choice, Quot.sound]
+#print axioms LeftWord.concat_one_l_append_zero_rIrreducible
+-- [propext, Classical.choice, Quot.sound]
+#print axioms XWord.dropLast_of_getLast_eq_one_of_penultimate_eq_zero
 -- [propext, Classical.choice, Quot.sound]
 #print axioms xN_finite
 -- [propext, Classical.choice, Quot.sound]

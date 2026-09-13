@@ -68,6 +68,12 @@ Checked on 2026-09-12. Live OEIS HTML history/edit pages were Cloudflare-blocked
 - OEIS A108081 JSON still revision 39 (`2025-01-19T09:28:27-05:00`). No Xia-word proof added.
 - No new DeepMind/Epoch/arXiv match for the word count. Fried arXiv:2607.24832 still A108080.
 
+## Repeat search, 2026-09-13 04:21Z
+
+- OEIS A108081 JSON still revision 39 (`2025-01-19T09:28:27-05:00`). Xia comment and “is this always true?” unchanged.
+- OEIS A081696 JSON still revision 115 (`2026-05-30T16:40:09-04:00`). No Xia-word bijection added.
+- Web search for a Xia-word proof of `|X_n|=a(n-1)` found only the OEIS comment. Fried arXiv:2607.24832 still treats A108080.
+
 ## Novelty conclusion
 
 No accepted Lean proof, Epoch submission, AlphaProof output, or paper proving or disproving `|X_n| = a(n-1)` was found. Finite enumeration through `n = 14` is known and is not a solution. An upstream `sorry` is not evidence of openness; this is only “no public solution found in the checked sources.”
