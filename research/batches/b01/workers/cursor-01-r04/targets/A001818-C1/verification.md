@@ -35,6 +35,7 @@ which type-checks. The original `a` is used. The admitted `OeisA1818.conjecture1
 'A001818C1.signed_derangement_inv_sum' depends on axioms: [propext, Classical.choice, Quot.sound]
 'A001818C1.cycleEdgeWeight_formPerm_cons' depends on axioms: [propext, Classical.choice, Quot.sound]
 'A001818C1.sum_cycleEdgeWeight_cons_rotate' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.sum_cycleEdgeWeight_ncycles' depends on axioms: [propext, Classical.choice, Quot.sound]
 ```
 
 No `sorryAx`, `native_decide`, or `Lean.trustCompiler` in those lemmas. The general `n ≥ 1` identity is not yet proved.

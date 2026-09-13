@@ -1202,7 +1202,89 @@ lemma sum_cycleEdgeWeight_cons_rotate {α : Type*} [Fintype α] [DecidableEq α]
   rw [← hreindex, hker]
   exact sum_insert_kernel (x p) z hw
 
-/- Type of the frozen source theorem, with `sunMatrix` in place of the inline matrix. -/
+lemma ofFn_rotate {α : Type*} {m : ℕ} [NeZero m] (f : Fin m → α) (k : Fin m) :
+    (List.ofFn f).rotate k.val = List.ofFn fun i => f (i + k) := by
+  refine List.ext_getElem (by simp [List.length_rotate, List.length_ofFn]) ?_
+  intro i hi _hi'
+  have him : i < m := by simp [List.length_ofFn] at hi; exact hi
+  rw [List.getElem_rotate]
+  simp only [List.getElem_ofFn, List.length_ofFn]
+  refine congr_arg f ?_
+  ext
+  simp [Fin.val_add]
+
+/-- Guo Lemma 3.1: the sum of insertion weights over all listings of the remaining
+points is zero when at least two remaining points are present. -/
+lemma sum_cycleEdgeWeight_ncycles {α : Type*} [Fintype α] [DecidableEq α]
+    (x : α → ℂ) (hx : Function.Injective x) (p : α)
+    (hcard : 2 ≤ Fintype.card {q : α // q ≠ p}) :
+    ∑ e : Fin (Fintype.card {q : α // q ≠ p}) ≃ {q : α // q ≠ p},
+      cycleEdgeWeight x (List.formPerm (p :: List.ofFn fun i => (e i).1)) = 0 := by
+  set m := Fintype.card {q : α // q ≠ p}
+  have : NeZero m := ⟨by omega⟩
+  have hclass :
+      ∀ e : Fin m ≃ {q : α // q ≠ p},
+        ∑ k : Fin m,
+            cycleEdgeWeight x
+              (List.formPerm
+                (p :: (List.ofFn fun i => (e i).1).rotate k.val)) = 0 := by
+    intro e
+    let L := List.ofFn fun i => (e i).1
+    have hL : L.Nodup :=
+      List.nodup_ofFn_ofInjective fun i j hij => e.injective (Subtype.ext hij)
+    have hpL : p ∉ L := by
+      intro hmem
+      rw [List.mem_ofFn'] at hmem
+      obtain ⟨i, hi⟩ := hmem
+      exact (e i).2 hi
+    have h2 : 2 ≤ L.length := by
+      simpa [L, List.length_ofFn] using hcard
+    have hsum := sum_cycleEdgeWeight_cons_rotate (x := x) hL hpL h2 hx
+    have hlen : L.length = m := List.length_ofFn
+    refine Eq.trans ?_ hsum
+    refine Fintype.sum_equiv (finCongr hlen.symm)
+      (fun k : Fin m =>
+        cycleEdgeWeight x (List.formPerm (p :: L.rotate k.val)))
+      (fun k : Fin L.length =>
+        cycleEdgeWeight x (List.formPerm (p :: L.rotate k.val)))
+      (fun _ => rfl)
+  let W : (Fin m ≃ {q : α // q ≠ p}) → ℂ :=
+    fun σ => cycleEdgeWeight x (List.formPerm (p :: List.ofFn fun i : Fin m => (σ i).1))
+  have hrot :
+      ∀ (e : Fin m ≃ {q : α // q ≠ p}) (k : Fin m),
+        (List.ofFn fun i => (e i).1).rotate k.val =
+          List.ofFn fun i : Fin m => (e (i + k)).1 := fun e k => ofFn_rotate _ k
+  have hWrot :
+      ∀ (e : Fin m ≃ {q : α // q ≠ p}) (k : Fin m),
+        cycleEdgeWeight x
+            (List.formPerm (p :: (List.ofFn fun i => (e i).1).rotate k.val)) =
+          W ((Equiv.addRight k).trans e) := by
+    intro e k
+    rw [hrot]
+    rfl
+  have hdouble :
+      ∑ e : Fin m ≃ {q : α // q ≠ p}, ∑ k : Fin m, W ((Equiv.addRight k).trans e) = 0 := by
+    simp_rw [← hWrot]
+    rw [sum_congr rfl fun e _ => hclass e]
+    simp
+  have hreindex :
+      ∀ k : Fin m,
+        ∑ e : Fin m ≃ {q : α // q ≠ p}, W ((Equiv.addRight k).trans e) =
+          ∑ e, W e := by
+    intro k
+    let φ :=
+      (Equiv.addRight k).symm.equivCongr (Equiv.refl {q : α // q ≠ p})
+    have hφ : ∀ e, φ e = (Equiv.addRight k).trans e := by
+      intro e
+      ext i
+      dsimp [φ]
+    simp_rw [← hφ]
+    exact Equiv.sum_comp φ W
+  rw [sum_comm] at hdouble
+  simp_rw [hreindex] at hdouble
+  simp only [sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul] at hdouble
+  have hm0 : (m : ℂ) ≠ 0 := Nat.cast_ne_zero.2 (by omega)
+  exact (mul_eq_zero.mp hdouble).resolve_left hm0
 #check (OeisA1818.conjecture1 :
     ∀ (n : ℕ), 1 ≤ n → ∀ (ζ : ℂ), IsPrimitiveRoot ζ (2 * n) →
       (sunMatrix n ζ).permanent = (a n : ℂ))
@@ -1226,5 +1308,7 @@ lemma sum_cycleEdgeWeight_cons_rotate {α : Type*} [Fintype α] [DecidableEq α]
 #print axioms cycleEdgeWeight_mul_disjoint
 #print axioms cycleEdgeWeight_formPerm_cons
 #print axioms sum_cycleEdgeWeight_cons_rotate
+#print axioms ofFn_rotate
+#print axioms sum_cycleEdgeWeight_ncycles
 
 end A001818C1

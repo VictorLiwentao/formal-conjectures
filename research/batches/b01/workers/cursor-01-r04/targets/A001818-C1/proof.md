@@ -57,3 +57,4 @@ Do not import or use `OeisA1818.conjecture1` (`sorry`). Use original `a`. Prove 
 - Signed derangement sum of `(1-ζ^{σi-i})⁻¹` equals that determinant over `2^{2n}`.
 - `per(M-J) = 2^{2n}` times the corresponding unsigned derangement sum, using `∏ ζ^{σi-i}=1`.
 - Guo Lemma 3.1 class sum: inserting a point on one edge of a remaining cycle multiplies by a telescoping kernel; rotating the tail after a fixed point sums to zero (`sum_cycleEdgeWeight_cons_rotate`). The paper's displayed `λ_i/λ_1` product is not used; the kernel is `(z_{k+1}-z_k)/((w-z_k)(z_{k+1}-w))`.
+- Guo Lemma 3.1 global form: the sum of those insertion weights over all listings of the remaining points is zero (`sum_cycleEdgeWeight_ncycles`).
