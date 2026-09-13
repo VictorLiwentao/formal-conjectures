@@ -34,7 +34,7 @@ kept, or with colour 0 if it has no neighbour in the set.
 If every degree is at least 2, delete a maximum-degree vertex `v` of degree
 `D`. A neighbour `u` of degree `t` has weight gain `2/(t(t+1))` after the
 edge to `v` disappears. Since `2 ≤ t ≤ D`, each gain is at least `2/(D(D+1))`.
-There are `D` neighbours, so the total gain equals the deleted weight
+There are `D` neighbours, so the total gain is at least the deleted weight
 `2/(D+1)`. Non-neighbours keep their weight. The inductive induced set in
 `G - v` remains induced bipartite in `G`.
 
