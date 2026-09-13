@@ -1363,6 +1363,11 @@ noncomputable def listingPerm {α : Type*} [Fintype α] [DecidableEq α] {p : α
     (e : Fin (Fintype.card {q : α // q ≠ p}) ≃ {q : α // q ≠ p}) : Perm α :=
   List.formPerm (p :: List.ofFn fun i => (e i).1)
 
+lemma listingPerm_eq_formPerm {α : Type*} [Fintype α] [DecidableEq α] {p : α}
+    (e : Fin (Fintype.card {q : α // q ≠ p}) ≃ {q : α // q ≠ p}) :
+    listingPerm e = List.formPerm (p :: List.ofFn fun i => (e i).1) :=
+  rfl
+
 lemma listingPerm_isCycle {α : Type*} [Fintype α] [DecidableEq α] {p : α}
     (e : Fin (Fintype.card {q : α // q ≠ p}) ≃ {q : α // q ≠ p})
     (hcard : 2 ≤ Fintype.card {q : α // q ≠ p}) :
@@ -1567,6 +1572,107 @@ lemma ncycle_inv_one_sub_sum {N : ℕ} [NeZero N] {ζ : ℂ}
   dsimp only [listingEquiv]
   exact listing_inv_one_sub_sum hζ p hcard
 
+lemma cycleEdgeWeight_ofSubtype {α : Type*} [Fintype α] [DecidableEq α]
+    {p : α → Prop} [DecidablePred p] (x : α → ℂ) (u : Perm (Subtype p)) :
+    cycleEdgeWeight x (Equiv.Perm.ofSubtype u) =
+      cycleEdgeWeight (fun q : Subtype p => x q.1) u := by
+  simp only [cycleEdgeWeight, Equiv.Perm.support_ofSubtype]
+  rw [prod_map]
+  refine prod_congr rfl fun q _ => ?_
+  simp [Equiv.Perm.ofSubtype_apply_coe]
+
+lemma ofSubtype_isCycle {α : Type*} [DecidableEq α] {p : α → Prop} [DecidablePred p]
+    {u : Perm (Subtype p)} (hu : u.IsCycle) :
+    (Equiv.Perm.ofSubtype u).IsCycle :=
+  hu.extendDomain (Equiv.refl _)
+
+lemma support_ofSubtype_subset {α : Type*} [Fintype α] [DecidableEq α] {s : Finset α}
+    (u : Perm {a // a ∈ s}) :
+    (Equiv.Perm.ofSubtype u).support ⊆ s := by
+  intro x hx
+  obtain ⟨hx', _⟩ := (Equiv.Perm.mem_support_ofSubtype x u).mp hx
+  exact hx'
+
+lemma ofSubtype_disjoint_of_support_subset_compl {α : Type*} [Fintype α] [DecidableEq α]
+    {s : Finset α} (u : Perm {a // a ∈ s}) {τ : Perm α} (hτ : τ.support ⊆ sᶜ) :
+    Equiv.Perm.Disjoint (Equiv.Perm.ofSubtype u) τ := by
+  rw [Equiv.Perm.disjoint_iff_disjoint_support]
+  exact Finset.disjoint_of_subset_left (support_ofSubtype_subset u)
+    (Finset.disjoint_of_subset_right hτ disjoint_compl_right)
+
+lemma two_le_card_subtype_ne_of_three {α : Type*} [Fintype α] [DecidableEq α] (p : α)
+    (h : 3 ≤ Fintype.card α) :
+    2 ≤ Fintype.card {q : α // q ≠ p} := by
+  rw [card_subtype_ne]
+  omega
+
+lemma sum_cycleEdgeWeight_replace_cycle {α : Type*} [Fintype α] [DecidableEq α]
+    (x : α → ℂ) (hx : Function.Injective x) {s : Finset α}
+    (p : {a // a ∈ s})
+    (hcard : 2 ≤ Fintype.card {q : {a // a ∈ s} // q ≠ p})
+    {τ : Perm α} (hτ : τ.support ⊆ sᶜ) :
+    ∑ e : Fin (Fintype.card {q : {a // a ∈ s} // q ≠ p}) ≃ {q : {a // a ∈ s} // q ≠ p},
+      cycleEdgeWeight x (Equiv.Perm.ofSubtype (listingPerm (p := p) e) * τ) = 0 := by
+  have hterm : ∀ e,
+      cycleEdgeWeight x (Equiv.Perm.ofSubtype (listingPerm (p := p) e) * τ) =
+        cycleEdgeWeight (fun q : {a // a ∈ s} => x q.1) (listingPerm (p := p) e) *
+          cycleEdgeWeight x τ := fun e => by
+    rw [cycleEdgeWeight_mul_disjoint x
+        (ofSubtype_disjoint_of_support_subset_compl (listingPerm (p := p) e) hτ)]
+    refine congr_arg (· * cycleEdgeWeight x τ) ?_
+    convert cycleEdgeWeight_ofSubtype x (listingPerm (p := p) e)
+  simp_rw [hterm]
+  rw [← sum_mul]
+  have h0 :
+      ∑ e : Fin (Fintype.card {q : {a // a ∈ s} // q ≠ p}) ≃ {q : {a // a ∈ s} // q ≠ p},
+        cycleEdgeWeight (fun q : {a // a ∈ s} => x q.1) (listingPerm (p := p) e) = 0 := by
+    refine (sum_congr rfl fun e _ =>
+      congrArg _ (listingPerm_eq_formPerm (p := p) e)).trans ?_
+    exact sum_cycleEdgeWeight_ncycles (fun q : {a // a ∈ s} => x q.1)
+      (hx.comp Subtype.val_injective) p hcard
+  rw [h0, zero_mul]
+
+lemma coe_units_neg_one_pow (k : ℕ) :
+    ((↑((-1 : ℤˣ) ^ k) : ℤ) : ℂ) = (-1 : ℂ) ^ k := by
+  rw [Units.val_pow_eq_pow_val]
+  simp
+
+lemma sign_of_cycleType_replicate_two {n : ℕ} {σ : Perm (Fin (2 * n))}
+    (h : σ.cycleType = Multiset.replicate n 2) :
+    (Perm.sign σ : ℂ) = (-1 : ℂ) ^ n := by
+  rw [Equiv.Perm.sign_of_cycleType, h, Multiset.sum_replicate, Multiset.card_replicate,
+    nsmul_eq_mul]
+  exact (coe_units_neg_one_pow (n * 2 + n)).trans (by
+    rw [pow_add, mul_comm n 2, pow_mul, neg_one_sq, one_pow, one_mul])
+
+lemma cycleType_eq_replicate_two {n : ℕ} {σ : Perm (Fin (2 * n))}
+    (hsup : σ.support = univ) (h2 : ∀ m ∈ σ.cycleType, m = 2) :
+    σ.cycleType = Multiset.replicate n 2 := by
+  have hr : σ.cycleType = Multiset.replicate (Multiset.card σ.cycleType) 2 :=
+    Multiset.eq_replicate_card.2 h2
+  have hsum : σ.cycleType.sum = 2 * n := by
+    rw [Equiv.Perm.sum_cycleType, hsup, card_univ, Fintype.card_fin]
+  have hcard : Multiset.card σ.cycleType * 2 = 2 * n := by
+    rw [← Nat.nsmul_eq_mul, ← Multiset.sum_replicate, ← hr, hsum]
+  have hn : Multiset.card σ.cycleType = n := by omega
+  rw [hr, hn]
+
+lemma derangement_long_cycle_or_replicate_two {n : ℕ} {σ : Perm (Fin (2 * n))}
+    (hsup : σ.support = univ) :
+    (∃ c ∈ σ.cycleFactorsFinset, 3 ≤ c.support.card) ∨
+      σ.cycleType = Multiset.replicate n 2 := by
+  by_cases hlong : ∃ c ∈ σ.cycleFactorsFinset, 3 ≤ c.support.card
+  · exact Or.inl hlong
+  · refine Or.inr (cycleType_eq_replicate_two hsup ?_)
+    intro m hm
+    have hm2 : 2 ≤ m := Equiv.Perm.two_le_of_mem_cycleType hm
+    have hm3 : ¬ 3 ≤ m := by
+      intro h3
+      rw [Equiv.Perm.cycleType_def] at hm
+      obtain ⟨c, hc, rfl⟩ := Multiset.mem_map.mp hm
+      exact hlong ⟨c, Finset.mem_def.mpr hc, h3⟩
+    omega
+
 #check (OeisA1818.conjecture1 :
     ∀ (n : ℕ), 1 ≤ n → ∀ (ζ : ℂ), IsPrimitiveRoot ζ (2 * n) →
       (sunMatrix n ζ).permanent = (a n : ℂ))
@@ -1603,5 +1709,12 @@ lemma ncycle_inv_one_sub_sum {N : ℕ} [NeZero N] {ζ : ℂ}
 #print axioms ncycleToListing_listingPerm
 #print axioms listingPerm_ncycleToListing
 #print axioms ncycle_inv_one_sub_sum
+#print axioms cycleEdgeWeight_ofSubtype
+#print axioms ofSubtype_isCycle
+#print axioms sum_cycleEdgeWeight_replace_cycle
+#print axioms coe_units_neg_one_pow
+#print axioms sign_of_cycleType_replicate_two
+#print axioms cycleType_eq_replicate_two
+#print axioms derangement_long_cycle_or_replicate_two
 
 end A001818C1
