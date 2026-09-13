@@ -1690,6 +1690,122 @@ lemma seven_sigma_lt_ten_usigma_three_large {p q r a b c : ℕ}
     (S := usigma (r ^ c)) hcp hcq hcr hcap hp.pos hup hq.pos huq
   simpa [mul_assoc] using this
 
+lemma seven_ten_of_four_caps {A B X Y C D P Q E F R S G H T U : ℕ}
+    (hA : A * X < B * Y) (hC : C * P < D * Q) (hE : E * R < F * S)
+    (hG : G * T < H * U)
+    (hcap : 7 * B * D * F * H ≤ 10 * A * C * E * G)
+    (hB : 0 < B) (hY : 0 < Y) (hD : 0 < D) (hQ : 0 < Q)
+    (hF : 0 < F) (hS : 0 < S) :
+    7 * X * P * R * T < 10 * Y * Q * S * U := by
+  have hprod12 : (A * X) * (C * P) < (B * Y) * (D * Q) :=
+    Nat.mul_lt_mul_of_le_of_lt (Nat.le_of_lt hA) hC (Nat.mul_pos hB hY)
+  have hprod123 : ((A * X) * (C * P)) * (E * R) <
+      ((B * Y) * (D * Q)) * (F * S) :=
+    Nat.mul_lt_mul_of_le_of_lt (Nat.le_of_lt hprod12) hE
+      (Nat.mul_pos (Nat.mul_pos hB hY) (Nat.mul_pos hD hQ))
+  have hprod : (((A * X) * (C * P)) * (E * R)) * (G * T) <
+      (((B * Y) * (D * Q)) * (F * S)) * (H * U) :=
+    Nat.mul_lt_mul_of_le_of_lt (Nat.le_of_lt hprod123) hG
+      (Nat.mul_pos (Nat.mul_pos (Nat.mul_pos hB hY) (Nat.mul_pos hD hQ))
+        (Nat.mul_pos hF hS))
+  have h7 : 7 * ((((A * X) * (C * P)) * (E * R)) * (G * T)) <
+      7 * ((((B * Y) * (D * Q)) * (F * S)) * (H * U)) :=
+    Nat.mul_lt_mul_of_pos_left hprod (by decide)
+  have h10 : 7 * B * D * F * H * (Y * Q * S * U) ≤
+      10 * A * C * E * G * (Y * Q * S * U) :=
+    Nat.mul_le_mul_right (Y * Q * S * U) hcap
+  have hchain : 7 * A * C * E * G * X * P * R * T <
+      10 * A * C * E * G * Y * Q * S * U := by
+    have hL : 7 * A * C * E * G * X * P * R * T =
+        7 * ((((A * X) * (C * P)) * (E * R)) * (G * T)) := by ring
+    have hmid : 7 * ((((B * Y) * (D * Q)) * (F * S)) * (H * U)) =
+        7 * B * D * F * H * (Y * Q * S * U) := by ring
+    have hR : 7 * B * D * F * H * (Y * Q * S * U) ≤
+        10 * A * C * E * G * Y * Q * S * U := by
+      simpa [mul_assoc, mul_left_comm, mul_comm] using h10
+    calc
+      7 * A * C * E * G * X * P * R * T =
+          7 * ((((A * X) * (C * P)) * (E * R)) * (G * T)) := hL
+      _ < 7 * ((((B * Y) * (D * Q)) * (F * S)) * (H * U)) := h7
+      _ = 7 * B * D * F * H * (Y * Q * S * U) := hmid
+      _ ≤ 10 * A * C * E * G * Y * Q * S * U := hR
+  have hcancel : A * C * E * G * (7 * X * P * R * T) <
+      A * C * E * G * (10 * Y * Q * S * U) := by
+    have h1 : A * C * E * G * (7 * X * P * R * T) =
+        7 * A * C * E * G * X * P * R * T := by ring
+    have h2 : A * C * E * G * (10 * Y * Q * S * U) =
+        10 * A * C * E * G * Y * Q * S * U := by ring
+    rw [h1, h2]
+    exact hchain
+  exact Nat.lt_of_mul_lt_mul_left hcancel
+
+lemma seven_eleven_thirteen_forty_one_cap :
+    7 * 7 * 11 * 13 * 41 ≤ 10 * 6 * 10 * 12 * 40 := by
+  decide
+
+lemma seven_p_q_r_s_cap {p q r s : ℕ}
+    (hp : 7 ≤ p) (hq : 11 ≤ q) (hr : 13 ≤ r) (hs : 41 ≤ s) :
+    7 * p * q * r * s ≤ 10 * (p - 1) * (q - 1) * (r - 1) * (s - 1) := by
+  have hp6 : p * 6 ≤ 7 * (p - 1) := cap_ratio_anti (by decide : 2 ≤ 7) hp
+  have hq10 : q * 10 ≤ 11 * (q - 1) := cap_ratio_anti (by decide : 2 ≤ 11) hq
+  have hr12 : r * 12 ≤ 13 * (r - 1) := cap_ratio_anti (by decide : 2 ≤ 13) hr
+  have hs40 : s * 40 ≤ 41 * (s - 1) := cap_ratio_anti (by decide : 2 ≤ 41) hs
+  have hprod : p * q * r * s * 6 * 10 * 12 * 40 ≤
+      7 * 11 * 13 * 41 * (p - 1) * (q - 1) * (r - 1) * (s - 1) := by
+    have h1 : p * 6 * (q * 10) * (r * 12) * (s * 40) ≤
+        7 * (p - 1) * (11 * (q - 1)) * (13 * (r - 1)) * (41 * (s - 1)) :=
+      Nat.mul_le_mul (Nat.mul_le_mul (Nat.mul_le_mul hp6 hq10) hr12) hs40
+    simpa [mul_assoc, mul_left_comm, mul_comm] using h1
+  have h7 : 7 * p * q * r * s * 6 * 10 * 12 * 40 ≤
+      7 * 7 * 11 * 13 * 41 * (p - 1) * (q - 1) * (r - 1) * (s - 1) := by
+    simpa [mul_assoc, mul_left_comm, mul_comm] using Nat.mul_le_mul_left 7 hprod
+  have h10 : 7 * 7 * 11 * 13 * 41 * (p - 1) * (q - 1) * (r - 1) * (s - 1) ≤
+      10 * 6 * 10 * 12 * 40 * (p - 1) * (q - 1) * (r - 1) * (s - 1) := by
+    simpa [mul_assoc, mul_left_comm, mul_comm] using
+      Nat.mul_le_mul_right ((p - 1) * (q - 1) * (r - 1) * (s - 1))
+        seven_eleven_thirteen_forty_one_cap
+  have hchain : 7 * p * q * r * s * 6 * 10 * 12 * 40 ≤
+      10 * 6 * 10 * 12 * 40 * (p - 1) * (q - 1) * (r - 1) * (s - 1) :=
+    le_trans h7 (by simpa [mul_assoc, mul_left_comm, mul_comm] using h10)
+  have hcancel : 6 * 10 * 12 * 40 * (7 * p * q * r * s) ≤
+      6 * 10 * 12 * 40 * (10 * (p - 1) * (q - 1) * (r - 1) * (s - 1)) := by
+    have h1 : 6 * 10 * 12 * 40 * (7 * p * q * r * s) =
+        7 * p * q * r * s * 6 * 10 * 12 * 40 := by ring
+    have h2 : 6 * 10 * 12 * 40 * (10 * (p - 1) * (q - 1) * (r - 1) * (s - 1)) =
+        10 * 6 * 10 * 12 * 40 * (p - 1) * (q - 1) * (r - 1) * (s - 1) := by ring
+    rw [h1, h2]
+    exact hchain
+  exact Nat.le_of_mul_le_mul_left hcancel (by decide : 0 < 6 * 10 * 12 * 40)
+
+/-- Four squareful primes `7 ≤ p < q < r < s` with `s ≥ 41` cannot fill
+leftover `10/7`. -/
+lemma seven_sigma_lt_ten_usigma_four_large {p q r s a b c d : ℕ}
+    (hp : p.Prime) (hq : q.Prime) (hr : r.Prime) (hs : s.Prime)
+    (hp7 : 7 ≤ p) (hq11 : 11 ≤ q) (hr13 : 13 ≤ r) (hs41 : 41 ≤ s)
+    (ha : 0 < a) (hb : 0 < b) (hc : 0 < c) (hd : 0 < d) :
+    7 * σ 1 (p ^ a) * σ 1 (q ^ b) * σ 1 (r ^ c) * σ 1 (s ^ d) <
+      10 * usigma (p ^ a) * usigma (q ^ b) * usigma (r ^ c) * usigma (s ^ d) := by
+  have hcp := sigma_lt_cap_usigma hp ha
+  have hcq := sigma_lt_cap_usigma hq hb
+  have hcr := sigma_lt_cap_usigma hr hc
+  have hcs := sigma_lt_cap_usigma hs hd
+  have hup : 0 < usigma (p ^ a) := by
+    rw [usigma_prime_pow hp ha]
+    exact Nat.add_pos_left (by decide : 0 < 1) _
+  have huq : 0 < usigma (q ^ b) := by
+    rw [usigma_prime_pow hq hb]
+    exact Nat.add_pos_left (by decide : 0 < 1) _
+  have hur : 0 < usigma (r ^ c) := by
+    rw [usigma_prime_pow hr hc]
+    exact Nat.add_pos_left (by decide : 0 < 1) _
+  have hcap := seven_p_q_r_s_cap hp7 hq11 hr13 hs41
+  have := seven_ten_of_four_caps (A := p - 1) (B := p) (X := σ 1 (p ^ a))
+    (Y := usigma (p ^ a)) (C := q - 1) (D := q) (P := σ 1 (q ^ b))
+    (Q := usigma (q ^ b)) (E := r - 1) (F := r) (R := σ 1 (r ^ c))
+    (S := usigma (r ^ c)) (G := s - 1) (H := s) (T := σ 1 (s ^ d))
+    (U := usigma (s ^ d)) hcp hcq hcr hcs hcap hp.pos hup hq.pos huq hr.pos hur
+  simpa [mul_assoc] using this
+
 lemma seven_mul_twenty_five_forty_nine_cap {p : ℕ} (hp : 23 ≤ p) :
     7 * 31 * 57 * p ≤ 10 * 26 * 50 * (p - 1) := by
   have hp1 : 1 ≤ p := by omega
@@ -5295,6 +5411,73 @@ lemma seven_sigma_eq_ten_of_three_squareful {m p q r : ℕ} (hm : m ≠ 0)
     exact sigma_pos_iff.mpr (Nat.ordCompl_pos r hm'')
   exact Nat.eq_of_mul_eq_mul_right hpos hmul
 
+set_option maxHeartbeats 800000 in
+/-- If the rest after four distinct prime powers is squarefree, leftover
+`10/7` is concentrated on those four prime powers. -/
+lemma seven_sigma_eq_ten_of_four_squareful {m p q r s : ℕ} (hm : m ≠ 0)
+    (hp : p.Prime) (hq : q.Prime) (hr : r.Prime) (hs : s.Prime)
+    (_hpq : p ≠ q) (_hpr : p ≠ r) (_hps : p ≠ s)
+    (_hqr : q ≠ r) (_hqs : q ≠ s) (_hrs : r ≠ s)
+    (h : 7 * σ 1 m = 10 * usigma m)
+    (hsf : Squarefree
+      (ordCompl[s] (ordCompl[r] (ordCompl[q] (ordCompl[p] m))))) :
+    7 * σ 1 (ordProj[p] m) * σ 1 (ordProj[q] (ordCompl[p] m)) *
+        σ 1 (ordProj[r] (ordCompl[q] (ordCompl[p] m))) *
+        σ 1 (ordProj[s] (ordCompl[r] (ordCompl[q] (ordCompl[p] m)))) =
+      10 * usigma (ordProj[p] m) * usigma (ordProj[q] (ordCompl[p] m)) *
+        usigma (ordProj[r] (ordCompl[q] (ordCompl[p] m))) *
+        usigma (ordProj[s] (ordCompl[r] (ordCompl[q] (ordCompl[p] m)))) := by
+  set t := ordCompl[s] (ordCompl[r] (ordCompl[q] (ordCompl[p] m)))
+  have hm' : ordCompl[p] m ≠ 0 := (Nat.ordCompl_pos p hm).ne'
+  have hm'' : ordCompl[q] (ordCompl[p] m) ≠ 0 :=
+    (Nat.ordCompl_pos q hm').ne'
+  have hm''' : ordCompl[r] (ordCompl[q] (ordCompl[p] m)) ≠ 0 :=
+    (Nat.ordCompl_pos r hm'').ne'
+  have hdecomp_p : ordProj[p] m * ordCompl[p] m = m :=
+    Nat.ordProj_mul_ordCompl_eq_self m p
+  have hdecomp_q : ordProj[q] (ordCompl[p] m) * ordCompl[q] (ordCompl[p] m) =
+      ordCompl[p] m :=
+    Nat.ordProj_mul_ordCompl_eq_self (ordCompl[p] m) q
+  have hdecomp_r : ordProj[r] (ordCompl[q] (ordCompl[p] m)) *
+      ordCompl[r] (ordCompl[q] (ordCompl[p] m)) =
+      ordCompl[q] (ordCompl[p] m) :=
+    Nat.ordProj_mul_ordCompl_eq_self (ordCompl[q] (ordCompl[p] m)) r
+  have hdecomp_s : ordProj[s] (ordCompl[r] (ordCompl[q] (ordCompl[p] m))) * t =
+      ordCompl[r] (ordCompl[q] (ordCompl[p] m)) :=
+    Nat.ordProj_mul_ordCompl_eq_self (ordCompl[r] (ordCompl[q] (ordCompl[p] m))) s
+  have hc_p : Coprime (ordProj[p] m) (ordCompl[p] m) :=
+    (Nat.coprime_ordCompl hp hm).pow_left (m.factorization p)
+  have hc_q : Coprime (ordProj[q] (ordCompl[p] m))
+      (ordCompl[q] (ordCompl[p] m)) :=
+    (Nat.coprime_ordCompl hq hm').pow_left ((ordCompl[p] m).factorization q)
+  have hc_r : Coprime (ordProj[r] (ordCompl[q] (ordCompl[p] m)))
+      (ordCompl[r] (ordCompl[q] (ordCompl[p] m))) :=
+    (Nat.coprime_ordCompl hr hm'').pow_left
+      ((ordCompl[q] (ordCompl[p] m)).factorization r)
+  have hc_s : Coprime (ordProj[s] (ordCompl[r] (ordCompl[q] (ordCompl[p] m))))
+      t :=
+    (Nat.coprime_ordCompl hs hm''').pow_left
+      ((ordCompl[r] (ordCompl[q] (ordCompl[p] m))).factorization s)
+  have hmul : 7 * σ 1 (ordProj[p] m) * σ 1 (ordProj[q] (ordCompl[p] m)) *
+        σ 1 (ordProj[r] (ordCompl[q] (ordCompl[p] m))) *
+        σ 1 (ordProj[s] (ordCompl[r] (ordCompl[q] (ordCompl[p] m)))) * σ 1 t =
+      10 * usigma (ordProj[p] m) * usigma (ordProj[q] (ordCompl[p] m)) *
+        usigma (ordProj[r] (ordCompl[q] (ordCompl[p] m))) *
+        usigma (ordProj[s] (ordCompl[r] (ordCompl[q] (ordCompl[p] m)))) *
+        usigma t := by
+    have := h
+    rw [← hdecomp_p, sigma_mul_of_coprime hc_p, usigma_mul hc_p] at this
+    rw [← hdecomp_q, sigma_mul_of_coprime hc_q, usigma_mul hc_q] at this
+    rw [← hdecomp_r, sigma_mul_of_coprime hc_r, usigma_mul hc_r] at this
+    rw [← hdecomp_s, sigma_mul_of_coprime hc_s, usigma_mul hc_s] at this
+    convert this using 1 <;> ring
+  have hσu := (sigma_eq_usigma_iff_squarefree (Nat.ordCompl_pos s hm''')).mpr hsf
+  rw [hσu] at hmul
+  have hpos : 0 < usigma t := by
+    rw [← hσu]
+    exact sigma_pos_iff.mpr (Nat.ordCompl_pos s hm''')
+  exact Nat.eq_of_mul_eq_mul_right hpos hmul
+
 /-- Leftover `10/7` cannot be three squareful primes `7 ≤ p < q < r` times a
 squarefree coprime factor. -/
 lemma not_seven_sigma_of_three_sq_primes_ge_seven {m p q r : ℕ} (hm : m ≠ 0)
@@ -6243,6 +6426,58 @@ lemma not_five_sigma_of_three_sq_primes_eleven_thirteen_large {m p : ℕ}
     padicValNat_ordCompl_of_ne hp13 hpq_ne, hproj_p] at heq
   exact (five_sigma_lt_six_usigma_eleven_thirteen_large hp hp149
     (by omega) (by omega) (by omega)).ne heq
+
+/-- Leftover `10/7` cannot be four squareful primes `7 ≤ p < q < r < s` with
+`s ≥ 41` times a squarefree coprime factor. -/
+lemma not_seven_sigma_of_four_sq_primes_ge_seven {m p q r s : ℕ} (hm : m ≠ 0)
+    (hp : p.Prime) (hq : q.Prime) (hr : r.Prime) (hs : s.Prime)
+    (hpq : p < q) (hqr : q < r) (hrs : r < s) (hp7 : 7 ≤ p) (hs41 : 41 ≤ s)
+    (h : 7 * σ 1 m = 10 * usigma m)
+    (hkp : 2 ≤ padicValNat p m) (hkq : 2 ≤ padicValNat q m)
+    (hkr : 2 ≤ padicValNat r m) (hks : 2 ≤ padicValNat s m)
+    (hsf : Squarefree
+      (ordCompl[s] (ordCompl[r] (ordCompl[q] (ordCompl[p] m))))) : False := by
+  have hpq_ne : p ≠ q := Nat.ne_of_lt hpq
+  have hpr_ne : p ≠ r := Nat.ne_of_lt (lt_trans hpq hqr)
+  have hps_ne : p ≠ s :=
+    Nat.ne_of_lt (lt_trans (lt_trans hpq hqr) hrs)
+  have hqr_ne : q ≠ r := Nat.ne_of_lt hqr
+  have hqs_ne : q ≠ s := Nat.ne_of_lt (lt_trans hqr hrs)
+  have hrs_ne : r ≠ s := Nat.ne_of_lt hrs
+  have heq := seven_sigma_eq_ten_of_four_squareful hm hp hq hr hs hpq_ne hpr_ne
+    hps_ne hqr_ne hqs_ne hrs_ne h hsf
+  have hproj_p : ordProj[p] m = p ^ padicValNat p m := by
+    simp [Nat.factorization_def m hp]
+  have hproj_q : ordProj[q] (ordCompl[p] m) =
+      q ^ padicValNat q (ordCompl[p] m) := by
+    simp [Nat.factorization_def (ordCompl[p] m) hq]
+  have hproj_r : ordProj[r] (ordCompl[q] (ordCompl[p] m)) =
+      r ^ padicValNat r (ordCompl[q] (ordCompl[p] m)) := by
+    simp [Nat.factorization_def (ordCompl[q] (ordCompl[p] m)) hr]
+  have hproj_s : ordProj[s] (ordCompl[r] (ordCompl[q] (ordCompl[p] m))) =
+      s ^ padicValNat s (ordCompl[r] (ordCompl[q] (ordCompl[p] m))) := by
+    simp [Nat.factorization_def (ordCompl[r] (ordCompl[q] (ordCompl[p] m))) hs]
+  rw [hproj_s, padicValNat_ordCompl_of_ne hs hrs_ne,
+    padicValNat_ordCompl_of_ne hs hqs_ne, padicValNat_ordCompl_of_ne hs hps_ne,
+    hproj_r, padicValNat_ordCompl_of_ne hr hqr_ne,
+    padicValNat_ordCompl_of_ne hr hpr_ne, hproj_q,
+    padicValNat_ordCompl_of_ne hq hpq_ne, hproj_p] at heq
+  have hq11 : 11 ≤ q := by
+    have : 8 ≤ q := by omega
+    have hmem : q = 8 ∨ q = 9 ∨ q = 10 ∨ 11 ≤ q := by omega
+    rcases hmem with rfl | rfl | rfl | h11
+    · cases (by decide : ¬ Nat.Prime 8) hq
+    · cases (by decide : ¬ Nat.Prime 9) hq
+    · cases (by decide : ¬ Nat.Prime 10) hq
+    · exact h11
+  have hr13 : 13 ≤ r := by
+    have : 12 ≤ r := by omega
+    have hmem : r = 12 ∨ 13 ≤ r := by omega
+    rcases hmem with rfl | h13
+    · cases (by decide : ¬ Nat.Prime 12) hr
+    · exact h13
+  exact (seven_sigma_lt_ten_usigma_four_large hp hq hr hs hp7 hq11 hr13 hs41
+    (by omega) (by omega) (by omega) (by omega)).ne heq
 
 end Unitary
 

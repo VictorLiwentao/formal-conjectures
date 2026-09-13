@@ -56,7 +56,7 @@ In `A063880.lean`, compiled with `lake env lean -DwarningAsError=true`:
 - `{11, 17, p}` cannot fill leftover `6/5` for any third prime `p ≥ 19`. Squares overshoot for `19 ≤ p ≤ 23`; `p = 29,31` sandwich `a=2` under against `a≥3` over; `p = 37` is a finite exponent split; Euler `11/10 · 17/16 · p/(p-1) < 6/5` kills `p ≥ 41`. The family is glued to an arbitrary `m` (`not_five_sigma_of_three_sq_primes_eleven_seventeen`).
 - Leftover `10/7` on an arbitrary `m` cannot be three squareful primes `7 ≤ p < q < r` times a squarefree coprime factor (`not_seven_sigma_of_three_sq_primes_ge_seven`).
 - Leftover `10/7` on an arbitrary `m` cannot be three squareful primes `5,7,r` with `r ≥ 11` times a squarefree coprime factor (`not_seven_sigma_of_three_sq_primes_five_seven`).
-- Leftover `10/7` on an arbitrary `m` cannot be three squareful primes `5 < q < r` with `11 ≤ q` times a squarefree coprime factor (`not_seven_sigma_of_three_sq_primes_five`). The cases are `{5,11,r}` (family lemmas through `r=23`, Euler for `r≥29`), `{5,13,r}` (family lemmas `{17,19}`, Euler for `r≥23`), `{5,17,r}` (Euler for `r≥19`), and `{5,q,r}` with `19 ≤ q < r` (Euler `5/4 · q/(q-1) · r/(r-1) < 10/7`). Together with the two previous glues, leftover `10/7` is closed at ω=3.
+- Leftover `10/7` on an arbitrary `m` cannot be four squareful primes `7 ≤ p < q < r < s` with `s ≥ 41` times a squarefree coprime factor (`not_seven_sigma_of_four_sq_primes_ge_seven`). The Euler-product cap is at most `7/6 · 11/10 · 13/12 · 41/40 < 10/7`. Remaining leftover `10/7` ω=4 includes last prime `17 ≤ s ≤ 37` and kernels that contain `5`.
 
 These lemmas are infrastructure and partial case analysis. They do not decide the open statements.
 
@@ -93,7 +93,7 @@ The script `experiments/omega3_ten_seven.py` searches leftover `10/7` for three 
 - No Lean proof that the only squareful kernel is 108.
 - No independent proof yet of `powerful_of_isPrimitiveTerm` or `exists_primitive_of_a`.
 - Odd kernels (`leftover 2`) and the remaining `v₂ ≥ 3` leftovers (`6/5` with ω≥3, `34/31`, …) are not ruled out by a complete finite case tree in Lean.
-- Leftover `10/7` ω=3 is closed on an arbitrary `m`: three primes `≥ 7`; `{5,7,r}` with `r ≥ 11`; and `{5,q,r}` with `11 ≤ q < r`. Remaining leftover `10/7` work is ω≥4, leftover `100/91`, leftover `2`, and leftover `6/5` with ω≥3. A deterministic `Fraction` search (`experiments/omega3_ten_seven.py`) found no ω=3 fill with primes `≥ 5`; that search is not a proof. The script `experiments/omega3_five_triples.py` only maps which exponent triples sit above or below leftover `10/7`; it is not a proof. The script `experiments/omega2_six_five.py` only maps leftover `6/5` ω=2 splits; it is not a proof.
+- Leftover `10/7` ω=3 is closed on an arbitrary `m`. Leftover `10/7` ω=4 with four primes `≥ 7` and last prime `≥ 41` is glued. Remaining leftover `10/7` work is ω=4 with last prime `≤ 37` or a factor `5`, ω≥5, leftover `100/91`, leftover `2`, and leftover `6/5` with ω≥3.
 - Leftover `6/5` is closed for ω≤2 (squarefree, unique squareful prime, and two squareful primes `≥ 5`). ω≥3 remains except: every kernel containing squareful `5` and `7` overshoots; `{11^2,13^2,p^k}` is closed for `p≥17`; `{11,13,p}` is glued for `17 ≤ p ≤ 43` and for `p ≥ 149`; `{11,17,p}` is glued for every `p ≥ 19`. Remaining triples include `{11,13,p}` with a raised 11-or-13 exponent and `47 ≤ p ≤ 139`, `{7,q,r}`, and `{5,q,r}`.
 - Leftover `100/91` after `11^2` still allows ω≥2 with primes `≥ 127`. Without `11^2`, the smallest squareful prime may be `≥ 13`.
 
