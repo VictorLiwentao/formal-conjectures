@@ -34,6 +34,8 @@ python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/lefto
 python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/window_miller.py 2000000
 python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/mod_one_factor.py 400000
 python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/type_b.py 2000000
+python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/type_a_gaps.py 5000000 157
+python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/bonferroni.py
 ```
 
 No `lake clean`, `lake update`, or full default `lake build`.
@@ -115,9 +117,11 @@ remaining_p_sub_two_odd / remaining_div_ge_minFac / remaining_minFac_ge_seven_of
 remaining_mod_one_factor_ge_seven / k_mul_sub_two_mod_of_six_one : propext, Quot.sound
 k_mod_three_of_six_one / k_ge_seven_of_mod_six_one : propext
 remaining_p_sub_two_gt_one / seven_mul_sub_two_ge_seven / two_le_seven_mul_of_ge_seven / five_le_of_seven_le / one_ne_two / zero_ne_two / one_lt_three / one_lt_five / one_lt_seven / four_le_seven / two_mod_three / five_mod_three : no extra axioms (or a subset of propext)
+remaining_type_A_cofactor_prime / remaining_type_A_cofactor_mod_one / conjecture_of_remaining_type_A_mod_two_seven : propext, Classical.choice, Quot.sound
+one_hundred_fifty_seven_dvd_x_1097 / conjecture_of_one_hundred_fifty_seven_dvd / remaining_p_ge_one_hundred_fifty_seven / conjecture_of_minFac_one_hundred_fifty_seven / one_hundred_seventy_three_dvd_x_863 / conjecture_of_one_hundred_seventy_three_dvd / remaining_p_ge_one_hundred_seventy_three / conjecture_of_minFac_one_hundred_seventy_three / one_hundred_ninety_one_dvd_x_953 / conjecture_of_one_hundred_ninety_one_dvd / remaining_p_ge_one_hundred_ninety_one / conjecture_of_minFac_one_hundred_ninety_one / one_hundred_ninety_seven_dvd_x_983 / conjecture_of_one_hundred_ninety_seven_dvd / remaining_p_ge_one_hundred_ninety_seven / conjecture_of_minFac_one_hundred_ninety_seven / remaining_prime_le_one_hundred_seventy_three / remaining_prime_from_one_hundred_seventy_four_le_one_hundred_ninety_seven / remaining_prime_le_one_hundred_ninety_seven / conjecture_of_minFac_le_one_hundred_ninety_seven_or_twin : propext, Classical.choice, Quot.sound
 ```
 
-No `sorryAx`, `native_decide`, or `Lean.trustCompiler` on these declarations. `Classical.choice` enters through `Nat.find` in `exists_least_dvd` and through Mathlib `decide` instances. Full log: `experiments/a135508_axioms.log`. Recompiled 2026-09-13T06:13Z.
+No `sorryAx`, `native_decide`, or `Lean.trustCompiler` on these declarations. `Classical.choice` enters through `Nat.find` in `exists_least_dvd` and through Mathlib `decide` instances. Full log: `experiments/a135508_axioms.log`. Recompiled 2026-09-13T06:39Z.
 
 ## Formalization audit (summary)
 

@@ -54,6 +54,9 @@ McEachen window (in particular `k=7` fits once `5 ∤ p-2`), Type B
 remaining numbers (every prime factor `≡ 2 (mod 3)`) satisfy
 `lpf^2 ≤ (p-2)/lpf`, first-entry of `113`, `127`, `131`, `137` and
 `149`, remaining McEachen when `lpf(p-2) ≤ 149` or that least factor
+is a larger twin, that a remaining Type A number `p-2 < lpf^3` has
+prime cofactor `(p-2)/lpf`, first-entry of `157`, `173`, `191` and
+`197`, remaining McEachen when `lpf(p-2) ≤ 197` or that least factor
 is a larger twin, and that the frozen statement follows from first-entry
 of every prime `q ≥ 5` by the square-window index `q(q+2)-1`. Existence
 of a window injector for every leftover least factor is not proved.
@@ -2108,6 +2111,58 @@ theorem conjecture_of_one_hundred_forty_nine_dvd {p : ℕ} (hp : p.Prime)
     (by decide : 1 < 149) h149
     (one_hundred_forty_nine_dvd_x (Nat.sub_le_sub_right hp746 3))
 
+lemma one_hundred_fifty_seven_dvd_x_1097 : 157 ∣ x 1097 :=
+  q_dvd_x_of_prime_index (k := 7) (q := 157)
+    (by norm_num) (by decide) (by decide)
+
+lemma one_hundred_fifty_seven_dvd_x {n : ℕ} (hn : 1097 ≤ n) : 157 ∣ x n :=
+  one_hundred_fifty_seven_dvd_x_1097.trans (x_dvd_of_le (by decide : 0 < 1097) hn)
+
+theorem conjecture_of_one_hundred_fifty_seven_dvd {p : ℕ} (hp : p.Prime)
+    (hp1100 : 1100 ≤ p) (h157 : 157 ∣ p - 2) : a (p - 1) = p :=
+  conjecture_of_factor_dvd_x hp (le_trans (by decide : 5 ≤ 1100) hp1100)
+    (by decide : 1 < 157) h157
+    (one_hundred_fifty_seven_dvd_x (Nat.sub_le_sub_right hp1100 3))
+
+lemma one_hundred_seventy_three_dvd_x_863 : 173 ∣ x 863 :=
+  q_dvd_x_of_prime_index (k := 5) (q := 173)
+    (by norm_num) (by decide) (by decide)
+
+lemma one_hundred_seventy_three_dvd_x {n : ℕ} (hn : 863 ≤ n) : 173 ∣ x n :=
+  one_hundred_seventy_three_dvd_x_863.trans (x_dvd_of_le (by decide : 0 < 863) hn)
+
+theorem conjecture_of_one_hundred_seventy_three_dvd {p : ℕ} (hp : p.Prime)
+    (hp866 : 866 ≤ p) (h173 : 173 ∣ p - 2) : a (p - 1) = p :=
+  conjecture_of_factor_dvd_x hp (le_trans (by decide : 5 ≤ 866) hp866)
+    (by decide : 1 < 173) h173
+    (one_hundred_seventy_three_dvd_x (Nat.sub_le_sub_right hp866 3))
+
+lemma one_hundred_ninety_one_dvd_x_953 : 191 ∣ x 953 :=
+  q_dvd_x_of_prime_index (k := 5) (q := 191)
+    (by norm_num) (by decide) (by decide)
+
+lemma one_hundred_ninety_one_dvd_x {n : ℕ} (hn : 953 ≤ n) : 191 ∣ x n :=
+  one_hundred_ninety_one_dvd_x_953.trans (x_dvd_of_le (by decide : 0 < 953) hn)
+
+theorem conjecture_of_one_hundred_ninety_one_dvd {p : ℕ} (hp : p.Prime)
+    (hp956 : 956 ≤ p) (h191 : 191 ∣ p - 2) : a (p - 1) = p :=
+  conjecture_of_factor_dvd_x hp (le_trans (by decide : 5 ≤ 956) hp956)
+    (by decide : 1 < 191) h191
+    (one_hundred_ninety_one_dvd_x (Nat.sub_le_sub_right hp956 3))
+
+lemma one_hundred_ninety_seven_dvd_x_983 : 197 ∣ x 983 :=
+  q_dvd_x_of_prime_index (k := 5) (q := 197)
+    (by norm_num) (by decide) (by decide)
+
+lemma one_hundred_ninety_seven_dvd_x {n : ℕ} (hn : 983 ≤ n) : 197 ∣ x n :=
+  one_hundred_ninety_seven_dvd_x_983.trans (x_dvd_of_le (by decide : 0 < 983) hn)
+
+theorem conjecture_of_one_hundred_ninety_seven_dvd {p : ℕ} (hp : p.Prime)
+    (hp986 : 986 ≤ p) (h197 : 197 ∣ p - 2) : a (p - 1) = p :=
+  conjecture_of_factor_dvd_x hp (le_trans (by decide : 5 ≤ 986) hp986)
+    (by decide : 1 < 197) h197
+    (one_hundred_ninety_seven_dvd_x (Nat.sub_le_sub_right hp986 3))
+
 lemma remaining_minFac_ge_five {p : ℕ} (hp : p.Prime) (hp7 : 7 ≤ p)
     (hmod : p % 3 = 1) : 5 ≤ Nat.minFac (p - 2) := by
   have hn : 1 < p - 2 := by omega
@@ -2777,6 +2832,93 @@ lemma remaining_type_B_p_ge {p : ℕ} (hp : p.Prime) (hp7 : 7 ≤ p)
       p - 2 + 2 := Nat.add_le_add_right hcube 2
   rwa [Nat.sub_add_cancel h2le] at this
 
+/-- Remaining Type A: if `p-2 < lpf(p-2)^3`, then the complementary
+cofactor `(p-2)/lpf` is prime. Three prime factors each at least
+`lpf` would be at least `lpf^3`. -/
+lemma remaining_type_A_cofactor_prime {p : ℕ} (hp : p.Prime) (hp7 : 7 ≤ p)
+    (hmod : p % 3 = 1) (hcomp : ¬ (p - 2).Prime)
+    (hcube : p - 2 <
+      Nat.minFac (p - 2) * Nat.minFac (p - 2) * Nat.minFac (p - 2)) :
+    ((p - 2) / Nat.minFac (p - 2)).Prime := by
+  have hn : 1 < p - 2 := remaining_p_sub_two_gt_one hp7
+  set q := Nat.minFac (p - 2)
+  have hd : q ∣ p - 2 := Nat.minFac_dvd _
+  set m := (p - 2) / q
+  have hmul : q * m = p - 2 := Nat.mul_div_cancel' hd
+  have hm1 : 1 < m := by
+    have hge : q ≤ m := Nat.minFac_le_div (Nat.zero_lt_of_lt hn) hcomp
+    have hq5 : 5 ≤ q := remaining_minFac_ge_five hp hp7 hmod
+    exact lt_of_lt_of_le one_lt_five (le_trans hq5 hge)
+  by_contra hm
+  have hrmin : (Nat.minFac m).Prime := Nat.minFac_prime (ne_of_gt hm1)
+  have hrd : Nat.minFac m ∣ p - 2 := by
+    have hrdm : Nat.minFac m ∣ q * m :=
+      dvd_mul_of_dvd_right (Nat.minFac_dvd m) q
+    rwa [hmul] at hrdm
+  have hqle : q ≤ Nat.minFac m := Nat.minFac_le_of_dvd hrmin.two_le hrd
+  have hsq : Nat.minFac m * Nat.minFac m ≤ m := by
+    have hge : Nat.minFac m ≤ m / Nat.minFac m :=
+      Nat.minFac_le_div (Nat.zero_lt_of_lt hm1) hm
+    have hmulr : Nat.minFac m * (m / Nat.minFac m) = m :=
+      Nat.mul_div_cancel' (Nat.minFac_dvd m)
+    exact (Nat.mul_le_mul_left (Nat.minFac m) hge).trans_eq hmulr
+  have hqq : q * q ≤ Nat.minFac m * Nat.minFac m := Nat.mul_le_mul hqle hqle
+  have hn3 : q * q * q ≤ p - 2 := by
+    have h1 : q * (q * q) ≤ q * (Nat.minFac m * Nat.minFac m) :=
+      Nat.mul_le_mul_left q hqq
+    have h2 : q * (Nat.minFac m * Nat.minFac m) ≤ q * m :=
+      Nat.mul_le_mul_left q hsq
+    have hassoc : q * q * q = q * (q * q) := Nat.mul_assoc q q q
+    exact hassoc ▸ (h1.trans (h2.trans_eq hmul))
+  exact not_le_of_gt hcube hn3
+
+/-- In remaining Type A with least factor `≡ 2 (mod 3)`, the prime
+cofactor is `≡ 1 (mod 3)`. -/
+lemma remaining_type_A_cofactor_mod_one {p : ℕ} (hp7 : 7 ≤ p)
+    (hmod : p % 3 = 1)
+    (hqmod : Nat.minFac (p - 2) % 3 = 2) :
+    ((p - 2) / Nat.minFac (p - 2)) % 3 = 1 := by
+  have hmul : Nat.minFac (p - 2) * ((p - 2) / Nat.minFac (p - 2)) =
+      p - 2 := Nat.mul_div_cancel' (Nat.minFac_dvd _)
+  have hprod : (Nat.minFac (p - 2) *
+      ((p - 2) / Nat.minFac (p - 2))) % 3 = 2 := by
+    rw [hmul]
+    exact p_sub_two_mod (le_trans four_le_seven hp7) hmod
+  have hmulmod : ((Nat.minFac (p - 2) % 3) *
+      (((p - 2) / Nat.minFac (p - 2)) % 3)) % 3 = 2 := by
+    rw [← Nat.mul_mod]
+    exact hprod
+  rw [hqmod] at hmulmod
+  rcases mod_three_cases ((p - 2) / Nat.minFac (p - 2)) with h0 | h1 | h2
+  · rw [h0, Nat.mul_zero, Nat.zero_mod] at hmulmod
+    exact False.elim (zero_ne_two hmulmod)
+  · exact h1
+  · rw [h2] at hmulmod
+    exact False.elim (one_ne_two (two_mul_two_mod_three.symm.trans hmulmod))
+
+/-- Remaining Type A McEachen if the least factor is `≡ 2 (mod 3)` and
+the complementary injector `7r-2` is prime. The cofactor `r` is prime
+by `remaining_type_A_cofactor_prime`, and `k = 7` fits once
+`5 ∤ p-2`. Primality of `7r-2` is not proved. -/
+theorem conjecture_of_remaining_type_A_mod_two_seven {p : ℕ}
+    (hp : p.Prime) (hp7 : 7 ≤ p) (hmod : p % 3 = 1)
+    (hcomp : ¬ (p - 2).Prime)
+    (hqmod : Nat.minFac (p - 2) % 3 = 2)
+    (hcube : p - 2 <
+      Nat.minFac (p - 2) * Nat.minFac (p - 2) * Nat.minFac (p - 2))
+    (hpr : (7 * ((p - 2) / Nat.minFac (p - 2)) - 2).Prime) :
+    a (p - 1) = p := by
+  have hr := remaining_type_A_cofactor_prime hp hp7 hmod hcomp hcube
+  have hr1 := remaining_type_A_cofactor_mod_one hp7 hmod hqmod
+  have hdq : Nat.minFac (p - 2) ∣ p - 2 := Nat.minFac_dvd _
+  have hmul : Nat.minFac (p - 2) * ((p - 2) / Nat.minFac (p - 2)) =
+      p - 2 := Nat.mul_div_cancel' hdq
+  have hdr : ((p - 2) / Nat.minFac (p - 2)) ∣ p - 2 := by
+    have h := Nat.dvd_mul_left ((p - 2) / Nat.minFac (p - 2))
+      (Nat.minFac (p - 2))
+    rwa [hmul] at h
+  exact conjecture_of_remaining_mod_one_seven hp hp7 hmod hcomp hr hr1 hdr hpr
+
 /-- `k = q` always lies in the leftover add-eight window. Primality of
 `q²-2` is not proved. -/
 lemma q_dvd_x_add_eight_window_of_sq_sub_two {q : ℕ}
@@ -3046,6 +3188,90 @@ theorem conjecture_of_minFac_one_hundred_forty_nine {p : ℕ}
   conjecture_of_one_hundred_forty_nine_dvd hp
     (remaining_p_ge_one_hundred_forty_nine hp hp7 hmod hcomp h149)
     (h149 ▸ Nat.minFac_dvd (p - 2))
+
+lemma remaining_p_ge_one_hundred_fifty_seven {p : ℕ}
+    (hp : p.Prime) (hp7 : 7 ≤ p) (hmod : p % 3 = 1)
+    (hcomp : ¬ (p - 2).Prime)
+    (h157 : Nat.minFac (p - 2) = 157) : 1100 ≤ p := by
+  have hbound := remaining_minFac_mul_add_two_le hp hp7 hmod hcomp
+  rw [h157] at hbound
+  have h2le : 2 ≤ p := le_trans (by decide : 2 ≤ 7) hp7
+  have hnum : 157 * (157 + 2) + 2 = 24965 := by decide
+  have : 157 * (157 + 2) + 2 ≤ p - 2 + 2 := Nat.add_le_add_right hbound 2
+  rw [hnum, Nat.sub_add_cancel h2le] at this
+  exact le_trans (by decide : 1100 ≤ 24965) this
+
+/-- Remaining McEachen if `lpf(p-2) = 157`. The injector is `k = 7`. -/
+theorem conjecture_of_minFac_one_hundred_fifty_seven {p : ℕ}
+    (hp : p.Prime) (hp7 : 7 ≤ p) (hmod : p % 3 = 1)
+    (hcomp : ¬ (p - 2).Prime)
+    (h157 : Nat.minFac (p - 2) = 157) : a (p - 1) = p :=
+  conjecture_of_one_hundred_fifty_seven_dvd hp
+    (remaining_p_ge_one_hundred_fifty_seven hp hp7 hmod hcomp h157)
+    (h157 ▸ Nat.minFac_dvd (p - 2))
+
+lemma remaining_p_ge_one_hundred_seventy_three {p : ℕ}
+    (hp : p.Prime) (hp7 : 7 ≤ p) (hmod : p % 3 = 1)
+    (hcomp : ¬ (p - 2).Prime)
+    (h173 : Nat.minFac (p - 2) = 173) : 866 ≤ p := by
+  have hbound := remaining_minFac_mul_add_two_le hp hp7 hmod hcomp
+  rw [h173] at hbound
+  have h2le : 2 ≤ p := le_trans (by decide : 2 ≤ 7) hp7
+  have hnum : 173 * (173 + 2) + 2 = 30277 := by decide
+  have : 173 * (173 + 2) + 2 ≤ p - 2 + 2 := Nat.add_le_add_right hbound 2
+  rw [hnum, Nat.sub_add_cancel h2le] at this
+  exact le_trans (by decide : 866 ≤ 30277) this
+
+/-- Remaining McEachen if `lpf(p-2) = 173`. The injector is `k = 5`. -/
+theorem conjecture_of_minFac_one_hundred_seventy_three {p : ℕ}
+    (hp : p.Prime) (hp7 : 7 ≤ p) (hmod : p % 3 = 1)
+    (hcomp : ¬ (p - 2).Prime)
+    (h173 : Nat.minFac (p - 2) = 173) : a (p - 1) = p :=
+  conjecture_of_one_hundred_seventy_three_dvd hp
+    (remaining_p_ge_one_hundred_seventy_three hp hp7 hmod hcomp h173)
+    (h173 ▸ Nat.minFac_dvd (p - 2))
+
+lemma remaining_p_ge_one_hundred_ninety_one {p : ℕ}
+    (hp : p.Prime) (hp7 : 7 ≤ p) (hmod : p % 3 = 1)
+    (hcomp : ¬ (p - 2).Prime)
+    (h191 : Nat.minFac (p - 2) = 191) : 956 ≤ p := by
+  have hbound := remaining_minFac_mul_add_two_le hp hp7 hmod hcomp
+  rw [h191] at hbound
+  have h2le : 2 ≤ p := le_trans (by decide : 2 ≤ 7) hp7
+  have hnum : 191 * (191 + 2) + 2 = 36865 := by decide
+  have : 191 * (191 + 2) + 2 ≤ p - 2 + 2 := Nat.add_le_add_right hbound 2
+  rw [hnum, Nat.sub_add_cancel h2le] at this
+  exact le_trans (by decide : 956 ≤ 36865) this
+
+/-- Remaining McEachen if `lpf(p-2) = 191`. The injector is `k = 5`. -/
+theorem conjecture_of_minFac_one_hundred_ninety_one {p : ℕ}
+    (hp : p.Prime) (hp7 : 7 ≤ p) (hmod : p % 3 = 1)
+    (hcomp : ¬ (p - 2).Prime)
+    (h191 : Nat.minFac (p - 2) = 191) : a (p - 1) = p :=
+  conjecture_of_one_hundred_ninety_one_dvd hp
+    (remaining_p_ge_one_hundred_ninety_one hp hp7 hmod hcomp h191)
+    (h191 ▸ Nat.minFac_dvd (p - 2))
+
+lemma remaining_p_ge_one_hundred_ninety_seven {p : ℕ}
+    (hp : p.Prime) (hp7 : 7 ≤ p) (hmod : p % 3 = 1)
+    (hcomp : ¬ (p - 2).Prime)
+    (h197 : Nat.minFac (p - 2) = 197) : 986 ≤ p := by
+  have hbound := remaining_minFac_mul_add_two_le hp hp7 hmod hcomp
+  rw [h197] at hbound
+  have h2le : 2 ≤ p := le_trans (by decide : 2 ≤ 7) hp7
+  have hnum : 197 * (197 + 2) + 2 = 39205 := by decide
+  have : 197 * (197 + 2) + 2 ≤ p - 2 + 2 := Nat.add_le_add_right hbound 2
+  rw [hnum, Nat.sub_add_cancel h2le] at this
+  exact le_trans (by decide : 986 ≤ 39205) this
+
+/-- Remaining McEachen if `lpf(p-2) = 197`. The injector is `k = 5`. -/
+theorem conjecture_of_minFac_one_hundred_ninety_seven {p : ℕ}
+    (hp : p.Prime) (hp7 : 7 ≤ p) (hmod : p % 3 = 1)
+    (hcomp : ¬ (p - 2).Prime)
+    (h197 : Nat.minFac (p - 2) = 197) : a (p - 1) = p :=
+  conjecture_of_one_hundred_ninety_seven_dvd hp
+    (remaining_p_ge_one_hundred_ninety_seven hp hp7 hmod hcomp h197)
+    (h197 ▸ Nat.minFac_dvd (p - 2))
 
 /-- Remaining McEachen if `5·lpf(p-2)-2` is prime. For `lpf ≡ 2 (mod 3)`
 this is the first remaining injector and always fits in the square window.
@@ -3920,8 +4146,135 @@ theorem conjecture_of_minFac_le_one_hundred_forty_nine_or_twin {p : ℕ}
   · by_cases h13 : 13 ≤ Nat.minFac (p - 2)
     · exact conjecture_of_larger_twin_dvd hp (five_le_of_seven_le hp7) hcomp
         hpr h13 htwin hd
-    · have : Nat.minFac (p - 2) ≤ 29 := by omega
-      exact conjecture_of_minFac_le_twenty_nine hp hp7 hmod hcomp this
+    · have h12 : Nat.minFac (p - 2) ≤ 12 := Nat.lt_succ_iff.mp (lt_of_not_ge h13)
+      exact conjecture_of_minFac_le_twenty_nine hp hp7 hmod hcomp
+        (le_trans h12 (by decide : 12 ≤ 29))
+
+lemma remaining_prime_le_one_hundred_seventy_three {q : ℕ} (hq : q.Prime)
+    (h150 : 150 ≤ q) (h173 : q ≤ 173) (hnotwin : ¬ (q - 2).Prime) :
+    q = 157 ∨ q = 163 ∨ q = 167 ∨ q = 173 := by
+  interval_cases q
+  · exact ((by norm_num : ¬ Nat.Prime 150) hq).elim
+  · exact (hnotwin (by norm_num : Nat.Prime 149)).elim
+  · exact ((by norm_num : ¬ Nat.Prime 152) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 153) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 154) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 155) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 156) hq).elim
+  · exact Or.inl rfl
+  · exact ((by norm_num : ¬ Nat.Prime 158) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 159) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 160) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 161) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 162) hq).elim
+  · exact Or.inr (Or.inl rfl)
+  · exact ((by norm_num : ¬ Nat.Prime 164) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 165) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 166) hq).elim
+  · exact Or.inr (Or.inr (Or.inl rfl))
+  · exact ((by norm_num : ¬ Nat.Prime 168) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 169) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 170) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 171) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 172) hq).elim
+  · exact Or.inr (Or.inr (Or.inr rfl))
+
+lemma remaining_prime_from_one_hundred_seventy_four_le_one_hundred_ninety_seven
+    {q : ℕ} (hq : q.Prime) (h174 : 174 ≤ q) (h197 : q ≤ 197)
+    (hnotwin : ¬ (q - 2).Prime) :
+    q = 179 ∨ q = 191 ∨ q = 197 := by
+  interval_cases q
+  · exact ((by norm_num : ¬ Nat.Prime 174) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 175) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 176) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 177) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 178) hq).elim
+  · exact Or.inl rfl
+  · exact ((by norm_num : ¬ Nat.Prime 180) hq).elim
+  · exact (hnotwin (by norm_num : Nat.Prime 179)).elim
+  · exact ((by norm_num : ¬ Nat.Prime 182) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 183) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 184) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 185) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 186) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 187) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 188) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 189) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 190) hq).elim
+  · exact Or.inr (Or.inl rfl)
+  · exact ((by norm_num : ¬ Nat.Prime 192) hq).elim
+  · exact (hnotwin (by norm_num : Nat.Prime 191)).elim
+  · exact ((by norm_num : ¬ Nat.Prime 194) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 195) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 196) hq).elim
+  · exact Or.inr (Or.inr rfl)
+
+lemma remaining_prime_le_one_hundred_ninety_seven {q : ℕ} (hq : q.Prime)
+    (h150 : 150 ≤ q) (h197 : q ≤ 197) (hnotwin : ¬ (q - 2).Prime) :
+    q = 157 ∨ q = 163 ∨ q = 167 ∨ q = 173 ∨ q = 179 ∨ q = 191 ∨
+      q = 197 := by
+  by_cases h173 : q ≤ 173
+  · have hcases := remaining_prime_le_one_hundred_seventy_three hq h150 h173
+      hnotwin
+    rcases hcases with h157 | h163 | h167 | h173eq
+    · exact Or.inl h157
+    · exact Or.inr (Or.inl h163)
+    · exact Or.inr (Or.inr (Or.inl h167))
+    · exact Or.inr (Or.inr (Or.inr (Or.inl h173eq)))
+  · have h174 : 174 ≤ q := Nat.succ_le_of_lt (lt_of_not_ge h173)
+    have hcases :=
+      remaining_prime_from_one_hundred_seventy_four_le_one_hundred_ninety_seven
+        hq h174 h197 hnotwin
+    rcases hcases with h179 | h191 | h197eq
+    · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inl h179))))
+    · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl h191)))))
+    · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr h197eq)))))
+
+/-- Remaining McEachen if `lpf(p-2) ≤ 197` or that least factor is a larger twin.
+After this cutoff the leftover least factor is at least `211`. -/
+theorem conjecture_of_minFac_le_one_hundred_ninety_seven_or_twin {p : ℕ}
+    (hp : p.Prime) (hp7 : 7 ≤ p) (hmod : p % 3 = 1)
+    (hcomp : ¬ (p - 2).Prime)
+    (h : Nat.minFac (p - 2) ≤ 197 ∨ (Nat.minFac (p - 2) - 2).Prime) :
+    a (p - 1) = p := by
+  have hpr : (Nat.minFac (p - 2)).Prime :=
+    Nat.minFac_prime (ne_of_gt (remaining_p_sub_two_gt_one hp7))
+  have hd : Nat.minFac (p - 2) ∣ p - 2 := Nat.minFac_dvd _
+  rcases h with h197 | htwin
+  · by_cases h149 : Nat.minFac (p - 2) ≤ 149
+    · exact conjecture_of_minFac_le_one_hundred_forty_nine_or_twin hp hp7 hmod
+        hcomp (Or.inl h149)
+    · by_cases ht : (Nat.minFac (p - 2) - 2).Prime
+      · have h13 : 13 ≤ Nat.minFac (p - 2) :=
+          le_trans (by decide : 13 ≤ 150)
+            (Nat.succ_le_of_lt (lt_of_not_ge h149))
+        exact conjecture_of_larger_twin_dvd hp (five_le_of_seven_le hp7)
+          hcomp hpr h13 ht hd
+      · have h150 : 150 ≤ Nat.minFac (p - 2) :=
+          Nat.succ_le_of_lt (lt_of_not_ge h149)
+        have hcases := remaining_prime_le_one_hundred_ninety_seven hpr h150
+          h197 ht
+        rcases hcases with h157 | h163 | h167 | h173 | h179 | h191 | h197eq
+        · exact conjecture_of_minFac_one_hundred_fifty_seven hp hp7 hmod hcomp
+            h157
+        · exact conjecture_of_minFac_one_hundred_sixty_three hp hp7 hmod hcomp
+            h163
+        · exact conjecture_of_minFac_one_hundred_sixty_seven hp hp7 hmod hcomp
+            h167
+        · exact conjecture_of_minFac_one_hundred_seventy_three hp hp7 hmod
+            hcomp h173
+        · exact conjecture_of_minFac_one_hundred_seventy_nine hp hp7 hmod hcomp
+            h179
+        · exact conjecture_of_minFac_one_hundred_ninety_one hp hp7 hmod hcomp
+            h191
+        · exact conjecture_of_minFac_one_hundred_ninety_seven hp hp7 hmod
+            hcomp h197eq
+  · by_cases h13 : 13 ≤ Nat.minFac (p - 2)
+    · exact conjecture_of_larger_twin_dvd hp (five_le_of_seven_le hp7) hcomp
+        hpr h13 htwin hd
+    · have h12 : Nat.minFac (p - 2) ≤ 12 := Nat.lt_succ_iff.mp (lt_of_not_ge h13)
+      exact conjecture_of_minFac_le_twenty_nine hp hp7 hmod hcomp
+        (le_trans h12 (by decide : 12 ≤ 29))
 
 private instance : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
 
@@ -4834,5 +5187,28 @@ lemma v2_x_two_four_pow_pred (k : ℕ) :
 #print axioms conjecture_of_remaining_mod_one_seven
 #print axioms conjecture_of_exists_mod_one_seven
 #print axioms conjecture_of_remaining_lt_cube_mod_one_seven
+#print axioms remaining_type_A_cofactor_prime
+#print axioms remaining_type_A_cofactor_mod_one
+#print axioms conjecture_of_remaining_type_A_mod_two_seven
+#print axioms one_hundred_fifty_seven_dvd_x_1097
+#print axioms conjecture_of_one_hundred_fifty_seven_dvd
+#print axioms remaining_p_ge_one_hundred_fifty_seven
+#print axioms conjecture_of_minFac_one_hundred_fifty_seven
+#print axioms one_hundred_seventy_three_dvd_x_863
+#print axioms conjecture_of_one_hundred_seventy_three_dvd
+#print axioms remaining_p_ge_one_hundred_seventy_three
+#print axioms conjecture_of_minFac_one_hundred_seventy_three
+#print axioms one_hundred_ninety_one_dvd_x_953
+#print axioms conjecture_of_one_hundred_ninety_one_dvd
+#print axioms remaining_p_ge_one_hundred_ninety_one
+#print axioms conjecture_of_minFac_one_hundred_ninety_one
+#print axioms one_hundred_ninety_seven_dvd_x_983
+#print axioms conjecture_of_one_hundred_ninety_seven_dvd
+#print axioms remaining_p_ge_one_hundred_ninety_seven
+#print axioms conjecture_of_minFac_one_hundred_ninety_seven
+#print axioms remaining_prime_le_one_hundred_seventy_three
+#print axioms remaining_prime_from_one_hundred_seventy_four_le_one_hundred_ninety_seven
+#print axioms remaining_prime_le_one_hundred_ninety_seven
+#print axioms conjecture_of_minFac_le_one_hundred_ninety_seven_or_twin
 
 end OeisA135508

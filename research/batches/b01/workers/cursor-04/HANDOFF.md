@@ -15,13 +15,15 @@ Do not start duplicate work on this declaration. Cursor-07 owns non-OEIS discove
 
 The remaining sufficient arithmetic condition is `conjecture_of_exists_factor_injector`: some prime factor `q` of `p-2` has a prime injector with `k ≤ (p-2)/q`. Existence is not proved.
 
-Complementary factors `r ≡ 1 (mod 3)` inject at `k ≡ 1 (mod 6)`, `k ≥ 7` (`conjecture_of_remaining_mod_one_k`). Type B remaining numbers (every prime factor `≡ 2 (mod 3)`) satisfy `lpf^2 ≤ (p-2)/lpf` and `lpf^3 + 2 ≤ p`. After the `lpf ≤ 149` family, Type B leftover needs `lpf ≥ 157`, hence `p ≥ 157^3 + 2`.
+Remaining Type A numbers (`p-2 < lpf^3`) have prime cofactor (`remaining_type_A_cofactor_prime`). If the least factor is `≡ 2 (mod 3)`, that cofactor is `≡ 1 (mod 3)`, and McEachen follows from primality of `7r-2` (`conjecture_of_remaining_type_A_mod_two_seven`). Primality is not proved.
 
-An elementary Chebyshev product bound on leftover candidates, using Mathlib `θ(x) ≤ (log 4) x`, does not close at leftover `q ≥ 157` (`experiments/chebyshev_gap.py`).
+Complementary factors `r ≡ 1 (mod 3)` inject at `k ≡ 1 (mod 6)`, `k ≥ 7` (`conjecture_of_remaining_mod_one_k`). Type B remaining numbers (every prime factor `≡ 2 (mod 3)`) satisfy `lpf^2 ≤ (p-2)/lpf` and `lpf^3 + 2 ≤ p`. After the `lpf ≤ 197` family, leftover Type B needs a non-twin least factor `≡ 2 (mod 3)` at least `233`, hence `p ≥ 233^3 + 2`.
 
-Remaining McEachen is proved when `lpf(p-2) ≤ 149` or that least factor is a larger twin (`conjecture_of_minFac_le_one_hundred_forty_nine_or_twin`). First-entry of `113` (`k=5`), `127` (`k=7`), `131`, `137`, `149`, `163`, `167`, `179`, `227`, `251` and `389` is proved. That is not `∀p`.
+An elementary Chebyshev product bound on leftover candidates, using Mathlib `θ(x) ≤ (log 4) x`, does not close at leftover `q ≥ 211` (`experiments/chebyshev_gap.py`). First-order Bonferroni/Mertens is not a `∀q` proof (`experiments/bonferroni.py`).
 
-A Type B scan to `p < 2000000` found exactly one leftover example, `p = 113^3 + 2`, now covered by `113 ∣ x 563`.
+Remaining McEachen is proved when `lpf(p-2) ≤ 197` or that least factor is a larger twin (`conjecture_of_minFac_le_one_hundred_ninety_seven_or_twin`). First-entry of `157` (`k=7`), `173`, `191` and `197` is proved, together with the earlier families. That is not `∀p`.
+
+A leftover scan to `p < 5000000` with `lpf ≥ 157` found 14783 primes, zero Type A cofactor failures, and zero McEachen-window gaps (`experiments/type_a_gaps.py`). The unique Lean Type B leftover in that range is `p = 167^2 · 179 + 2 = 4992133`, already covered by `167` and `179`. Finite scans are not a proof.
 
 ## Reproduce
 
@@ -41,19 +43,18 @@ python3 research/batches/b01/control/check_assignments.py --repo . --worker curs
 
 See `proof.md` for the full list. New in this continuation:
 
-- Cube lemma: odd composite `n ≡ 2 (mod 3)` with `n < lpf^3` has a prime factor `≡ 1 (mod 3)`.
-- Complementary `k ≡ 1 (mod 6)` packaging, including `k=7`.
-- Type B cofactor window `k ≤ lpf^2` and size bound `lpf^3 + 2 ≤ p`.
-- First-entry `113 | x 563`, `127 | x 887`, `131 | x 653`, `137 | x 683`, `149 | x 743`.
-- Remaining McEachen when `lpf(p-2) ≤ 149` or a larger-twin least factor.
+- Type A leftover is semiprime: `remaining_type_A_cofactor_prime`.
+- Complementary residue of that cofactor when `lpf ≡ 2 (mod 3)`, and packaging through `7r-2`.
+- First-entry `157 | x 1097`, `173 | x 863`, `191 | x 953`, `197 | x 983`.
+- Remaining McEachen when `lpf(p-2) ≤ 197` or a larger-twin least factor.
 
-Previously: mod-3 family, minFac `≤ 107` or larger-twin least factor, square-window and add-eight packaging, Dirichlet unbounded injectors, Cloitre 6.5 / 6.7, twin inhibition, 3-adic barriers through `a 14`, first-entry of `163`, `167`, `179`, `227`, `251`, `389`.
+Previously: cube / complementary / Type B structure, minFac `≤ 149` or larger-twin least factor, square-window and add-eight packaging, Dirichlet unbounded injectors, Cloitre 6.5 / 6.7, twin inhibition, 3-adic barriers through `a 14`, first-entry of `113`, `127`, `131`, `137`, `149`, `163`, `167`, `179`, `227`, `251`, `389`.
 
 ## Gap
 
-See `proof.md`. Remaining McEachen primes have `lpf(p-2) ≥ 157` not a larger twin and not among `{163,167,179,227,251,389}`, and need a first-entry bound. Dirichlet, Linnik `L=5`, GRH, and the elementary Chebyshev product bound do not give `r ≤ q(q+2)-1`. Finite scans are not a proof.
+See `proof.md`. Remaining McEachen primes have `lpf(p-2) ≥ 211` not a larger twin and not among `{227,251,389}`, and need a first-entry bound. Dirichlet, Linnik `L=5`, GRH, Chebyshev, and first-order Bonferroni do not give `r ≤ q(q+2)-1`. Finite scans are not a proof.
 
 ## Commit SHA
 
-Research commit: `5f1b23f6`
+Research commit: pending (recorded after commit)
 Branch: `cursor/a135508-lcm-primes-770d`
