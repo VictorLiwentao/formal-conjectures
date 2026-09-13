@@ -101,3 +101,50 @@ A published informal proof is in scope if no exact public Lean proof exists.
 WOWII 31 was selected on that basis: Erdős–Saks–Sós Theorem 2.2, proof by
 Fan Chung. The frozen Lean type still has `sorry`. Classification:
 `known_mathematics_formalization`. See `targets/WOWII31/`.
+
+## Pause (2026-09-13T01:15Z)
+
+Coordinator: WOWII31 is under independent compile/type/axiom audit of
+commit `54991f4b`. Status is `audit_pending`, not `independently_verified`.
+Further target work is paused. Continuation timer cancelled. Original
+deadline preserved. WOWII133 is **not** selected.
+
+## WOWII133 screening notes (incomplete, paused)
+
+Frozen file: `FormalConjectures/WrittenOnTheWallII/GraphConjecture133.lean`.
+SHA-256: `05c03eefa92f75236bd3f1e9caa6411816fc0b88b5a739f341f6fa87d5db2cc5`.
+DeepMind PR #4282 only fixed the `path` invariant and the `cC4`
+characteristic; it is not a proof. No public Lean proof found on 2026-09-13.
+
+Lean statement, connected nontrivial `G`:
+
+`rad + ⌊l G⌋ ^ cC4 ≤ path G`,
+
+with `cC4 = 0` if `G` has a (not necessarily induced) 4-cycle, else `1`.
+In Lean, `x ^ (0 : ℕ) = 1` for `x : ℝ`, including `0 ^ 0`. So the C4 case is
+`path ≥ rad + 1`. Chung (WOWII31) already gives `path ≥ 2 rad − 1`.
+
+Informal case split, **not proved in this session**, not a candidate:
+
+1. Has a 4-cycle: `path ≥ rad + 1`. Follows from Chung if `rad ≥ 2`. If
+   `rad = 1`, a connected graph on at least two vertices has an edge, so
+   `path ≥ 2`.
+2. C4-free and `⌊l G⌋ ≤ 1`: same bound as the C4 case.
+3. C4-free and `rad = 1`: there is a dominating vertex `v`. Then `G[N(v)]`
+   is a disjoint union of cliques (an induced `P3` in `N(v)` would give a
+   4-cycle with `v`). Average local independence is then `< 2`, so
+   `⌊l G⌋ ≤ 1`, and `path ≥ 2`.
+4. C4-free, `rad ≥ 2`, and `⌊l G⌋ ≤ rad − 1`: Chung.
+5. Remaining open case: C4-free, `rad ≥ 2`, `⌊l G⌋ ≥ rad`. In particular
+   `⌊l G⌋ ≥ 2`. Connected C4-free P4-free graphs are cographs, hence joins;
+   both join parts of size at least 2 create a 4-cycle, so one part is a
+   single vertex and `rad = 1`. Thus C4-free and `rad ≥ 2` implies
+   `path ≥ 4`. Combined with Chung, `path ≥ rad + 2` holds for all C4-free
+   graphs with `rad ≥ 2`. That would finish `⌊l G⌋ = 2`. Still open:
+   `⌊l G⌋ ≥ 3` with `rad ≥ 2` (Petersen is a test case: `rad = 2`,
+   `l = 3`, need `path ≥ 5`).
+
+No Lean-faithful counterexample was found in the earlier named-graph search.
+Nauty `133n` / construction sweeps in `scratch/wow_tight.py` were prepared
+but not completed before this pause. These notes are not a proof, not a
+disproof, and not a successor reservation.

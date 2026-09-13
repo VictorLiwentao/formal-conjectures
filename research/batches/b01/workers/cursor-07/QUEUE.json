@@ -2,7 +2,7 @@
   "schema": 1,
   "worker_id": "cursor-07",
   "baseline_commit": "a2f4a1bb12a28e04a969da78feefac7d1ce49565",
-  "updated_utc": "2026-09-13T00:59:18Z",
+  "updated_utc": "2026-09-13T01:15:00Z",
   "active": [
     {
       "id": "WOWII31",
@@ -38,7 +38,7 @@
       "declaration": "WrittenOnTheWallII.GraphConjecture133.conjecture133",
       "source_path": "FormalConjectures/WrittenOnTheWallII/GraphConjecture133.lean",
       "source_sha256": "05c03eefa92f75236bd3f1e9caa6411816fc0b88b5a739f341f6fa87d5db2cc5",
-      "note": "Parked."
+      "note": "Screening only; not selected. Coordinator paused further target work while WOWII31 is under independent audit. Incomplete notes in SCREENING.md (2026-09-13). No Lean proof file. Do not launch."
     },
     {
       "id": "WOWII40",
