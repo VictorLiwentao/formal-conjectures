@@ -89,6 +89,13 @@ Kummer gives `v_3(C(3^e-1,k))=0`. Among odd `r < 3^e` the unique index with
 gives `v_3` of the inner sum equal to `-2(e-1)`. Kernel-checked; axioms
 `propext`, `Classical.choice`, `Quot.sound`. This is not the frozen iff.
 
+`not_n_sq_dvd_num_of_three_mul_pow`: for an odd prime `p ≥ 5` and `e ≥ 1`,
+`v_p(T(3 p^e)) = -e < 2e`. Kummer gives `v_p(C(3 p^e-1, p^e-1))=0`.
+Among odd `r < 3 p^e` the unique multiple of `p^e` is `r=p^e`
+(`a=2` is even). The reusable unique-min lemma
+`padicValRat_inner_of_unique` then gives `v_p` of the inner sum equal to
+`-2e`. Kernel-checked; same axioms. This is not the frozen iff.
+
 ## Odd composite converse
 
 Not finished. c5-k4 found no counterexample for `n ≤ 4000`. The binomial identity reduces the problem to showing that for some prime `p | n` one has `v_p(T(n)) < 2 v_p(n)`.
@@ -104,9 +111,11 @@ Kernel-checked fragments of the converse:
   - `p^e ≤ m < p^{e+1}`, `p∤m`, and `L(m/p^e)≠0` in `𝔽_p`
 - exact `n=9, 25, 27, 49`
 - all powers `n=3^e` for `e≥2` (`v_3(T(3^e))=2-e`)
+- all `n=3 p^e` for primes `p≥5` and `e≥1` (`v_p(T(3 p^e))=-e`)
 
 Remaining odd composites include prime powers `p^e` for `p≥5` and products
-where `L(m/p^e)=0` for every eligible prime (for example `n=1027=13·79`).
+where `L(m/p^e)=0` for every eligible prime (for example `n=1027=13·79`),
+and mixed powers such as `3^a q^b` with `a≥2`.
 Experiments (`experiments/padic_converse.py`, `experiments/remaining_odd.py`,
 `experiments/prime_power_leading.py`) give:
 

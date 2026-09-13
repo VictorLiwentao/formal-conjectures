@@ -78,6 +78,14 @@ Kernel-checked powers of 3, same axioms, `#print axioms` on 2026-09-13:
 ```
 
 For `e≥2`, `v_3(T(3^e))=2-e<2e`. This covers `n=9,27,81,...` structurally.
+
+Kernel-checked `n=3 p^e` for primes `p≥5`, same axioms, `#print axioms` on 2026-09-13:
+
+```
+'OeisA108866.not_n_sq_dvd_num_of_three_mul_pow'
+```
+
+For `e≥1`, `v_p(T(3 p^e))=-e<2e`. Compile log: `/opt/cursor/artifacts/a108866_lean_wfail_threemulpow.log`, exit 0, no `sorryAx`.
 The file still does not prove the frozen iff.
 
 Kernel-checked exact evaluations `n=9,25,27,49` and packaging lemmas remain in the same file, same axioms.
