@@ -7303,6 +7303,213 @@ lemma not_five_sigma_of_three_sq_primes_eleven_thirteen_mid {m p : ℕ}
       exact not_five_sigma_of_three_sq_primes_eleven_thirteen_sixty_seven hm h
         hk11 hk13 hkp hs
 
+lemma prime_seventy_one : Nat.Prime 71 := by norm_num
+
+lemma usigma_seventy_one_pow_two : usigma (71 ^ 2) = 5042 := by
+  rw [usigma_prime_pow prime_seventy_one (by decide : 0 < 2)]
+  decide
+
+lemma sigma_seventy_one_pow_two : σ 1 (71 ^ 2) = 5113 := by
+  rw [sigma_prime_pow_two prime_seventy_one]
+  decide
+
+lemma usigma_seventy_one_pow_three : usigma (71 ^ 3) = 357912 := by
+  rw [usigma_prime_pow prime_seventy_one (by decide : 0 < 3)]
+  norm_num
+
+lemma sigma_seventy_one_pow_three : σ 1 (71 ^ 3) = 363024 := by
+  rw [sigma_prime_pow_div prime_seventy_one]
+  norm_num
+
+lemma eleven_cube_thirteen_sq_seventy_one_sq_under :
+    5 * σ 1 (11 ^ 3) * σ 1 (13 ^ 2) * σ 1 (71 ^ 2) <
+      6 * usigma (11 ^ 3) * usigma (13 ^ 2) * usigma (71 ^ 2) := by
+  rw [sigma_eleven_pow_three, usigma_eleven_pow_three,
+    sigma_thirteen_pow_two, usigma_thirteen_pow_two,
+    sigma_seventy_one_pow_two, usigma_seventy_one_pow_two]
+  norm_num
+
+lemma eleven_cube_thirteen_sq_seventy_one_cube_overshoot :
+    6 * usigma (11 ^ 3) * usigma (13 ^ 2) * usigma (71 ^ 3) <
+      5 * σ 1 (11 ^ 3) * σ 1 (13 ^ 2) * σ 1 (71 ^ 3) := by
+  rw [usigma_eleven_pow_three, sigma_eleven_pow_three,
+    usigma_thirteen_pow_two, sigma_thirteen_pow_two,
+    usigma_seventy_one_pow_three, sigma_seventy_one_pow_three]
+  norm_num
+
+lemma eleven_fourth_thirteen_sq_seventy_one_sq_overshoot :
+    6 * usigma (11 ^ 4) * usigma (13 ^ 2) * usigma (71 ^ 2) <
+      5 * σ 1 (11 ^ 4) * σ 1 (13 ^ 2) * σ 1 (71 ^ 2) := by
+  rw [usigma_eleven_pow_four, sigma_eleven_pow_four,
+    usigma_thirteen_pow_two, sigma_thirteen_pow_two,
+    usigma_seventy_one_pow_two, sigma_seventy_one_pow_two]
+  norm_num
+
+lemma eleven_cube_thirteen_cube_seventy_one_sq_overshoot :
+    6 * usigma (11 ^ 3) * usigma (13 ^ 3) * usigma (71 ^ 2) <
+      5 * σ 1 (11 ^ 3) * σ 1 (13 ^ 3) * σ 1 (71 ^ 2) := by
+  rw [usigma_eleven_pow_three, sigma_eleven_pow_three,
+    usigma_thirteen_pow_three, sigma_thirteen_pow_three,
+    usigma_seventy_one_pow_two, sigma_seventy_one_pow_two]
+  norm_num
+
+/-- Leftover `6/5` cannot be three squareful primes `11,13,71` times a
+squarefree coprime factor. -/
+lemma not_five_sigma_of_three_sq_primes_eleven_thirteen_seventy_one {m : ℕ}
+    (hm : m ≠ 0) (h : 5 * σ 1 m = 6 * usigma m)
+    (hk11 : 2 ≤ padicValNat 11 m) (hk13 : 2 ≤ padicValNat 13 m)
+    (hkp : 2 ≤ padicValNat 71 m)
+    (hs : Squarefree (ordCompl[71] (ordCompl[13] (ordCompl[11] m)))) :
+    False := by
+  have hp11 : Nat.Prime 11 := by decide
+  have hp13 : Nat.Prime 13 := by decide
+  have hp71 := prime_seventy_one
+  have hpq_ne : (11 : ℕ) ≠ 13 := by decide
+  have hpr_ne : (11 : ℕ) ≠ 71 := by decide
+  have hqr_ne : (13 : ℕ) ≠ 71 := by decide
+  have heq := five_sigma_eq_six_of_three_squareful hm hp11 hp13 hp71 hpq_ne
+    hpr_ne hqr_ne h hs
+  have hproj_p : ordProj[11] m = 11 ^ padicValNat 11 m := by
+    simp [Nat.factorization_def m hp11]
+  have hproj_q : ordProj[13] (ordCompl[11] m) =
+      13 ^ padicValNat 13 (ordCompl[11] m) := by
+    simp [Nat.factorization_def (ordCompl[11] m) hp13]
+  have hproj_r : ordProj[71] (ordCompl[13] (ordCompl[11] m)) =
+      71 ^ padicValNat 71 (ordCompl[13] (ordCompl[11] m)) := by
+    simp [Nat.factorization_def (ordCompl[13] (ordCompl[11] m)) hp71]
+  rw [hproj_r, padicValNat_ordCompl_of_ne hp71 hqr_ne,
+    padicValNat_ordCompl_of_ne hp71 hpr_ne, hproj_q,
+    padicValNat_ordCompl_of_ne hp13 hpq_ne, hproj_p] at heq
+  rcases eq_or_lt_of_le hk11 with h11eq | h11
+  · rw [← h11eq] at heq
+    exact (five_sigma_lt_six_usigma_eleven_sq_thirteen_large hp71
+      (by decide : 67 ≤ 71) (by omega) (by omega)).ne heq
+  · have ha3 : 3 ≤ padicValNat 11 m := Nat.succ_le_of_lt h11
+    rcases eq_or_lt_of_le hk13 with h13eq | h13
+    · rw [← h13eq] at heq
+      rcases eq_or_lt_of_le ha3 with ha3eq | ha4
+      · rw [← ha3eq] at heq
+        rcases eq_or_lt_of_le hkp with hkeq | hk3
+        · rw [← hkeq] at heq
+          exact eleven_cube_thirteen_sq_seventy_one_sq_under.ne heq
+        · have hover := six_five_overshoot_mono_three hp11 hp13 hp71
+            (by decide : 0 < 3) (by decide : 0 < 2) (by decide : 0 < 3)
+            (le_refl _) (le_refl _) (Nat.succ_le_of_lt hk3)
+            eleven_cube_thirteen_sq_seventy_one_cube_overshoot
+          rw [← heq] at hover
+          exact lt_irrefl _ hover
+      · have hover := six_five_overshoot_mono_three hp11 hp13 hp71
+          (by decide : 0 < 4) (by decide : 0 < 2) (by decide : 0 < 2)
+          (Nat.succ_le_of_lt ha4) (le_refl _) hkp
+          eleven_fourth_thirteen_sq_seventy_one_sq_overshoot
+        rw [← heq] at hover
+        exact lt_irrefl _ hover
+    · have hover := six_five_overshoot_mono_three hp11 hp13 hp71
+        (by decide : 0 < 3) (by decide : 0 < 3) (by decide : 0 < 2)
+        ha3 (Nat.succ_le_of_lt h13) hkp
+        eleven_cube_thirteen_cube_seventy_one_sq_overshoot
+      rw [← heq] at hover
+      exact lt_irrefl _ hover
+
+lemma prime_seventy_three : Nat.Prime 73 := by norm_num
+
+lemma usigma_seventy_three_pow_two : usigma (73 ^ 2) = 5330 := by
+  rw [usigma_prime_pow prime_seventy_three (by decide : 0 < 2)]
+  decide
+
+lemma sigma_seventy_three_pow_two : σ 1 (73 ^ 2) = 5403 := by
+  rw [sigma_prime_pow_two prime_seventy_three]
+  decide
+
+lemma five_mul_eleven_cube_thirteen_sq_seventy_three_cap :
+    5 * 73 * 1464 * 183 ≤ 6 * 72 * 1332 * 170 := by
+  norm_num
+
+/-- `{11^3, 13^2, 73^k}` undershoots leftover `6/5`. -/
+lemma five_sigma_lt_six_usigma_eleven_cube_thirteen_sq_seventy_three {k : ℕ}
+    (hk : 0 < k) :
+    5 * σ 1 (11 ^ 3) * σ 1 (13 ^ 2) * σ 1 (73 ^ k) <
+      6 * usigma (11 ^ 3) * usigma (13 ^ 2) * usigma (73 ^ k) := by
+  rw [sigma_eleven_pow_three, usigma_eleven_pow_three,
+    sigma_thirteen_pow_two, usigma_thirteen_pow_two]
+  have h73 := sigma_lt_cap_usigma prime_seventy_three hk
+  have hthis := six_five_of_cap_times_const (A := 72) (B := 73)
+    (X := σ 1 (73 ^ k)) (Y := usigma (73 ^ k)) (S := 1332 * 170)
+    (T := 1464 * 183) h73 (by
+      have hL : 5 * 73 * (1464 * 183) = 5 * 73 * 1464 * 183 := by ring
+      have hR : 6 * 72 * (1332 * 170) = 6 * 72 * 1332 * 170 := by ring
+      rw [hL, hR]
+      exact five_mul_eleven_cube_thirteen_sq_seventy_three_cap)
+    (by decide : 0 < 1464 * 183)
+  convert hthis using 1 <;> ring
+
+lemma eleven_fourth_thirteen_sq_seventy_three_sq_overshoot :
+    6 * usigma (11 ^ 4) * usigma (13 ^ 2) * usigma (73 ^ 2) <
+      5 * σ 1 (11 ^ 4) * σ 1 (13 ^ 2) * σ 1 (73 ^ 2) := by
+  rw [usigma_eleven_pow_four, sigma_eleven_pow_four,
+    usigma_thirteen_pow_two, sigma_thirteen_pow_two,
+    usigma_seventy_three_pow_two, sigma_seventy_three_pow_two]
+  norm_num
+
+lemma eleven_cube_thirteen_cube_seventy_three_sq_overshoot :
+    6 * usigma (11 ^ 3) * usigma (13 ^ 3) * usigma (73 ^ 2) <
+      5 * σ 1 (11 ^ 3) * σ 1 (13 ^ 3) * σ 1 (73 ^ 2) := by
+  rw [usigma_eleven_pow_three, sigma_eleven_pow_three,
+    usigma_thirteen_pow_three, sigma_thirteen_pow_three,
+    usigma_seventy_three_pow_two, sigma_seventy_three_pow_two]
+  norm_num
+
+/-- Leftover `6/5` cannot be three squareful primes `11,13,73` times a
+squarefree coprime factor. -/
+lemma not_five_sigma_of_three_sq_primes_eleven_thirteen_seventy_three {m : ℕ}
+    (hm : m ≠ 0) (h : 5 * σ 1 m = 6 * usigma m)
+    (hk11 : 2 ≤ padicValNat 11 m) (hk13 : 2 ≤ padicValNat 13 m)
+    (hkp : 2 ≤ padicValNat 73 m)
+    (hs : Squarefree (ordCompl[73] (ordCompl[13] (ordCompl[11] m)))) :
+    False := by
+  have hp11 : Nat.Prime 11 := by decide
+  have hp13 : Nat.Prime 13 := by decide
+  have hp73 := prime_seventy_three
+  have hpq_ne : (11 : ℕ) ≠ 13 := by decide
+  have hpr_ne : (11 : ℕ) ≠ 73 := by decide
+  have hqr_ne : (13 : ℕ) ≠ 73 := by decide
+  have heq := five_sigma_eq_six_of_three_squareful hm hp11 hp13 hp73 hpq_ne
+    hpr_ne hqr_ne h hs
+  have hproj_p : ordProj[11] m = 11 ^ padicValNat 11 m := by
+    simp [Nat.factorization_def m hp11]
+  have hproj_q : ordProj[13] (ordCompl[11] m) =
+      13 ^ padicValNat 13 (ordCompl[11] m) := by
+    simp [Nat.factorization_def (ordCompl[11] m) hp13]
+  have hproj_r : ordProj[73] (ordCompl[13] (ordCompl[11] m)) =
+      73 ^ padicValNat 73 (ordCompl[13] (ordCompl[11] m)) := by
+    simp [Nat.factorization_def (ordCompl[13] (ordCompl[11] m)) hp73]
+  rw [hproj_r, padicValNat_ordCompl_of_ne hp73 hqr_ne,
+    padicValNat_ordCompl_of_ne hp73 hpr_ne, hproj_q,
+    padicValNat_ordCompl_of_ne hp13 hpq_ne, hproj_p] at heq
+  rcases eq_or_lt_of_le hk11 with h11eq | h11
+  · rw [← h11eq] at heq
+    exact (five_sigma_lt_six_usigma_eleven_sq_thirteen_large hp73
+      (by decide : 67 ≤ 73) (by omega) (by omega)).ne heq
+  · have ha3 : 3 ≤ padicValNat 11 m := Nat.succ_le_of_lt h11
+    rcases eq_or_lt_of_le hk13 with h13eq | h13
+    · rw [← h13eq] at heq
+      rcases eq_or_lt_of_le ha3 with ha3eq | ha4
+      · rw [← ha3eq] at heq
+        exact (five_sigma_lt_six_usigma_eleven_cube_thirteen_sq_seventy_three
+          (by omega)).ne heq
+      · have hover := six_five_overshoot_mono_three hp11 hp13 hp73
+          (by decide : 0 < 4) (by decide : 0 < 2) (by decide : 0 < 2)
+          (Nat.succ_le_of_lt ha4) (le_refl _) hkp
+          eleven_fourth_thirteen_sq_seventy_three_sq_overshoot
+        rw [← heq] at hover
+        exact lt_irrefl _ hover
+    · have hover := six_five_overshoot_mono_three hp11 hp13 hp73
+        (by decide : 0 < 3) (by decide : 0 < 3) (by decide : 0 < 2)
+        ha3 (Nat.succ_le_of_lt h13) hkp
+        eleven_cube_thirteen_cube_seventy_three_sq_overshoot
+      rw [← heq] at hover
+      exact lt_irrefl _ hover
+
 end Unitary
 
 section Congruence
