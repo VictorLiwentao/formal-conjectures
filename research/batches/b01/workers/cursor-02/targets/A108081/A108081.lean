@@ -93,6 +93,36 @@ lemma r_map_sub_two (d : Word) : r (d.map (fun x => x - 2)) = l d := by
   intro a _
   ring
 
+lemma map_sub_two_r (t : Word) : (r t).map (fun x => x - 2) = l t := by
+  simp [r, l, List.map_reverse, List.map_map]
+  intro a _
+  ring
+
+lemma l_append_r_append_zero (u v : Word) :
+    l (u ++ r v) ++ [0] = v ++ l u ++ [0] := by
+  rw [l_append, l_r, append_assoc]
+
+lemma l_cons_zero_r_append_zero (v : Word) :
+    l ([0] ++ r v) ++ [0] = v ++ [-1, 0] := by
+  rw [l_append_r_append_zero]
+  simp [l]
+
+lemma r_neg_one_neg_two : r ([-1, -2] : Word) = [-1, 0] := by
+  simp [r]
+
+lemma r_neg_one_neg_two_append (b : Word) :
+    r (([-1, -2] : Word) ++ b) = r b ++ [-1, 0] := by
+  rw [r_append, r_neg_one_neg_two]
+
+lemma r_neg_one_map_sub_two_append_zero (u : Word) :
+    r ((-1 : ℤ) :: u.map (fun x => x - 2) ++ [0]) = [1] ++ l u ++ [0] := by
+  have h : (-1 : ℤ) :: u.map (fun x => x - 2) ++ [0] =
+      ([-1] ++ u.map (fun x => x - 2)) ++ [0] := rfl
+  have hr0 : r ([0] : Word) = [1] := by simp [r]
+  have hr1 : r ([-1] : Word) = [0] := by simp [r]
+  rw [h, r_append, hr0, r_append, r_map_sub_two, hr1]
+  simp
+
 lemma r_concat_neg_one (v : Word) : r ([-1] ++ v) = r v ++ [0] := by
   simp [r, reverse_cons]
 
@@ -1440,6 +1470,9 @@ lemma RightWord.head_eq_zero {w : Word} (h : RightWord w) :
 lemma RightWord.of_head_eq_zero {w : Word} (hw : PWord w)
     (hhead : w.head hw.1.ne_nil = 0) : RightWord w :=
   ⟨hw, (head_eq_zero_iff_head? hw.1.ne_nil).mp hhead⟩
+
+lemma RightWord.zero : RightWord [0] :=
+  ⟨⟨XWord.base, by simp⟩, by simp⟩
 
 lemma getLast_eq_zero_iff_getLast? {w : Word} (h : w ≠ []) :
     w.getLast h = 0 ↔ w.getLast? = some 0 := by
@@ -4051,6 +4084,49 @@ lemma isRightParse_l_append_zero_cons_zero {s : Word}
       ((-1 : ℤ) :: s.dropLast.map (fun x => x - 2)) :=
   ⟨XWord.base, hq, l_append_zero_eq_cons_zero_r_of_getLast_eq_one hne h1⟩
 
+lemma XWord.neg_one_zero : XWord [-1, 0] := by
+  simpa [l] using XWord.step_left XWord.base XWord.base
+
+lemma XWord.neg_one_neg_two_append {b : Word} (hb : XWord b) :
+    XWord ([-1, -2] ++ b) := by
+  have h : l [-1, 0] ++ b = [-1, -2] ++ b := by simp [l]
+  exact h ▸ XWord.step_left XWord.neg_one_zero hb
+
+lemma isRightParse_append_neg_one_zero {v a b : Word}
+    (h : IsRightParse v a b) :
+    IsRightParse (v ++ [-1, 0]) a ([-1, -2] ++ b) :=
+  ⟨h.1, XWord.neg_one_neg_two_append h.2.1, by
+    rw [h.2.2, append_assoc, r_neg_one_neg_two_append]⟩
+
+lemma isRightParse_l_cons_zero_r_append_zero {v a b : Word}
+    (h : IsRightParse v a b) :
+    IsRightParse (l ([0] ++ r v) ++ [0]) a ([-1, -2] ++ b) := by
+  rw [l_cons_zero_r_append_zero]
+  exact isRightParse_append_neg_one_zero h
+
+lemma RightWord.of_cons_zero_r {v : Word} (hv : RightWord v) :
+    RightWord ([0] ++ r v) :=
+  RightWord.of_step_right RightWord.zero hv
+
+lemma RightWord.cons_zero_r_l_append_zero_not_rIrreducible {v : Word}
+    (hv : RightWord v) (hlen : 2 ≤ v.length) :
+    ¬ RIrreducible (l ([0] ++ r v) ++ [0]) := by
+  obtain ⟨a, b, ha, hb, heq⟩ := RightWord.exists_step_right hv hlen
+  have hparse : IsRightParse v a b := ⟨ha.xWord, hb.xWord, heq⟩
+  intro hI
+  exact hI.2 a ([-1, -2] ++ b) (isRightParse_l_cons_zero_r_append_zero hparse)
+
+lemma RightWord.neg_one_map_sub_two_append_zero_of_cons_zero_r {t : Word}
+    (ht : RightWord t) :
+    XWord ((-1 : ℤ) :: ([0] ++ r t).map (fun x => x - 2) ++ [0]) := by
+  have hmap : ([0] ++ r t).map (fun x => x - 2) = [-2] ++ l t := by
+    simp [map_sub_two_r]
+  have h : (-1 : ℤ) :: ([0] ++ r t).map (fun x => x - 2) ++ [0] =
+      l [-1, 0] ++ (l t ++ [0]) := by
+    rw [hmap]
+    simp [l]
+  exact h ▸ XWord.step_left XWord.neg_one_zero (XWord.step_left ht.xWord XWord.base)
+
 lemma XWord.exists_left_parse_of_start_zero_zero :
     ∀ {n : ℕ} {z : Word}, z.length = n → XWord z →
       2 ≤ z.length → z.head? = some (0 : ℤ) →
@@ -4441,6 +4517,35 @@ lemma PWord.eq_concat_one_of_getLast_eq_one_of_penultimate_le_one {s : Word}
     rw [heq, count_append] at hcnt
     simpa using hcnt
   exact ⟨⟨hX, hc⟩, heq⟩
+
+lemma isRightParse_l_append_r_append_zero_of_penultimate_le_one
+    {u v : Word} (hv : RightWord v) (hlen : 2 ≤ v.length)
+    (hpen : v[v.length - 2]'(by omega) ≤ 1)
+    (hq : XWord ((-1 : ℤ) :: u.map (fun x => x - 2) ++ [0])) :
+    IsRightParse (l (u ++ r v) ++ [0]) v.dropLast
+      ((-1 : ℤ) :: u.map (fun x => x - 2) ++ [0]) := by
+  have hlast : v.getLast hv.xWord.ne_nil = 1 :=
+    PWord.getLast_eq_one_of_head_eq_zero hv.pWord hv.head_eq_zero hlen
+  have hvdrop : XWord v.dropLast :=
+    (PWord.eq_concat_one_of_getLast_eq_one_of_penultimate_le_one hv.pWord hlen
+      hlast hpen).1.1
+  have heq : v = v.dropLast ++ [1] :=
+    (PWord.eq_concat_one_of_getLast_eq_one_of_penultimate_le_one hv.pWord hlen
+      hlast hpen).2
+  refine ⟨hvdrop, hq, ?_⟩
+  rw [l_append_r_append_zero, heq, append_assoc, append_assoc,
+    r_neg_one_map_sub_two_append_zero]
+  simp
+
+lemma isRightParse_l_cons_zero_r_append_zero_of_penultimate_le_one
+    {v : Word} (hv : RightWord v) (hlen : 2 ≤ v.length)
+    (hpen : v[v.length - 2]'(by omega) ≤ 1) :
+    IsRightParse (l ([0] ++ r v) ++ [0]) v.dropLast [-1, -2, 0] := by
+  have hq : XWord ((-1 : ℤ) :: ([0] : Word).map (fun x => x - 2) ++ [0]) := by
+    simpa using XWord.neg_one_neg_two_zero
+  have h := isRightParse_l_append_r_append_zero_of_penultimate_le_one
+    (u := [0]) hv hlen hpen hq
+  simpa using h
 
 lemma getElem_one_of_getElem? {z : Word} (hlen : 2 ≤ z.length)
     {x : ℤ} (h : z[1]? = some x) :
@@ -5188,5 +5293,16 @@ lemma ncard_iN_ge_sum_catalan_iN_add_pConcatOne (n : ℕ) (hn : 2 ≤ n) :
 #print axioms ncard_iN_ge_sum_catalan_iN_add_pConcatOne
 #print axioms l_append_zero_eq_cons_zero_r_of_getLast_eq_one
 #print axioms isRightParse_l_append_zero_cons_zero
+#print axioms map_sub_two_r
+#print axioms l_cons_zero_r_append_zero
+#print axioms r_neg_one_map_sub_two_append_zero
+#print axioms XWord.neg_one_neg_two_append
+#print axioms isRightParse_append_neg_one_zero
+#print axioms isRightParse_l_cons_zero_r_append_zero
+#print axioms RightWord.of_cons_zero_r
+#print axioms RightWord.cons_zero_r_l_append_zero_not_rIrreducible
+#print axioms RightWord.neg_one_map_sub_two_append_zero_of_cons_zero_r
+#print axioms isRightParse_l_append_r_append_zero_of_penultimate_le_one
+#print axioms isRightParse_l_cons_zero_r_append_zero_of_penultimate_le_one
 
 end OeisA108081

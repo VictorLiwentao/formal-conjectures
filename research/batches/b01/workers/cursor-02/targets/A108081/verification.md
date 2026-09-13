@@ -50,13 +50,14 @@ python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/gword
 python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/cons_zero_converse.py
 python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/pword_concat_one_xia_prefixes.py
 python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/bad_pword_right_parses.py
+python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/rightword_bad_remainder.py
 ```
 
 Guard: PASS (worker path only). Source SHA-256 matches.
 
 ## Lean axioms
 
-`lake --wfail env lean` on `A108081.lean` succeeded on 2026-09-13 05:40Z.
+`lake --wfail env lean` on `A108081.lean` succeeded on 2026-09-13 06:10Z.
 
 ```
 #print axioms ncard_xN_one
@@ -169,6 +170,28 @@ Guard: PASS (worker path only). Source SHA-256 matches.
 -- [propext, Quot.sound]
 #print axioms isRightParse_l_append_zero_cons_zero
 -- [propext, Quot.sound]
+#print axioms map_sub_two_r
+-- [propext, Quot.sound]
+#print axioms l_cons_zero_r_append_zero
+-- [propext, Quot.sound]
+#print axioms r_neg_one_map_sub_two_append_zero
+-- [propext, Quot.sound]
+#print axioms XWord.neg_one_neg_two_append
+-- [propext]
+#print axioms isRightParse_append_neg_one_zero
+-- [propext]
+#print axioms isRightParse_l_cons_zero_r_append_zero
+-- [propext, Quot.sound]
+#print axioms RightWord.of_cons_zero_r
+-- [propext, Classical.choice, Quot.sound]
+#print axioms RightWord.cons_zero_r_l_append_zero_not_rIrreducible
+-- [propext, Classical.choice, Quot.sound]
+#print axioms RightWord.neg_one_map_sub_two_append_zero_of_cons_zero_r
+-- [propext, Quot.sound]
+#print axioms isRightParse_l_append_r_append_zero_of_penultimate_le_one
+-- [propext, Classical.choice, Quot.sound]
+#print axioms isRightParse_l_cons_zero_r_append_zero_of_penultimate_le_one
+-- [propext, Classical.choice, Quot.sound]
 #print axioms xN_finite
 -- [propext, Classical.choice, Quot.sound]
 ```
