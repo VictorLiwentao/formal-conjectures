@@ -2,7 +2,7 @@
   "automation_id": "maintain-seven-cursor-math-workers",
   "interval_minutes": 15,
   "target_cursor_slots": 7,
-  "updated_at_utc": "2026-09-13T03:45:54.050354+00:00",
+  "updated_at_utc": "2026-09-13T04:05:33.272551+00:00",
   "accept_known_informal_proofs_for_new_lean_formalization": true,
   "note": "WOWII20 independently verified and retired; WOWII7 replacement has verified active goal. Six active Cursor research goals, with A069004 held for ongoing independent certificate rebuild.",
   "slots": [
@@ -29,8 +29,8 @@
           "launched_at_utc": "2026-09-13T02:54:22.021545+00:00"
         }
       ],
-      "last_checked_at_utc": "2026-09-13T03:37:17.699102+00:00",
-      "progress_note": "Goal active; checkpoint706eab57 proves n=1 and root-of-unity sums. General permanent identity unresolved.",
+      "last_checked_at_utc": "2026-09-13T04:05:33.272551+00:00",
+      "progress_note": "Goal active; checkpoint d9dbe420 proves Calogero determinant and a derangement-sum reduction. Full permanent identity unresolved.",
       "history": [
         {
           "run_id": "cursor-01",
@@ -62,7 +62,7 @@
       "launch_verified_at_utc": "2026-09-13T02:54:22.021545+00:00",
       "goal_command_submitted": true,
       "goal_active_verified": true,
-      "goal_verified_at_utc": "2026-09-13T03:37:17.699102+00:00",
+      "goal_verified_at_utc": "2026-09-13T04:05:33.272551+00:00",
       "environment_build": "bld-20260912-716b23c3-d124-4da8-ab69-743e1fb16843",
       "model": "Cursor Grok 4.6 Extra High",
       "session_start_utc": "2026-09-13T02:54:27Z",
@@ -75,10 +75,10 @@
       "state": "researching",
       "actual_branch": "cursor/b01-cursor-02-13c0",
       "replacements": [],
-      "last_checked_at_utc": "2026-09-13T03:37:17.699102+00:00",
-      "progress_note": "Goal active with original07:10Z deadline; latest checkpoint8634a42a, exact I-word enumeration unresolved.",
+      "last_checked_at_utc": "2026-09-13T04:05:33.272551+00:00",
+      "progress_note": "Goal active; checkpoint 6e32a407 adds left-gluing lower bounds and experimental first-return counts. Exact enumeration unresolved.",
       "goal_active_verified": true,
-      "goal_verified_at_utc": "2026-09-13T03:37:17.699102+00:00"
+      "goal_verified_at_utc": "2026-09-13T04:05:33.272551+00:00"
     },
     {
       "slot": "cursor-03",
@@ -93,8 +93,8 @@
           "launched_at_utc": "2026-09-13T00:12:48.331188+00:00"
         }
       ],
-      "last_checked_at_utc": "2026-09-13T03:37:17.699102+00:00",
-      "progress_note": "Independent driver PID78813 alive; 55/317 commands passed, C53.lean compiling. Full exact audit pending.",
+      "last_checked_at_utc": "2026-09-13T04:05:33.272551+00:00",
+      "progress_note": "Independent driver PID78813 alive; 72/317 fresh commands passed, C70.lean compiling. Full exact audit pending.",
       "history": [
         {
           "run_id": "cursor-03",
@@ -124,10 +124,10 @@
       "state": "researching",
       "actual_branch": "cursor/a135508-lcm-primes-770d",
       "replacements": [],
-      "last_checked_at_utc": "2026-09-13T03:37:17.699102+00:00",
-      "progress_note": "Goal active;03:32Z checkpoint4bfbfbb6 expands square-window and least-factor reductions; full conjecture unresolved.",
+      "last_checked_at_utc": "2026-09-13T04:05:33.272551+00:00",
+      "progress_note": "Goal active, continuing after a partial handoff. Latest fetched checkpoint 4bfbfbb6; full recurrence conjecture unresolved.",
       "goal_active_verified": true,
-      "goal_verified_at_utc": "2026-09-13T03:37:17.699102+00:00"
+      "goal_verified_at_utc": "2026-09-13T04:05:33.272551+00:00"
     },
     {
       "slot": "cursor-05",
@@ -136,10 +136,10 @@
       "state": "researching",
       "actual_branch": "cursor/b01-cursor-05-cb88",
       "replacements": [],
-      "last_checked_at_utc": "2026-09-13T03:37:17.699102+00:00",
-      "progress_note": "Goal active; checkpointae73e30b continues residual divisor-sum families; full targets unresolved.",
+      "last_checked_at_utc": "2026-09-13T04:05:33.272551+00:00",
+      "progress_note": "Goal active confirmed visually after oversized transcript error. Checkpoint 9a7b32c5 extends residual divisor-sum families; exact targets unresolved.",
       "goal_active_verified": true,
-      "goal_verified_at_utc": "2026-09-13T03:37:17.699102+00:00"
+      "goal_verified_at_utc": "2026-09-13T04:05:33.272551+00:00"
     },
     {
       "slot": "cursor-06",
@@ -148,10 +148,10 @@
       "state": "researching",
       "actual_branch": "cursor/b01-cursor-06-a108866-efe4",
       "replacements": [],
-      "last_checked_at_utc": "2026-09-13T03:37:17.699102+00:00",
-      "progress_note": "Goal active;03:32Z checkpointec4294af adds all3^e and3p^e converse families; full iff unresolved.",
+      "last_checked_at_utc": "2026-09-13T04:05:33.272551+00:00",
+      "progress_note": "Goal active; checkpoint ee6d1b83 proves product decomposition for prime powers. Required p-squared congruence and full iff unresolved.",
       "goal_active_verified": true,
-      "goal_verified_at_utc": "2026-09-13T03:37:17.699102+00:00"
+      "goal_verified_at_utc": "2026-09-13T04:05:33.272551+00:00"
     },
     {
       "slot": "cursor-07",
@@ -181,8 +181,8 @@
           "launched_at_utc": "2026-09-13T03:44:44.602495+00:00"
         }
       ],
-      "last_checked_at_utc": "2026-09-13T03:45:54.050354+00:00",
-      "progress_note": "WOWII7 successor launched from027daebf; prepared environment ready, Used create-goal and Goal active verified. Correct source hash and seed acknowledged, beginning literature and graph APIs.",
+      "last_checked_at_utc": "2026-09-13T04:05:33.272551+00:00",
+      "progress_note": "Goal active; live connected-domination feasibility and boundary-extension lemmas being compiled and fixed. No exact candidate yet.",
       "goal_active_verified": true,
       "history": [
         {
@@ -224,18 +224,18 @@
       "environment_build": "bld-20260912-716b23c3-d124-4da8-ab69-743e1fb16843",
       "starting_commit": "027daebfe1c7b664055c00cd4add0dd0419515d1",
       "launch_verified_at_utc": "2026-09-13T03:44:44.602495+00:00",
-      "goal_verified_at_utc": "2026-09-13T03:45:54.050354+00:00",
+      "goal_verified_at_utc": "2026-09-13T04:05:33.272551+00:00",
       "session_start_utc": "2026-09-13T03:44:44Z",
       "session_deadline_utc": "2026-09-13T11:44:44Z"
     }
   ],
   "last_heartbeat": {
-    "scheduled_at_utc": "2026-09-13T03:30:19.392Z",
-    "completed_at_utc": "2026-09-13T03:45:54.050354+00:00",
+    "scheduled_at_utc": "2026-09-13T04:01:20.140Z",
+    "completed_at_utc": "2026-09-13T04:05:33.272551+00:00",
     "occupied_slots": 6,
     "audit_pending_slots": 1,
-    "replacements": 1,
+    "replacements": 0,
     "resumes": 0,
-    "notifications": 1
+    "notifications": 0
   }
 }
