@@ -15,6 +15,7 @@ python3 research/batches/b01/control/check_assignments.py --repo . --worker curs
 LEAN_NUM_THREADS=2 lake --wfail build 'FormalConjectures.OEIS.«108866»'
 LEAN_NUM_THREADS=2 lake env lean -DwarningAsError=true research/batches/b01/workers/cursor-06/targets/A108866/A108866.lean
 python3 research/batches/b01/workers/cursor-06/targets/A108866/experiments/scan_beyond_c5k4.py
+python3 research/batches/b01/workers/cursor-06/targets/A108866/experiments/padic_converse.py
 ```
 
 Final commit SHA: update after the next commit on this branch.
@@ -26,8 +27,11 @@ Partial. Kernel-checked so far:
 - even-composite converse `not_n_sq_dvd_num_of_even`
 - odd identity `ratExpression_eq_two_mul_n_sum_choose_sq`
 - prime direction `n_sq_dvd_num_of_prime`
+- odd valuation formula `padicValRat_ratExpression_of_odd_prime`
+- converse criteria `not_n_sq_dvd_num_of_odd_inner_lt`, `not_n_sq_dvd_num_of_inner_le_denom`
+- Fermat congruence `q_dvd_two_pow_mul_sub` and `q T(pq) - T(p)` identity
 - reduction `conjecture_of_odd_composite_converse`
 
-Axioms `{propext, Classical.choice, Quot.sound}` on the even lemma, the odd identity, and the prime-direction theorem. Odd converse open. No PR. No OEIS edit.
+Axioms `{propext, Classical.choice, Quot.sound}` on the printed theorems. Odd converse open. No PR. No OEIS edit.
 
 Run URL: https://cursor.com/agents/bc-c701d4c6-5791-456d-bec8-130a051cefe4

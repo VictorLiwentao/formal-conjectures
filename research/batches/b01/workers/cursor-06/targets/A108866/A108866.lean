@@ -34,9 +34,10 @@ import Mathlib.Algebra.Field.ZMod
 Partial development for OEIS A108866.
 
 This file does not use `OeisA108866.conjecture`. It proves the even
-converse, the Komatsu–Sury odd identity, and the prime direction
-`p^2 ∣ T(p).num` for primes `p > 3`. The odd-composite converse is
-not proved here.
+converse, the Komatsu–Sury odd identity, the prime direction
+`p^2 ∣ T(p).num` for primes `p > 3`, and reduction lemmas for the
+odd-composite converse. The odd-composite converse itself is not
+proved here.
 -/
 
 open Finset
@@ -977,7 +978,204 @@ theorem n_sq_dvd_num_of_prime {p : ℕ} (hp : p.Prime) (h3 : p > 3) :
     simpa [padicValInt] using hnum
   exact Int.modEq_zero_iff_dvd.2 (Int.natCast_dvd.mpr hpow)
 
-/-- The frozen iff follows from the odd-composite converse. -/
+lemma not_n_sq_dvd_num_of_prime_dvd_den {n p : ℕ} (hp : p.Prime) (hpn : p ∣ n)
+    (hd : p ∣ (ratExpression n).den) :
+    ¬ (ratExpression n).num ≡ 0 [ZMOD (n ^ 2 : ℤ)] := by
+  intro hcong
+  have hdiv : (n ^ 2 : ℤ) ∣ (ratExpression n).num := Int.modEq_zero_iff_dvd.mp hcong
+  have hpz : (p : ℤ) ∣ (n : ℤ) := by exact_mod_cast hpn
+  have hpow : (p : ℤ) ∣ (n : ℤ) ^ 2 := dvd_pow hpz (by decide)
+  have hnumZ : (p : ℤ) ∣ (ratExpression n).num := hpow.trans (by simpa using hdiv)
+  have hnum : p ∣ (ratExpression n).num.natAbs := Int.natCast_dvd.mp hnumZ
+  have hg : p ∣ Nat.gcd (ratExpression n).num.natAbs (ratExpression n).den :=
+    Nat.dvd_gcd hnum hd
+  have hred : Nat.gcd (ratExpression n).num.natAbs (ratExpression n).den = 1 :=
+    (ratExpression n).reduced
+  have : p ∣ 1 := by simpa [hred] using hg
+  exact hp.not_dvd_one this
+
+lemma not_n_sq_dvd_num_of_padicVal_lt {n p : ℕ} (hp : p.Prime) (hpn : p ∣ n)
+    (hn0 : 0 < n) (hT : ratExpression n ≠ 0)
+    (hval : padicValRat p (ratExpression n) < 2 * padicValNat p n) :
+    ¬ (ratExpression n).num ≡ 0 [ZMOD (n ^ 2 : ℤ)] := by
+  have : Fact p.Prime := ⟨hp⟩
+  intro hcong
+  have hdiv : (n ^ 2 : ℤ) ∣ (ratExpression n).num := Int.modEq_zero_iff_dvd.mp hcong
+  have hn2 : p ^ (2 * padicValNat p n) ∣ n ^ 2 := by
+    rw [mul_comm, pow_mul]
+    exact pow_dvd_pow_of_dvd pow_padicValNat_dvd 2
+  have hnumA : p ^ (2 * padicValNat p n) ∣ (ratExpression n).num.natAbs := by
+    have hn2Z : (p ^ (2 * padicValNat p n) : ℤ) ∣ (n ^ 2 : ℤ) := by exact_mod_cast hn2
+    have : (p ^ (2 * padicValNat p n) : ℤ) ∣ (ratExpression n).num :=
+      hn2Z.trans (by simpa using hdiv)
+    exact Int.natCast_dvd.mp this
+  have hn00 : (ratExpression n).num.natAbs ≠ 0 :=
+    Int.natAbs_ne_zero.mpr (Rat.num_ne_zero.mpr hT)
+  have hle : 2 * padicValNat p n ≤ padicValNat p (ratExpression n).num.natAbs :=
+    (padicValNat_dvd_iff_le hn00).1 hnumA
+  have hp_num : p ∣ (ratExpression n).num.natAbs := by
+    have : 1 ≤ padicValNat p n :=
+      one_le_padicValNat_of_dvd (Nat.pos_iff_ne_zero.mp hn0) hpn
+    have : 1 ≤ padicValNat p (ratExpression n).num.natAbs := by omega
+    exact dvd_of_one_le_padicValNat this
+  have hden0 : ¬ p ∣ (ratExpression n).den := by
+    intro hd
+    have hg : p ∣ Nat.gcd (ratExpression n).num.natAbs (ratExpression n).den :=
+      Nat.dvd_gcd hp_num hd
+    have hred : Nat.gcd (ratExpression n).num.natAbs (ratExpression n).den = 1 :=
+      (ratExpression n).reduced
+    exact hp.not_dvd_one (by simpa [hred] using hg)
+  have hval' : padicValRat p (ratExpression n) =
+      padicValInt p (ratExpression n).num := by
+    rw [padicValRat_def, padicValNat.eq_zero_of_not_dvd hden0, Nat.cast_zero, sub_zero]
+  have : (2 * padicValNat p n : ℤ) ≤ padicValRat p (ratExpression n) := by
+    rw [hval']
+    exact_mod_cast hle
+  exact not_lt_of_ge this hval
+
+lemma sq_dvd_oddDenom_of_prime_lt {n p : ℕ} (hp : p.Prime) (hlt : p < n) :
+    p ^ 2 ∣ oddDenom n := by
+  have : p ≤ n - 1 := Nat.le_sub_one_of_lt hlt
+  unfold oddDenom
+  exact pow_dvd_pow_of_dvd (Nat.dvd_factorial hp.pos this) 2
+
+lemma exists_prime_dvd_lt_of_not_prime {n : ℕ} (hn : 1 < n) (hnp : ¬ n.Prime) :
+    ∃ p, p.Prime ∧ p ∣ n ∧ p < n := by
+  have hn1 : n ≠ 1 := ne_of_gt hn
+  obtain ⟨p, hp, hpn⟩ := Nat.exists_prime_and_dvd hn1
+  have hlt : p < n := lt_of_le_of_ne (Nat.le_of_dvd (Nat.zero_lt_of_lt hn) hpn) fun h =>
+    hnp (h ▸ hp)
+  exact ⟨p, hp, hpn, hlt⟩
+
+lemma oddInnerNum_ne_zero {n : ℕ} (hn : Odd n) (hn1 : 1 < n) :
+    oddInnerNum n ≠ 0 := by
+  have hT := ratExpression_eq_two_mul_num_div_denom hn hn1
+  have hTne : ratExpression n ≠ 0 := ne_of_gt (ratExpression_pos hn1)
+  intro h0
+  have : ratExpression n = 0 := by
+    rw [hT, h0]
+    simp
+  exact hTne this
+
+lemma padicValRat_ratExpression_odd {n p : ℕ} (hn : Odd n) (hn1 : 1 < n) (hp : p.Prime) :
+    padicValRat p (ratExpression n) =
+      padicValRat p (2 : ℚ) + padicValRat p (n : ℚ) +
+        padicValRat p (oddInnerNum n : ℚ) - padicValRat p (oddDenom n : ℚ) := by
+  have : Fact p.Prime := ⟨hp⟩
+  have hTeq := ratExpression_eq_two_mul_num_div_denom hn hn1
+  have hNne : (oddInnerNum n : ℚ) ≠ 0 := by
+    exact_mod_cast (oddInnerNum_ne_zero hn hn1)
+  have h2ne : (2 : ℚ) ≠ 0 := by norm_num
+  have hnne : (n : ℚ) ≠ 0 := Nat.cast_ne_zero.mpr (Nat.ne_zero_of_lt hn1)
+  have hDne : (oddDenom n : ℚ) ≠ 0 := Nat.cast_ne_zero.mpr oddDenom_ne_zero
+  have hprod : ratExpression n = ((2 : ℚ) * n * oddInnerNum n) / oddDenom n := by
+    simpa [mul_assoc] using hTeq
+  have hnumne : (2 : ℚ) * n * oddInnerNum n ≠ 0 :=
+    mul_ne_zero (mul_ne_zero h2ne hnne) hNne
+  rw [hprod, padicValRat.div hnumne hDne, padicValRat.mul (mul_ne_zero h2ne hnne) hNne,
+    padicValRat.mul h2ne hnne]
+
+lemma padicValRat_ratExpression_of_odd_prime {n p : ℕ} (hn : Odd n) (hn1 : 1 < n)
+    (hp : p.Prime) (hp2 : p ≠ 2) :
+    padicValRat p (ratExpression n) =
+      (padicValNat p n : ℤ) + padicValNat p (oddInnerNum n) -
+        padicValNat p (oddDenom n) := by
+  have : Fact p.Prime := ⟨hp⟩
+  have h2 : padicValRat p (2 : ℚ) = 0 := by
+    rw [show (2 : ℚ) = ((2 : ℕ) : ℚ) from rfl, padicValRat.of_nat]
+    exact_mod_cast (padicValNat_primes hp2)
+  have hnval : padicValRat p (n : ℚ) = padicValNat p n := padicValRat.of_nat
+  have hNval : padicValRat p (oddInnerNum n : ℚ) = padicValNat p (oddInnerNum n) :=
+    padicValRat.of_nat
+  have hDval : padicValRat p (oddDenom n : ℚ) = padicValNat p (oddDenom n) :=
+    padicValRat.of_nat
+  rw [padicValRat_ratExpression_odd hn hn1 hp, h2, hnval, hNval, hDval]
+  abel
+
+lemma not_n_sq_dvd_num_of_odd_inner_lt {n p : ℕ} (hn : n > 3) (hodd : Odd n)
+    (hp : p.Prime) (hp2 : p ≠ 2) (hpn : p ∣ n)
+    (hval : padicValNat p (oddInnerNum n) <
+      padicValNat p n + padicValNat p (oddDenom n)) :
+    ¬ (ratExpression n).num ≡ 0 [ZMOD (n ^ 2 : ℤ)] := by
+  have hn1 : 1 < n := by omega
+  have hn0 : 0 < n := Nat.zero_lt_of_lt hn
+  have hT : ratExpression n ≠ 0 := ne_of_gt (ratExpression_pos hn1)
+  have hpad : padicValRat p (ratExpression n) =
+      (padicValNat p n : ℤ) + padicValNat p (oddInnerNum n) -
+        padicValNat p (oddDenom n) :=
+    padicValRat_ratExpression_of_odd_prime hodd hn1 hp hp2
+  have hlt : padicValRat p (ratExpression n) < 2 * padicValNat p n := by
+    rw [hpad]
+    have : (padicValNat p (oddInnerNum n) : ℤ) <
+        padicValNat p n + padicValNat p (oddDenom n) := by exact_mod_cast hval
+    linarith
+  exact not_n_sq_dvd_num_of_padicVal_lt hp hpn hn0 hT hlt
+
+lemma two_mul_prime_le_pred_of_odd_composite {n p : ℕ} (hn : 1 < n) (hnp : ¬ n.Prime)
+    (hodd : Odd n) (hp : p.Prime) (hpn : p ∣ n) : 2 * p ≤ n - 1 := by
+  have hn0 : 0 < n := Nat.zero_lt_of_lt hn
+  have hmul : n / p * p = n := Nat.div_mul_cancel hpn
+  have hquot_ne_one : n / p ≠ 1 := by
+    intro h1
+    have : n = p := by
+      rw [h1, one_mul] at hmul
+      exact hmul.symm
+    exact hnp (this ▸ hp)
+  have hquot_pos : 1 ≤ n / p := by
+    have : p ≤ n := Nat.le_of_dvd hn0 hpn
+    exact (Nat.one_le_div_iff hp.pos).mpr this
+  have hquot_ne_two : n / p ≠ 2 := by
+    intro h2
+    have : n = 2 * p := by
+      rw [h2] at hmul
+      exact hmul.symm
+    have : Even n := by
+      rw [this]
+      exact Even.mul_right even_two p
+    exact Nat.not_odd_iff_even.mpr this hodd
+  have hquot : 3 ≤ n / p := by omega
+  have : 3 * p ≤ n := by
+    rw [← hmul]
+    exact Nat.mul_le_mul_right p hquot
+  omega
+
+lemma two_le_padicValNat_factorial_pred {n p : ℕ} [Fact p.Prime]
+    (hn1 : 1 < n) (h : 2 * p ≤ n - 1) :
+    2 ≤ padicValNat p (Nat.factorial (n - 1)) := by
+  have hp1 : 1 < p := Nat.Prime.one_lt ‹Fact p.Prime›.out
+  have hm0 : n - 1 ≠ 0 := by omega
+  have hnb : Nat.log p (n - 1) < n :=
+    (Nat.log_lt_self p hm0).trans (by omega)
+  rw [padicValNat_factorial (p := p) (n := n - 1) (b := n) hnb]
+  have h1mem : 1 ∈ Finset.Ico 1 n := Finset.mem_Ico.mpr ⟨le_rfl, hn1⟩
+  have hterm : 2 ≤ (n - 1) / p ^ 1 := by
+    rw [pow_one]
+    exact (Nat.le_div_iff_mul_le (Nat.zero_lt_of_lt hp1)).2 (by simpa [mul_comm] using h)
+  have := Finset.single_le_sum
+    (fun i _ => Nat.zero_le ((n - 1) / p ^ i)) h1mem
+  omega
+
+lemma four_le_padicValNat_oddDenom {n p : ℕ} [Fact p.Prime]
+    (hn1 : 1 < n) (h : 2 * p ≤ n - 1) :
+    4 ≤ padicValNat p (oddDenom n) := by
+  unfold oddDenom
+  rw [padicValNat.pow]
+  have : 2 ≤ padicValNat p (Nat.factorial (n - 1)) :=
+    two_le_padicValNat_factorial_pred hn1 h
+  omega
+
+/-- If `v_p(N) ≤ v_p(D)` then `v_p(T) ≤ v_p(n) < 2 v_p(n)` for odd `p | n`. -/
+lemma not_n_sq_dvd_num_of_inner_le_denom {n p : ℕ} (hn : n > 3) (hodd : Odd n)
+    (hp : p.Prime) (hp2 : p ≠ 2) (hpn : p ∣ n)
+    (hle : padicValNat p (oddInnerNum n) ≤ padicValNat p (oddDenom n)) :
+    ¬ (ratExpression n).num ≡ 0 [ZMOD (n ^ 2 : ℤ)] := by
+  have : Fact p.Prime := ⟨hp⟩
+  have hn0 : 0 < n := by omega
+  have _he : 1 ≤ padicValNat p n :=
+    one_le_padicValNat_of_dvd (Nat.pos_iff_ne_zero.mp hn0) hpn
+  refine not_n_sq_dvd_num_of_odd_inner_lt hn hodd hp hp2 hpn ?_
+  omega
+
 lemma conjecture_of_odd_composite_converse
     (hconv : ∀ {n : ℕ}, n > 3 → Odd n → ¬ n.Prime →
       ¬ (ratExpression n).num ≡ 0 [ZMOD (n ^ 2 : ℤ)]) :
@@ -992,5 +1190,71 @@ lemma conjecture_of_odd_composite_converse
     · exact hconv hn ho hnp hcong
   · intro hp
     exact n_sq_dvd_num_of_prime hp hn
+
+/-- The `-2/n` terms cancel: `q T(pq) - T(p) = q S_{pq} - S_p`. -/
+lemma q_mul_ratExpression_sub_eq_sum {p q : ℕ} (hp0 : 0 < p) (hq0 : 0 < q) :
+    (q : ℚ) * ratExpression (p * q) - ratExpression p =
+      (q : ℚ) * ∑ i ∈ range (p * q), (2 : ℚ) ^ (i + 1) / (i + 1) -
+        ∑ i ∈ range p, (2 : ℚ) ^ (i + 1) / (i + 1) := by
+  have hn : 0 < p * q := Nat.mul_pos hp0 hq0
+  have hpne : (p : ℚ) ≠ 0 := Nat.cast_ne_zero.mpr (Nat.pos_iff_ne_zero.mp hp0)
+  have hqne : (q : ℚ) ≠ 0 := Nat.cast_ne_zero.mpr (Nat.pos_iff_ne_zero.mp hq0)
+  have hdiv : (q : ℚ) * ((-2 : ℚ) / (p * q)) = (-2 : ℚ) / p := by
+    field_simp [hpne, hqne]
+  rw [ratExpression_of_pos hn, ratExpression_of_pos hp0, mul_add, Nat.cast_mul, hdiv]
+  ring
+
+lemma two_eq_one_add_one_zmod {q : ℕ} : (2 : ZMod q) = 1 + 1 := by
+  norm_num
+
+lemma two_pow_card_eq_two {q : ℕ} [Fact q.Prime] : (2 : ZMod q) ^ q = 2 := by
+  rw [two_eq_one_add_one_zmod, add_pow_char]
+  simp
+
+lemma two_pow_mul_eq_two_pow_zmod {q j : ℕ} [Fact q.Prime] :
+    (2 : ZMod q) ^ (j * q) = (2 : ZMod q) ^ j := by
+  rw [mul_comm, pow_mul, two_pow_card_eq_two]
+
+lemma two_pow_j_le_of_mul {q j : ℕ} (hq : 0 < q) : 2 ^ j ≤ 2 ^ (j * q) :=
+  Nat.pow_le_pow_right (by decide) (Nat.le_mul_of_pos_right j hq)
+
+lemma q_dvd_two_pow_mul_sub {q j : ℕ} (hq : q.Prime) :
+    q ∣ 2 ^ (j * q) - 2 ^ j := by
+  have : Fact q.Prime := ⟨hq⟩
+  have hle := two_pow_j_le_of_mul (j := j) hq.pos
+  have hz : ((2 ^ (j * q) : ℕ) : ZMod q) = ((2 ^ j : ℕ) : ZMod q) := by
+    rw [Nat.cast_pow, Nat.cast_pow]
+    exact two_pow_mul_eq_two_pow_zmod
+  exact (Nat.modEq_iff_dvd' hle).1 ((ZMod.natCast_eq_natCast_iff _ _ q).1 hz.symm)
+
+lemma two_pow_mul_ne {q j : ℕ} (hq : 1 < q) (hj : 0 < j) : 2 ^ (j * q) ≠ 2 ^ j := by
+  refine ne_of_gt (Nat.pow_lt_pow_right (by decide : 1 < 2) ?_)
+  have : j * 1 < j * q := Nat.mul_lt_mul_of_pos_left hq hj
+  simpa using this
+
+lemma nat_cast_two_pow_mul_sub {q j : ℕ} (hq : 0 < q) :
+    ((2 ^ (j * q) - 2 ^ j : ℕ) : ℚ) = (2 : ℚ) ^ (j * q) - (2 : ℚ) ^ j := by
+  have hle := two_pow_j_le_of_mul (j := j) hq
+  rw [Nat.cast_sub hle, Nat.cast_pow, Nat.cast_pow]
+  simp
+
+lemma one_le_padicValRat_two_pow_mul_sub {q j : ℕ} (hq : q.Prime) (hj : 0 < j) :
+    1 ≤ padicValRat q ((2 : ℚ) ^ (j * q) - (2 : ℚ) ^ j) := by
+  have : Fact q.Prime := ⟨hq⟩
+  have hne := two_pow_mul_ne hq.one_lt hj
+  have hdiff : 2 ^ (j * q) - 2 ^ j ≠ 0 :=
+    Nat.sub_ne_zero_of_lt (lt_of_le_of_ne (two_pow_j_le_of_mul hq.pos) hne.symm)
+  have hval : 1 ≤ padicValNat q (2 ^ (j * q) - 2 ^ j) :=
+    one_le_padicValNat_of_dvd hdiff (q_dvd_two_pow_mul_sub hq)
+  rw [← nat_cast_two_pow_mul_sub hq.pos, padicValRat.of_nat]
+  exact_mod_cast hval
+
+#print axioms OeisA108866.not_n_sq_dvd_num_of_even
+#print axioms OeisA108866.n_sq_dvd_num_of_prime
+#print axioms OeisA108866.padicValRat_ratExpression_of_odd_prime
+#print axioms OeisA108866.not_n_sq_dvd_num_of_odd_inner_lt
+#print axioms OeisA108866.not_n_sq_dvd_num_of_inner_le_denom
+#print axioms OeisA108866.q_dvd_two_pow_mul_sub
+#print axioms OeisA108866.one_le_padicValRat_two_pow_mul_sub
 
 end OeisA108866

@@ -7,18 +7,23 @@
   "source_sha256": "afa95297bd177a882fb72b03f32f1da68ecae58d9126981567562462b73266f8",
   "current_status": "partial",
   "novelty_status": "no_public_exact_solution_in_checked_sources",
-  "last_updated_utc": "2026-09-13T00:31:00Z",
+  "last_updated_utc": "2026-09-13T01:11:09Z",
   "proof_declarations": [
     "OeisA108866.not_n_sq_dvd_num_of_even",
     "OeisA108866.sum_two_pow_div_eq_two_sum_odd_choose",
     "OeisA108866.ratExpression_eq_two_sum_odd_choose_lt",
     "OeisA108866.ratExpression_eq_two_mul_n_sum_choose_sq",
     "OeisA108866.n_sq_dvd_num_of_prime",
+    "OeisA108866.padicValRat_ratExpression_of_odd_prime",
+    "OeisA108866.not_n_sq_dvd_num_of_odd_inner_lt",
+    "OeisA108866.not_n_sq_dvd_num_of_inner_le_denom",
+    "OeisA108866.q_mul_ratExpression_sub_eq_sum",
+    "OeisA108866.q_dvd_two_pow_mul_sub",
     "OeisA108866.conjecture_of_odd_composite_converse"
   ],
   "unresolved_gaps": [
-    "Odd composite converse: no counterexample in c5-k4 n≤4000; structural p-adic argument not finished.",
+    "Odd composite converse: no counterexample in c5-k4 n≤4000; kernel proof that some p|n has v_p(T(n)) < 2 v_p(n) is not finished.",
     "Independently_verified is not claimed."
   ],
-  "next_step": "Prove the odd-composite converse, or a p-adic bound that some prime p|n has v_p(T(n)) < 2 v_p(n). Do not claim the frozen iff until that converse is kernel-checked."
+  "next_step": "Finish v_q(q T(pq) - T(p)) ≥ 1 and deduce the square-free converse, then treat prime powers. Do not claim the frozen iff until the converse is kernel-checked."
 }
