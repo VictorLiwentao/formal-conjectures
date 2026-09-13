@@ -33,7 +33,9 @@ remaining-class factor `q ≡ 2 (mod 3)` of `p-2`, injection of a factor of
 `p-2` is a larger twin, Cloitre's valuation barrier, remaining McEachen
 when `lpf(p-2) ≤ 101` or that least factor is a larger twin, Dirichlet
 existence of some (unbounded) prime injector for every prime `q ≥ 5`,
-and that `3 ∣ a n` for `n ≥ 3` forces `9 ∣ n+1`.
+that `3 ∣ a n` for `n ≥ 3` forces `9 ∣ n+1`, that `3 ∣ a n` for `n ≥ 6`
+forces `81 ∣ n+1`, and that the frozen statement follows from first-entry
+of every prime `q ≥ 5` by the square-window index `q(q+2)-1`.
 -/
 
 namespace OeisA135508
@@ -151,6 +153,40 @@ lemma nine_dvd_succ_of_three_dvd_a {n : ℕ} (hn : 3 ≤ n) (h3 : 3 ∣ a n) :
 lemma not_three_dvd_a_of_not_nine {n : ℕ} (hn : 3 ≤ n) (h9 : ¬ 9 ∣ n + 1) :
     ¬ 3 ∣ a n := fun h => h9 (nine_dvd_succ_of_three_dvd_a hn h)
 
+/-- `a 5 = 1` because `6 ∣ x 5`. -/
+lemma a_5 : a 5 = 1 := by
+  have hn : 0 < (5 : ℕ) := by decide
+  have h2 : 2 ∣ x 5 := two_dvd_x (by decide : 2 ≤ 5)
+  have h3 : 3 ∣ x 5 := three_dvd_x (by decide : 4 ≤ 5)
+  have hcop : Nat.Coprime 2 3 := Nat.coprime_iff_gcd_eq_one.2 (by decide)
+  have h6 : 6 ∣ x 5 := hcop.mul_dvd_of_dvd_of_dvd h2 h3
+  have hg : Nat.gcd (x 5) 6 = 6 := Nat.gcd_eq_right h6
+  rw [a_eq hn, show (5 : ℕ) + 1 = 6 from rfl, hg, Nat.div_self (by decide : 0 < 6)]
+
+/-- Three successive increments `a 3 = a 4 = a 5 = 1` give `27 ∣ x 6`. -/
+lemma x_six_eq_mul : x 6 = x 3 * 27 := by
+  have h4 := x_succ_a (by decide : 0 < (3 : ℕ))
+  rw [a_3] at h4
+  have h5 := x_succ_a (by decide : 0 < (4 : ℕ))
+  rw [a_4] at h5
+  have h6 := x_succ_a (by decide : 0 < (5 : ℕ))
+  rw [a_5] at h6
+  rw [h6, h5, h4]
+  ring
+
+lemma twenty_seven_dvd_x_six : 27 ∣ x 6 := by
+  rw [x_six_eq_mul]
+  exact dvd_mul_left _ _
+
+lemma twenty_seven_dvd_x {n : ℕ} (hn : 6 ≤ n) : 27 ∣ x n :=
+  twenty_seven_dvd_x_six.trans (x_dvd_of_le (by decide : 0 < 6) hn)
+
+lemma x_three : x 3 = 20 := by decide
+
+lemma not_seven_dvd_x_six : ¬ 7 ∣ x 6 := by
+  rw [x_six_eq_mul, x_three]
+  decide
+
 lemma five_dvd_x_three : 5 ∣ x 3 := by
   have h := x_succ_a (n := 2) (by decide)
   rw [a_2] at h
@@ -190,6 +226,12 @@ lemma a_eq_one_iff_dvd {p : ℕ} (hp : p.Prime) :
   · intro hd
     have : Nat.gcd (x (p - 1)) p = p := Nat.gcd_eq_right hd
     rw [this, Nat.div_self hp.pos]
+
+/-- The prime index `7` is the unique McEachen exception among twins. -/
+lemma a_6 : a 6 = 7 := by
+  rcases a_eq_one_or_self (p := 7) Nat.prime_seven with h | h
+  · exact (not_seven_dvd_x_six ((a_eq_one_iff_dvd Nat.prime_seven).1 h)).elim
+  · exact h
 
 lemma dvd_x_pred_of_a {p : ℕ} (_hp : p.Prime) (_hp5 : 5 ≤ p)
     (ha : a (p - 3) = p - 2) : p ∣ x (p - 1) := by
@@ -837,6 +879,16 @@ lemma q_dvd_x_of_prime_index {k q : ℕ} (hpr : (k * q - 2).Prime)
   rw [this] at hx
   exact (Nat.dvd_mul_left q k).trans hx
 
+/-- A prime injector inside the square window injects `q` by index `q(q+2)-1`. -/
+lemma q_dvd_x_square_window_of_prime_index {k q : ℕ}
+    (hpr : (k * q - 2).Prime) (h7 : 7 ≤ k * q - 2)
+    (hmod : (k * q - 2) % 3 = 2)
+    (hle : k * q - 2 ≤ q * (q + 2) - 1) :
+    q ∣ x (q * (q + 2) - 1) := by
+  have hx := q_dvd_x_of_prime_index hpr h7 hmod
+  have hpos : 0 < k * q - 2 := by omega
+  exact hx.trans (x_dvd_of_le hpos hle)
+
 /-- If `r = kq - 2` is an odd prime `≡ 2 (mod 3)`, then `q` enters `x` at index `r`. -/
 lemma q_dvd_x_of_prime_injector {k q : ℕ} (hmodk : k % 3 = 2) (hmodq : q % 3 = 2)
     (hpr : (k * q - 2).Prime) (h7 : 7 ≤ k * q - 2) :
@@ -1457,6 +1509,69 @@ lemma remaining_minFac_ge_five {p : ℕ} (hp : p.Prime) (hp7 : 7 ≤ p)
     exact (by decide : ¬ Nat.Prime 4) hminp
   omega
 
+/-- The frozen McEachen statement, assuming every prime `q ≥ 5` divides
+`x` by the square-window index `q(q+2)-1`. Larger twins already satisfy
+that bound via `larger_twin_dvd_x`. This does not prove the window. -/
+theorem conjecture_of_square_window
+    (hwin : ∀ q, q.Prime → 5 ≤ q → q ∣ x (q * (q + 2) - 1))
+    {p : ℕ} (hp : p.Prime) (hp_twin : ¬ (p - 2).Prime) : a (p - 1) = p := by
+  have hmodlt : p % 3 < 3 := Nat.mod_lt p (by decide)
+  interval_cases hmod : p % 3
+  · have h3p : 3 ∣ p := Nat.dvd_of_mod_eq_zero hmod
+    have hp3 : p = 3 :=
+      ((Nat.prime_dvd_prime_iff_eq Nat.prime_three hp).1 h3p).symm
+    subst hp3
+    exact conjecture_three hp_twin
+  · have hne2 : p ≠ 2 := by
+      intro h
+      subst h
+      exact absurd hmod (by decide)
+    have hgt2 : 2 < p := lt_of_le_of_ne hp.two_le hne2.symm
+    have hge3 : 3 ≤ p := Nat.succ_le_of_lt hgt2
+    have hne3 : p ≠ 3 := by
+      intro h
+      subst h
+      exact absurd hmod (by decide)
+    have hgt3 : 3 < p := lt_of_le_of_ne hge3 hne3.symm
+    have hge4 : 4 ≤ p := Nat.succ_le_of_lt hgt3
+    have hne4 : p ≠ 4 := by
+      intro h
+      subst h
+      exact (by decide : ¬ Nat.Prime 4) hp
+    have hgt4 : 4 < p := lt_of_le_of_ne hge4 hne4.symm
+    have hge5 : 5 ≤ p := Nat.succ_le_of_lt hgt4
+    have hne5 : p ≠ 5 := by
+      intro h
+      subst h
+      exact absurd hmod (by decide)
+    have hgt5 : 5 < p := lt_of_le_of_ne hge5 hne5.symm
+    have hge6 : 6 ≤ p := Nat.succ_le_of_lt hgt5
+    have hne6 : p ≠ 6 := by
+      intro h
+      subst h
+      exact (by decide : ¬ Nat.Prime 6) hp
+    have hp7 : 7 ≤ p := Nat.succ_le_of_lt (lt_of_le_of_ne hge6 hne6.symm)
+    have hne1 : p - 2 ≠ 1 := by
+      intro h
+      have h2le : 2 ≤ p := le_trans (by decide : 2 ≤ 7) hp7
+      have hcancel := Nat.sub_add_cancel h2le
+      rw [h] at hcancel
+      have hp3 : p = 3 := hcancel.symm
+      exact Nat.ne_of_lt (lt_of_lt_of_le (by decide : 3 < 7) hp7) hp3.symm
+    have hminp : (Nat.minFac (p - 2)).Prime := Nat.minFac_prime hne1
+    have h5 := remaining_minFac_ge_five hp hp7 hmod
+    exact conjecture_of_minFac_entered hp hp7 hmod hp_twin (hwin _ hminp h5)
+  · by_cases h7 : 7 ≤ p
+    · exact conjecture_of_mod_three hp h7 hmod
+    · have hle6 : p ≤ 6 := Nat.lt_succ_iff.mp (Nat.not_le.mp h7)
+      have h2le := hp.two_le
+      interval_cases p
+      · exact conjecture_two hp_twin
+      · exact absurd hmod (by decide)
+      · exact False.elim ((by decide : ¬ Nat.Prime 4) hp)
+      · exact (hp_twin Nat.prime_three).elim
+      · exact False.elim ((by decide : ¬ Nat.Prime 6) hp)
+
 lemma prime_le_twentythree {q : ℕ} (hq : q.Prime) (h5 : 5 ≤ q) (h23 : q ≤ 23) :
     q = 5 ∨ q = 7 ∨ q = 11 ∨ q = 13 ∨ q = 17 ∨ q = 19 ∨ q = 23 := by
   interval_cases q
@@ -1764,6 +1879,8 @@ theorem conjecture_of_minFac_le_one_hundred_one_or_twin {p : ℕ} (hp : p.Prime)
 
 private instance : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
 
+private instance : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+
 lemma a_pos {n : ℕ} (hn : 0 < n) : 0 < a n :=
   Nat.pos_of_dvd_of_pos (a_dvd hn) (Nat.succ_pos n)
 
@@ -1811,6 +1928,60 @@ lemma padicValNat_a (p n : ℕ) [Fact p.Prime] (hn : 0 < n) :
   have hx := x_pos hn
   rw [a_eq hn, padicValNat.div_of_dvd (Nat.gcd_dvd_right _ _),
     padicValNat_gcd p (x n) (n + 1) hx (Nat.succ_pos n)]
+
+/-- If a prime `ℓ` already divides `x n` and also divides `a n`, then
+`ℓ^{v_ℓ(x n)+1} ∣ n+1`. This is the valuation form of Cloitre 6.7 without
+requiring `a n = ℓ`. -/
+lemma prime_dvd_a_padic {ℓ n : ℕ} [Fact ℓ.Prime] (hn : 0 < n)
+    (_hx : ℓ ∣ x n) (ha : ℓ ∣ a n) :
+    padicValNat ℓ (x n) + 1 ≤ padicValNat ℓ (n + 1) := by
+  have hva : 1 ≤ padicValNat ℓ (a n) :=
+    one_le_padicValNat_of_dvd (a_pos hn).ne' ha
+  have hformula := padicValNat_a ℓ n hn
+  by_cases hle : padicValNat ℓ (x n) ≤ padicValNat ℓ (n + 1)
+  · have hmin : min (padicValNat ℓ (x n)) (padicValNat ℓ (n + 1)) =
+        padicValNat ℓ (x n) := min_eq_left hle
+    have : padicValNat ℓ (a n) =
+        padicValNat ℓ (n + 1) - padicValNat ℓ (x n) := by
+      rw [hformula, hmin]
+    omega
+  · have hgt : padicValNat ℓ (n + 1) < padicValNat ℓ (x n) :=
+      Nat.lt_of_not_ge hle
+    have hmin : min (padicValNat ℓ (x n)) (padicValNat ℓ (n + 1)) =
+        padicValNat ℓ (n + 1) := min_eq_right (le_of_lt hgt)
+    have : padicValNat ℓ (a n) = 0 := by
+      rw [hformula, hmin, Nat.sub_self]
+    omega
+
+/-- After `ℓ` divides `x N`, any later `ℓ ∣ a n` needs
+`ℓ^{v_ℓ(x N)+1} ∣ n+1`. -/
+lemma prime_dvd_a_padic_of_le {ℓ N n : ℕ} [Fact ℓ.Prime]
+    (hN : 0 < N) (hNle : N ≤ n) (hd : ℓ ∣ x N) (ha : ℓ ∣ a n) :
+    padicValNat ℓ (x N) + 1 ≤ padicValNat ℓ (n + 1) := by
+  have hx : ℓ ∣ x n := hd.trans (x_dvd_of_le hN hNle)
+  have hn : 0 < n := lt_of_lt_of_le hN hNle
+  have h := prime_dvd_a_padic hn hx ha
+  have hvle : padicValNat ℓ (x N) ≤ padicValNat ℓ (x n) :=
+    (padicValNat_dvd_iff_le (x_pos hn).ne').1
+      (pow_padicValNat_dvd.trans (x_dvd_of_le hN hNle))
+  omega
+
+/-- If `n ≥ 6` and `3 ∣ a n`, then `81 ∣ n+1`. -/
+lemma eighty_one_dvd_succ_of_three_dvd_a {n : ℕ} (hn : 6 ≤ n) (h3 : 3 ∣ a n) :
+    81 ∣ n + 1 := by
+  have hn0 : 0 < n := by omega
+  have hx : 3 ∣ x n := three_dvd_x (le_trans (by decide : 4 ≤ 6) hn)
+  have hv := prime_dvd_a_padic hn0 hx h3
+  have h27 : 27 ∣ x n := twenty_seven_dvd_x hn
+  have hpow : (3 : ℕ) ^ 3 = 27 := by decide
+  have hge : 3 ≤ padicValNat 3 (x n) :=
+    (padicValNat_dvd_iff_le (x_pos hn0).ne').1 (hpow ▸ h27)
+  have : 4 ≤ padicValNat 3 (n + 1) := by omega
+  exact (padicValNat_dvd_iff_le (Nat.succ_ne_zero n)).2 this
+
+lemma not_three_dvd_a_of_not_eighty_one {n : ℕ} (hn : 6 ≤ n)
+    (h81 : ¬ 81 ∣ n + 1) : ¬ 3 ∣ a n :=
+  fun h => h81 (eighty_one_dvd_succ_of_three_dvd_a hn h)
 
 /-- If `a n` equals a prime `ℓ` that already divides `x n`, then
 `ℓ^{v_ℓ(x n)+1} ∣ n+1`. This is Cloitre Lemma 6.7 at a single index. -/
@@ -2164,5 +2335,13 @@ lemma v2_x_two_four_pow_pred (k : ℕ) :
 #print axioms exists_prime_index_injector_mod_one
 #print axioms q_dvd_x_eventually
 #print axioms q_dvd_x_eventually_mod_one
+#print axioms a_5
+#print axioms a_6
+#print axioms twenty_seven_dvd_x
+#print axioms conjecture_of_square_window
+#print axioms q_dvd_x_square_window_of_prime_index
+#print axioms prime_dvd_a_padic
+#print axioms eighty_one_dvd_succ_of_three_dvd_a
+#print axioms not_three_dvd_a_of_not_eighty_one
 
 end OeisA135508

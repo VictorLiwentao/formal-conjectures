@@ -5,7 +5,7 @@ Frozen source SHA-256: `3814549cee8601c96c59b923d7ece1c4b26a59b0fd134f49a93cbbc3
 (matches `assignments.json` and the working tree).
 Baseline commit: `a2f4a1bb12a28e04a969da78feefac7d1ce49565`.
 Coordination seed: `238f78bdd5701ae4c97a0d70d4e22e2d45770d7a`.
-Audit date: 2026-09-12/13 UTC. Re-checked Cloitre arXiv:2510.18891v3 and OEIS A135508 on 2026-09-13 (direct HTML fetch of oeis.org hit Cloudflare; the public sequence snippet still lists McEachen as a comment and C1 as a comment). Cloitre’s Corollary 6.6 remains conditional on `C₁`. The paper still treats a complete proof of the prime-increment / McEachen statements as requiring a Linnik strengthening beyond current reach.
+Audit date: 2026-09-12/13 UTC. Re-checked Cloitre arXiv:2510.18891v3 and OEIS A135508 on 2026-09-13. Live OEIS terms are `2, 3, 1, 1, 1, 7, 2, …`, matching Lean `a 1` through `a 6`. Direct HTML fetch of oeis.org previously hit Cloudflare; the public sequence page still lists McEachen as a comment and C1 as a comment. Cloitre’s Corollary 6.6 remains conditional on `C₁`. The paper still treats a complete proof of the prime-increment / McEachen statements as requiring a Linnik strengthening beyond current reach.
 
 This is a search log. “No match found” means no public exact solution was found in the sources below. It does not prove the problem is open.
 
@@ -82,4 +82,4 @@ No MathOverflow thread stating or proving this exact assertion. Nearby LCM-ratio
 
 ## Conclusion
 
-No exact prior solution of the frozen proposition was found. Cloitre’s McEachen corollary is conditional on `C₁`. Reproducing that conditional corollary is not a batch resolution. Formalizing Dirichlet existence of unbounded injectors is not a resolution either.
+No exact prior solution of the frozen proposition was found. Cloitre’s McEachen corollary is conditional on `C₁`. Reproducing that conditional corollary is not a batch resolution. Formalizing Dirichlet existence of unbounded injectors is not a resolution either. `conjecture_of_square_window` is a proved reduction of the frozen type to first-entry by `q(q+2)-1`; it is not a proof of that first-entry bound.

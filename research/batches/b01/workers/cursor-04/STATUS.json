@@ -11,7 +11,7 @@
   "novelty_status": "no_exact_public_solution_found_in_checked_sources",
   "statement_audit": "matches_intended_mceachen_statement",
   "oeis_editability": "unknown",
-  "last_updated_utc": "2026-09-13T02:30:28Z",
+  "last_updated_utc": "2026-09-13T03:00:46Z",
   "session_kickoff_utc": "2026-09-12T23:12:00Z",
   "session_hard_stop_utc": "2026-09-13T07:12:00Z",
   "proof_declarations": [
@@ -79,16 +79,26 @@
     "OeisA135508.coprime_five_mul_sub_two",
     "OeisA135508.coprime_sub_two_six_mul",
     "OeisA135508.nine_dvd_succ_of_three_dvd_a",
-    "OeisA135508.not_three_dvd_a_of_not_nine"
+    "OeisA135508.not_three_dvd_a_of_not_nine",
+    "OeisA135508.a_5",
+    "OeisA135508.a_6",
+    "OeisA135508.twenty_seven_dvd_x",
+    "OeisA135508.prime_dvd_a_padic",
+    "OeisA135508.eighty_one_dvd_succ_of_three_dvd_a",
+    "OeisA135508.not_three_dvd_a_of_not_eighty_one",
+    "OeisA135508.q_dvd_x_square_window_of_prime_index",
+    "OeisA135508.conjecture_of_square_window"
   ],
   "unresolved_gaps": [
     "Frozen OeisA135508.conjecture is still sorry.",
     "Remaining class: primes p ≡ 1 (mod 3) with p-2 composite, lpf(p-2) ≥ 103, and that least factor not a larger twin.",
+    "conjecture_of_square_window reduces the frozen type to q | x(q(q+2)-1) for every prime q ≥ 5. That hypothesis is not proved.",
     "conjecture_of_minFac_entered reduces remaining McEachen to q | x(q(q+2)-1) for q = lpf(p-2).",
     "exists_prime_index_injector proves an unbounded prime injector via Dirichlet; it does not prove r ≤ q(q+2)-1.",
     "gcd_gt_one_of_composite_shift: a composite odd kq-2 ≡ 2 (mod 3) is not a coprime injector once lpf(kq-2) has entered by s(s+2)-1.",
     "Need a prime r = kq-2 with r ≤ q(q+2)-1. For q ≡ 2 (mod 3) the candidates are k ≡ 5 (mod 6).",
     "Dirichlet, Linnik L=5, and the usual GRH bound do not give r ≤ q(q+2)-1. Finite injector checks are not a proof.",
+    "Miller-Rabin to q ≤ 200000 found no window failures (worst k=257 at q=40973). Not a proof.",
     "Cloitre C1 and Cor. 6.6 are not used and are not an unconditional solution."
   ],
   "next_step": "Prove an unconditional first-entry bound q | x(q(q+2)-1) for remaining primes q ≥ 103, or find a different invariant. Do not claim completion. Continue until an exact candidate, a verified prior solution, a defective-target report, or the original 8-hour kickoff limit.",
