@@ -18,7 +18,7 @@ python3 research/batches/b01/workers/cursor-06/targets/A108866/experiments/scan_
 python3 research/batches/b01/workers/cursor-06/targets/A108866/experiments/padic_converse.py
 ```
 
-Final math commit SHA: update after git commit.
+Final math commit SHA: `4ac6f60caf60a91a9527a5e8658ff2bc37daedda`.
 
 ## Status
 
