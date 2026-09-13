@@ -11,8 +11,8 @@ Incomplete research session. No exact proof or disproof. Do not treat this as a 
 - source baseline: `a2f4a1bb12a28e04a969da78feefac7d1ce49565`
 - source SHA-256: `b50d00e13735613cbe37bd3a25c19130874e8f036ca2a0e3c1aceb177a33c683`
 - original kickoff (UTC): 2026-09-12T23:12Z
-- this checkpoint (UTC): 2026-09-13T01:35Z
-- final commit SHA: `70feba5f4238c592345dc9cb3e3ed49394b7a09d`
+- this checkpoint (UTC): 2026-09-13T01:40Z
+- final commit SHA: recorded after this commit
 
 ## Reproduction
 
@@ -40,6 +40,7 @@ Do not run a full `lake build`, `lake clean`, or `lake update`.
 - `ρ(p^a)` is strictly increasing in the exponent for `a ≥ 1`.
 - Leftover `10/7` cannot be two squareful primes `p < q` both at least `5` times a squarefree factor. This includes the `{5,7}` pair.
 - Three squareful primes all at least `7` cannot fill leftover `10/7` (cap `1001/720 < 10/7`).
+- Leftover `10/7` ω=3 with a factor `5`: `{5^2,7^2,p^k}` for `p ≥ 23`; Euler caps `{5,11,p≥29}`, `{5,13,p≥23}`, `{5,17,p≥19}`; squares `{5,7,11/13/17/19}` overshoot.
 - A `Fraction` search for three primes `≥ 5` on leftover `10/7` returned no hits. That search is not a proof.
 
 ## Next step

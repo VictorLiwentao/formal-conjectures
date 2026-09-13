@@ -28,11 +28,11 @@ Command:
 LEAN_NUM_THREADS=2 lake env lean -DwarningAsError=true research/batches/b01/workers/cursor-05/targets/A063880/A063880.lean
 ```
 
-Result on 2026-09-13T01:34Z: exit code 0, no warnings, no `sorry` declaration in this file.
+Result on 2026-09-13T01:40Z: exit code 0, no warnings, no `sorry` declaration in this file.
 
 This is **not** a compile of the frozen theorems. The frozen `sorry` theorems in `FormalConjectures/OEIS/63880.lean` were not used as proof steps.
 
-New lemmas compiled in this checkpoint include `sigma_usigma_ratio_strict_mono`, `not_seven_sigma_eq_ten_usigma_five_seven`, `not_seven_sigma_of_two_sq_primes`, and `seven_sigma_lt_ten_usigma_three_large`.
+New lemmas compiled in this checkpoint include `sigma_usigma_ratio_strict_mono`, `not_seven_sigma_eq_ten_usigma_five_seven`, `not_seven_sigma_of_two_sq_primes`, `seven_sigma_lt_ten_usigma_three_large`, `seven_sigma_lt_ten_usigma_five_seven_sq_large`, and `twenty_five_forty_nine_eleven_sq_overshoot`.
 
 No `#print axioms` audit of a completed target theorem exists, because those theorems are not proved.
 
