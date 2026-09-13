@@ -45,9 +45,9 @@ Unconditional in that paper: inhibition (Lemma 6.1); 2-adic staircase (Prop 6.5)
 Conditional on hypothesis `C₁` (`c_n ∈ {1} ∪ primes` for all `n`):
 - Theorem 6.2: `c_q = 1` for prime `q ≥ 5` implies `q-2` prime.
 - Corollary 6.6: McEachen for `p ≥ 5`. Proof: `c_p ∈ {1,p}`; `c_p=1` plus 6.2 would force `p-2` prime.
-- Hypothesis 6.11 is the prime-index form of McEachen plus twin detection, assumed for the `K=2` density-1 theorem.
+- Hypothesis 6.11 is the prime-index form of McEachen plus twin detection. Cloitre uses it as an assumption for the `K=2` density-1 theorem. Worker cursor-04 proved the twin-detection half unconditionally for larger twins `≥ 13` (`larger_twin_eq_one`) and McEachen for several infinite families, but not the remaining prime-index cases with `lpf(p-2) ≥ 37` not a twin. Reproducing Corollary 6.6 under `C₁` is not a batch resolution.
 
-Do **not** count Corollary 6.6 as a new or unconditional solution.
+OEIS `/internal` (retrieved 2026-09-13 via HTML snapshot): `%I #47 Oct 01 2025`; McEachen comment still present; C1 still appears as a comment (“1's or primes only”), not as a proof. Editability: **unknown**. No OEIS edit was submitted.
 
 Even under GRH, the usual bound on the least prime in an arithmetic progression is larger than the square window `q(q+2)-1` by logarithmic factors. Pointwise first-entry of every `q ≡ 2 (mod 3)` by index `q(q+2)-1` is therefore beyond current analytic technology as well as beyond Mathlib. This does not forbid an elementary proof that uses more of the recurrence, but it does rule out quoting Linnik or Dirichlet as a finish.
 

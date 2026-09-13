@@ -24,6 +24,7 @@ python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/scan_
 python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/first_entry_bound.py
 python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/injector_bound.py
 python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/injector_mod.py
+python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/first_entry_shape.py
 ```
 
 No `lake clean`, `lake update`, or full default `lake build`.
@@ -59,8 +60,12 @@ not_q_dvd_x_le / not_q_dvd_x_self : propext, Classical.choice, Quot.sound
 not_prime_kq_sub_two_of_even : propext, Quot.sound
 not_prime_kq_sub_two_of_k_mod_one : propext, Classical.choice, Quot.sound
 conjecture_of_five_prime_injector / remaining_injector / cases : propext, Classical.choice, Quot.sound
-conjecture_of_seventeen_dvd / twentythree_dvd : propext, Classical.choice, Quot.sound
-conjecture_of_minFac_le_twentythree : propext, Classical.choice, Quot.sound
+conjecture_of_seventeen_dvd / twentythree_dvd / twenty_nine_dvd : propext, Classical.choice, Quot.sound
+conjecture_of_minFac_le_twentythree / twenty_nine / twenty_nine_or_twin : propext, Classical.choice, Quot.sound
+conjecture_of_larger_twin_dvd / larger_twin_dvd_x : propext, Classical.choice, Quot.sound
+q_dvd_x_of_prime_index / conjecture_of_prime_index : propext, Classical.choice, Quot.sound
+cloitre_valuation_barrier / a_eq_prime_padic_succ : propext, Classical.choice, Quot.sound
+gcd_gt_one_of_three_dvd_succ : propext, Quot.sound
 ```
 
 No `sorryAx`, `native_decide`, or `Lean.trustCompiler` on these declarations. `Classical.choice` enters through `Nat.find` in `exists_least_dvd` and through Mathlib `decide` instances. Full log: `experiments/a135508_axioms.log`.

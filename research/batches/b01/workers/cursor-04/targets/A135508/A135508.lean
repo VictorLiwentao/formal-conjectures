@@ -28,8 +28,10 @@ They prove the closed form of `a`, the prime-index dichotomy, the first-entry
 criterion, and the conjecture for every prime `p ≥ 7` with `3 ∣ p - 2`
 (equivalently `p ≡ 2 (mod 3)`), together with the primes `2` and `3`.
 They also prove Cloitre's 2-adic staircase `a(2 · 4^k - 1) = 2`, the
-remaining-class factor `q ≡ 2 (mod 3)` of `p-2`, and injection of `q` when
-some `kq-2` is prime.
+remaining-class factor `q ≡ 2 (mod 3)` of `p-2`, injection of a factor of
+`p-2` when some `kq-2` is a prime `≡ 2 (mod 3)`, McEachen when a factor of
+`p-2` is a larger twin, Cloitre's valuation barrier, and remaining McEachen
+when `lpf(p-2) ≤ 29` or that least factor is a larger twin.
 -/
 
 namespace OeisA135508
@@ -107,6 +109,15 @@ lemma three_dvd_x_four : 3 ∣ x 4 := by
 
 lemma three_dvd_x {n : ℕ} (hn : 4 ≤ n) : 3 ∣ x n :=
   three_dvd_x_four.trans (x_dvd_of_le (by decide : 0 < 4) hn)
+
+/-- If `3 ∣ n+1` and `n ≥ 4`, then `x n` and `n+1` are not coprime. -/
+lemma gcd_gt_one_of_three_dvd_succ {n : ℕ} (hn : 4 ≤ n) (h3 : 3 ∣ n + 1) :
+    1 < Nat.gcd (x n) (n + 1) := by
+  have hx := three_dvd_x hn
+  have hg : 3 ∣ Nat.gcd (x n) (n + 1) := Nat.dvd_gcd hx h3
+  have : 3 ≤ Nat.gcd (x n) (n + 1) :=
+    Nat.le_of_dvd (Nat.gcd_pos_of_pos_right _ (by omega)) hg
+  omega
 
 lemma five_dvd_x_three : 5 ∣ x 3 := by
   have h := x_succ_a (n := 2) (by decide)
@@ -406,6 +417,26 @@ theorem larger_twin_eq_one {q : ℕ} (hq : q.Prime) (h13 : 13 ≤ q)
   have hidx : (q - 2) + 1 = q - 1 := by omega
   simpa [hidx] using hpair.2
 
+lemma larger_twin_dvd_x {q : ℕ} (hq : q.Prime) (h13 : 13 ≤ q)
+    (htwin : (q - 2).Prime) : q ∣ x (q - 1) :=
+  (a_eq_one_iff_dvd hq).1 (larger_twin_eq_one hq h13 htwin)
+
+/-- McEachen at `p` if some prime factor of `p-2` is a larger twin `≥ 13`. -/
+theorem conjecture_of_larger_twin_dvd {p q : ℕ} (hp : p.Prime) (hp5 : 5 ≤ p)
+    (hp_twin : ¬ (p - 2).Prime) (hq : q.Prime) (h13 : 13 ≤ q)
+    (htwin : (q - 2).Prime) (hqp : q ∣ p - 2) : a (p - 1) = p := by
+  have hx : q ∣ x (q - 1) := larger_twin_dvd_x hq h13 htwin
+  have hle : q - 1 ≤ p - 3 := by
+    have hpos : 0 < p - 2 := by omega
+    have hqle : q ≤ p - 2 := Nat.le_of_dvd hpos hqp
+    have hne : q ≠ p - 2 := by
+      intro h
+      exact hp_twin (h ▸ hq)
+    omega
+  have hx2 : q ∣ x (p - 3) :=
+    hx.trans (x_dvd_of_le (by omega : 0 < q - 1) hle)
+  exact conjecture_of_factor_dvd_x hp hp5 (lt_of_lt_of_le (by decide : 1 < 13) h13) hqp hx2
+
 lemma a_10 : a 10 = 11 := by
   simpa using conjecture_of_mod_three (by decide : Nat.Prime 11) (by decide) (by decide)
 
@@ -699,16 +730,21 @@ lemma mul_sub_two_mod_three {k q : ℕ} (hk : k % 3 = 2) (hq : q % 3 = 2)
     simpa [Nat.mul_comm, hmul] using (Nat.div_add_mod (k * q) 3).symm
   omega
 
-/-- If `r = kq - 2` is an odd prime `≡ 2 (mod 3)`, then `q` enters `x` at index `r`. -/
-lemma q_dvd_x_of_prime_injector {k q : ℕ} (hmodk : k % 3 = 2) (hmodq : q % 3 = 2)
-    (hpr : (k * q - 2).Prime) (h7 : 7 ≤ k * q - 2) :
+/-- If `r = kq - 2` is a prime `≡ 2 (mod 3)`, then `q` enters `x` at index `r`.
+This does not require `q ≡ 2 (mod 3)`. -/
+lemma q_dvd_x_of_prime_index {k q : ℕ} (hpr : (k * q - 2).Prime)
+    (h7 : 7 ≤ k * q - 2) (hmod : (k * q - 2) % 3 = 2) :
     q ∣ x (k * q - 2) := by
-  have h4 : 4 ≤ k * q := by omega
-  have hmod := mul_sub_two_mod_three hmodk hmodq h4
   have hx := add_two_dvd_x_of_mod_three hpr h7 hmod
   have : k * q - 2 + 2 = k * q := by omega
   rw [this] at hx
   exact (Nat.dvd_mul_left q k).trans hx
+
+/-- If `r = kq - 2` is an odd prime `≡ 2 (mod 3)`, then `q` enters `x` at index `r`. -/
+lemma q_dvd_x_of_prime_injector {k q : ℕ} (hmodk : k % 3 = 2) (hmodq : q % 3 = 2)
+    (hpr : (k * q - 2).Prime) (h7 : 7 ≤ k * q - 2) :
+    q ∣ x (k * q - 2) :=
+  q_dvd_x_of_prime_index hpr h7 (mul_sub_two_mod_three hmodk hmodq (by omega))
 
 /-- McEachen at `p` if some factor `q` of `p-2` is injected by a prime `kq-2 ≤ p-3`. -/
 theorem conjecture_of_prime_injector {p k q : ℕ} (hp : p.Prime) (hp5 : 5 ≤ p)
@@ -717,6 +753,16 @@ theorem conjecture_of_prime_injector {p k q : ℕ} (hp : p.Prime) (hp5 : 5 ≤ p
     (hle : k * q - 2 ≤ p - 3) (hqp : q ∣ p - 2) (hq1 : 1 < q) :
     a (p - 1) = p := by
   have hx := q_dvd_x_of_prime_injector hmodk hmodq hpr h7
+  have hpos : 0 < k * q - 2 := by omega
+  have hx2 : q ∣ x (p - 3) := hx.trans (x_dvd_of_le hpos hle)
+  exact conjecture_of_factor_dvd_x hp hp5 hq1 hqp hx2
+
+/-- McEachen at `p` if some factor of `p-2` is injected by a prime `kq-2 ≡ 2 (mod 3)`. -/
+theorem conjecture_of_prime_index {p k q : ℕ} (hp : p.Prime) (hp5 : 5 ≤ p)
+    (hpr : (k * q - 2).Prime) (h7 : 7 ≤ k * q - 2)
+    (hmod : (k * q - 2) % 3 = 2) (hle : k * q - 2 ≤ p - 3)
+    (hqp : q ∣ p - 2) (hq1 : 1 < q) : a (p - 1) = p := by
+  have hx := q_dvd_x_of_prime_index hpr h7 hmod
   have hpos : 0 < k * q - 2 := by omega
   have hx2 : q ∣ x (p - 3) := hx.trans (x_dvd_of_le hpos hle)
   exact conjecture_of_factor_dvd_x hp hp5 hq1 hqp hx2
@@ -945,6 +991,18 @@ theorem conjecture_of_twentythree_dvd {p : ℕ} (hp : p.Prime) (hp116 : 116 ≤ 
   conjecture_of_factor_dvd_x hp (by omega) (by decide : 1 < 23) h23
     (twentythree_dvd_x (by omega : 113 ≤ p - 3))
 
+lemma twenty_nine_dvd_x_317 : 29 ∣ x 317 :=
+  q_dvd_x_of_prime_injector (k := 11) (q := 29)
+    (by decide) (by decide) (by norm_num) (by decide)
+
+lemma twenty_nine_dvd_x {n : ℕ} (hn : 317 ≤ n) : 29 ∣ x n :=
+  twenty_nine_dvd_x_317.trans (x_dvd_of_le (by decide : 0 < 317) hn)
+
+theorem conjecture_of_twenty_nine_dvd {p : ℕ} (hp : p.Prime) (hp320 : 320 ≤ p)
+    (h29 : 29 ∣ p - 2) : a (p - 1) = p :=
+  conjecture_of_factor_dvd_x hp (by omega) (by decide : 1 < 29) h29
+    (twenty_nine_dvd_x (by omega : 317 ≤ p - 3))
+
 lemma remaining_minFac_ge_five {p : ℕ} (hp : p.Prime) (hp7 : 7 ≤ p)
     (hmod : p % 3 = 1) : 5 ≤ Nat.minFac (p - 2) := by
   have hn : 1 < p - 2 := by omega
@@ -1045,6 +1103,50 @@ theorem conjecture_of_minFac_le_twentythree {p : ℕ} (hp : p.Prime) (hp7 : 7 �
       omega
     exact conjecture_of_twentythree_dvd hp hp116 hd23
 
+lemma eq_twenty_nine_of_prime_ge_twenty_four {q : ℕ}
+    (hq : q.Prime) (h24 : 24 ≤ q) (h29 : q ≤ 29) : q = 29 := by
+  interval_cases q
+  · exact ((by decide : ¬ Nat.Prime 24) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 25) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 26) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 27) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 28) hq).elim
+  · rfl
+
+/-- Remaining McEachen primes whose least prime factor is at most `29`. -/
+theorem conjecture_of_minFac_le_twenty_nine {p : ℕ} (hp : p.Prime) (hp7 : 7 ≤ p)
+    (hmod : p % 3 = 1) (hcomp : ¬ (p - 2).Prime)
+    (hmin : Nat.minFac (p - 2) ≤ 29) : a (p - 1) = p := by
+  by_cases h23 : Nat.minFac (p - 2) ≤ 23
+  · exact conjecture_of_minFac_le_twentythree hp hp7 hmod hcomp h23
+  · have h24 : 24 ≤ Nat.minFac (p - 2) := by omega
+    have hpr : (Nat.minFac (p - 2)).Prime :=
+      Nat.minFac_prime (by omega : p - 2 ≠ 1)
+    have hd : Nat.minFac (p - 2) ∣ p - 2 := Nat.minFac_dvd _
+    have heq : Nat.minFac (p - 2) = 29 :=
+      eq_twenty_nine_of_prime_ge_twenty_four hpr h24 hmin
+    have hd29 : 29 ∣ p - 2 := by rwa [heq] at hd
+    have hbound := remaining_minFac_mul_add_two_le hp hp7 hmod hcomp
+    have hp320 : 320 ≤ p := by
+      rw [heq] at hbound
+      omega
+    exact conjecture_of_twenty_nine_dvd hp hp320 hd29
+
+/-- Remaining McEachen if `lpf(p-2) ≤ 29` or that least factor is a larger twin. -/
+theorem conjecture_of_minFac_le_twenty_nine_or_twin {p : ℕ} (hp : p.Prime)
+    (hp7 : 7 ≤ p) (hmod : p % 3 = 1) (hcomp : ¬ (p - 2).Prime)
+    (h : Nat.minFac (p - 2) ≤ 29 ∨ (Nat.minFac (p - 2) - 2).Prime) :
+    a (p - 1) = p := by
+  rcases h with h29 | htwin
+  · exact conjecture_of_minFac_le_twenty_nine hp hp7 hmod hcomp h29
+  · by_cases hle : Nat.minFac (p - 2) ≤ 29
+    · exact conjecture_of_minFac_le_twenty_nine hp hp7 hmod hcomp hle
+    · have hpr : (Nat.minFac (p - 2)).Prime :=
+        Nat.minFac_prime (by omega : p - 2 ≠ 1)
+      have hd : Nat.minFac (p - 2) ∣ p - 2 := Nat.minFac_dvd _
+      have h13 : 13 ≤ Nat.minFac (p - 2) := by omega
+      exact conjecture_of_larger_twin_dvd hp (by omega) hcomp hpr h13 htwin hd
+
 private instance : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
 
 lemma a_pos {n : ℕ} (hn : 0 < n) : 0 < a n :=
@@ -1071,6 +1173,68 @@ lemma v2_a {n : ℕ} (hn : 0 < n) :
       padicValNat 2 (n + 1) - min (padicValNat 2 (x n)) (padicValNat 2 (n + 1)) := by
   have hx := x_pos hn
   rw [a_eq hn, padicValNat.div_of_dvd (Nat.gcd_dvd_right _ _), v2_gcd hx (Nat.succ_pos n)]
+
+lemma padicValNat_gcd (p m n : ℕ) [Fact p.Prime] (hm : 0 < m) (hn : 0 < n) :
+    padicValNat p (Nat.gcd m n) = min (padicValNat p m) (padicValNat p n) := by
+  have hg : Nat.gcd m n ≠ 0 := (Nat.gcd_pos_of_pos_left n hm).ne'
+  have hm0 : m ≠ 0 := hm.ne'
+  have hn0 : n ≠ 0 := hn.ne'
+  apply le_antisymm
+  · refine le_min ?_ ?_
+    · exact (padicValNat_dvd_iff_le hm0).1 <|
+        pow_padicValNat_dvd.trans (Nat.gcd_dvd_left m n)
+    · exact (padicValNat_dvd_iff_le hn0).1 <|
+        pow_padicValNat_dvd.trans (Nat.gcd_dvd_right m n)
+  · have hpow : p ^ min (padicValNat p m) (padicValNat p n) ∣ Nat.gcd m n :=
+      Nat.dvd_gcd ((padicValNat_dvd_iff_le hm0).2 (min_le_left _ _))
+        ((padicValNat_dvd_iff_le hn0).2 (min_le_right _ _))
+    exact (padicValNat_dvd_iff_le hg).1 hpow
+
+lemma padicValNat_a (p n : ℕ) [Fact p.Prime] (hn : 0 < n) :
+    padicValNat p (a n) =
+      padicValNat p (n + 1) - min (padicValNat p (x n)) (padicValNat p (n + 1)) := by
+  have hx := x_pos hn
+  rw [a_eq hn, padicValNat.div_of_dvd (Nat.gcd_dvd_right _ _),
+    padicValNat_gcd p (x n) (n + 1) hx (Nat.succ_pos n)]
+
+/-- If `a n` equals a prime `ℓ` that already divides `x n`, then
+`ℓ^{v_ℓ(x n)+1} ∣ n+1`. This is Cloitre Lemma 6.7 at a single index. -/
+lemma a_eq_prime_padic_succ {ℓ n : ℕ} (hℓ : ℓ.Prime) (hn : 0 < n)
+    (ha : a n = ℓ) (_hd : ℓ ∣ x n) :
+    padicValNat ℓ (x n) + 1 ≤ padicValNat ℓ (n + 1) := by
+  have : Fact ℓ.Prime := ⟨hℓ⟩
+  have hva : padicValNat ℓ (a n) = 1 := by
+    rw [ha]
+    have h1 : padicValNat ℓ (ℓ ^ 1) = 1 := padicValNat.prime_pow (n := 1)
+    rwa [pow_one] at h1
+  have hformula := padicValNat_a ℓ n hn
+  have hle : padicValNat ℓ (x n) ≤ padicValNat ℓ (n + 1) := by
+    by_contra hne
+    have hgt : padicValNat ℓ (n + 1) < padicValNat ℓ (x n) := Nat.lt_of_not_ge hne
+    have hmin : min (padicValNat ℓ (x n)) (padicValNat ℓ (n + 1)) =
+        padicValNat ℓ (n + 1) := min_eq_right (le_of_lt hgt)
+    rw [hformula, hmin, Nat.sub_self] at hva
+    omega
+  have hmin : min (padicValNat ℓ (x n)) (padicValNat ℓ (n + 1)) =
+      padicValNat ℓ (x n) := min_eq_left hle
+  have : padicValNat ℓ (n + 1) - padicValNat ℓ (x n) = 1 := by
+    rw [hformula, hmin] at hva
+    exact hva
+  omega
+
+/-- Cloitre Lemma 6.7: after `ℓ` divides `x N`, any later `a n = ℓ` needs
+`ℓ^{v_ℓ(x N)+1} ∣ n+1`. -/
+lemma cloitre_valuation_barrier {ℓ N n : ℕ} (hℓ : ℓ.Prime) (hN : 0 < N)
+    (hNle : N ≤ n) (hd : ℓ ∣ x N) (ha : a n = ℓ) :
+    padicValNat ℓ (x N) + 1 ≤ padicValNat ℓ (n + 1) := by
+  have : Fact ℓ.Prime := ⟨hℓ⟩
+  have hx : ℓ ∣ x n := hd.trans (x_dvd_of_le hN hNle)
+  have hn : 0 < n := lt_of_lt_of_le hN hNle
+  have h := a_eq_prime_padic_succ hℓ hn ha hx
+  have hvle : padicValNat ℓ (x N) ≤ padicValNat ℓ (x n) :=
+    (padicValNat_dvd_iff_le (x_pos hn).ne').1
+      (pow_padicValNat_dvd.trans (x_dvd_of_le hN hNle))
+  omega
 
 lemma v2_x_succ {n : ℕ} (hn : 0 < n) :
     padicValNat 2 (x (n + 1)) = padicValNat 2 (x n) + padicValNat 2 (a n + 2) := by
@@ -1339,5 +1503,16 @@ lemma v2_x_two_four_pow_pred (k : ℕ) :
 #print axioms conjecture_of_minFac_le_twentythree
 #print axioms remaining_minFac_ge_five
 #print axioms prime_le_twentythree
+#print axioms gcd_gt_one_of_three_dvd_succ
+#print axioms larger_twin_dvd_x
+#print axioms conjecture_of_larger_twin_dvd
+#print axioms q_dvd_x_of_prime_index
+#print axioms conjecture_of_prime_index
+#print axioms twenty_nine_dvd_x_317
+#print axioms conjecture_of_twenty_nine_dvd
+#print axioms conjecture_of_minFac_le_twenty_nine
+#print axioms conjecture_of_minFac_le_twenty_nine_or_twin
+#print axioms a_eq_prime_padic_succ
+#print axioms cloitre_valuation_barrier
 
 end OeisA135508
