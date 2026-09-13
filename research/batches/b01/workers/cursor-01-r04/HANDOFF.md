@@ -31,7 +31,9 @@ Proved in worker Lean (allowlisted axioms only): `n=1` case; denominator nonvani
 
 Identified `per M` with the Cayley-kernel expansion `∑_σ cayleyWeight (fun i => ζ^i) σ`, where the weight is the product over the support of `(x i + x(σ i))/(x i - x(σ i))`. Inverse permutations pick up `(-1)^{#support}`. Off-diagonal `sunMatrix` entries equal those Cayley factors.
 
-Still needed: `per M = per(M-J)` via She–Sun–Xia 1.3(i) / Theorem 1.1 (odd-cycle reverse-pairing, then matching formula).
+Odd cycles of length at least 3 cancel: reversing the distinguished odd cycle (the cycle of the least odd-cycle point) is an involution that negates the Cayley weight. Hence `per M` equals the sum of Cayley weights over permutations with no odd cycle of length at least 3.
+
+Still needed: `per M = per(M-J)` via She–Sun–Xia Theorem 1.1 (matching formula) and 1.3(i).
 
 ## Attribution
 

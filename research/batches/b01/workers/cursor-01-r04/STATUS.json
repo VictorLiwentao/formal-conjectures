@@ -21,7 +21,7 @@
   "novelty_status": "known_mathematics_formalization",
   "mathematical_novelty": "known_mathematics_She_Sun_Xia_2022_Thm1_3_ii",
   "formalization_novelty": "no_prior_exact_public_lean_found_in_checked_sources_audit_incomplete_until_stop",
-  "last_updated_utc": "2026-09-13T05:49:03Z",
+  "last_updated_utc": "2026-09-13T05:54:14Z",
   "proof_declarations": [
     "A001818C1.conjecture1_of_one",
     "A001818C1.zpow_sub_ne_one",
@@ -91,12 +91,16 @@
     "A001818C1.cayleyWeight_mul_disjoint",
     "A001818C1.cayley_eq_sunFactor",
     "A001818C1.prod_sunMatrix_eq_cayleyWeight",
-    "A001818C1.permanent_sunMatrix_eq_sum_cayleyWeight"
+    "A001818C1.permanent_sunMatrix_eq_sum_cayleyWeight",
+    "A001818C1.cayleyWeight_reverse_odd_cycle",
+    "A001818C1.reverseOddCycle_involutive",
+    "A001818C1.sum_cayleyWeight_eq_sum_no_odd",
+    "A001818C1.permanent_sunMatrix_eq_sum_no_odd"
   ],
   "unresolved_gaps": [
-    "General n>=1 C1 identity still open. Have per(M-J)=a n and per M = sum of Cayley weights. Need SSX 1.3(i): odd-cycle reverse-pairing, then matching/recurrence so per M = per(M-J)."
+    "General n>=1 C1 identity still open. Have per(M-J)=a n and per M = Cayley-weight sum over permutations with no odd cycle of length >= 3. Need SSX 1.1 matching formula or 1.3(i) so per M = per(M-J)."
   ],
-  "next_step": "Cancel odd cycles of length >= 3 in the Cayley-weight expansion of per M, then compare the remaining even-cycle sum to per(M-J).",
+  "next_step": "Prove the She-Sun-Xia recurrence (4.8) / matching formula for the remaining even-cycle Cayley sum, then compare to per(M-J).",
   "self_review": "not a candidate yet; cannot set independently_verified",
   "excluded_from_this_worker": [
     "OeisA1818.conjecture2",

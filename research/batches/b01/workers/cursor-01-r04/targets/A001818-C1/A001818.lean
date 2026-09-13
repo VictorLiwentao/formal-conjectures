@@ -2674,6 +2674,236 @@ lemma permanent_sunMatrix_eq_sum_cayleyWeight {n : ℕ} (hn : 1 ≤ n) {ζ : ℂ
   refine Fintype.sum_congr _ _ fun σ =>
     prod_sunMatrix_eq_cayleyWeight hζ σ
 
+/-- Points that lie on an odd-length cycle. Cycle factors have length at least 2,
+so these cycles have length at least 3. -/
+noncomputable def oddLongPoints {α : Type*} [Fintype α] [DecidableEq α] (σ : Perm α) :
+    Finset α :=
+  univ.filter fun a => Odd ((σ.cycleOf a).support.card)
+
+lemma mem_oddLongPoints {α : Type*} [Fintype α] [DecidableEq α] {σ : Perm α} {a : α} :
+    a ∈ oddLongPoints σ ↔ Odd ((σ.cycleOf a).support.card) := by
+  simp [oddLongPoints]
+
+lemma odd_card_cycleOf_ne_self {α : Type*} [Fintype α] [DecidableEq α]
+    {σ : Perm α} {a : α} (h : Odd ((σ.cycleOf a).support.card)) : σ a ≠ a := by
+  intro hfix
+  have h1 : σ.cycleOf a = 1 := (Equiv.Perm.cycleOf_eq_one_iff σ).mpr hfix
+  have h0 : (σ.cycleOf a).support.card = 0 := by
+    rw [h1, Equiv.Perm.support_one, card_empty]
+  exact Nat.not_odd_zero (h0 ▸ h)
+
+lemma oddLongPoints_nonempty_iff {α : Type*} [Fintype α] [DecidableEq α] {σ : Perm α} :
+    (oddLongPoints σ).Nonempty ↔ ∃ c ∈ σ.cycleFactorsFinset, Odd c.support.card := by
+  constructor
+  · intro ⟨a, ha⟩
+    rw [mem_oddLongPoints] at ha
+    exact ⟨σ.cycleOf a, (Equiv.Perm.cycleOf_mem_cycleFactorsFinset_iff).2
+      (Equiv.Perm.mem_support.mpr (odd_card_cycleOf_ne_self ha)), ha⟩
+  · intro ⟨c, hc, hodd⟩
+    obtain ⟨a, ha⟩ := Equiv.Perm.IsCycle.nonempty_support
+      (Equiv.Perm.mem_cycleFactorsFinset_iff.mp hc).1
+    refine ⟨a, mem_oddLongPoints.mpr ?_⟩
+    rwa [← Equiv.Perm.cycle_is_cycleOf ha hc]
+
+lemma odd_cycleOf_min_ne_self {α : Type*} [Fintype α] [DecidableEq α] [LinearOrder α]
+    {σ : Perm α} (hne : (oddLongPoints σ).Nonempty) :
+    σ ((oddLongPoints σ).min' hne) ≠ (oddLongPoints σ).min' hne :=
+  odd_card_cycleOf_ne_self (mem_oddLongPoints.mp (min'_mem _ hne))
+
+lemma odd_cycleOf_min_mem_cycleFactorsFinset {α : Type*} [Fintype α] [DecidableEq α]
+    [LinearOrder α] {σ : Perm α} (hne : (oddLongPoints σ).Nonempty) :
+    σ.cycleOf ((oddLongPoints σ).min' hne) ∈ σ.cycleFactorsFinset :=
+  (Equiv.Perm.cycleOf_mem_cycleFactorsFinset_iff).2
+    (Equiv.Perm.mem_support.mpr (odd_cycleOf_min_ne_self hne))
+
+lemma odd_cycleOf_min_odd {α : Type*} [Fintype α] [DecidableEq α] [LinearOrder α]
+    {σ : Perm α} (hne : (oddLongPoints σ).Nonempty) :
+    Odd ((σ.cycleOf ((oddLongPoints σ).min' hne)).support.card) :=
+  mem_oddLongPoints.mp (min'_mem _ hne)
+
+lemma cayleyWeight_reverse_odd_cycle {α : Type*} [Fintype α] [DecidableEq α]
+    (x : α → ℂ) {σ c : Perm α} (hc : c ∈ σ.cycleFactorsFinset)
+    (hodd : Odd c.support.card) :
+    cayleyWeight x (c⁻¹ * (σ * c⁻¹)) = - cayleyWeight x σ := by
+  have hd := Equiv.Perm.disjoint_mul_inv_of_mem_cycleFactorsFinset hc
+  have hσeq := eq_mul_remainder_of_mem_cycleFactorsFinset hc
+  have hdis : Equiv.Perm.Disjoint c⁻¹ (σ * c⁻¹) := hd.symm.inv_left
+  calc
+    cayleyWeight x (c⁻¹ * (σ * c⁻¹))
+        = cayleyWeight x c⁻¹ * cayleyWeight x (σ * c⁻¹) :=
+      cayleyWeight_mul_disjoint x hdis
+    _ = (-1 : ℂ) ^ c.support.card * cayleyWeight x c * cayleyWeight x (σ * c⁻¹) := by
+      rw [cayleyWeight_inv]
+    _ = - (cayleyWeight x c * cayleyWeight x (σ * c⁻¹)) := by
+      rw [Odd.neg_one_pow hodd]
+      ring
+    _ = - cayleyWeight x (c * (σ * c⁻¹)) := by
+      rw [cayleyWeight_mul_disjoint x hd.symm]
+    _ = - cayleyWeight x σ := by
+      rw [← hσeq]
+
+lemma cycleOf_reverse_odd_of_mem {α : Type*} [Fintype α] [DecidableEq α]
+    {σ c : Perm α} (hc : c ∈ σ.cycleFactorsFinset) {a : α} (ha : a ∈ c.support) :
+    (c⁻¹ * (σ * c⁻¹)).cycleOf a = c⁻¹ := by
+  have hd := Equiv.Perm.disjoint_mul_inv_of_mem_cycleFactorsFinset hc
+  have hdis : Equiv.Perm.Disjoint c⁻¹ (σ * c⁻¹) := hd.symm.inv_left
+  have hcyc : c⁻¹.IsCycle := (Equiv.Perm.mem_cycleFactorsFinset_iff.mp hc).1.inv
+  have hmem : c⁻¹ ∈ (c⁻¹ * (σ * c⁻¹)).cycleFactorsFinset := by
+    rw [hdis.cycleFactorsFinset_mul_eq_union, hcyc.cycleFactorsFinset_eq_singleton]
+    simp
+  have ha' : a ∈ c⁻¹.support := by rwa [Equiv.Perm.support_inv]
+  exact (Equiv.Perm.cycle_is_cycleOf ha' hmem).symm
+
+lemma cycleOf_reverse_odd_of_not_mem {α : Type*} [Fintype α] [DecidableEq α]
+    {σ c : Perm α} (hc : c ∈ σ.cycleFactorsFinset) {a : α} (ha : a ∉ c.support) :
+    (c⁻¹ * (σ * c⁻¹)).cycleOf a = σ.cycleOf a := by
+  have hd := Equiv.Perm.disjoint_mul_inv_of_mem_cycleFactorsFinset hc
+  have hσeq := eq_mul_remainder_of_mem_cycleFactorsFinset hc
+  have hcx : c a = a := Equiv.Perm.notMem_support.mp ha
+  have hc1 : c.cycleOf a = 1 := (Equiv.Perm.cycleOf_eq_one_iff c).mpr hcx
+  have hinv1 : c⁻¹.cycleOf a = 1 :=
+    (Equiv.Perm.cycleOf_eq_one_iff c⁻¹).mpr (inv_apply_eq_self_of_apply_eq_self hcx)
+  have hdis : Equiv.Perm.Disjoint c⁻¹ (σ * c⁻¹) := hd.symm.inv_left
+  have hcyσ : σ.cycleOf a = (σ * c⁻¹).cycleOf a := by
+    have hleft : σ.cycleOf a = (c * (σ * c⁻¹)).cycleOf a :=
+      congrArg (fun f => f.cycleOf a) hσeq
+    rw [hleft, Equiv.Perm.Disjoint.cycleOf_mul_distrib hd.symm a, hc1, one_mul]
+  have hcyσ' : (c⁻¹ * (σ * c⁻¹)).cycleOf a = (σ * c⁻¹).cycleOf a := by
+    rw [Equiv.Perm.Disjoint.cycleOf_mul_distrib hdis a, hinv1, one_mul]
+  rw [hcyσ', hcyσ]
+
+lemma oddLongPoints_reverse_odd_cycle {α : Type*} [Fintype α] [DecidableEq α]
+    {σ c : Perm α} (hc : c ∈ σ.cycleFactorsFinset) :
+    oddLongPoints (c⁻¹ * (σ * c⁻¹)) = oddLongPoints σ := by
+  ext a
+  simp only [mem_oddLongPoints]
+  by_cases ha : a ∈ c.support
+  · rw [cycleOf_reverse_odd_of_mem hc ha, Equiv.Perm.support_inv,
+      Equiv.Perm.cycle_is_cycleOf ha hc]
+  · rw [cycleOf_reverse_odd_of_not_mem hc ha]
+
+/-- Reverse the distinguished odd cycle of `σ`, the cycle of the least odd-cycle point. -/
+noncomputable def reverseOddCycle {α : Type*} [Fintype α] [DecidableEq α] [LinearOrder α]
+    (σ : Perm α) : Perm α :=
+  if h : (oddLongPoints σ).Nonempty then
+    (σ.cycleOf ((oddLongPoints σ).min' h))⁻¹ *
+      (σ * (σ.cycleOf ((oddLongPoints σ).min' h))⁻¹)
+  else
+    σ
+
+lemma reverseOddCycle_of_nonempty {α : Type*} [Fintype α] [DecidableEq α] [LinearOrder α]
+    {σ : Perm α} (h : (oddLongPoints σ).Nonempty) :
+    reverseOddCycle σ =
+      (σ.cycleOf ((oddLongPoints σ).min' h))⁻¹ *
+        (σ * (σ.cycleOf ((oddLongPoints σ).min' h))⁻¹) :=
+  dif_pos h
+
+lemma reverseOddCycle_of_empty {α : Type*} [Fintype α] [DecidableEq α] [LinearOrder α]
+    {σ : Perm α} (h : ¬ (oddLongPoints σ).Nonempty) :
+    reverseOddCycle σ = σ :=
+  dif_neg h
+
+lemma cayleyWeight_reverseOddCycle {α : Type*} [Fintype α] [DecidableEq α] [LinearOrder α]
+    (x : α → ℂ) (σ : Perm α) :
+    cayleyWeight x (reverseOddCycle σ) =
+      if (oddLongPoints σ).Nonempty then - cayleyWeight x σ
+      else cayleyWeight x σ := by
+  by_cases h : (oddLongPoints σ).Nonempty
+  · rw [if_pos h, reverseOddCycle_of_nonempty h]
+    exact cayleyWeight_reverse_odd_cycle x
+      (odd_cycleOf_min_mem_cycleFactorsFinset h) (odd_cycleOf_min_odd h)
+  · rw [if_neg h, reverseOddCycle_of_empty h]
+
+lemma oddLongPoints_reverseOddCycle {α : Type*} [Fintype α] [DecidableEq α] [LinearOrder α]
+    (σ : Perm α) :
+    oddLongPoints (reverseOddCycle σ) = oddLongPoints σ := by
+  by_cases h : (oddLongPoints σ).Nonempty
+  · rw [reverseOddCycle_of_nonempty h]
+    exact oddLongPoints_reverse_odd_cycle (odd_cycleOf_min_mem_cycleFactorsFinset h)
+  · rw [reverseOddCycle_of_empty h]
+
+lemma reverseOddCycle_cycleOf_min {α : Type*} [Fintype α] [DecidableEq α] [LinearOrder α]
+    {σ : Perm α} (h : (oddLongPoints σ).Nonempty) :
+    (reverseOddCycle σ).cycleOf ((oddLongPoints σ).min' h) =
+      (σ.cycleOf ((oddLongPoints σ).min' h))⁻¹ := by
+  rw [reverseOddCycle_of_nonempty h]
+  exact cycleOf_reverse_odd_of_mem (odd_cycleOf_min_mem_cycleFactorsFinset h)
+    (Equiv.Perm.mem_support.mpr (by
+      rw [Equiv.Perm.cycleOf_apply_self]
+      exact odd_cycleOf_min_ne_self h))
+
+lemma reverse_odd_cycle_mul_inv {α : Type*} [Fintype α] [DecidableEq α]
+    {σ c : Perm α} (hc : c ∈ σ.cycleFactorsFinset) :
+    c * ((c⁻¹ * (σ * c⁻¹)) * c) = σ := by
+  have hd := Equiv.Perm.disjoint_mul_inv_of_mem_cycleFactorsFinset hc
+  have hdis : Equiv.Perm.Disjoint c⁻¹ (σ * c⁻¹) := hd.symm.inv_left
+  have hσeq := eq_mul_remainder_of_mem_cycleFactorsFinset hc
+  have hmul : (c⁻¹ * (σ * c⁻¹)) * c = σ * c⁻¹ := by
+    rw [hdis.commute.eq]
+    simp
+  rw [hmul, ← hσeq]
+
+lemma reverseOddCycle_involutive {α : Type*} [Fintype α] [DecidableEq α] [LinearOrder α] :
+    Function.Involutive (reverseOddCycle : Perm α → Perm α) := by
+  intro σ
+  by_cases h : (oddLongPoints σ).Nonempty
+  · have hne' : (oddLongPoints (reverseOddCycle σ)).Nonempty := by
+      rwa [oddLongPoints_reverseOddCycle]
+    have hmin : (oddLongPoints (reverseOddCycle σ)).min' hne' =
+        (oddLongPoints σ).min' h := by
+      apply le_antisymm
+      · exact (isLeast_min' _ hne').2 (by
+          rw [oddLongPoints_reverseOddCycle]
+          exact min'_mem _ h)
+      · exact (isLeast_min' _ h).2 (by
+          rw [← oddLongPoints_reverseOddCycle]
+          exact min'_mem _ hne')
+    rw [reverseOddCycle_of_nonempty hne', hmin, reverseOddCycle_cycleOf_min h, inv_inv,
+      reverseOddCycle_of_nonempty h]
+    exact reverse_odd_cycle_mul_inv (odd_cycleOf_min_mem_cycleFactorsFinset h)
+  · rw [reverseOddCycle_of_empty h, reverseOddCycle_of_empty h]
+
+lemma sum_cayleyWeight_eq_sum_no_odd {α : Type*} [Fintype α] [DecidableEq α]
+    [LinearOrder α] (x : α → ℂ) :
+    (∑ σ : Perm α, cayleyWeight x σ) =
+      ∑ σ : Perm α, if (oddLongPoints σ).Nonempty then 0 else cayleyWeight x σ := by
+  have hrev :
+      (∑ σ : Perm α, cayleyWeight x (reverseOddCycle σ)) =
+        ∑ σ : Perm α, cayleyWeight x σ :=
+    Equiv.sum_comp (reverseOddCycle_involutive.toPerm reverseOddCycle) (cayleyWeight x)
+  have hsum :
+      (∑ σ : Perm α, (cayleyWeight x σ + cayleyWeight x (reverseOddCycle σ))) =
+        2 * ∑ σ : Perm α, cayleyWeight x σ := by
+    rw [sum_add_distrib, hrev, two_mul]
+  have hterm : ∀ σ : Perm α,
+      cayleyWeight x σ + cayleyWeight x (reverseOddCycle σ) =
+        if (oddLongPoints σ).Nonempty then 0 else 2 * cayleyWeight x σ := by
+    intro σ
+    by_cases h : (oddLongPoints σ).Nonempty
+    · rw [if_pos h, cayleyWeight_reverseOddCycle, if_pos h]
+      ring
+    · rw [if_neg h, cayleyWeight_reverseOddCycle, if_neg h]
+      ring
+  have hite : ∀ σ : Perm α,
+      (if (oddLongPoints σ).Nonempty then (0 : ℂ) else 2 * cayleyWeight x σ) =
+        2 * (if (oddLongPoints σ).Nonempty then 0 else cayleyWeight x σ) := by
+    intro σ
+    split_ifs <;> ring
+  have hsum' :
+      (∑ σ : Perm α, (cayleyWeight x σ + cayleyWeight x (reverseOddCycle σ))) =
+        2 * ∑ σ : Perm α, if (oddLongPoints σ).Nonempty then 0 else cayleyWeight x σ := by
+    rw [Fintype.sum_congr _ _ hterm, Fintype.sum_congr _ _ hite, mul_sum]
+  exact mul_left_cancel₀ (two_ne_zero : (2 : ℂ) ≠ 0) (hsum.symm.trans hsum')
+
+lemma permanent_sunMatrix_eq_sum_no_odd {n : ℕ} (hn : 1 ≤ n) {ζ : ℂ}
+    (hζ : IsPrimitiveRoot ζ (2 * n)) :
+    (sunMatrix n ζ).permanent =
+      ∑ σ : Perm (Fin (2 * n)),
+        if (oddLongPoints σ).Nonempty then 0
+        else cayleyWeight (fun i => ζ ^ i.val) σ := by
+  rw [permanent_sunMatrix_eq_sum_cayleyWeight hn hζ]
+  exact sum_cayleyWeight_eq_sum_no_odd _
+
 #check (OeisA1818.conjecture1 :
     ∀ (n : ℕ), 1 ≤ n → ∀ (ζ : ℂ), IsPrimitiveRoot ζ (2 * n) →
       (sunMatrix n ζ).permanent = (a n : ℂ))
@@ -2741,5 +2971,9 @@ lemma permanent_sunMatrix_eq_sum_cayleyWeight {n : ℕ} (hn : 1 ≤ n) {ζ : ℂ
 #print axioms cayleyWeight_inv
 #print axioms prod_sunMatrix_eq_cayleyWeight
 #print axioms permanent_sunMatrix_eq_sum_cayleyWeight
+#print axioms cayleyWeight_reverse_odd_cycle
+#print axioms reverseOddCycle_involutive
+#print axioms sum_cayleyWeight_eq_sum_no_odd
+#print axioms permanent_sunMatrix_eq_sum_no_odd
 
 end A001818C1
