@@ -5304,6 +5304,125 @@ lemma padicValRat_ratExpression_forty_nine :
     padicValNat_forty_nine_num, padicValNat_forty_nine_den]
   norm_num
 
+lemma not_pow_dvd_oddInnerNum_iff_combo {p : ℕ} (hp : p.Prime) (h5 : 5 ≤ p) :
+    ¬ p ^ 2 ∣ oddInnerNum p ↔
+      ∑ r ∈ (range p).filter Odd,
+          (1 - (p : ZMod (p ^ 2)) *
+            ∑ b ∈ Icc 1 (r - 1), (b : ZMod (p ^ 2))⁻¹) *
+            ((r : ZMod (p ^ 2))⁻¹) ^ 2 ≠ 0 := by
+  rw [not_pow_dvd_oddInnerNum_iff hp h5]
+  have hC :
+      ∑ r ∈ (range p).filter Odd,
+          ((p - 1).choose (r - 1) : ZMod (p ^ 2)) *
+            ((r : ZMod (p ^ 2))⁻¹) ^ 2 =
+        ∑ r ∈ (range p).filter Odd,
+          (1 - (p : ZMod (p ^ 2)) *
+            ∑ b ∈ Icc 1 (r - 1), (b : ZMod (p ^ 2))⁻¹) *
+            ((r : ZMod (p ^ 2))⁻¹) ^ 2 := by
+    refine sum_congr rfl fun r hr => ?_
+    have hr' := mem_filter.mp hr
+    have hodd : Odd r := hr'.2
+    have hap : r ≤ p := (mem_range.mp hr'.1).le
+    rw [choose_pred_eq_one_sub_harmonic_zmod hp hodd hap]
+  rw [hC]
+
+lemma odd_combo_eq_seven_eight {p : ℕ} (hp : p.Prime) (h5 : 5 ≤ p) :
+    ∑ r ∈ (range p).filter Odd,
+        (1 - (p : ZMod (p ^ 2)) *
+          ∑ b ∈ Icc 1 (r - 1), (b : ZMod (p ^ 2))⁻¹) *
+          ((r : ZMod (p ^ 2))⁻¹) ^ 2 =
+      (7 : ZMod (p ^ 2)) * ((2 : ZMod (p ^ 2))⁻¹) ^ 3 *
+          ∑ i ∈ range (p - 1), (((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹) ^ 2 +
+        (p : ZMod (p ^ 2)) *
+          (((2 : ZMod (p ^ 2))⁻¹) ^ 2 *
+              ∑ i ∈ range (p / 2), (((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹) ^ 3 -
+            ∑ r ∈ (range p).filter Odd,
+              (∑ b ∈ Icc 1 (r - 1), (b : ZMod (p ^ 2))⁻¹) *
+                ((r : ZMod (p ^ 2))⁻¹) ^ 2) := by
+  rw [odd_combo_zmod hp h5, inv_sq_odd_eq_seven_eight hp h5]
+  ring
+
+lemma inv_sq_half_eq_mul_p {p : ℕ} (hp : p.Prime) (h5 : 5 ≤ p) :
+    ∃ c, ∑ i ∈ range (p / 2), (((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹) ^ 2 =
+      (p : ZMod (p ^ 2)) * c := by
+  have : NeZero p := ⟨hp.ne_zero⟩
+  have : NeZero (p ^ 2) := ⟨pow_ne_zero 2 hp.ne_zero⟩
+  exact eq_mul_p_of_cast_eq_zero _ (inv_sq_half_cast_eq_zero hp h5)
+
+lemma odd_combo_eq_mul_p {p : ℕ} (hp : p.Prime) (h5 : 5 ≤ p) :
+    ∃ c, ∑ r ∈ (range p).filter Odd,
+          (1 - (p : ZMod (p ^ 2)) *
+            ∑ b ∈ Icc 1 (r - 1), (b : ZMod (p ^ 2))⁻¹) *
+            ((r : ZMod (p ^ 2))⁻¹) ^ 2 =
+      (p : ZMod (p ^ 2)) * c := by
+  obtain ⟨c, hc⟩ := odd_inv_sq_sum_eq_mul_p hp h5
+  refine ⟨c -
+      ∑ r ∈ (range p).filter Odd,
+        (∑ b ∈ Icc 1 (r - 1), (b : ZMod (p ^ 2))⁻¹) *
+          ((r : ZMod (p ^ 2))⁻¹) ^ 2, ?_⟩
+  rw [odd_combo_zmod hp h5, hc]
+  ring
+
+lemma inv_sq_sum_eq_two_mul_p_add {p : ℕ} (hp : p.Prime) (h5 : 5 ≤ p) :
+    ∃ c, ∑ i ∈ range (p - 1), (((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹) ^ 2 =
+      (2 : ZMod (p ^ 2)) * (p : ZMod (p ^ 2)) *
+        (c + ∑ i ∈ range (p / 2), (((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹) ^ 3) := by
+  obtain ⟨c, hc⟩ := inv_sq_half_eq_mul_p hp h5
+  refine ⟨c, ?_⟩
+  rw [inv_sq_sum_eq_two_half_add_p hp h5, hc]
+  ring
+
+lemma odd_combo_eq_p_mul_coeff {p : ℕ} (hp : p.Prime) (h5 : 5 ≤ p)
+    {c : ZMod (p ^ 2)}
+    (hc : ∑ i ∈ range (p / 2), (((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹) ^ 2 =
+      (p : ZMod (p ^ 2)) * c) :
+    ∑ r ∈ (range p).filter Odd,
+        (1 - (p : ZMod (p ^ 2)) *
+          ∑ b ∈ Icc 1 (r - 1), (b : ZMod (p ^ 2))⁻¹) *
+          ((r : ZMod (p ^ 2))⁻¹) ^ 2 =
+      (p : ZMod (p ^ 2)) *
+        ((7 : ZMod (p ^ 2)) * ((2 : ZMod (p ^ 2))⁻¹) ^ 2 *
+            (c + ∑ i ∈ range (p / 2), (((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹) ^ 3) +
+          ((2 : ZMod (p ^ 2))⁻¹) ^ 2 *
+            ∑ i ∈ range (p / 2), (((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹) ^ 3 -
+          ∑ r ∈ (range p).filter Odd,
+            (∑ b ∈ Icc 1 (r - 1), (b : ZMod (p ^ 2))⁻¹) *
+              ((r : ZMod (p ^ 2))⁻¹) ^ 2) := by
+  have hI : ∑ i ∈ range (p - 1), (((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹) ^ 2 =
+      (2 : ZMod (p ^ 2)) * (p : ZMod (p ^ 2)) *
+        (c + ∑ i ∈ range (p / 2), (((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹) ^ 3) := by
+    rw [inv_sq_sum_eq_two_half_add_p hp h5, hc]
+    ring
+  rw [odd_combo_eq_seven_eight hp h5, hI]
+  have h2 := two_mul_inv_two_zmod hp h5
+  have hpow : (2 : ZMod (p ^ 2)) * ((2 : ZMod (p ^ 2))⁻¹) ^ 3 =
+      ((2 : ZMod (p ^ 2))⁻¹) ^ 2 := by
+    calc
+      (2 : ZMod (p ^ 2)) * ((2 : ZMod (p ^ 2))⁻¹) ^ 3 =
+          ((2 : ZMod (p ^ 2)) * (2 : ZMod (p ^ 2))⁻¹) *
+            ((2 : ZMod (p ^ 2))⁻¹) ^ 2 := by ring
+      _ = 1 * ((2 : ZMod (p ^ 2))⁻¹) ^ 2 := by rw [h2]
+      _ = ((2 : ZMod (p ^ 2))⁻¹) ^ 2 := by rw [one_mul]
+  have h7 :
+      (7 : ZMod (p ^ 2)) * ((2 : ZMod (p ^ 2))⁻¹) ^ 3 *
+          ((2 : ZMod (p ^ 2)) * (p : ZMod (p ^ 2)) *
+            (c + ∑ i ∈ range (p / 2), (((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹) ^ 3)) =
+        (p : ZMod (p ^ 2)) *
+          ((7 : ZMod (p ^ 2)) * ((2 : ZMod (p ^ 2))⁻¹) ^ 2 *
+            (c + ∑ i ∈ range (p / 2), (((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹) ^ 3)) := by
+    have hassoc :
+        (7 : ZMod (p ^ 2)) * ((2 : ZMod (p ^ 2))⁻¹) ^ 3 *
+            ((2 : ZMod (p ^ 2)) * (p : ZMod (p ^ 2)) *
+              (c + ∑ i ∈ range (p / 2), (((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹) ^ 3)) =
+          ((7 : ZMod (p ^ 2)) * ((2 : ZMod (p ^ 2)) * ((2 : ZMod (p ^ 2))⁻¹) ^ 3)) *
+            ((p : ZMod (p ^ 2)) *
+              (c + ∑ i ∈ range (p / 2), (((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹) ^ 3)) := by
+      ring
+    rw [hassoc, hpow]
+    ring
+  rw [h7]
+  ring
+
 lemma oddInnerNum_seven : oddInnerNum 7 = 1693440 := by
   unfold oddInnerNum oddDenom
   rw [show Nat.factorial 6 = 720 by decide]
@@ -5509,6 +5628,11 @@ lemma not_n_sq_dvd_num_of_thirty_one_pow {e : ℕ} (he : 2 ≤ e) :
 #print axioms OeisA108866.inv_sq_half_cast_eq_zero
 #print axioms OeisA108866.odd_inv_sq_sum_eq_mul_p
 #print axioms OeisA108866.padicValRat_ratExpression_forty_nine
+#print axioms OeisA108866.not_pow_dvd_oddInnerNum_iff_combo
+#print axioms OeisA108866.odd_combo_eq_seven_eight
+#print axioms OeisA108866.odd_combo_eq_mul_p
+#print axioms OeisA108866.odd_combo_eq_p_mul_coeff
+#print axioms OeisA108866.inv_sq_sum_eq_two_mul_p_add
 
 end OeisA108866
 

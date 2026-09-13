@@ -170,9 +170,12 @@ in `ZMod (p^2)`. `odd_inv_sq_sum_eq_mul_p` records the same for
 `I_odd`. `padicValRat_ratExpression_forty_nine` gives
 `v_7(T(49))=2` from the exact fraction.
 
-The remaining gap for prime powers is the nonvanishing
-`v_p(U0)=1`. Empirically it holds except at `p=7` where `v=2`, and
-it would fail at Wolstenholme primes (`p | B_{p-3}`).
+`odd_combo_eq_p_mul_coeff`: after writing the half-range inverse
+squares as `p c`, the harmonic unit sum is
+`p (7·4^{-1}(c+S3) + 4^{-1} S3 - τ)` in `ZMod (p^2)`.
+Nonvanishing of that coefficient in `𝔽_p` is equivalent to
+`v_p(U0)=1`. Empirically the coefficient is a unit except at `p=7`
+(and would fail at Wolstenholme primes).
 
 ## Odd composite converse
 
