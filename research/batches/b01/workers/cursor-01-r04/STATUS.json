@@ -21,7 +21,7 @@
   "novelty_status": "known_mathematics_formalization",
   "mathematical_novelty": "known_mathematics_She_Sun_Xia_2022_Thm1_3_ii",
   "formalization_novelty": "no_prior_exact_public_lean_found_in_checked_sources_audit_incomplete_until_stop",
-  "last_updated_utc": "2026-09-13T05:14:05Z",
+  "last_updated_utc": "2026-09-13T05:28:10Z",
   "proof_declarations": [
     "A001818C1.conjecture1_of_one",
     "A001818C1.zpow_sub_ne_one",
@@ -77,12 +77,15 @@
     "A001818C1.ofSubtype_mul_remainder",
     "A001818C1.cycleOf_mul_listing",
     "A001818C1.longPoints_mul_listing",
-    "A001818C1.sum_eq_sum_longKey"
+    "A001818C1.sum_eq_sum_longKey",
+    "A001818C1.longKey_of_listing",
+    "A001818C1.isCycle_subtypePerm_of_support",
+    "A001818C1.eq_listing_of_longKey"
   ],
   "unresolved_gaps": [
-    "General n>=1 C1 identity still open. Have Guo 3.1 for replacing one long cycle, remainder reconstruction, and fiberwise sums by longKey. Need to identify longKey fibers with listing families, vanish those (1-ζ)^{-1} sums, then per M = per(M-J)."
+    "General n>=1 C1 identity still open. Have reconstruction of a long-cycle permutation as a listing times remainder, and longKey_of_listing. Need fiber vanishing of (1-ζ)^{-1} weights, then per M = per(M-J)."
   ],
-  "next_step": "Identify longKey fibers with listing families and apply inv_one_sub_replace_cycle. Remaining terms are fixed-point-free involutions of sign (-1)^n. Then per M = per(M-J).",
+  "next_step": "Apply eq_listing_of_longKey and longKey_of_listing to vanish each longKey fiber via inv_one_sub_replace_cycle. Then involution sign cancellation and per M = per(M-J).",
   "self_review": "not a candidate yet; cannot set independently_verified",
   "excluded_from_this_worker": [
     "OeisA1818.conjecture2",

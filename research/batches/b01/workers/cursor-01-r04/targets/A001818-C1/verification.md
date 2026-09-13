@@ -53,6 +53,8 @@ which type-checks. The original `a` is used. The admitted `OeisA1818.conjecture1
 'A001818C1.ofSubtype_mul_remainder' depends on axioms: [propext, Classical.choice, Quot.sound]
 'A001818C1.longPoints_mul_listing' depends on axioms: [propext, Classical.choice, Quot.sound]
 'A001818C1.sum_eq_sum_longKey' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.longKey_of_listing' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.eq_listing_of_longKey' depends on axioms: [propext, Classical.choice, Quot.sound]
 ```
 
 No `sorryAx`, `native_decide`, or `Lean.trustCompiler` in those lemmas. The general `n ≥ 1` identity is not yet proved.
