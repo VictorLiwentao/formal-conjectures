@@ -2,16 +2,16 @@
   "automation_id": "maintain-seven-cursor-math-workers",
   "interval_minutes": 15,
   "target_cursor_slots": 7,
-  "updated_at_utc": "2026-09-13T02:09:32.432952+00:00",
+  "updated_at_utc": "2026-09-13T02:20:17.275868+00:00",
   "accept_known_informal_proofs_for_new_lean_formalization": true,
-  "note": "WOWII101 independently verified and replaced by active Green66 known-bound worker. A109074 has a new stopped candidate under independent audit; other five OEIS goals active. No audit shortcut to keep turnover high.",
+  "note": "WOWII101 and A109074 independently verified. Green66 replacement active; A051903-C2 replacement reserved. Five original OEIS workers continue.",
   "slots": [
     {
       "slot": "cursor-01",
-      "run_id": "cursor-01-r02",
-      "agent_url": "https://cursor.com/agents/bc-25b34f4b-3076-4e2d-93c5-d2bd6b630918",
-      "state": "audit_pending",
-      "actual_branch": "cursor/b01-cursor-01-r02-0918",
+      "run_id": "cursor-01-r03",
+      "agent_url": null,
+      "state": "reserved_for_replacement",
+      "actual_branch": null,
       "replacements": [
         {
           "run_id": "cursor-01-r02",
@@ -19,8 +19,8 @@
           "launched_at_utc": "2026-09-13T00:14:28.257975+00:00"
         }
       ],
-      "last_checked_at_utc": "2026-09-13T02:09:32.432952+00:00",
-      "progress_note": "A109074 exact candidate5e40973b stopped with deadline timer cancelled and no Goal active. Independent audit and OEIS successor screening running; no replacement yet.",
+      "last_checked_at_utc": "2026-09-13T02:20:17.275868+00:00",
+      "progress_note": "A109074 passed independent exact-type/axiom/compile audit; documentation correction014dd479 leaves proof unchanged. Predecessor stopped with no goal/timers. A051903-C2 reserved and screened, awaiting one launch.",
       "history": [
         {
           "run_id": "cursor-01",
@@ -29,14 +29,22 @@
           "retired_at_utc": "2026-09-13T00:11:52.305832+00:00",
           "result": "independently_verified_known_math_formalization",
           "audit": "research/batches/b01/control/audits/cursor-01.md"
+        },
+        {
+          "run_id": "cursor-01-r02",
+          "agent_url": "https://cursor.com/agents/bc-25b34f4b-3076-4e2d-93c5-d2bd6b630918",
+          "actual_branch": "cursor/b01-cursor-01-r02-0918",
+          "retired_at_utc": "2026-09-13T02:20:17.275868+00:00",
+          "result": "independently_verified_known_mathematics_formalization",
+          "audit": "research/batches/b01/control/audits/cursor-01-r02.md"
         }
       ],
-      "predecessor": "cursor-01",
-      "starting_commit": "1107856a264a066e316c3cba7b5339be475f6304",
-      "launch_verified_at_utc": "2026-09-13T00:14:28.257975+00:00",
-      "goal_command_submitted": true,
+      "predecessor": "cursor-01-r02",
+      "starting_commit": null,
+      "launch_verified_at_utc": null,
+      "goal_command_submitted": false,
       "goal_active_verified": false,
-      "goal_verified_at_utc": "2026-09-13T01:42:33.986276+00:00",
+      "goal_verified_at_utc": null,
       "environment_build": "bld-20260912-716b23c3-d124-4da8-ab69-743e1fb16843",
       "model": "Cursor Grok 4.6 Extra High"
     },
