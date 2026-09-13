@@ -55,7 +55,15 @@ which type-checks. The original `a` is used. The admitted `OeisA1818.conjecture1
 'A001818C1.sum_eq_sum_longKey' depends on axioms: [propext, Classical.choice, Quot.sound]
 'A001818C1.longKey_of_listing' depends on axioms: [propext, Classical.choice, Quot.sound]
 'A001818C1.eq_listing_of_longKey' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.long_fiber_inv_one_sub' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.long_cycle_inv_one_sub_sum' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.long_fiber_signed_inv_one_sub' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.long_cycle_signed_inv_one_sub_sum' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.unsigned_derangement_inv_sum' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.permanent_sunMatrix_sub_ones_eq_a' depends on axioms: [propext, Classical.choice, Quot.sound]
 ```
+
+No `sorryAx`, `native_decide`, or `Lean.trustCompiler` in those lemmas. The general `n ≥ 1` identity is not yet proved. `per(M-J) = a n` is proved; `per M = per(M-J)` remains.
 
 No `sorryAx`, `native_decide`, or `Lean.trustCompiler` in those lemmas. The general `n ≥ 1` identity is not yet proved.
 
