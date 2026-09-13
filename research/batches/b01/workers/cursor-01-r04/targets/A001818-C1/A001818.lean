@@ -7466,8 +7466,19 @@ lemma matchingSum_eq_recurrence {α : Type*} [Fintype α] [DecidableEq α]
     rw [sum_fiber_swap_ofSubtype (Ne.symm hq)
       (fun σ => if σ.support = univ ∧ σ * σ = 1 then matchingWeight x σ else 0)]
     unfold matchingSumOn matchingSum
-    refine Eq.trans (Fintype.sum_congr _ _ fun u => ?_) ?_
-    · have hiff := matching_swap_mul_ofSubtype_iff (Ne.symm hq) u
+    have hinner :
+        ∀ u : Perm {a // a ∈ ({p, q} : Finset α)ᶜ},
+          (if (Equiv.swap p q * Equiv.Perm.ofSubtype u).support = univ ∧
+              (Equiv.swap p q * Equiv.Perm.ofSubtype u) *
+                (Equiv.swap p q * Equiv.Perm.ofSubtype u) = 1 then
+            matchingWeight x (Equiv.swap p q * Equiv.Perm.ofSubtype u)
+          else 0) =
+            matchingWeight x (Equiv.swap p q) *
+              (if u.support = univ ∧ u * u = 1 then
+                matchingWeight (fun a : {a // a ∈ ({p, q} : Finset α)ᶜ} => x a.1) u
+              else 0) := by
+      intro u
+      have hiff := matching_swap_mul_ofSubtype_iff (Ne.symm hq) u
       by_cases hu : u.support = univ ∧ u * u = 1
       · have hσ : (Equiv.swap p q * Equiv.Perm.ofSubtype u).support = univ ∧
             (Equiv.swap p q * Equiv.Perm.ofSubtype u) *
@@ -7477,7 +7488,7 @@ lemma matchingSum_eq_recurrence {α : Type*} [Fintype α] [DecidableEq α]
             (Equiv.swap p q * Equiv.Perm.ofSubtype u) *
               (Equiv.swap p q * Equiv.Perm.ofSubtype u) = 1) := fun h => hu (hiff.1 h)
         rw [if_neg hσ, if_neg hu, mul_zero]
-    · rw [← mul_sum]
+    rw [Fintype.sum_congr _ _ hinner, ← mul_sum]
 
 lemma cycleType_replicate_two_of_mul_self {n : ℕ} {σ : Perm (Fin (2 * n))}
     (hsup : σ.support = univ) (hsq : σ * σ = 1) :
