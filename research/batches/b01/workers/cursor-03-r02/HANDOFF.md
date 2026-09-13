@@ -33,7 +33,7 @@ Count* compiles should stay serial on a 15 GiB VM.
 
 ## Final commit SHA
 
-Recorded after the verification-doc commit on this branch. Glue compile of `fb612f16` plus verification files.
+`0cfc37ddcaee09c44458b42966393bea64e078d3` (verification log and `candidate_proof` status).
 
 ## Result
 
