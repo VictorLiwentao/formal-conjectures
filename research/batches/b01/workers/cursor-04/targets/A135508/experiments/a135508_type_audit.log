@@ -1,0 +1,8 @@
+OeisA135508.conjecture : ∀ (p : ℕ), Nat.Prime p → ¬Nat.Prime (p - 2) → OeisA135508.a (p - 1) = p
+theorem OeisA135508.conjecture : ∀ (p : ℕ), Nat.Prime p → ¬Nat.Prime (p - 2) → OeisA135508.a (p - 1) = p :=
+fun p hp hp_twin => sorry
+'OeisA135508.a_0' does not depend on any axioms
+'OeisA135508.a_1' does not depend on any axioms
+'OeisA135508.a_2' does not depend on any axioms
+'OeisA135508.a_3' does not depend on any axioms
+'OeisA135508.a_4' does not depend on any axioms

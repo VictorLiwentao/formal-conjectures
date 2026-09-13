@@ -1,0 +1,41 @@
+{
+  "worker_id": "cursor-04",
+  "target_id": "A135508",
+  "declaration": "OeisA135508.conjecture",
+  "actual_branch": "cursor/a135508-lcm-primes-770d",
+  "baseline_commit": "a2f4a1bb12a28e04a969da78feefac7d1ce49565",
+  "coordination_seed": "238f78bdd5701ae4c97a0d70d4e22e2d45770d7a",
+  "source_file": "FormalConjectures/OEIS/135508.lean",
+  "source_sha256": "3814549cee8601c96c59b923d7ece1c4b26a59b0fd134f49a93cbbc38e914b0b",
+  "current_status": "partial",
+  "novelty_status": "no_exact_public_solution_found_in_checked_sources",
+  "statement_audit": "matches_intended_mceachen_statement",
+  "oeis_editability": "unknown",
+  "last_updated_utc": "2026-09-13T00:01:00Z",
+  "session_kickoff_utc": "2026-09-12T23:12:00Z",
+  "session_hard_stop_utc": "2026-09-13T07:12:00Z",
+  "proof_declarations": [
+    "OeisA135508.conjecture_of_mod_three",
+    "OeisA135508.conjecture_of_three_dvd",
+    "OeisA135508.conjecture_of_five_dvd",
+    "OeisA135508.conjecture_of_seven_dvd",
+    "OeisA135508.conjecture_of_eleven_dvd",
+    "OeisA135508.conjecture_of_thirteen_dvd",
+    "OeisA135508.conjecture_of_nineteen_dvd",
+    "OeisA135508.conjecture_two",
+    "OeisA135508.conjecture_three",
+    "OeisA135508.inhibition",
+    "OeisA135508.twin_pair_inhibition",
+    "OeisA135508.larger_twin_eq_one",
+    "OeisA135508.conjecture_of_factor_dvd_x",
+    "OeisA135508.conjecture_of_injected"
+  ],
+  "unresolved_gaps": [
+    "Frozen OeisA135508.conjecture is still sorry.",
+    "Remaining class: primes p ≡ 1 (mod 3) with p-2 composite and not divisible by an already-injected prime (3,5,7,11,13,19,...).",
+    "Need some prime q | (p-2) with q | x(p-3). For q ≡ 2 (mod 3), q ≥ 11, this is a later injection r ≡ -2 (mod q).",
+    "Existence of a prime r ≡ -2 (mod q), r ≡ 2 (mod 3), r ≤ q(q+2)-1 is experimental for q ≤ 5000, not a Linnik-free proof.",
+    "Cloitre C1 and Cor. 6.6 are not used and are not an unconditional solution."
+  ],
+  "next_step": "Prove an unconditional first-entry bound q | x(q(q+2)-1) for primes q ≡ 2 (mod 3), or find a different invariant. Do not claim completion. Continue until an exact candidate, a verified prior solution, a defective-target report, or the original 8-hour kickoff limit."
+}
