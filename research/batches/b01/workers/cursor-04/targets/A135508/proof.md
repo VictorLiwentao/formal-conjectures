@@ -40,7 +40,9 @@ Hence McEachen at `p` is equivalent to `gcd(x (p-3), p-2) > 1`, i.e. some prime 
    - `13 ∣ x n` for `n ≥ 11`, hence McEachen if `13 ∣ p-2` and `p ≥ 14`.
    - `19 ∣ x n` for `n ≥ 17`.
    - `11 ∣ x n` for `n ≥ 53`.
-   The general form is `conjecture_of_injected`.
+   - `17 ∣ x n` for `n ≥ 83` (`5·17-2 = 83` prime).
+   - `23 ∣ x n` for `n ≥ 113` (`5·23-2 = 113` prime).
+   The general form is `conjecture_of_injected` / `conjecture_of_prime_injector` / `conjecture_of_five_prime_injector`.
 
 ## Twin primes without `C₁` (proved)
 
@@ -63,11 +65,13 @@ If `r` itself is a prime `≡ 2 (mod 3)`, then `r ≡ -2 (mod q)` and `r ≤ p-3
 
 `r = kq - 2 ≤ q(q+2)-1` with `k ≡ 2 (mod 3)` and `r ≥ 7`
 
-would finish McEachen. Existence of such an `r` is a Linnik-type statement in a fixed residue class modulo `3q`. Mathlib has Dirichlet’s theorem (`Nat.forall_exists_prime_gt_and_eq_mod`), which gives infinitely many primes in that class but no bound `r ≤ q(q+2)-1`. Current Linnik exponents (`L = 5`) are larger than `2`. The bound was **not** assumed.
+would finish McEachen. Even `k` makes `kq-2` even (`not_prime_kq_sub_two_of_even`). If `k ≡ 1 (mod 3)` then `3 ∣ kq-2`, hence composite for `q ≥ 11` (`not_prime_kq_sub_two_of_k_mod_one`). The only prime-injector candidates are therefore `k ≡ 5 (mod 6)`. Existence of such an `r` is a Linnik-type statement in a fixed residue class modulo `6q`. Mathlib has Dirichlet’s theorem (`Nat.forall_exists_prime_gt_and_eq_mod`), which gives infinitely many primes in that class but no bound `r ≤ q(q+2)-1`. Current Linnik exponents (`L = 5`) are larger than `2`. Even the usual GRH bound is larger than `q^2` by a log factor. The bound was **not** assumed.
+
+`conjecture_of_cases` splits the frozen type into `p=2`, `p=3`, `p ≡ 2 (mod 3)`, or a remaining injector. `not_q_dvd_x_le` proves that a prime `q ≡ 2 (mod 3)` with `q ≥ 7` does not divide `x n` for `0 < n ≤ q`.
 
 Composite injection is also available: if `gcd(x(kq-3), kq-2)=1`, then `q` enters even when `kq-2` is composite (`q_dvd_x_of_coprime_shift`). When `kq-2` is prime the gcd is 1 by the mod-3 theorem. No uniform proof that some `k` in range has gcd `1` was obtained.
 
-Deterministic experiment (`injector_bound.py`): for every prime `q ≡ 2 (mod 3)` with `11 ≤ q ≤ 5000`, such an `r` exists and is `≤ q(q+2)-1`. A factorization scan to `n = 50000` found no McEachen failure. Finite checks are not a resolution.
+Deterministic experiments (`injector_bound.py`, `injector_mod.py`): for every prime `q ≡ 2 (mod 3)` with `11 ≤ q ≤ 5000`, a `k ≡ 5 (mod 6)` injector exists with `k ≤ q+2` (worst `k = 89` at `q = 4271`). A factorization scan to `n = 40000` found no McEachen failure and no composite `a(n)`. Finite checks are not a resolution.
 
 Cloitre’s route (assume `C₁`, then Theorem 6.2) was not used. `C₁` is stronger than McEachen and remains open.
 
@@ -82,6 +86,7 @@ Proved: `v2(gcd)`, `v2(a n)`, `v2(x(n+1))`, odd-increment stability, dyadic bloc
 - Proving `q ∣ x(q^2-1)` in full generality (Epoch’s closest attempt; still open).
 - Using `native_decide` or the frozen `sorry`.
 - Using Mathlib Dirichlet without a Linnik bound.
+- Using GRH or current Linnik `L=5` as if they implied `r ≤ q(q+2)-1`. They do not.
 
 ## Status
 

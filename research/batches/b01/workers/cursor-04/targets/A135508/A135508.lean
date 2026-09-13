@@ -721,6 +721,230 @@ theorem conjecture_of_prime_injector {p k q : ℕ} (hp : p.Prime) (hp5 : 5 ≤ p
   have hx2 : q ∣ x (p - 3) := hx.trans (x_dvd_of_le hpos hle)
   exact conjecture_of_factor_dvd_x hp hp5 hq1 hqp hx2
 
+lemma odd_of_prime_mod_three_two {q : ℕ} (hq : q.Prime) (h7 : 7 ≤ q)
+    (_hmod : q % 3 = 2) : q % 2 = 1 := by
+  rcases hq.eq_two_or_odd with h2 | hodd
+  · omega
+  · exact hodd
+
+/-- Even `k` never yields a prime injector: `kq-2` is even and at least `8`. -/
+lemma kq_sub_two_even {k q : ℕ} (hk : k % 2 = 0) (hq : q % 2 = 1)
+    (h2 : 2 ≤ k * q) : (k * q - 2) % 2 = 0 := by
+  have hmul : (k * q) % 2 = 0 := by
+    rw [Nat.mul_mod, hk, hq]
+  omega
+
+lemma not_prime_kq_sub_two_of_even {k q : ℕ} (hk : k % 2 = 0) (hq : q % 2 = 1)
+    (h2 : 2 ≤ k) (h5 : 5 ≤ q) : ¬ (k * q - 2).Prime := by
+  have h10 : 10 ≤ k * q := Nat.mul_le_mul h2 h5
+  have heven : (k * q - 2) % 2 = 0 :=
+    kq_sub_two_even hk hq (le_trans (by decide : 2 ≤ 10) h10)
+  intro hpr
+  rcases hpr.eq_two_or_odd with h2' | hodd
+  · omega
+  · omega
+
+lemma not_prime_kq_sub_two_of_even_prime {k q : ℕ} (hq : q.Prime) (h7 : 7 ≤ q)
+    (hmod : q % 3 = 2) (hk : k % 2 = 0) (h2 : 2 ≤ k) :
+    ¬ (k * q - 2).Prime :=
+  not_prime_kq_sub_two_of_even hk (odd_of_prime_mod_three_two hq h7 hmod) h2
+    (le_trans (by decide : 5 ≤ 7) h7)
+
+/-- If `k ≡ 1 (mod 3)` then `3 ∣ kq-2`. For `q ≥ 11` this is composite. -/
+lemma kq_sub_two_mod_three_of_k_one {k q : ℕ} (hk : k % 3 = 1) (hq : q % 3 = 2)
+    (h4 : 4 ≤ k * q) : (k * q - 2) % 3 = 0 := by
+  have hmul : (k * q) % 3 = 2 := by
+    rw [Nat.mul_mod, hk, hq]
+  have hrep : k * q = 3 * (k * q / 3) + 2 := by
+    simpa [Nat.mul_comm, hmul] using (Nat.div_add_mod (k * q) 3).symm
+  omega
+
+lemma not_prime_kq_sub_two_of_k_mod_one {k q : ℕ} (hk : k % 3 = 1) (hq : q % 3 = 2)
+    (h1 : 1 ≤ k) (h11 : 11 ≤ q) : ¬ (k * q - 2).Prime := by
+  have h4 : 4 ≤ k * q := by
+    have : 1 * 11 ≤ k * q := Nat.mul_le_mul h1 h11
+    omega
+  have hmod0 := kq_sub_two_mod_three_of_k_one hk hq h4
+  have h3 : 3 ∣ k * q - 2 := Nat.dvd_of_mod_eq_zero hmod0
+  have hgt : 3 < k * q - 2 := by
+    have : 11 ≤ k * q := Nat.mul_le_mul h1 h11
+    omega
+  intro hpr
+  have heq : k * q - 2 = 3 :=
+    ((Nat.prime_dvd_prime_iff_eq Nat.prime_three hpr).1 h3).symm
+  omega
+
+lemma odd_k_mod_three_two_iff {k : ℕ} (hk2 : k % 2 = 1) :
+    k % 3 = 2 ↔ k % 6 = 5 := by
+  have h6 : k % 6 = 1 ∨ k % 6 = 3 ∨ k % 6 = 5 := by omega
+  constructor
+  · intro h3
+    rcases h6 with h | h | h
+    · omega
+    · omega
+    · exact h
+  · intro h
+    omega
+
+/-- A prime `q ≡ 2 (mod 3)`, `q ≥ 7`, does not divide `x n` for `0 < n ≤ q`.
+In particular it does not enter at its own index. -/
+lemma not_q_dvd_x_le {q n : ℕ} (hq : q.Prime) (hmod : q % 3 = 2) (h7 : 7 ≤ q)
+    (hn : 0 < n) (hle : n ≤ q) : ¬ q ∣ x n := by
+  intro hd
+  obtain ⟨m, hmpos, hmle, hdm, hmin⟩ := exists_least_dvd hn hd
+  have hmle' : m ≤ q := hmle.trans hle
+  have hmne1 : m ≠ 1 := by
+    intro hm1
+    subst hm1
+    exact not_prime_dvd_x_one hq hdm
+  have hmpred : 0 < m - 1 := by omega
+  have hnot : ¬ q ∣ x (m - 1) :=
+    hmin (m - 1) hmpred (Nat.sub_lt hmpos (by decide))
+  have hstep := x_succ_a hmpred
+  have hm1 : m - 1 + 1 = m := Nat.sub_add_cancel (by omega)
+  rw [hm1] at hstep
+  have hmul : q ∣ x (m - 1) * (a (m - 1) + 2) := by
+    rwa [← hstep]
+  have hfac : q ∣ a (m - 1) + 2 :=
+    (hq.dvd_mul.mp hmul).resolve_left hnot
+  have hale := a_le_succ hmpred
+  have hle_a : a (m - 1) + 2 ≤ m + 2 := by
+    have h1 : a (m - 1) + 2 ≤ m - 1 + 1 + 2 := Nat.add_le_add_right hale 2
+    have : m - 1 + 1 + 2 = m + 2 := by omega
+    exact h1.trans this.le
+  have hle2 : a (m - 1) + 2 ≤ q + 2 :=
+    hle_a.trans (Nat.add_le_add_right hmle' 2)
+  have hge : q ≤ a (m - 1) + 2 :=
+    Nat.le_of_dvd (by omega) hfac
+  have hcases : a (m - 1) + 2 = q ∨ a (m - 1) + 2 = q + 1 ∨
+      a (m - 1) + 2 = q + 2 := by omega
+  rcases hcases with h | h | h
+  · have ha : a (m - 1) = q - 2 := by omega
+    have hdivn : q - 2 ∣ m := by
+      have h := a_dvd hmpred
+      rwa [hm1, ha] at h
+    obtain ⟨k, hk⟩ := hdivn
+    have hkpos : 0 < k := by
+      cases k with
+      | zero =>
+        rw [Nat.mul_zero] at hk
+        exact (hmpos.ne' hk).elim
+      | succ k => exact Nat.succ_pos _
+    have hk1 : k = 1 := by
+      have hcases : k = 1 ∨ 2 ≤ k := by omega
+      rcases hcases with h | h
+      · exact h
+      · have hle2' : 2 * (q - 2) ≤ (q - 2) * k := by
+          have := Nat.mul_le_mul_left (q - 2) h
+          simpa [mul_comm] using this
+        have : 2 * (q - 2) ≤ m := by
+          rwa [← hk] at hle2'
+        have : 2 * (q - 2) ≤ q := this.trans hmle'
+        omega
+    have hm2 : m = q - 2 := by
+      rw [hk, hk1, Nat.mul_one]
+    have hidx : m - 1 = q - 3 := by omega
+    have hpos : 0 < q - 3 := by omega
+    have hsum : q - 3 + 1 = q - 2 := by omega
+    have hg : 1 < Nat.gcd (x (q - 3)) (q - 2) :=
+      three_dvd_gcd h7 (three_dvd_of_mod (le_trans (by decide : 2 ≤ 7) h7) hmod)
+    have haeq : a (q - 3) = q - 2 := by
+      rw [← hidx, ha]
+    have hcop : Nat.gcd (x (q - 3)) (q - 2) = 1 := by
+      have ha' : a (q - 3) = q - 3 + 1 := by
+        rwa [hsum]
+      have hgcd := (a_eq_succ_iff hpos).1 ha'
+      rwa [hsum] at hgcd
+    omega
+  · have : q ∣ q + 1 := by rwa [h] at hfac
+    have : (q + 1) % q = 0 := Nat.mod_eq_zero_of_dvd this
+    have : (q + 1) % q = 1 := by
+      rw [Nat.add_comm q 1, Nat.add_mod_right]
+      exact Nat.mod_eq_of_lt (by omega : 1 < q)
+    omega
+  · have hdq : q ∣ q + 2 := by rwa [h] at hfac
+    have : q ∣ 2 :=
+      (Nat.dvd_add_iff_left (dvd_rfl : q ∣ q)).mpr (by simpa [add_comm] using hdq)
+    have : q = 2 := (Nat.prime_dvd_prime_iff_eq hq Nat.prime_two).1 this
+    omega
+
+lemma not_q_dvd_x_self {q : ℕ} (hq : q.Prime) (hmod : q % 3 = 2) (h7 : 7 ≤ q) :
+    ¬ q ∣ x q :=
+  not_q_dvd_x_le hq hmod h7 (by omega : 0 < q) le_rfl
+
+/-- Specialization: a prime `5q-2` injects `q` at index `5q-2`. -/
+lemma q_dvd_x_of_five_prime_injector {q : ℕ} (hmodq : q % 3 = 2)
+    (hpr : (5 * q - 2).Prime) (h7 : 7 ≤ 5 * q - 2) :
+    q ∣ x (5 * q - 2) :=
+  q_dvd_x_of_prime_injector (k := 5) (by decide) hmodq hpr h7
+
+theorem conjecture_of_five_prime_injector {p q : ℕ} (hp : p.Prime) (hp5 : 5 ≤ p)
+    (hmodq : q % 3 = 2) (hpr : (5 * q - 2).Prime) (h7 : 7 ≤ 5 * q - 2)
+    (hle : 5 * q - 2 ≤ p - 3) (hqp : q ∣ p - 2) (hq1 : 1 < q) :
+    a (p - 1) = p :=
+  conjecture_of_prime_injector hp hp5 (by decide) hmodq hpr h7 hle hqp hq1
+
+/-- Remaining McEachen primes reduce to one prime injector `kq-2 ≤ p-3`. -/
+theorem conjecture_of_remaining_injector {p : ℕ} (hp : p.Prime) (hp7 : 7 ≤ p)
+    (hmod : p % 3 = 1) (_hcomp : ¬ (p - 2).Prime)
+    (hinj : ∃ q k, q.Prime ∧ q ∣ p - 2 ∧ q % 3 = 2 ∧ 1 < q ∧
+        k % 3 = 2 ∧ (k * q - 2).Prime ∧ 7 ≤ k * q - 2 ∧ k * q - 2 ≤ p - 3) :
+    a (p - 1) = p := by
+  obtain ⟨q, k, _hq, hqp, hmodq, hq1, hmodk, hpr, h7k, hle⟩ := hinj
+  exact conjecture_of_prime_injector hp (by omega) hmodk hmodq hpr h7k hle hqp hq1
+
+/-- The frozen dichotomy: `2`, `3`, every `p ≡ 2 (mod 3)`, or a remaining injector. -/
+theorem conjecture_of_cases {p : ℕ} (hp : p.Prime) (hp_twin : ¬ (p - 2).Prime)
+    (hinj : p % 3 = 1 →
+        ∃ q k, q.Prime ∧ q ∣ p - 2 ∧ q % 3 = 2 ∧ 1 < q ∧
+          k % 3 = 2 ∧ (k * q - 2).Prime ∧ 7 ≤ k * q - 2 ∧ k * q - 2 ≤ p - 3) :
+    a (p - 1) = p := by
+  have h2le : 2 ≤ p := hp.two_le
+  have hmod : p % 3 = 0 ∨ p % 3 = 1 ∨ p % 3 = 2 := by omega
+  rcases hmod with h0 | h1 | h2
+  · have h3p : 3 ∣ p := Nat.dvd_of_mod_eq_zero h0
+    have hp3 : p = 3 :=
+      ((Nat.prime_dvd_prime_iff_eq Nat.prime_three hp).1 h3p).symm
+    subst hp3
+    exact conjecture_three hp_twin
+  · have : p ≠ 2 := by
+      intro h
+      subst h
+      simp at h1
+    have hp7 : 7 ≤ p := by omega
+    exact conjecture_of_remaining_injector hp hp7 h1 hp_twin (hinj h1)
+  · by_cases h7 : 7 ≤ p
+    · exact conjecture_of_mod_three hp h7 h2
+    · have hlt : p < 7 := by omega
+      rcases hp.eq_two_or_odd with hp2 | hodd
+      · subst hp2
+        exact conjecture_two hp_twin
+      · have hp5 : p = 5 := by omega
+        subst hp5
+        exact (hp_twin Nat.prime_three).elim
+
+lemma seventeen_dvd_x_83 : 17 ∣ x 83 :=
+  q_dvd_x_of_five_prime_injector (by decide) (by decide) (by decide)
+
+lemma seventeen_dvd_x {n : ℕ} (hn : 83 ≤ n) : 17 ∣ x n :=
+  seventeen_dvd_x_83.trans (x_dvd_of_le (by decide : 0 < 83) hn)
+
+theorem conjecture_of_seventeen_dvd {p : ℕ} (hp : p.Prime) (hp86 : 86 ≤ p)
+    (h17 : 17 ∣ p - 2) : a (p - 1) = p :=
+  conjecture_of_factor_dvd_x hp (by omega) (by decide : 1 < 17) h17
+    (seventeen_dvd_x (by omega : 83 ≤ p - 3))
+
+lemma twentythree_dvd_x_113 : 23 ∣ x 113 :=
+  q_dvd_x_of_five_prime_injector (by decide) (by decide) (by decide)
+
+lemma twentythree_dvd_x {n : ℕ} (hn : 113 ≤ n) : 23 ∣ x n :=
+  twentythree_dvd_x_113.trans (x_dvd_of_le (by decide : 0 < 113) hn)
+
+theorem conjecture_of_twentythree_dvd {p : ℕ} (hp : p.Prime) (hp116 : 116 ≤ p)
+    (h23 : 23 ∣ p - 2) : a (p - 1) = p :=
+  conjecture_of_factor_dvd_x hp (by omega) (by decide : 1 < 23) h23
+    (twentythree_dvd_x (by omega : 113 ≤ p - 3))
+
 private instance : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
 
 lemma a_pos {n : ℕ} (hn : 0 < n) : 0 < a n :=
@@ -1002,5 +1226,15 @@ lemma v2_x_two_four_pow_pred (k : ℕ) :
 #print axioms conjecture_of_prime_injector
 #print axioms q_dvd_x_of_coprime_shift
 #print axioms v2_x_ge_two
+#print axioms not_q_dvd_x_le
+#print axioms not_q_dvd_x_self
+#print axioms not_prime_kq_sub_two_of_even
+#print axioms not_prime_kq_sub_two_of_k_mod_one
+#print axioms odd_k_mod_three_two_iff
+#print axioms conjecture_of_five_prime_injector
+#print axioms conjecture_of_remaining_injector
+#print axioms conjecture_of_cases
+#print axioms conjecture_of_seventeen_dvd
+#print axioms conjecture_of_twentythree_dvd
 
 end OeisA135508

@@ -23,6 +23,7 @@ Experiments (not proofs):
 python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/scan_structure.py
 python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/first_entry_bound.py
 python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/injector_bound.py
+python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/injector_mod.py
 ```
 
 No `lake clean`, `lake update`, or full default `lake build`.
@@ -54,6 +55,11 @@ a_two_four_pow / v2_x_ge_two / v2_x_two_four_pow_pred : propext, Classical.choic
 exists_prime_factor_mod_three / exists_remaining_factor / remaining_minFac_mul_add_two_le : propext, Classical.choice, Quot.sound
 q_dvd_x_of_prime_injector / conjecture_of_prime_injector : propext, Classical.choice, Quot.sound
 q_dvd_x_of_coprime_shift : propext, Quot.sound
+not_q_dvd_x_le / not_q_dvd_x_self : propext, Classical.choice, Quot.sound
+not_prime_kq_sub_two_of_even : propext, Quot.sound
+not_prime_kq_sub_two_of_k_mod_one : propext, Classical.choice, Quot.sound
+conjecture_of_five_prime_injector / remaining_injector / cases : propext, Classical.choice, Quot.sound
+conjecture_of_seventeen_dvd / twentythree_dvd : propext, Classical.choice, Quot.sound
 ```
 
 No `sorryAx`, `native_decide`, or `Lean.trustCompiler` on these declarations. `Classical.choice` enters through `Nat.find` in `exists_least_dvd` and through Mathlib `decide` instances. Full log: `experiments/a135508_axioms.log`.

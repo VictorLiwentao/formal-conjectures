@@ -49,6 +49,8 @@ Conditional on hypothesis `C₁` (`c_n ∈ {1} ∪ primes` for all `n`):
 
 Do **not** count Corollary 6.6 as a new or unconditional solution.
 
+Even under GRH, the usual bound on the least prime in an arithmetic progression is larger than the square window `q(q+2)-1` by logarithmic factors. Pointwise first-entry of every `q ≡ 2 (mod 3)` by index `q(q+2)-1` is therefore beyond current analytic technology as well as beyond Mathlib. This does not forbid an elementary proof that uses more of the recurrence, but it does rule out quoting Linnik or Dirichlet as a finish.
+
 ## Schepke thesis (required)
 
 Markus Schepke, *Über Primzahlerzeugende Folgen*, thesis, U. Hannover, 2009.

@@ -30,14 +30,17 @@ python3 research/batches/b01/control/check_assignments.py --repo . --worker curs
 ## What is proved (research file only)
 
 - Closed form of `a`, dichotomy at primes, first-entry criterion `p | x(p-1) ↔ a(p-3)=p-2` for `p ≥ 5`.
-- McEachen for `p=2,3`, all primes `p ≥ 7` with `p ≡ 2 (mod 3)`, and several injected-factor families (`5,7,11,13,19`).
+- McEachen for `p=2,3`, all primes `p ≥ 7` with `p ≡ 2 (mod 3)`, and injected-factor families (`5,7,11,13,17,19,23`).
 - Unconditional twin inhibition for pairs with smaller member `≥ 11` (Cloitre 6.3 without `C₁`).
 - Cloitre 2-adic staircase `a(2·4^k-1)=2` for every `k`.
 - Remaining-class reduction: a factor `q ≡ 2 (mod 3)` of `p-2`, the bound `q(q+2) ≤ p-2` on the least prime factor, prime and coprime injectors.
+- `not_q_dvd_x_le`: such a `q ≥ 7` does not divide `x n` for `0 < n ≤ q`.
+- Even `k` and `k ≡ 1 (mod 3)` cannot give prime injectors; remaining candidates are `k ≡ 5 (mod 6)`.
+- `conjecture_of_cases` is the frozen type plus an injector hypothesis on the remaining class.
 
 ## Gap
 
-See `proof.md`. Remaining McEachen primes need a first-entry bound for some factor of `p-2`. Dirichlet in Mathlib does not give the bound. Finite scans to `n=50000` and injector checks for `q ≤ 5000` are not a proof.
+See `proof.md`. Remaining McEachen primes need a first-entry bound for some factor of `p-2`. Dirichlet, Linnik `L=5`, and the usual GRH bound do not give `r ≤ q(q+2)-1`. Finite scans to `n=40000` and injector checks for `q ≤ 5000` are not a proof.
 
 ## Commit SHA
 
