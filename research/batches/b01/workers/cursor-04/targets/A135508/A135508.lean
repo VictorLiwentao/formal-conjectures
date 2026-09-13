@@ -32,7 +32,7 @@ remaining-class factor `q ≡ 2 (mod 3)` of `p-2`, injection of a factor of
 `p-2` when some `kq-2` is a prime `≡ 2 (mod 3)`, McEachen when a factor of
 `p-2` is a larger twin, Cloitre's valuation barrier, remaining McEachen
 when `lpf(p-2) ≤ 107` or that least factor is a larger twin, first-entry of
-`163`, `167`, `179` and `227` at the recorded injector indices, Dirichlet
+`163`, `167`, `179`, `227`, `251` and `389` at the recorded injector indices, Dirichlet
 existence of some (unbounded) prime injector for every prime `q ≥ 5`,
 that `3 ∣ a n` for `n ≥ 3` forces `9 ∣ n+1`, that `3 ∣ a n` for `n ≥ 6`
 forces `81 ∣ n+1`, that `3 ∣ a n` for `n ≥ 7` forces `729 ∣ n+1`, that
@@ -2012,6 +2012,30 @@ theorem conjecture_of_two_hundred_twenty_seven_dvd {p : ℕ} (hp : p.Prime)
   conjecture_of_factor_dvd_x hp (by omega) (by decide : 1 < 227) h227
     (two_hundred_twenty_seven_dvd_x (by omega : 6581 ≤ p - 3))
 
+lemma two_hundred_fifty_one_dvd_x_8783 : 251 ∣ x 8783 :=
+  q_dvd_x_of_prime_index (k := 35) (q := 251)
+    (by norm_num) (by decide) (by decide)
+
+lemma two_hundred_fifty_one_dvd_x {n : ℕ} (hn : 8783 ≤ n) : 251 ∣ x n :=
+  two_hundred_fifty_one_dvd_x_8783.trans (x_dvd_of_le (by decide : 0 < 8783) hn)
+
+theorem conjecture_of_two_hundred_fifty_one_dvd {p : ℕ} (hp : p.Prime)
+    (hp8786 : 8786 ≤ p) (h251 : 251 ∣ p - 2) : a (p - 1) = p :=
+  conjecture_of_factor_dvd_x hp (by omega) (by decide : 1 < 251) h251
+    (two_hundred_fifty_one_dvd_x (by omega : 8783 ≤ p - 3))
+
+lemma three_hundred_eighty_nine_dvd_x_11279 : 389 ∣ x 11279 :=
+  q_dvd_x_of_prime_index (k := 29) (q := 389)
+    (by norm_num) (by decide) (by decide)
+
+lemma three_hundred_eighty_nine_dvd_x {n : ℕ} (hn : 11279 ≤ n) : 389 ∣ x n :=
+  three_hundred_eighty_nine_dvd_x_11279.trans (x_dvd_of_le (by decide : 0 < 11279) hn)
+
+theorem conjecture_of_three_hundred_eighty_nine_dvd {p : ℕ} (hp : p.Prime)
+    (hp11282 : 11282 ≤ p) (h389 : 389 ∣ p - 2) : a (p - 1) = p :=
+  conjecture_of_factor_dvd_x hp (by omega) (by decide : 1 < 389) h389
+    (three_hundred_eighty_nine_dvd_x (by omega : 11279 ≤ p - 3))
+
 lemma remaining_minFac_ge_five {p : ℕ} (hp : p.Prime) (hp7 : 7 ≤ p)
     (hmod : p % 3 = 1) : 5 ≤ Nat.minFac (p - 2) := by
   have hn : 1 < p - 2 := by omega
@@ -2352,6 +2376,48 @@ theorem conjecture_of_minFac_two_hundred_twenty_seven {p : ℕ}
   conjecture_of_two_hundred_twenty_seven_dvd hp
     (remaining_p_ge_two_hundred_twenty_seven hp hp7 hmod hcomp h227)
     (h227 ▸ Nat.minFac_dvd (p - 2))
+
+lemma remaining_p_ge_two_hundred_fifty_one {p : ℕ}
+    (hp : p.Prime) (hp7 : 7 ≤ p) (hmod : p % 3 = 1)
+    (hcomp : ¬ (p - 2).Prime)
+    (h251 : Nat.minFac (p - 2) = 251) : 8786 ≤ p := by
+  have hbound := remaining_minFac_mul_add_two_le hp hp7 hmod hcomp
+  rw [h251] at hbound
+  have h2le : 2 ≤ p := le_trans (by decide : 2 ≤ 7) hp7
+  have hnum : 251 * (251 + 2) + 2 = 63505 := by decide
+  have : 251 * (251 + 2) + 2 ≤ p - 2 + 2 := Nat.add_le_add_right hbound 2
+  rw [hnum, Nat.sub_add_cancel h2le] at this
+  exact le_trans (by decide : 8786 ≤ 63505) this
+
+/-- Remaining McEachen if `lpf(p-2) = 251`. The injector is `k = 35`. -/
+theorem conjecture_of_minFac_two_hundred_fifty_one {p : ℕ}
+    (hp : p.Prime) (hp7 : 7 ≤ p) (hmod : p % 3 = 1)
+    (hcomp : ¬ (p - 2).Prime)
+    (h251 : Nat.minFac (p - 2) = 251) : a (p - 1) = p :=
+  conjecture_of_two_hundred_fifty_one_dvd hp
+    (remaining_p_ge_two_hundred_fifty_one hp hp7 hmod hcomp h251)
+    (h251 ▸ Nat.minFac_dvd (p - 2))
+
+lemma remaining_p_ge_three_hundred_eighty_nine {p : ℕ}
+    (hp : p.Prime) (hp7 : 7 ≤ p) (hmod : p % 3 = 1)
+    (hcomp : ¬ (p - 2).Prime)
+    (h389 : Nat.minFac (p - 2) = 389) : 11282 ≤ p := by
+  have hbound := remaining_minFac_mul_add_two_le hp hp7 hmod hcomp
+  rw [h389] at hbound
+  have h2le : 2 ≤ p := le_trans (by decide : 2 ≤ 7) hp7
+  have hnum : 389 * (389 + 2) + 2 = 152101 := by decide
+  have : 389 * (389 + 2) + 2 ≤ p - 2 + 2 := Nat.add_le_add_right hbound 2
+  rw [hnum, Nat.sub_add_cancel h2le] at this
+  exact le_trans (by decide : 11282 ≤ 152101) this
+
+/-- Remaining McEachen if `lpf(p-2) = 389`. The injector is `k = 29`. -/
+theorem conjecture_of_minFac_three_hundred_eighty_nine {p : ℕ}
+    (hp : p.Prime) (hp7 : 7 ≤ p) (hmod : p % 3 = 1)
+    (hcomp : ¬ (p - 2).Prime)
+    (h389 : Nat.minFac (p - 2) = 389) : a (p - 1) = p :=
+  conjecture_of_three_hundred_eighty_nine_dvd hp
+    (remaining_p_ge_three_hundred_eighty_nine hp hp7 hmod hcomp h389)
+    (h389 ▸ Nat.minFac_dvd (p - 2))
 
 /-- Remaining McEachen if `5·lpf(p-2)-2` is prime. For `lpf ≡ 2 (mod 3)`
 this is the first remaining injector and always fits in the square window.
@@ -3997,5 +4063,13 @@ lemma v2_x_two_four_pow_pred (k : ℕ) :
 #print axioms conjecture_of_minFac_one_hundred_seventy_nine
 #print axioms remaining_p_ge_two_hundred_twenty_seven
 #print axioms conjecture_of_minFac_two_hundred_twenty_seven
+#print axioms two_hundred_fifty_one_dvd_x_8783
+#print axioms conjecture_of_two_hundred_fifty_one_dvd
+#print axioms remaining_p_ge_two_hundred_fifty_one
+#print axioms conjecture_of_minFac_two_hundred_fifty_one
+#print axioms three_hundred_eighty_nine_dvd_x_11279
+#print axioms conjecture_of_three_hundred_eighty_nine_dvd
+#print axioms remaining_p_ge_three_hundred_eighty_nine
+#print axioms conjecture_of_minFac_three_hundred_eighty_nine
 
 end OeisA135508

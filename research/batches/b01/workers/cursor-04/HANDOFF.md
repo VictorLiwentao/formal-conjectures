@@ -17,7 +17,7 @@ The remaining sufficient arithmetic condition is now `conjecture_of_exists_facto
 
 An elementary Chebyshev product bound on leftover candidates, using Mathlib `θ(x) ≤ (log 4) x`, does not close at leftover `q ≥ 113` (`experiments/chebyshev_gap.py`).
 
-First-entry of leftover least factors `163`, `167`, `179`, `227` is proved. That is not `∀p`. New leftover least factors at `p < 400000` include `251` (`k=35`) and `389` (`k=29`).
+First-entry of leftover least factors `163`, `167`, `179`, `227` is proved. That is not `∀p`. New leftover least factors at `p < 400000` include `251` (`k=35`) and `389` (`k=29`); those first-entries are now proved as well.
 
 ## Reproduce
 
@@ -39,13 +39,13 @@ See `proof.md` for the full list. New in this continuation:
 
 - `k_mul_sub_two_le_of_cofactor`, `conjecture_of_factor_k_le_cofactor`, `conjecture_of_exists_factor_injector`: remaining McEachen if some factor of `p-2` has a prime injector inside the actual McEachen window `k ≤ (p-2)/q`.
 - `q_dvd_x_add_eight_window_of_sq_sub_two`, `q_dvd_x_add_eight_window_of_add_six`: leftover polynomial candidates `k = q` and `k = q+6`. Primality not proved.
-- First-entry `163 | x 4073`, `167 | x 2837`, `179 | x 3041`, `227 | x 6581`, and remaining McEachen when those are `lpf(p-2)`.
+- First-entry `163 | x 4073`, `167 | x 2837`, `179 | x 3041`, `227 | x 6581`, `251 | x 8783`, `389 | x 11279`, and remaining McEachen when those are `lpf(p-2)`.
 
 Previously: mod-3 family, minFac `≤ 107` or larger-twin least factor, square-window and add-eight packaging, Dirichlet unbounded injectors, Cloitre 6.5 / 6.7, twin inhibition, 3-adic barriers through `a 14`.
 
 ## Gap
 
-See `proof.md`. Remaining McEachen primes have `lpf(p-2) ≥ 113` not a larger twin and not among `{163,167,179,227}`, and need a first-entry bound. Dirichlet, Linnik `L=5`, GRH, and the elementary Chebyshev product bound do not give `r ≤ q(q+2)-1`. Finite scans are not a proof.
+See `proof.md`. Remaining McEachen primes have `lpf(p-2) ≥ 113` not a larger twin and not among `{163,167,179,227,251,389}`, and need a first-entry bound. Dirichlet, Linnik `L=5`, GRH, and the elementary Chebyshev product bound do not give `r ≤ q(q+2)-1`. Finite scans are not a proof.
 
 ## Commit SHA
 

@@ -60,6 +60,8 @@ Hence McEachen at `p` is equivalent to `gcd(x (p-3), p-2) > 1`, i.e. some prime 
    - `167 ∣ x n` for `n ≥ 2837` (`17·167-2 = 2837` prime).
    - `179 ∣ x n` for `n ≥ 3041` (`17·179-2 = 3041` prime).
    - `227 ∣ x n` for `n ≥ 6581` (`29·227-2 = 6581` prime).
+   - `251 ∣ x n` for `n ≥ 8783` (`35·251-2 = 8783` prime).
+   - `389 ∣ x n` for `n ≥ 11279` (`29·389-2 = 11279` prime).
    The general form is `conjecture_of_injected` / `conjecture_of_prime_injector` / `conjecture_of_prime_index` / `conjecture_of_five_prime_injector`.
 5. Remaining primes with `lpf(p-2) ≤ 29` (`conjecture_of_minFac_le_twenty_nine`), `lpf(p-2) ≤ 59` or a larger-twin least factor (`conjecture_of_minFac_le_fifty_nine_or_twin`), `lpf(p-2) ≤ 101` or a larger-twin least factor (`conjecture_of_minFac_le_one_hundred_one_or_twin`), and `lpf(p-2) ≤ 107` or a larger-twin least factor (`conjecture_of_minFac_le_one_hundred_seven_or_twin`). The factor `107` enters at index `23·107-2 = 2459`.
 

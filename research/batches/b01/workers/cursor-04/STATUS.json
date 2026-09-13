@@ -176,7 +176,15 @@
     "OeisA135508.remaining_p_ge_one_hundred_seventy_nine",
     "OeisA135508.conjecture_of_minFac_one_hundred_seventy_nine",
     "OeisA135508.remaining_p_ge_two_hundred_twenty_seven",
-    "OeisA135508.conjecture_of_minFac_two_hundred_twenty_seven"
+    "OeisA135508.conjecture_of_minFac_two_hundred_twenty_seven",
+    "OeisA135508.two_hundred_fifty_one_dvd_x_8783",
+    "OeisA135508.conjecture_of_two_hundred_fifty_one_dvd",
+    "OeisA135508.remaining_p_ge_two_hundred_fifty_one",
+    "OeisA135508.conjecture_of_minFac_two_hundred_fifty_one",
+    "OeisA135508.three_hundred_eighty_nine_dvd_x_11279",
+    "OeisA135508.conjecture_of_three_hundred_eighty_nine_dvd",
+    "OeisA135508.remaining_p_ge_three_hundred_eighty_nine",
+    "OeisA135508.conjecture_of_minFac_three_hundred_eighty_nine"
   ],
   "unresolved_gaps": [
     "Frozen OeisA135508.conjecture is still sorry.",
