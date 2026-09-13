@@ -48,6 +48,7 @@ Proved:
 - Unique I×Y rebuild (`xword_exists_rIrreducible_yword`, `eq_of_rIrreducible_yword`): every Xia word is uniquely `c ++ y.tail` with `c` right-irreducible and `y` a `YWord`. Hence `|X_n| = ∑_{k=1}^n |I_k| H_{n-k}` (`ncard_xN_eq_sum_iN_H`).
 - Left parses of I-words: every I-word of length at least 2 has a left parse (`RIrreducible.exists_left_parse`). Any left-parse remainder is again I. The unique shortest left factor is a `PWord`.
 - Unique-zero words that end in `0` are I-words (`LeftWord.rIrreducible`). They are the `rho` dual of `RightWord`, so `|Left_n| = C_{n-1}`. Hence `C_{n-1} ≤ |I_n|`. I-words with a unique `0` are exactly the LeftWords.
+- Left combs `ZWord` are the `rho` dual of `YWord`, so `|Z_n| = H_{n-1}`. Every I-word is a `ZWord`, hence `C_{n-1} ≤ |I_n| ≤ H_{n-1}`.
 
 ## Experimental decomposition (not a proof)
 

@@ -6,7 +6,7 @@
   "coordination_commit": "238f78bdd5701ae4c97a0d70d4e22e2d45770d7a",
   "current_status": "partial",
   "novelty_status": "provisional_no_public_solution_found",
-  "last_updated_utc": "2026-09-13T02:56:00Z",
+  "last_updated_utc": "2026-09-13T03:10:00Z",
   "kickoff_utc": "2026-09-12T23:10:00Z",
   "session_limit_utc": "2026-09-13T07:10:00Z",
   "proof_declarations": [
@@ -29,11 +29,14 @@
     "OeisA108081.ncard_leftN_eq_catalan",
     "OeisA108081.ncard_catalan_le_iN",
     "OeisA108081.leftWord_iff_rIrreducible_pword",
-    "OeisA108081.RIrreducible.shortest_left_factor_pword"
+    "OeisA108081.ncard_zN_eq_H",
+    "OeisA108081.iN_subset_zN",
+    "OeisA108081.ncard_iN_le_H",
+    "OeisA108081.RIrreducible.zWord"
   ],
   "unresolved_gaps": [
     "The quantified identity |X_n| = a(n-1) is not proved.",
-    "|X_n| = ∑_k |I_k| H_{n-k} is proved, and C_{n-1} ≤ |I_n|, but |I_n| = A081696(n-1) is not.",
+    "|X_n| = ∑_k |I_k| H_{n-k} is proved, and C_{n-1} ≤ |I_n| ≤ H_{n-1}, but |I_n| = A081696(n-1) is not.",
     "Paul Barry's gf is H(x)F(x); that algebraic identity is unproved from Lean's Fibonacci-binomial a.",
     "Partial lemmas and n<=8 (or public n<=14) counts are not a resolution."
   ],

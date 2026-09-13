@@ -1912,6 +1912,42 @@ lemma YWord.xWord {w : Word} (hw : YWord w) : XWord w :=
 lemma YWord.ne_nil {w : Word} (hw : YWord w) : w ≠ [] :=
   hw.xWord.ne_nil
 
+/-- Smallest set containing `[0]` and closed under `l u ++ v` for `u ∈ X`.
+Dual to `YWord` via `rho`. -/
+inductive ZWord : Word → Prop
+  | base : ZWord [0]
+  | step {u v : Word} (hu : XWord u) (hv : ZWord v) : ZWord (l u ++ v)
+
+lemma ZWord.xWord {w : Word} (hw : ZWord w) : XWord w :=
+  match hw with
+  | .base => XWord.base
+  | .step hu hv => XWord.step_left hu (ZWord.xWord hv)
+
+lemma ZWord.ne_nil {w : Word} (hw : ZWord w) : w ≠ [] :=
+  hw.xWord.ne_nil
+
+lemma YWord.rho_mem {w : Word} (hw : YWord w) : ZWord (OeisA108081.rho w) :=
+  match hw with
+  | .base => by
+    have h0 : OeisA108081.rho [0] = [0] := by simp [OeisA108081.rho]
+    exact h0 ▸ ZWord.base
+  | @YWord.step u v hu hv => by
+    have : OeisA108081.rho (u ++ r v) =
+        l (OeisA108081.rho v) ++ OeisA108081.rho u := by
+      rw [rho_append, rho_r]
+    exact this ▸ ZWord.step hv.rho_mem (YWord.rho_mem hu)
+
+lemma ZWord.rho_mem {w : Word} (hw : ZWord w) : YWord (OeisA108081.rho w) :=
+  match hw with
+  | .base => by
+    have h0 : OeisA108081.rho [0] = [0] := by simp [OeisA108081.rho]
+    exact h0 ▸ YWord.base
+  | @ZWord.step u v hu hv => by
+    have : OeisA108081.rho (l u ++ v) =
+        OeisA108081.rho v ++ r (OeisA108081.rho u) := by
+      rw [rho_append, rho_l]
+    exact this ▸ YWord.step (ZWord.rho_mem hv) hu.rho_mem
+
 /-- Central-binomial tail counts: `H 0 = 1` and `H (m+1) = C(2m+1, m)`. -/
 def H : ℕ → ℕ
   | 0 => 1
@@ -2187,6 +2223,27 @@ lemma RIrreducible.of_isLeftParse_remainder {w u v : Word}
   have : IsRightParse w (l u ++ a) b :=
     ⟨XWord.step_left h.1 hp.1, hp.2.1, by rw [h.2.2, hp.2.2, append_assoc]⟩
   exact hw.2 _ _ this
+
+lemma RIrreducible.zWord :
+    ∀ n w, w.length = n → RIrreducible w → ZWord w := by
+  intro n
+  induction n using Nat.strong_induction_on with
+  | h n ih =>
+    intro w hlen hw
+    by_cases h2 : 2 ≤ w.length
+    · obtain ⟨u, v, hp⟩ := hw.exists_left_parse h2
+      have hvI := hw.of_isLeftParse_remainder hp
+      have hvlen : v.length < n := by
+        have := hp.length_add
+        have := hp.pos_left
+        omega
+      have hvZ := ih v.length hvlen v rfl hvI
+      exact hp.2.2 ▸ ZWord.step hp.1 hvZ
+    · have h1 : w.length = 1 := by
+        have := hw.xWord.length_ge_one
+        omega
+      have : w = [0] := XWord.eq_base_of_length_one hw.xWord h1
+      exact this ▸ ZWord.base
 
 lemma getLast_append_r {u v : Word} (hv : v ≠ []) :
     (u ++ r v).getLast (append_ne_nil_of_right_ne_nil u (r_ne_nil hv)) =
@@ -2818,6 +2875,34 @@ lemma ncard_yN_eq_H_of_pos {n : ℕ} (hn : 1 ≤ n) :
   convert ncard_yN_eq_H (n - 1)
   exact (Nat.sub_add_cancel hn).symm
 
+def zN (n : ℕ) : Set Word :=
+  {w | ZWord w ∧ w.length = n}
+
+lemma zN_subset_xN (n : ℕ) : zN n ⊆ xN n :=
+  fun _ hw => ⟨hw.1.xWord, hw.2⟩
+
+lemma zN_finite (n : ℕ) : (zN n).Finite :=
+  (xN_finite n).subset (zN_subset_xN n)
+
+lemma rho_image_yN (n : ℕ) :
+    (fun w => OeisA108081.rho w) '' yN n = zN n := by
+  ext w
+  constructor
+  · intro h
+    obtain ⟨u, hu, hρ⟩ := h
+    subst hρ
+    exact ⟨hu.1.rho_mem, by simpa [length_rho] using hu.2⟩
+  · intro hw
+    refine ⟨OeisA108081.rho w, ⟨hw.1.rho_mem, by simpa [length_rho] using hw.2⟩, ?_⟩
+    simp [rho_rho]
+
+lemma ncard_zN_eq_H {n : ℕ} (hn : 1 ≤ n) :
+    (zN n).ncard = H (n - 1) := by
+  have hinj : Set.InjOn (fun w => OeisA108081.rho w) (yN n) := by
+    intro a _ b _ h
+    simpa [rho_rho] using congrArg OeisA108081.rho h
+  rw [← rho_image_yN n, hinj.ncard_image, ncard_yN_eq_H_of_pos hn]
+
 lemma exists_right_parse_append_YWord_tail {c y : Word} (hc : XWord c)
     (hy : YWord y) (hlen : 2 ≤ y.length) :
     ∃ u v, IsRightParse (c ++ y.tail) u v :=
@@ -2991,6 +3076,14 @@ lemma ncard_catalan_le_iN {n : ℕ} (hn : 1 ≤ n) :
   rw [← ncard_leftN_eq_catalan hn]
   exact ncard_leftN_le_iN n
 
+lemma iN_subset_zN (n : ℕ) : iN n ⊆ zN n :=
+  fun w hw => ⟨RIrreducible.zWord w.length w rfl hw.1, hw.2⟩
+
+lemma ncard_iN_le_H {n : ℕ} (hn : 1 ≤ n) :
+    (iN n).ncard ≤ H (n - 1) := by
+  have := Set.ncard_le_ncard (iN_subset_zN n) (zN_finite n)
+  simpa [ncard_zN_eq_H hn] using this
+
 noncomputable def iNFinset (n : ℕ) : Finset Word :=
   (iN_finite n).toFinset
 
@@ -3153,7 +3246,10 @@ lemma ncard_xN_eq_sum_iN_H (n : ℕ) (hn : 1 ≤ n) :
 #print axioms RIrreducible.shortest_left_factor_pword
 #print axioms LeftWord.rho_mem
 #print axioms RightWord.rho_mem
-#print axioms ncard_leftN_eq_catalan
+#print axioms ncard_zN_eq_H
+#print axioms iN_subset_zN
+#print axioms ncard_iN_le_H
+#print axioms RIrreducible.zWord
 #print axioms leftN_subset_iN
 #print axioms ncard_catalan_le_iN
 #print axioms leftWord_iff_rIrreducible_pword

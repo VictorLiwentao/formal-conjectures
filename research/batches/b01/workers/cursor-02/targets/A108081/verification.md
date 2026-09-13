@@ -111,6 +111,14 @@ Guard: PASS (worker path only). Source SHA-256 matches.
 -- [propext, Classical.choice, Quot.sound]
 #print axioms RIrreducible.shortest_left_factor_pword
 -- [propext, Classical.choice, Quot.sound]
+#print axioms ncard_zN_eq_H
+-- [propext, Classical.choice, Quot.sound]
+#print axioms iN_subset_zN
+-- [propext, Classical.choice, Quot.sound]
+#print axioms ncard_iN_le_H
+-- [propext, Classical.choice, Quot.sound]
+#print axioms RIrreducible.zWord
+-- [propext, Classical.choice, Quot.sound]
 #print axioms ncard_leftN_eq_catalan
 -- [propext, Classical.choice, Quot.sound]
 #print axioms ncard_catalan_le_iN
