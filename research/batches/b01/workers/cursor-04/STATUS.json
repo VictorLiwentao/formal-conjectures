@@ -11,7 +11,7 @@
   "novelty_status": "no_exact_public_solution_found_in_checked_sources",
   "statement_audit": "matches_intended_mceachen_statement",
   "oeis_editability": "unknown",
-  "last_updated_utc": "2026-09-13T03:23:25Z",
+  "last_updated_utc": "2026-09-13T03:32:11Z",
   "session_kickoff_utc": "2026-09-12T23:12:00Z",
   "session_hard_stop_utc": "2026-09-13T07:12:00Z",
   "proof_declarations": [
@@ -99,6 +99,7 @@
     "OeisA135508.conjecture_of_square_window",
     "OeisA135508.conjecture_of_C1",
     "OeisA135508.conjecture_of_cofactor_seven",
+    "OeisA135508.conjecture_of_minFac_seven",
     "OeisA135508.five_dvd_x_square_window",
     "OeisA135508.seven_dvd_x_square_window"
   ],

@@ -959,6 +959,39 @@ theorem conjecture_of_cofactor_seven {p q s : ℕ} (hp : p.Prime) (hp7 : 7 ≤ p
   exact conjecture_of_prime_index hp hp5 hpr h7r hmod hle
     (hqs ▸ Nat.dvd_mul_left s q) hs1
 
+/-- `7q-2` lies in the square window once `q ≥ 7`. -/
+lemma seven_mul_sub_two_le_square {q : ℕ} (h7 : 7 ≤ q) :
+    7 * q - 2 ≤ q * (q + 2) - 1 := by
+  have h1 : 7 * q ≤ q * q := Nat.mul_le_mul_right q h7
+  have h2 : q * q ≤ q * (q + 2) := Nat.mul_le_mul_left q (Nat.le_add_right q 2)
+  have h3 : 7 * q ≤ q * (q + 2) := h1.trans h2
+  exact (Nat.sub_le_sub_right h3 2).trans
+    (Nat.sub_le_sub_left (by decide : 1 ≤ 2) (q * (q + 2)))
+
+lemma seven_mul_sub_two_mod_of_one {q : ℕ} (h1 : q % 3 = 1) :
+    (7 * q) % 3 = 1 := by
+  rw [Nat.mul_mod]
+  have : (7 : ℕ) % 3 = 1 := by decide
+  rw [this, h1]
+
+lemma seven_mul_sub_two_mod_three {q : ℕ} (h1 : q % 3 = 1) (_h2 : 2 ≤ 7 * q) :
+    (7 * q - 2) % 3 = 2 := by
+  have hmul := seven_mul_sub_two_mod_of_one h1
+  have hrep : 7 * q = 3 * (7 * q / 3) + 1 := by
+    have := (Nat.div_add_mod (7 * q) 3).symm
+    rwa [hmul] at this
+  omega
+
+/-- A prime `7q-2 ≡ 2 (mod 3)` injects `q` inside the square window. -/
+lemma q_dvd_x_square_window_of_seven {q : ℕ} (hpr : (7 * q - 2).Prime)
+    (h7 : 7 ≤ q) (hmod : (7 * q - 2) % 3 = 2) :
+    q ∣ x (q * (q + 2) - 1) := by
+  have h7r : 7 ≤ 7 * q - 2 := by
+    have : 49 ≤ 7 * q := Nat.mul_le_mul_left 7 h7
+    exact le_trans (by decide : 7 ≤ 47) (Nat.sub_le_sub_right this 2)
+  exact q_dvd_x_square_window_of_prime_index hpr h7r hmod
+    (seven_mul_sub_two_le_square h7)
+
 lemma odd_of_prime_mod_three_two {q : ℕ} (hq : q.Prime) (h7 : 7 ≤ q)
     (_hmod : q % 3 = 2) : q % 2 = 1 := by
   rcases hq.eq_two_or_odd with h2 | hodd
@@ -1569,6 +1602,60 @@ lemma remaining_minFac_ge_five {p : ℕ} (hp : p.Prime) (hp7 : 7 ≤ p)
     rw [h4] at hminp
     exact (by decide : ¬ Nat.Prime 4) hminp
   omega
+
+/-- Remaining McEachen if `7·lpf(p-2)-2` is prime. For `lpf ≡ 1 (mod 3)`
+this is the first non-twin injector and always fits in the square window.
+If `lpf ≡ 2 (mod 3)` then `3 ∣ 7q-2`, so the hypothesis fails. -/
+theorem conjecture_of_minFac_seven {p : ℕ} (hp : p.Prime) (hp7 : 7 ≤ p)
+    (hmod : p % 3 = 1) (hcomp : ¬ (p - 2).Prime)
+    (hpr : (7 * Nat.minFac (p - 2) - 2).Prime) : a (p - 1) = p := by
+  have hq5 := remaining_minFac_ge_five hp hp7 hmod
+  have hne1 : p - 2 ≠ 1 := by
+    intro h
+    have h2le : 2 ≤ p := le_trans (by decide : 2 ≤ 7) hp7
+    have hcancel := Nat.sub_add_cancel h2le
+    rw [h] at hcancel
+    have hp3 : p = 3 := hcancel.symm
+    exact Nat.ne_of_lt (lt_of_lt_of_le (by decide : 3 < 7) hp7) hp3.symm
+  have hminp : (Nat.minFac (p - 2)).Prime := Nat.minFac_prime hne1
+  have hne5 : Nat.minFac (p - 2) ≠ 5 := by
+    intro h5
+    have : ¬ Nat.Prime (7 * 5 - 2) := by decide
+    exact this (by rwa [h5] at hpr)
+  have hgt5 : 5 < Nat.minFac (p - 2) := lt_of_le_of_ne hq5 hne5.symm
+  have hge6 : 6 ≤ Nat.minFac (p - 2) := Nat.succ_le_of_lt hgt5
+  have hne6 : Nat.minFac (p - 2) ≠ 6 := fun h6 =>
+    (by decide : ¬ Nat.Prime 6) (h6 ▸ hminp)
+  have h7q : 7 ≤ Nat.minFac (p - 2) :=
+    Nat.succ_le_of_lt (lt_of_le_of_ne hge6 hne6.symm)
+  have hmod3 : (7 * Nat.minFac (p - 2) - 2) % 3 = 2 := by
+    have hcases : Nat.minFac (p - 2) % 3 = 0 ∨
+        Nat.minFac (p - 2) % 3 = 1 ∨ Nat.minFac (p - 2) % 3 = 2 := by omega
+    rcases hcases with h0 | h1 | h2
+    · have h3 : 3 ∣ Nat.minFac (p - 2) := Nat.dvd_of_mod_eq_zero h0
+      have heq : Nat.minFac (p - 2) = 3 :=
+        ((Nat.prime_dvd_prime_iff_eq Nat.prime_three hminp).1 h3).symm
+      exact False.elim (Nat.ne_of_lt (lt_of_lt_of_le (by decide : 3 < 7) h7q) heq.symm)
+    · exact seven_mul_sub_two_mod_three h1
+        (le_trans (by decide : 2 ≤ 49) (Nat.mul_le_mul_left 7 h7q))
+    · have hmul : (7 * Nat.minFac (p - 2)) % 3 = 2 := by
+        rw [Nat.mul_mod]
+        have : (7 : ℕ) % 3 = 1 := by decide
+        rw [this, h2]
+      have hrep : 7 * Nat.minFac (p - 2) =
+          3 * (7 * Nat.minFac (p - 2) / 3) + 2 := by
+        have := (Nat.div_add_mod (7 * Nat.minFac (p - 2)) 3).symm
+        rwa [hmul] at this
+      have h0 : (7 * Nat.minFac (p - 2) - 2) % 3 = 0 := by omega
+      have h3d : 3 ∣ 7 * Nat.minFac (p - 2) - 2 := Nat.dvd_of_mod_eq_zero h0
+      have hgt : 3 < 7 * Nat.minFac (p - 2) - 2 := by
+        have : 49 ≤ 7 * Nat.minFac (p - 2) := Nat.mul_le_mul_left 7 h7q
+        exact lt_of_lt_of_le (by decide : 3 < 47) (Nat.sub_le_sub_right this 2)
+      have heq : 7 * Nat.minFac (p - 2) - 2 = 3 :=
+        ((Nat.prime_dvd_prime_iff_eq Nat.prime_three hpr).1 h3d).symm
+      exact False.elim (Nat.ne_of_lt hgt heq.symm)
+  exact conjecture_of_minFac_entered hp hp7 hmod hcomp
+    (q_dvd_x_square_window_of_seven hpr h7q hmod3)
 
 /-- The frozen McEachen statement, assuming every prime `q ≥ 5` divides
 `x` by the square-window index `q(q+2)-1`. Larger twins already satisfy
@@ -2549,5 +2636,8 @@ lemma v2_x_two_four_pow_pred (k : ℕ) :
 #print axioms seven_hundred_twenty_nine_dvd_succ_of_three_dvd_a
 #print axioms not_three_dvd_a_of_not_seven_hundred_twenty_nine
 #print axioms seven_dvd_x_square_window
+#print axioms conjecture_of_minFac_seven
+#print axioms q_dvd_x_square_window_of_seven
+#print axioms seven_mul_sub_two_le_square
 
 end OeisA135508

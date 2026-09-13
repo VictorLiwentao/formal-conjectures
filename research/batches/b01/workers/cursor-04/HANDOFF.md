@@ -50,6 +50,7 @@ python3 research/batches/b01/control/check_assignments.py --repo . --worker curs
 - `prime_of_no_prime_dvd_lt` / `q_dvd_x_window_of_no_small_factor`: for `q ≡ 2 (mod 3)`, a `k ≡ 5 (mod 6)` with `k ≤ q` and no prime factor of `kq-2` below `q` is a prime injector in the window.
 - `conjecture_of_C1`: Cloitre Cor. 6.6 as an implication from `C₁` on positive indices. Not a resolution.
 - `conjecture_of_cofactor_seven`: remaining McEachen if a cofactor `s ≡ 1 (mod 3)` of `p-2` has `7s-2` prime and the complementary factor is at least `7`.
+- `conjecture_of_minFac_seven`: remaining McEachen if `7·lpf(p-2)-2` is prime (usable when that least factor is `≡ 1 (mod 3)`).
 - Cloitre 6.7 as `cloitre_valuation_barrier`.
 - Unconditional twin inhibition for pairs with smaller member `≥ 11` (Cloitre 6.3 without `C₁`).
 - Cloitre 2-adic staircase `a(2·4^k-1)=2` for every `k`.

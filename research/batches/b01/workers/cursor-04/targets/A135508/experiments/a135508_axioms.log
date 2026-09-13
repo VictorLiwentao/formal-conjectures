@@ -111,3 +111,6 @@
  Classical.choice,
  Quot.sound]
 'OeisA135508.seven_dvd_x_square_window' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.conjecture_of_minFac_seven' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.q_dvd_x_square_window_of_seven' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.seven_mul_sub_two_le_square' depends on axioms: [propext]

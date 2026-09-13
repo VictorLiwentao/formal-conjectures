@@ -87,7 +87,7 @@ For `q ≡ 2 (mod 3)` and `k ≤ q` with `k ≡ 5 (mod 6)`, primality of `kq-2` 
 
 Cloitre Corollary 6.6 is now `conjecture_of_C1`: the assumption `∀ n>0, a n = 1 ∨ (a n).Prime` implies the frozen type. That implication is not an assumption of `C₁`, and it is not a resolution.
 
-If `p-2 = q s` with `q ≥ 7` and `s ≡ 1 (mod 3)` and `7s-2` prime, then McEachen holds (`conjecture_of_cofactor_seven`). This is another proper subfamily.
+If `p-2 = q s` with `q ≥ 7` and `s ≡ 1 (mod 3)` and `7s-2` prime, then McEachen holds (`conjecture_of_cofactor_seven`). If `7·lpf(p-2)-2` is prime, remaining McEachen also holds (`conjecture_of_minFac_seven`); this applies to least factors `≡ 1 (mod 3)`, since `lpf ≡ 2 (mod 3)` makes `3 ∣ 7q-2`. Both are proper subfamilies. A scan of remaining primes `p < 200000` found 466 such primes, of which 182 are covered by `7q-2` or `7s-2` prime.
 
 If `r` itself is a prime `≡ 2 (mod 3)`, then `r ≡ -2 (mod q)` and `r ≤ p-3` suffices (`q_dvd_x_of_prime_injector`, `conjecture_of_prime_injector`). For `lpf(p-2)=q` one has `p-2 ≥ q(q+2)` (`remaining_minFac_mul_add_two_le`). The square `p = q^2+2` is never an odd prime for `q > 3`. So a prime
 
