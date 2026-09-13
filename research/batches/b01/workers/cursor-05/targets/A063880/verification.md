@@ -28,11 +28,11 @@ Command:
 LEAN_NUM_THREADS=2 lake env lean -DwarningAsError=true research/batches/b01/workers/cursor-05/targets/A063880/A063880.lean
 ```
 
-Result on 2026-09-13T03:48Z: exit code 0, no warnings, no `sorry` declaration in this file.
+Result on 2026-09-13T03:52Z: exit code 0, no warnings, no `sorry` declaration in this file.
 
 This is **not** a compile of the frozen theorems. The frozen `sorry` theorems in `FormalConjectures/OEIS/63880.lean` were not used as proof steps.
 
-New lemmas compiled in this checkpoint include `not_five_sigma_of_three_sq_primes_five_sq_two_large` and `not_five_sigma_of_three_sq_primes_eleven_sq_thirteen_large`. Leftover `10/7` ω=3 remains closed. Leftover `10/7` ω=4 with last prime `≥ 41` remains glued.
+New lemmas compiled in this checkpoint include `not_five_sigma_of_three_sq_primes_seven_two_large`, `not_five_sigma_of_three_sq_primes_ge_eleven_twenty_three`, `not_five_sigma_of_three_sq_primes_ge_thirteen_nineteen`, `not_five_sigma_of_three_sq_primes_eleven_nineteen_large`, `not_five_sigma_of_three_sq_primes_eleven_thirteen_mid_small`, and `not_five_sigma_of_three_sq_primes_thirteen_sq_eleven_large`. Leftover `10/7` ω=3 remains closed. Leftover `10/7` ω=4 with last prime `≥ 41` remains glued.
 
 No `#print axioms` audit of a completed target theorem exists, because those theorems are not proved.
 
