@@ -26,4 +26,5 @@ See `STATUS.json` and `targets/WOWII31/{proof,literature,verification}.md`.
 
 ## Final commit SHA
 
-Filled after the commit that contains this file's SHA line.
+`a4a7b8cb4557aa7ed7d76947382e48bd18ef40e5` (proof commit).
+A follow-up commit on this branch may only update this SHA line.
