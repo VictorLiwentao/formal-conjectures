@@ -95,7 +95,15 @@ a_9 : propext, Quot.sound
 two_thousand_one_hundred_eighty_seven_dvd_x / six_thousand_five_hundred_sixty_one_dvd_succ_of_three_dvd_a : propext, Classical.choice, Quot.sound
 one_hundred_seven_dvd_x_2459 / conjecture_of_one_hundred_seven_dvd / remaining_prime_eq_one_hundred_seven / conjecture_of_minFac_le_one_hundred_seven_or_twin : propext, Classical.choice, Quot.sound
 a_11 / six_thousand_five_hundred_sixty_one_dvd_x / nineteen_thousand_six_hundred_eighty_three_dvd_succ_of_three_dvd_a : propext, Classical.choice, Quot.sound
+k_mul_sub_two_le_square : propext
+q_dvd_x_square_window_of_k_le / conjecture_of_minFac_k_le / q_dvd_x_square_window_of_seventeen / nineteen / twentythree / twentyfive / twenty_nine / sq_sub_two : propext, Classical.choice, Quot.sound
+q_mod_six_five : propext, Quot.sound
+dvd_x_succ_of_dvd_a_add_two : propext, Quot.sound
+not_prime_dvd_x_succ / prime_dvd_a_add_two_of_first_entry / a_12 / a_13 / not_seven_dvd_x_thirteen / nineteen_thousand_six_hundred_eighty_three_dvd_x / fifty_nine_thousand_forty_nine_dvd_succ_of_three_dvd_a / three_pow_eleven_dvd_x / three_pow_twelve_dvd_succ_of_three_dvd_a : propext, Classical.choice, Quot.sound
+a_14 : propext, Quot.sound
 ```
+
+No `sorryAx`, `native_decide`, or `Lean.trustCompiler` on these declarations. `Classical.choice` enters through `Nat.find` in `exists_least_dvd` and through Mathlib `decide` instances. Full log: `experiments/a135508_axioms.log`. Recompiled 2026-09-13T04:47Z.
 
 No `sorryAx`, `native_decide`, or `Lean.trustCompiler` on these declarations. `Classical.choice` enters through `Nat.find` in `exists_least_dvd` and through Mathlib `decide` instances. Full log: `experiments/a135508_axioms.log`.
 

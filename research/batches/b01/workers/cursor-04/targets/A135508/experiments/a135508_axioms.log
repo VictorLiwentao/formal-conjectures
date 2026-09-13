@@ -151,3 +151,28 @@
 'OeisA135508.nineteen_thousand_six_hundred_eighty_three_dvd_succ_of_three_dvd_a' depends on axioms: [propext,
  Classical.choice,
  Quot.sound]
+'OeisA135508.k_mul_sub_two_le_square' depends on axioms: [propext]
+'OeisA135508.q_dvd_x_square_window_of_k_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.conjecture_of_minFac_k_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.q_dvd_x_square_window_of_seventeen' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.q_dvd_x_square_window_of_nineteen' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.q_dvd_x_square_window_of_twentythree' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.q_dvd_x_square_window_of_twentyfive' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.q_dvd_x_square_window_of_twenty_nine' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.q_dvd_x_square_window_of_sq_sub_two' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.q_mod_six_five' depends on axioms: [propext, Quot.sound]
+'OeisA135508.dvd_x_succ_of_dvd_a_add_two' depends on axioms: [propext, Quot.sound]
+'OeisA135508.not_prime_dvd_x_succ' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.prime_dvd_a_add_two_of_first_entry' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.a_12' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.a_13' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.a_14' depends on axioms: [propext, Quot.sound]
+'OeisA135508.not_seven_dvd_x_thirteen' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.nineteen_thousand_six_hundred_eighty_three_dvd_x' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'OeisA135508.fifty_nine_thousand_forty_nine_dvd_succ_of_three_dvd_a' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'OeisA135508.three_pow_eleven_dvd_x' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.three_pow_twelve_dvd_succ_of_three_dvd_a' depends on axioms: [propext, Classical.choice, Quot.sound]

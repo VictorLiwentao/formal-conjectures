@@ -17,7 +17,9 @@ Dirichlet existence of some prime injector is proved (`exists_prime_index_inject
 
 `conjecture_of_square_window` proves the frozen type *assuming* every prime `q ≥ 5` divides `x(q(q+2)-1)`. The window hypothesis is not proved. Miller–Rabin found no window failures for primes `q ≡ 2 (mod 3)` up to `1000000`.
 
-If `n ≥ 7` and `3 ∣ a n` then `729 ∣ n+1`. If `n ≥ 9` then `2187 ∣ n+1`. If `n ≥ 10` then `6561 ∣ n+1`, using `a 9 = 1`. If `n ≥ 12` then `19683 ∣ n+1`, using `a 11 = 1`. Those are not McEachen.
+If `n ≥ 7` and `3 ∣ a n` then `729 ∣ n+1`. If `n ≥ 9` then `2187 ∣ n+1`. If `n ≥ 10` then `6561 ∣ n+1`, using `a 9 = 1`. If `n ≥ 12` then `19683 ∣ n+1`, using `a 11 = 1`. If `n ≥ 13` then `59049 ∣ n+1`, using `a 12 = 1`. If `n ≥ 14` then `531441 ∣ n+1`, using `a 13 = 7`. Those are not McEachen. Also `a 12 = 1`, `a 13 = 7`, `a 14 = 1`.
+
+Remaining McEachen holds if some prime injector of `lpf(p-2)` has `k ≤ q+2` (`conjecture_of_minFac_k_le`). Existence of such a `k` is the square-window gap. For `q ≡ 2 (mod 3)` one has `q ≡ 5 (mod 6)`, so `k = q` is admissible; primality of `q²-2` is sufficient, not necessary.
 
 Remaining McEachen holds if one of `5q-2`, `7q-2`, `5s-2`, `7s-2` is prime (`conjecture_of_paired_injectors`). A scan of remaining primes `p < 200000` found 332 of 466 covered by that pairing. That is a proper subfamily, not a `∀p` proof.
 
@@ -51,7 +53,11 @@ python3 research/batches/b01/control/check_assignments.py --repo . --worker curs
 - Composite shifts are not coprime injectors once that least factor has entered (`gcd_gt_one_of_composite_shift`).
 - General prime-index injector `q_dvd_x_of_prime_index` (the index need only be `≡ 2 (mod 3)`).
 - Dirichlet: some (unbounded) prime injector `kq-2 ≡ 2 (mod 3)` exists for every prime `q ≡ 2 (mod 3)` (`k ≡ 5 (mod 6)`) and every prime `q ≡ 1 (mod 3)` with `q ≥ 7` (`k ≡ 1 (mod 6)`). Hence those primes eventually divide `x`.
-- If `n ≥ 3` and `3 ∣ a n`, then `9 ∣ n+1`. If `n ≥ 6`, then `81 ∣ n+1`. If `n ≥ 7`, then `729 ∣ n+1`. If `n ≥ 9`, then `2187 ∣ n+1`. If `n ≥ 10`, then `6561 ∣ n+1`. If `n ≥ 12`, then `19683 ∣ n+1`. Also `a 6 = 7`, `a 7 = 2`, `a 8 = 1`, `a 9 = 1`, `a 11 = 1`, `243 ∣ x n` for `n ≥ 7`, `729 ∣ x n` for `n ≥ 9`, `2187 ∣ x n` for `n ≥ 10`, `6561 ∣ x n` for `n ≥ 12`.
+- If `n ≥ 3` and `3 ∣ a n`, then `9 ∣ n+1`. If `n ≥ 6`, then `81 ∣ n+1`. If `n ≥ 7`, then `729 ∣ n+1`. If `n ≥ 9`, then `2187 ∣ n+1`. If `n ≥ 10`, then `6561 ∣ n+1`. If `n ≥ 12`, then `19683 ∣ n+1`. If `n ≥ 13`, then `59049 ∣ n+1`. If `n ≥ 14`, then `531441 ∣ n+1`. Also `a 6 = 7`, `a 7 = 2`, `a 8 = 1`, `a 9 = 1`, `a 11 = 1`, `a 12 = 1`, `a 13 = 7`, `a 14 = 1`, `243 ∣ x n` for `n ≥ 7`, `729 ∣ x n` for `n ≥ 9`, `2187 ∣ x n` for `n ≥ 10`, `6561 ∣ x n` for `n ≥ 12`, `19683 ∣ x n` for `n ≥ 13`, `177147 ∣ x n` for `n ≥ 14`.
+- First-entry: `dvd_x_succ_of_dvd_a_add_two`, `not_prime_dvd_x_succ`, `prime_dvd_a_add_two_of_first_entry`.
+- Square-window packaging: `k_mul_sub_two_le_square`, `q_dvd_x_square_window_of_k_le`, `conjecture_of_minFac_k_le`. Existence of `k ≤ q+2` is not proved.
+- `q_mod_six_five`: remaining `q ≡ 2 (mod 3)` are `≡ 5 (mod 6)`. `q_dvd_x_square_window_of_sq_sub_two` if `q²-2` is prime.
+- Square-window instances `k = 17,19,23,25,29`.
 - `conjecture_of_add_two_overlap` / `conjecture_of_remaining_add_two_overlap`: McEachen if some prime `q ≡ 2 (mod 3)` has `gcd(q+2, p-2) > 1`.
 - `conjecture_of_square_window`: frozen type follows from `q ∣ x(q(q+2)-1)` for every prime `q ≥ 5`. Hypothesis not proved. Window holds for `q=5`, `q=7`, and larger twins.
 - `prime_of_no_prime_dvd_lt` / `q_dvd_x_window_of_no_small_factor`: for `q ≡ 2 (mod 3)`, a `k ≡ 5 (mod 6)` with `k ≤ q` and no prime factor of `kq-2` below `q` is a prime injector in the window.

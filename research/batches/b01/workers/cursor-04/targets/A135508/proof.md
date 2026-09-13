@@ -89,7 +89,11 @@ Cloitre Corollary 6.6 is now `conjecture_of_C1`: the assumption `∀ n>0, a n = 
 
 If `p-2 = q s` with `q ≥ 7` and `s ≡ 1 (mod 3)` and `7s-2` prime, then McEachen holds (`conjecture_of_cofactor_seven`). If `s ≡ 2 (mod 3)` and `5s-2` prime, then McEachen holds (`conjecture_of_cofactor_five`). If `5·lpf(p-2)-2` is prime, remaining McEachen holds (`conjecture_of_minFac_five`); this applies to least factors `≡ 2 (mod 3)`. If `7·lpf(p-2)-2` is prime, remaining McEachen holds (`conjecture_of_minFac_seven`); this applies to least factors `≡ 1 (mod 3)`. The four disjuncts are packaged as `conjecture_of_paired_injectors`. A scan of remaining primes `p < 200000` found 466 such primes, of which 332 are covered by that pairing. The first uncovered example is `(p,q,s)=(17443,107,163)`. These are proper subfamilies, not a `∀p` proof.
 
-If `n ≥ 9` and `3 ∣ a n`, then `2187 ∣ n+1` (`two_thousand_one_hundred_eighty_seven_dvd_succ_of_three_dvd_a`), using `a 8 = 1` so that `729 ∣ x n` for `n ≥ 9`. If `n ≥ 10` and `3 ∣ a n`, then `6561 ∣ n+1`, using `a 9 = 1` so that `2187 ∣ x n` for `n ≥ 10`. If `n ≥ 12` and `3 ∣ a n`, then `19683 ∣ n+1`, using `a 11 = 1` so that `6561 ∣ x n` for `n ≥ 12`. These are C1 fragments for the prime 3, not remaining McEachen.
+If `n ≥ 9` and `3 ∣ a n`, then `2187 ∣ n+1` (`two_thousand_one_hundred_eighty_seven_dvd_succ_of_three_dvd_a`), using `a 8 = 1` so that `729 ∣ x n` for `n ≥ 9`. If `n ≥ 10` and `3 ∣ a n`, then `6561 ∣ n+1`, using `a 9 = 1` so that `2187 ∣ x n` for `n ≥ 10`. If `n ≥ 12` and `3 ∣ a n`, then `19683 ∣ n+1`, using `a 11 = 1` so that `6561 ∣ x n` for `n ≥ 12`. If `n ≥ 13` and `3 ∣ a n`, then `59049 ∣ n+1`, using `a 12 = 1` so that `19683 ∣ x n` for `n ≥ 13`. If `n ≥ 14` and `3 ∣ a n`, then `531441 ∣ n+1`, using `a 13 = 7` so that `177147 ∣ x n` for `n ≥ 14`. These are C1 fragments for the prime 3, not remaining McEachen.
+
+The first-entry mechanism is now explicit: `dvd_x_succ_of_dvd_a_add_two`, `not_prime_dvd_x_succ`, and `prime_dvd_a_add_two_of_first_entry`. Using that chain, `7` does not divide `x 13`, so `a 13 = 7`. Also `a 12 = 1` (`13 ∣ x 12`) and `a 14 = 1` (`15 ∣ x 14`).
+
+Any injector with `k ≤ q+2` lies in the square window (`k_mul_sub_two_le_square`, `q_dvd_x_square_window_of_k_le`). Remaining McEachen follows if some prime injector of `lpf(p-2)` has `k ≤ q+2` (`conjecture_of_minFac_k_le`). This does not prove existence of such a `k`. For `q ≡ 2 (mod 3)` one has `q ≡ 5 (mod 6)` (`q_mod_six_five`), so `k = q` is an admissible residue; primality of `q²-2` is sufficient (`q_dvd_x_square_window_of_sq_sub_two`) but not necessary. Square-window lemmas for `k = 17,19,23,25,29` are instances of `k ≤ q+2`.
 
 McEachen also holds if some prime `q ≡ 2 (mod 3)` with `q ≤ p-3` satisfies `gcd(q+2, p-2) > 1` (`conjecture_of_add_two_overlap`, `conjecture_of_remaining_add_two_overlap`). Then a factor of `q+2` already divides `x q` and divides `p-2`. Among leftover primes `p < 200000` this overlap is rare (5 of 466). It is a proper subfamily.
 
@@ -124,6 +128,8 @@ Proved: `v2(gcd)`, `v2(a n)`, `v2(x(n+1))`, odd-increment stability, dyadic bloc
 - Treating `conjecture_of_paired_injectors` as a `∀p` proof. It is a proper subfamily.
 - Treating a leftover scan with no McEachen-window gap as a proof. It is a finite check.
 - Treating `conjecture_of_add_two_overlap` as a `∀p` proof. It needs `gcd(q+2, p-2) > 1`.
+- Treating `conjecture_of_minFac_k_le` as a `∀p` proof. It needs a prime injector with `k ≤ q+2`.
+- Treating `a 12 = 1`, `a 13 = 7`, `a 14 = 1`, or the 3-adic lifts `59049` and `531441` as remaining McEachen.
 
 ## Status
 
