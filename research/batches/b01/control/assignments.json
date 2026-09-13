@@ -232,33 +232,36 @@
           "oeis_url": "https://oeis.org/A001818"
         }
       ],
-      "notes": "Only A001818-C1 assigned. Known mathematics, substantive formalization effort. See prompts/cursor-01-r04.md and corresponding replacement screen; no new mathematical priority claim."
+      "notes": "Only A001818-C1 assigned. Known mathematics, substantive formalization effort. See prompts/cursor-01-r04.md and corresponding replacement screen; no new mathematical priority claim.",
+      "actual_branch": "cursor/b01-cursor-01-r04-6ddf"
     },
     {
-      "worker_id": "cursor-07-r04",
+      "worker_id": "cursor-07-r05",
       "slot": "cursor-07",
-      "predecessor": "cursor-07-r03",
-      "title": "WOWII20 induced bipartite average-degree bound",
+      "predecessor": "cursor-07-r04",
+      "title": "WOWII7 strengthened Griggs spanning-tree leaf bound",
       "platform": "Cursor Cloud",
       "requested_model": "Cursor Grok 4.6 Extra High",
-      "branch": "codex/b01-cursor-07-r04",
-      "status": "researching_goal_active",
+      "branch": "codex/b01-cursor-07-r05",
+      "status": "reserved_not_started",
       "novelty_status": "known_mathematics_formalization_candidate",
       "reserved_sequence_groups": [
-        "WOWII20"
+        "WOWII7",
+        "Griggs-strengthened-leaf-bound",
+        "connected-domination-2alpha-mu-plus1"
       ],
       "targets": [
         {
-          "id": "WOWII20",
-          "source_file": "FormalConjectures/WrittenOnTheWallII/GraphConjecture20.lean",
-          "source_sha256": "969908dc9e73fd3ebea73cdf272df476583efbe9745185fd466726c5d4faa2e7",
+          "id": "WOWII7",
+          "source_file": "FormalConjectures/WrittenOnTheWallII/GraphConjecture7.lean",
+          "source_sha256": "b24ee6ea69c547654647cdad7102ce95e64dc8a455fbd9aa12f7214b3d3c3968",
           "declarations": [
-            "WrittenOnTheWallII.GraphConjecture20.conjecture20"
+            "WrittenOnTheWallII.GraphConjecture7.conjecture7"
           ],
-          "source_url": "https://github.com/google-deepmind/formal-conjectures/blob/a2f4a1bb12a28e04a969da78feefac7d1ce49565/FormalConjectures/WrittenOnTheWallII/GraphConjecture20.lean"
+          "source_url": "https://github.com/google-deepmind/formal-conjectures/blob/a2f4a1bb12a28e04a969da78feefac7d1ce49565/FormalConjectures/WrittenOnTheWallII/GraphConjecture7.lean"
         }
       ],
-      "notes": "Only WOWII20 assigned. Known mathematics, substantive formalization effort. See prompts/cursor-07-r04.md and corresponding replacement screen; no new mathematical priority claim.",
+      "notes": "Only WOWII7 assigned; known DFW mathematics. Equivalent strengthened leaf/connected domination forms reserved together. See replacement-screening-07.md and prompts/cursor-07-r05.md. WOWII2 is prior work, not assigned.",
       "reserved_source_prefixes": [
         "FormalConjectures/WrittenOnTheWallII/",
         "FormalConjectures/Mathoverflow/",
@@ -306,7 +309,8 @@
     "A327295": "Exact result independently verified in cursor-01-r03; preserve equivalent group and do not restart. See research/batches/b01/control/audits/cursor-01-r03.md.",
     "Green66-trivial-bound": "Exact result independently verified in cursor-07-r03; preserve equivalent group and do not restart. See research/batches/b01/control/audits/cursor-07-r03.md.",
     "A001481": "Exact result independently verified in cursor-07-r03; preserve equivalent group and do not restart. See research/batches/b01/control/audits/cursor-07-r03.md.",
-    "A256435": "Exact result independently verified in cursor-07-r03; preserve equivalent group and do not restart. See research/batches/b01/control/audits/cursor-07-r03.md."
+    "A256435": "Exact result independently verified in cursor-07-r03; preserve equivalent group and do not restart. See research/batches/b01/control/audits/cursor-07-r03.md.",
+    "WOWII20": "Exact AKS induced-bipartite bound independently verified in cursor-07-r04; finaltipdadf30cc. See audits/cursor-07-r04.md. Do not restart."
   },
   "accept_known_informal_proofs_for_new_lean_formalization": true,
   "retired_workers": [
@@ -550,6 +554,46 @@
       "audit_file": "research/batches/b01/control/audits/cursor-07-r03.md",
       "mathematical_novelty": "known_mathematics",
       "formalization_novelty": "no_prior_exact_public_lean_found_in_checked_sources"
+    },
+    {
+      "worker_id": "cursor-07-r04",
+      "slot": "cursor-07",
+      "predecessor": "cursor-07-r03",
+      "title": "WOWII20 induced bipartite average-degree bound",
+      "platform": "Cursor Cloud",
+      "requested_model": "Cursor Grok 4.6 Extra High",
+      "branch": "codex/b01-cursor-07-r04",
+      "status": "retired_independently_verified",
+      "novelty_status": "known_mathematics_formalization_candidate",
+      "reserved_sequence_groups": [
+        "WOWII20"
+      ],
+      "targets": [
+        {
+          "id": "WOWII20",
+          "source_file": "FormalConjectures/WrittenOnTheWallII/GraphConjecture20.lean",
+          "source_sha256": "969908dc9e73fd3ebea73cdf272df476583efbe9745185fd466726c5d4faa2e7",
+          "declarations": [
+            "WrittenOnTheWallII.GraphConjecture20.conjecture20"
+          ],
+          "source_url": "https://github.com/google-deepmind/formal-conjectures/blob/a2f4a1bb12a28e04a969da78feefac7d1ce49565/FormalConjectures/WrittenOnTheWallII/GraphConjecture20.lean"
+        }
+      ],
+      "notes": "Only WOWII20 assigned. Known mathematics, substantive formalization effort. See prompts/cursor-07-r04.md and corresponding replacement screen; no new mathematical priority claim.",
+      "reserved_source_prefixes": [
+        "FormalConjectures/WrittenOnTheWallII/",
+        "FormalConjectures/Mathoverflow/",
+        "FormalConjectures/GreensOpenProblems/",
+        "FormalConjectures/ErdosProblems/"
+      ],
+      "actual_branch": "cursor/b01-cursor-07-r04-9d2b",
+      "final_commit": "dadf30cc901feb22fce0ba0bd200c5453266ac7a",
+      "audited_proof_commit": "7fe9aa0477c5e82be229733008d5db098bf7017a",
+      "retired_at_utc": "2026-09-13T03:43:03.203822+00:00",
+      "successor": "cursor-07-r05",
+      "audit_file": "research/batches/b01/control/audits/cursor-07-r04.md",
+      "mathematical_novelty": "known_mathematics",
+      "formalization_novelty": "no_prior_exact_public_lean_found_in_bounded_review"
     }
   ],
   "exclusion_changes": [

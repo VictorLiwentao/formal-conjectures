@@ -2,16 +2,16 @@
   "automation_id": "maintain-seven-cursor-math-workers",
   "interval_minutes": 15,
   "target_cursor_slots": 7,
-  "updated_at_utc": "2026-09-13T03:14:59.461697+00:00",
+  "updated_at_utc": "2026-09-13T03:43:03.203822+00:00",
   "accept_known_informal_proofs_for_new_lean_formalization": true,
-  "note": "A051903-C2 and Green66 independently verified; A001818-C1 and WOWII20 replacements have verified active goals. Six Cursor research workers active. A069004 slot held for detached independent317-command certificate rebuild; monitor existingPID/status rather than launch duplicate.",
+  "note": "Five active research goals; A069004 and WOWII20 slots held for independent audits. No duplicate launches; WOWII20 successor being screened pending verification.",
   "slots": [
     {
       "slot": "cursor-01",
       "run_id": "cursor-01-r04",
       "agent_url": "https://cursor.com/agents/bc-6d5121fc-3484-43b6-b32f-ddc4257f6ddf",
       "state": "researching",
-      "actual_branch": null,
+      "actual_branch": "cursor/b01-cursor-01-r04-6ddf",
       "replacements": [
         {
           "run_id": "cursor-01-r02",
@@ -29,8 +29,8 @@
           "launched_at_utc": "2026-09-13T02:54:22.021545+00:00"
         }
       ],
-      "last_checked_at_utc": "2026-09-13T03:14:59.461697+00:00",
-      "progress_note": "Goal active; first root-of-unity/geometric-sum/permanent lemmas being compiled and fixed. No exact candidate yet.",
+      "last_checked_at_utc": "2026-09-13T03:37:17.699102+00:00",
+      "progress_note": "Goal active; checkpoint706eab57 proves n=1 and root-of-unity sums. General permanent identity unresolved.",
       "history": [
         {
           "run_id": "cursor-01",
@@ -62,9 +62,11 @@
       "launch_verified_at_utc": "2026-09-13T02:54:22.021545+00:00",
       "goal_command_submitted": true,
       "goal_active_verified": true,
-      "goal_verified_at_utc": "2026-09-13T03:14:59.461697+00:00",
+      "goal_verified_at_utc": "2026-09-13T03:37:17.699102+00:00",
       "environment_build": "bld-20260912-716b23c3-d124-4da8-ab69-743e1fb16843",
-      "model": "Cursor Grok 4.6 Extra High"
+      "model": "Cursor Grok 4.6 Extra High",
+      "session_start_utc": "2026-09-13T02:54:27Z",
+      "session_deadline_utc": "2026-09-13T10:54:27Z"
     },
     {
       "slot": "cursor-02",
@@ -73,10 +75,10 @@
       "state": "researching",
       "actual_branch": "cursor/b01-cursor-02-13c0",
       "replacements": [],
-      "last_checked_at_utc": "2026-09-13T03:14:59.461697+00:00",
-      "progress_note": "Goal active;03:10Z checkpoint8634a42a proves X/I/H convolution and Catalan bounds, I-word exact enumeration unresolved.",
+      "last_checked_at_utc": "2026-09-13T03:37:17.699102+00:00",
+      "progress_note": "Goal active with original07:10Z deadline; latest checkpoint8634a42a, exact I-word enumeration unresolved.",
       "goal_active_verified": true,
-      "goal_verified_at_utc": "2026-09-13T03:14:59.461697+00:00"
+      "goal_verified_at_utc": "2026-09-13T03:37:17.699102+00:00"
     },
     {
       "slot": "cursor-03",
@@ -91,8 +93,8 @@
           "launched_at_utc": "2026-09-13T00:12:48.331188+00:00"
         }
       ],
-      "last_checked_at_utc": "2026-09-13T03:14:59.461697+00:00",
-      "progress_note": "Worker remains stopped with empty timer list. Independent detached audit PID78813 alive;27/317 fresh commands passed, C25 compiling. No exact-audit completion yet.",
+      "last_checked_at_utc": "2026-09-13T03:37:17.699102+00:00",
+      "progress_note": "Independent driver PID78813 alive; 48/317 commands passed, C46.lean compiling. Full exact audit pending.",
       "history": [
         {
           "run_id": "cursor-03",
@@ -122,10 +124,10 @@
       "state": "researching",
       "actual_branch": "cursor/a135508-lcm-primes-770d",
       "replacements": [],
-      "last_checked_at_utc": "2026-09-13T03:14:59.461697+00:00",
-      "progress_note": "Goal active;03:00Z checkpoint547027ea, square-window first-entry reduction and further valuation work, full conjecture unresolved.",
+      "last_checked_at_utc": "2026-09-13T03:37:17.699102+00:00",
+      "progress_note": "Goal active;03:32Z checkpoint4bfbfbb6 expands square-window and least-factor reductions; full conjecture unresolved.",
       "goal_active_verified": true,
-      "goal_verified_at_utc": "2026-09-13T03:14:59.461697+00:00"
+      "goal_verified_at_utc": "2026-09-13T03:37:17.699102+00:00"
     },
     {
       "slot": "cursor-05",
@@ -134,10 +136,10 @@
       "state": "researching",
       "actual_branch": "cursor/b01-cursor-05-cb88",
       "replacements": [],
-      "last_checked_at_utc": "2026-09-13T03:14:59.461697+00:00",
-      "progress_note": "Goal active;03:05Z checkpoint6ac68b41, glued additional three-prime families, full divisor-sum targets unresolved.",
+      "last_checked_at_utc": "2026-09-13T03:37:17.699102+00:00",
+      "progress_note": "Goal active; checkpointae73e30b continues residual divisor-sum families; full targets unresolved.",
       "goal_active_verified": true,
-      "goal_verified_at_utc": "2026-09-13T03:14:59.461697+00:00"
+      "goal_verified_at_utc": "2026-09-13T03:37:17.699102+00:00"
     },
     {
       "slot": "cursor-06",
@@ -146,17 +148,17 @@
       "state": "researching",
       "actual_branch": "cursor/b01-cursor-06-a108866-efe4",
       "replacements": [],
-      "last_checked_at_utc": "2026-09-13T03:14:59.461697+00:00",
-      "progress_note": "Goal active; checkpoint28c7378f and continued prime-power converse work, full iff unresolved.",
+      "last_checked_at_utc": "2026-09-13T03:37:17.699102+00:00",
+      "progress_note": "Goal active;03:32Z checkpointec4294af adds all3^e and3p^e converse families; full iff unresolved.",
       "goal_active_verified": true,
-      "goal_verified_at_utc": "2026-09-13T03:14:59.461697+00:00"
+      "goal_verified_at_utc": "2026-09-13T03:37:17.699102+00:00"
     },
     {
       "slot": "cursor-07",
-      "run_id": "cursor-07-r04",
-      "agent_url": "https://cursor.com/agents/bc-c73732d3-698e-44e1-93e8-b6aeb3ef9d2b",
-      "state": "researching",
-      "actual_branch": "cursor/b01-cursor-07-r04-9d2b",
+      "run_id": "cursor-07-r05",
+      "agent_url": null,
+      "state": "reserved_not_started",
+      "actual_branch": null,
       "replacements": [
         {
           "run_id": "cursor-07-r02",
@@ -174,10 +176,9 @@
           "launched_at_utc": "2026-09-13T02:52:47.668172+00:00"
         }
       ],
-      "last_checked_at_utc": "2026-09-13T03:14:59.461697+00:00",
-      "progress_note": "Goal active; branch7a8032d7 initial checkpoint and live AKS deletion/neighbor-count lemmas being fixed. Exact bound not complete.",
-      "goal_active_verified": true,
-      "goal_verified_at_utc": "2026-09-13T03:14:59.461697+00:00",
+      "last_checked_at_utc": "2026-09-13T03:37:17.699102+00:00",
+      "progress_note": "WOWII20 independently verified and stopped. WOWII7 reserved and complete prompt prepared; launch pending coordinator seed push.",
+      "goal_active_verified": false,
       "history": [
         {
           "run_id": "cursor-07",
@@ -202,23 +203,29 @@
           "retired_at_utc": "2026-09-13T02:51:08.955945+00:00",
           "result": "independently_verified_known_mathematics_formalization",
           "audit": "research/batches/b01/control/audits/cursor-07-r03.md"
+        },
+        {
+          "run_id": "cursor-07-r04",
+          "agent_url": "https://cursor.com/agents/bc-c73732d3-698e-44e1-93e8-b6aeb3ef9d2b",
+          "actual_branch": "cursor/b01-cursor-07-r04-9d2b",
+          "retired_at_utc": "2026-09-13T03:43:03.203822+00:00",
+          "result": "independently_verified_known_mathematics_formalization",
+          "audit": "research/batches/b01/control/audits/cursor-07-r04.md"
         }
       ],
-      "predecessor": "cursor-07-r03",
-      "starting_commit": "7a37b78ee539aab88ebbb77a2579f838e9fcc7a6",
-      "launch_verified_at_utc": "2026-09-13T02:52:47.668172+00:00",
-      "goal_command_submitted": true,
+      "predecessor": "cursor-07-r04",
+      "goal_command_submitted": false,
       "model": "Cursor Grok 4.6 Extra High",
       "environment_build": "bld-20260912-716b23c3-d124-4da8-ab69-743e1fb16843"
     }
   ],
   "last_heartbeat": {
-    "scheduled_at_utc": "2026-09-13T03:11:19.302Z",
-    "completed_at_utc": "2026-09-13T03:14:59.461697+00:00",
-    "occupied_slots": 6,
-    "audit_pending_slots": 1,
+    "scheduled_at_utc": "2026-09-13T03:30:19.392Z",
+    "completed_at_utc": null,
+    "occupied_slots": 5,
+    "audit_pending_slots": 2,
     "replacements": 0,
     "resumes": 0,
-    "notifications": 0
+    "notifications": 1
   }
 }
