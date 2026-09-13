@@ -5595,6 +5595,400 @@ lemma remainder_mul_of_cycleOf_eq {α : Type*} [Fintype α] [DecidableEq α]
     (c * τ) * ((c * τ).cycleOf p)⁻¹ = τ := by
   rw [cycleOf_mul_of_fixes hd hp, hc, hd.commute.eq, mul_assoc, mul_inv_cancel, mul_one]
 
+lemma disjoint_ofSubtype_support_compl {α : Type*} [Fintype α] [DecidableEq α]
+    {s : Finset α} (u : Perm {a // a ∈ s}) {τ : Perm α}
+    (hτ : τ.support ⊆ sᶜ) :
+    Equiv.Perm.Disjoint (Equiv.Perm.ofSubtype u) τ := by
+  intro x
+  by_cases hx : x ∈ s
+  · right
+    refine Equiv.Perm.notMem_support.mp ?_
+    intro hmem
+    exact (mem_compl.mp (hτ hmem)) hx
+  · left
+    exact Equiv.Perm.ofSubtype_apply_of_not_mem u hx
+
+lemma cayleyWeight_ofSubtype_mul_of_support_compl {α : Type*} [Fintype α] [DecidableEq α]
+    {s : Finset α} (x : α → ℂ) (u : Perm {a // a ∈ s}) {τ : Perm α}
+    (hτ : τ.support ⊆ sᶜ) :
+    cayleyWeight x (Equiv.Perm.ofSubtype u * τ) =
+      cayleyWeight (fun a : {a // a ∈ s} => x a.1) u * cayleyWeight x τ := by
+  rw [cayleyWeight_mul_disjoint x (disjoint_ofSubtype_support_compl u hτ),
+    cayleyWeight_ofSubtype_finset]
+
+lemma mem_support_compl_of_fixes {α : Type*} [Fintype α] [DecidableEq α]
+    {τ : Perm α} {p : α} (hp : τ p = p) : p ∈ τ.supportᶜ :=
+  mem_compl.mpr (Equiv.Perm.notMem_support.mpr hp)
+
+lemma support_cycleOf_subset_remainder_compl {α : Type*} [Fintype α] [DecidableEq α]
+    (σ : Perm α) (p : α) :
+    (σ.cycleOf p).support ⊆ (σ * (σ.cycleOf p)⁻¹).supportᶜ := by
+  intro x hx
+  exact mem_compl.mpr
+    (Finset.disjoint_left.1 (disjoint_cycleOf_remainder σ p).disjoint_support hx)
+
+lemma cycleOf_eq_self_of_support_eq {α : Type*} [Fintype α] [DecidableEq α]
+    {σ : Perm α} {p : α} (h : (σ.cycleOf p).support = σ.support) :
+    σ.cycleOf p = σ := by
+  ext y
+  by_cases hsame : Equiv.Perm.SameCycle σ p y
+  · exact hsame.cycleOf_apply
+  · have hns : y ∉ (σ.cycleOf p).support := fun hy =>
+      hsame (Equiv.Perm.mem_support_cycleOf_iff.mp hy).1
+    have hnsσ : y ∉ σ.support := by rwa [← h]
+    rw [Equiv.Perm.notMem_support.mp hns, Equiv.Perm.notMem_support.mp hnsσ]
+
+lemma cycleOf_cycleOf {α : Type*} [Fintype α] [DecidableEq α] (σ : Perm α) (p : α) :
+    (σ.cycleOf p).cycleOf p = σ.cycleOf p := by
+  by_cases hp : σ p = p
+  · have h1 : σ.cycleOf p = 1 := (Equiv.Perm.cycleOf_eq_one_iff σ).mpr hp
+    simp [h1, Equiv.Perm.cycleOf_one]
+  · exact (eq_cycleOf_of_isCycle_mem (Equiv.Perm.isCycle_cycleOf σ hp)
+      (Equiv.Perm.mem_support.mpr (by
+        rw [Equiv.Perm.cycleOf_apply_self]
+        exact hp))).symm
+
+lemma cycleOf_eq_self_iff {α : Type*} [Fintype α] [DecidableEq α] (σ : Perm α) (p : α) :
+    σ.cycleOf p = σ ↔ σ = 1 ∨ (σ.IsCycle ∧ p ∈ σ.support) := by
+  constructor
+  · intro h
+    by_cases hp : σ p = p
+    · have h1 : σ.cycleOf p = 1 := (Equiv.Perm.cycleOf_eq_one_iff σ).mpr hp
+      exact Or.inl (h.symm.trans h1)
+    · refine Or.inr ⟨?_, Equiv.Perm.mem_support.mpr hp⟩
+      rw [← h]
+      exact Equiv.Perm.isCycle_cycleOf σ hp
+  · rintro (h1 | ⟨hcy, hmem⟩)
+    · simp [h1, Equiv.Perm.cycleOf_one]
+    · exact (eq_cycleOf_of_isCycle_mem hcy hmem).symm
+
+lemma cycleOf_ofSubtype_eq_of_cycleOf_eq {α : Type*} [Fintype α] [DecidableEq α]
+    {s : Finset α} (u : Perm {a // a ∈ s}) {p : α} (hp : p ∈ s)
+    (h : u.cycleOf ⟨p, hp⟩ = u) :
+    (Equiv.Perm.ofSubtype u).cycleOf p = Equiv.Perm.ofSubtype u := by
+  rcases (cycleOf_eq_self_iff u ⟨p, hp⟩).mp h with h1 | ⟨hcy, hmem⟩
+  · rw [h1, map_one, Equiv.Perm.cycleOf_one]
+  · refine (eq_cycleOf_of_isCycle_mem (ofSubtype_isCycle hcy) ?_).symm
+    have hne : u ⟨p, hp⟩ ≠ ⟨p, hp⟩ := Equiv.Perm.mem_support.mp hmem
+    refine Equiv.Perm.mem_support.mpr ?_
+    rw [Equiv.Perm.ofSubtype_apply_of_mem u hp]
+    exact fun hf => hne (Subtype.ext hf)
+
+lemma cycleOf_eq_self_of_ofSubtype_cycleOf_eq {α : Type*} [Fintype α] [DecidableEq α]
+    {s : Finset α} (u : Perm {a // a ∈ s}) {p : α} (hp : p ∈ s)
+    (h : (Equiv.Perm.ofSubtype u).cycleOf p = Equiv.Perm.ofSubtype u) :
+    u.cycleOf ⟨p, hp⟩ = u := by
+  rcases (cycleOf_eq_self_iff (Equiv.Perm.ofSubtype u) p).mp h with h1 | ⟨hcy, hmem⟩
+  · have hu : u = 1 :=
+      Equiv.Perm.ofSubtype_injective (h1.trans (map_one Equiv.Perm.ofSubtype).symm)
+    simp [hu, Equiv.Perm.cycleOf_one]
+  · have hne : u ⟨p, hp⟩ ≠ ⟨p, hp⟩ := by
+      have : Equiv.Perm.ofSubtype u p ≠ p := Equiv.Perm.mem_support.mp hmem
+      exact fun hf => this (by
+        rw [Equiv.Perm.ofSubtype_apply_of_mem u hp, hf])
+    obtain ⟨a, ha, hall⟩ := hcy
+    have has : a ∈ s := by
+      by_contra hns
+      exact ha (Equiv.Perm.ofSubtype_apply_of_not_mem u hns)
+    have hcyu : u.IsCycle := by
+      refine ⟨⟨a, has⟩, ?_, fun y hy => ?_⟩
+      · intro hf
+        exact ha (by
+          rw [Equiv.Perm.ofSubtype_apply_of_mem u has, hf])
+      · exact (sameCycle_ofSubtype_coe u).mp (hall (by
+          rw [Equiv.Perm.ofSubtype_apply_coe]
+          exact fun hf => hy (Subtype.ext hf)))
+    exact (eq_cycleOf_of_isCycle_mem hcyu
+      (Equiv.Perm.mem_support.mpr hne)).symm
+
+lemma remainder_ofSubtype_mul {α : Type*} [Fintype α] [DecidableEq α]
+    {s : Finset α} (u : Perm {a // a ∈ s}) {τ : Perm α} {p : α}
+    (hp : p ∈ s) (hτ : τ.support ⊆ sᶜ)
+    (hc : u.cycleOf ⟨p, hp⟩ = u) :
+    (Equiv.Perm.ofSubtype u * τ) * ((Equiv.Perm.ofSubtype u * τ).cycleOf p)⁻¹ = τ :=
+  remainder_mul_of_cycleOf_eq (disjoint_ofSubtype_support_compl u hτ)
+    (not_mem_support_of_mem_of_subset_compl hτ hp)
+    (cycleOf_ofSubtype_eq_of_cycleOf_eq u hp hc)
+
+lemma remainder_ofSubtype_mul_iff {α : Type*} [Fintype α] [DecidableEq α]
+    {s : Finset α} (u : Perm {a // a ∈ s}) {τ : Perm α} {p : α}
+    (hp : p ∈ s) (hτ : τ.support ⊆ sᶜ) :
+    (Equiv.Perm.ofSubtype u * τ) * ((Equiv.Perm.ofSubtype u * τ).cycleOf p)⁻¹ = τ ↔
+      u.cycleOf ⟨p, hp⟩ = u := by
+  constructor
+  · intro hrem
+    have hd := disjoint_ofSubtype_support_compl u hτ
+    have hfix : τ p = p := not_mem_support_of_mem_of_subset_compl hτ hp
+    have hcyc : (Equiv.Perm.ofSubtype u * τ).cycleOf p =
+        (Equiv.Perm.ofSubtype u).cycleOf p :=
+      cycleOf_mul_of_fixes hd hfix
+    have hself : Equiv.Perm.ofSubtype u *
+        ((Equiv.Perm.ofSubtype u).cycleOf p)⁻¹ = 1 := by
+      have hcalc :
+          τ * (Equiv.Perm.ofSubtype u * ((Equiv.Perm.ofSubtype u).cycleOf p)⁻¹) = τ := by
+        calc τ * (Equiv.Perm.ofSubtype u * ((Equiv.Perm.ofSubtype u).cycleOf p)⁻¹)
+            = Equiv.Perm.ofSubtype u * τ *
+                ((Equiv.Perm.ofSubtype u).cycleOf p)⁻¹ := by
+              rw [hd.commute.eq, mul_assoc]
+          _ = Equiv.Perm.ofSubtype u * τ *
+                ((Equiv.Perm.ofSubtype u * τ).cycleOf p)⁻¹ := by
+              rw [hcyc]
+          _ = τ := hrem
+      exact mul_left_cancel hcalc
+    have : (Equiv.Perm.ofSubtype u).cycleOf p = Equiv.Perm.ofSubtype u :=
+      ((remainderThrough_eq_one_iff (Equiv.Perm.ofSubtype u) p).mp hself).symm
+    exact cycleOf_eq_self_of_ofSubtype_cycleOf_eq u hp this
+  · intro hc
+    exact remainder_ofSubtype_mul u hp hτ hc
+
+lemma cycleOf_subtypePerm_eq_self {α : Type*} [Fintype α] [DecidableEq α]
+    {s : Finset α} {c : Perm α} (hsub : c.support ⊆ s) {p : α} (hp : p ∈ s)
+    (hc : c.cycleOf p = c) :
+    (c.subtypePerm fun x => (mem_of_support_subset (s := s) hsub x).symm).cycleOf ⟨p, hp⟩ =
+      c.subtypePerm fun x => (mem_of_support_subset (s := s) hsub x).symm := by
+  refine cycleOf_eq_self_of_ofSubtype_cycleOf_eq
+      (c.subtypePerm fun x => (mem_of_support_subset (s := s) hsub x).symm) hp ?_
+  rw [ofSubtype_subtypePerm_of_support_subset hsub, hc]
+
+lemma cayleyWeight_ofSubtype_mul_oddLong {α : Type*} [Fintype α] [DecidableEq α]
+    {s : Finset α} (x : α → ℂ) (u : Perm {a // a ∈ s}) {τ : Perm α}
+    (hτ : τ.support ⊆ sᶜ) :
+    (if (oddLongPoints (Equiv.Perm.ofSubtype u * τ)).Nonempty then (0 : ℂ)
+      else cayleyWeight x (Equiv.Perm.ofSubtype u * τ)) =
+      (if (oddLongPoints τ).Nonempty then 0 else cayleyWeight x τ) *
+        (if (oddLongPoints u).Nonempty then 0
+          else cayleyWeight (fun a : {a // a ∈ s} => x a.1) u) := by
+  have hd := disjoint_ofSubtype_support_compl u hτ
+  have hodd := oddLongPoints_mul_disjoint hd
+  have hwt := cayleyWeight_ofSubtype_mul_of_support_compl x u hτ
+  by_cases hτo : (oddLongPoints τ).Nonempty
+  · have hne : (oddLongPoints (Equiv.Perm.ofSubtype u * τ)).Nonempty :=
+      hodd.mpr (Or.inr hτo)
+    simp [hne, hτo]
+  · by_cases huo : (oddLongPoints u).Nonempty
+    · have hne : (oddLongPoints (Equiv.Perm.ofSubtype u * τ)).Nonempty :=
+        hodd.mpr (Or.inl ((oddLongPoints_ofSubtype_nonempty_iff u).2 huo))
+      simp [hne, hτo, huo]
+    · have hne : ¬ (oddLongPoints (Equiv.Perm.ofSubtype u * τ)).Nonempty := fun h =>
+        (hodd.mp h).elim
+          (fun h' => huo ((oddLongPoints_ofSubtype_nonempty_iff u).1 h'))
+          (fun h' => hτo h')
+      rw [if_neg hne, if_neg hτo, if_neg huo, hwt, mul_comm]
+
+open scoped Classical in
+lemma sum_ite_cycleOf_eq_self {α : Type*} [Fintype α] [DecidableEq α]
+    [LinearOrder α] (p : α) (x : α → ℂ) :
+    (∑ σ : Perm α,
+        if σ.cycleOf p = σ then
+          (if (oddLongPoints σ).Nonempty then (0 : ℂ) else cayleyWeight x σ)
+        else 0) =
+      1 + evenCycleSumThrough p x := by
+  have hterm : ∀ σ : Perm α,
+      (if σ.cycleOf p = σ then
+        (if (oddLongPoints σ).Nonempty then (0 : ℂ) else cayleyWeight x σ)
+      else 0) =
+        if σ * (σ.cycleOf p)⁻¹ = 1 then
+          (if (oddLongPoints σ).Nonempty then (0 : ℂ) else cayleyWeight x σ)
+        else 0 := by
+    intro σ
+    have hiff : σ.cycleOf p = σ ↔ σ * (σ.cycleOf p)⁻¹ = 1 := by
+      rw [remainderThrough_eq_one_iff, eq_comm]
+    simp [hiff]
+  rw [Fintype.sum_congr _ _ hterm, cayleySum_remainder_one p x]
+
+lemma remainderFibre_support_cycleOf {α : Type*} [Fintype α] [DecidableEq α]
+    {σ τ : Perm α} {p : α} (h : σ * (σ.cycleOf p)⁻¹ = τ) :
+    (σ.cycleOf p).support ⊆ τ.supportᶜ := by
+  have : (σ.cycleOf p).support ⊆ (σ * (σ.cycleOf p)⁻¹).supportᶜ :=
+    support_cycleOf_subset_remainder_compl σ p
+  rwa [h] at this
+
+noncomputable def remainderFibreEquiv {α : Type*} [Fintype α] [DecidableEq α]
+    (p : α) (τ : Perm α) (hp : τ p = p) :
+    {u : Perm {a // a ∈ τ.supportᶜ} //
+        u.cycleOf ⟨p, mem_support_compl_of_fixes hp⟩ = u} ≃
+      {σ : Perm α // σ * (σ.cycleOf p)⁻¹ = τ} where
+  toFun u :=
+    ⟨Equiv.Perm.ofSubtype u.1 * τ,
+      remainder_ofSubtype_mul u.1 (mem_support_compl_of_fixes hp)
+        (by rw [compl_compl]) u.2⟩
+  invFun σ :=
+    ⟨(σ.1.cycleOf p).subtypePerm fun x =>
+        (mem_of_support_subset (remainderFibre_support_cycleOf σ.2) x).symm,
+      cycleOf_subtypePerm_eq_self (remainderFibre_support_cycleOf σ.2)
+        (mem_support_compl_of_fixes hp) (cycleOf_cycleOf σ.1 p)⟩
+  left_inv := fun u => by
+    apply Subtype.ext
+    apply Equiv.ext
+    intro q
+    apply Subtype.ext
+    change ((Equiv.Perm.ofSubtype u.1 * τ).cycleOf p) q.1 = (u.1 q).1
+    have hcy : (Equiv.Perm.ofSubtype u.1 * τ).cycleOf p =
+        Equiv.Perm.ofSubtype u.1 := by
+      rw [cycleOf_mul_of_fixes
+          (disjoint_ofSubtype_support_compl u.1 (by rw [compl_compl])) hp,
+        cycleOf_ofSubtype_eq_of_cycleOf_eq u.1 (mem_support_compl_of_fixes hp) u.2]
+    rw [hcy]
+    exact Equiv.Perm.ofSubtype_apply_coe u.1 q
+  right_inv := fun σ => by
+    apply Subtype.ext
+    change Equiv.Perm.ofSubtype
+        ((σ.1.cycleOf p).subtypePerm fun x =>
+          (mem_of_support_subset (remainderFibre_support_cycleOf σ.2) x).symm) * τ =
+      σ.1
+    rw [ofSubtype_subtypePerm_of_support_subset (remainderFibre_support_cycleOf σ.2)]
+    have hσ : σ.1 = σ.1.cycleOf p * (σ.1 * (σ.1.cycleOf p)⁻¹) :=
+      eq_cycleOf_mul_remainder σ.1 p
+    have hc : σ.1.cycleOf p * τ =
+        σ.1.cycleOf p * (σ.1 * (σ.1.cycleOf p)⁻¹) :=
+      congrArg (fun ρ => σ.1.cycleOf p * ρ) σ.2.symm
+    exact hc.trans hσ.symm
+
+open scoped Classical in
+lemma cayleySum_fibre_remainder {α : Type*} [Fintype α] [DecidableEq α]
+    [LinearOrder α] (x : α → ℂ) (p : α) (τ : Perm α) (hp : τ p = p) :
+    (∑ σ : Perm α,
+        if σ * (σ.cycleOf p)⁻¹ = τ then
+          (if (oddLongPoints σ).Nonempty then (0 : ℂ) else cayleyWeight x σ)
+        else 0) =
+      (if (oddLongPoints τ).Nonempty then 0 else cayleyWeight x τ) *
+        (1 + evenCycleSumThrough
+          (⟨p, mem_support_compl_of_fixes hp⟩ : {a // a ∈ τ.supportᶜ})
+          (fun a => x a.1)) := by
+  have hp' : p ∈ τ.supportᶜ := mem_support_compl_of_fixes hp
+  have hτs : τ.support ⊆ (τ.supportᶜ)ᶜ := by
+    rw [compl_compl]
+  let g : Perm α → ℂ := fun σ =>
+    if (oddLongPoints σ).Nonempty then 0 else cayleyWeight x σ
+  have hL :
+      (∑ σ : Perm α,
+          if σ * (σ.cycleOf p)⁻¹ = τ then g σ else 0) =
+        ∑ u : {u : Perm {a // a ∈ τ.supportᶜ} // u.cycleOf ⟨p, hp'⟩ = u},
+          g (Equiv.Perm.ofSubtype u.1 * τ) := by
+    calc
+      (∑ σ : Perm α,
+          if σ * (σ.cycleOf p)⁻¹ = τ then g σ else 0) =
+          ∑ σ ∈ univ.filter (fun σ : Perm α => σ * (σ.cycleOf p)⁻¹ = τ), g σ := by
+        rw [sum_filter]
+      _ = ∑ σ : {σ : Perm α // σ * (σ.cycleOf p)⁻¹ = τ}, g σ.1 := by
+        rw [sum_subtype (p := fun σ : Perm α => σ * (σ.cycleOf p)⁻¹ = τ)
+          (univ.filter (fun σ : Perm α => σ * (σ.cycleOf p)⁻¹ = τ))
+          (fun σ => by simp) g]
+      _ = ∑ u : {u : Perm {a // a ∈ τ.supportᶜ} // u.cycleOf ⟨p, hp'⟩ = u},
+            g (Equiv.Perm.ofSubtype u.1 * τ) := by
+        rw [← Equiv.sum_comp (remainderFibreEquiv p τ hp) (fun σ => g σ.1)]
+        rfl
+  have hU :
+      (∑ u : {u : Perm {a // a ∈ τ.supportᶜ} // u.cycleOf ⟨p, hp'⟩ = u},
+          g (Equiv.Perm.ofSubtype u.1 * τ)) =
+        ∑ u : Perm {a // a ∈ τ.supportᶜ},
+          if u.cycleOf ⟨p, hp'⟩ = u then
+            g (Equiv.Perm.ofSubtype u * τ) else 0 := by
+    rw [← sum_subtype
+        (p := fun u : Perm {a // a ∈ τ.supportᶜ} => u.cycleOf ⟨p, hp'⟩ = u)
+        (univ.filter (fun u : Perm {a // a ∈ τ.supportᶜ} => u.cycleOf ⟨p, hp'⟩ = u))
+        (fun u => by simp)
+        (fun u => g (Equiv.Perm.ofSubtype u * τ)),
+      sum_filter]
+  have hterm : ∀ u : Perm {a // a ∈ τ.supportᶜ},
+      (if u.cycleOf ⟨p, hp'⟩ = u then
+        g (Equiv.Perm.ofSubtype u * τ) else 0) =
+        (if (oddLongPoints τ).Nonempty then (0 : ℂ) else cayleyWeight x τ) *
+          (if u.cycleOf ⟨p, hp'⟩ = u then
+            (if (oddLongPoints u).Nonempty then 0
+              else cayleyWeight (fun a : {a // a ∈ τ.supportᶜ} => x a.1) u)
+          else 0) := by
+    intro u
+    by_cases hc : u.cycleOf ⟨p, hp'⟩ = u
+    · rw [if_pos hc, if_pos hc]
+      change (if (oddLongPoints (Equiv.Perm.ofSubtype u * τ)).Nonempty then (0 : ℂ)
+          else cayleyWeight x (Equiv.Perm.ofSubtype u * τ)) =
+        (if (oddLongPoints τ).Nonempty then 0 else cayleyWeight x τ) *
+          (if (oddLongPoints u).Nonempty then 0
+            else cayleyWeight (fun a : {a // a ∈ τ.supportᶜ} => x a.1) u)
+      exact cayleyWeight_ofSubtype_mul_oddLong x u hτs
+    · simp [hc]
+  rw [hL, hU, Fintype.sum_congr _ _ hterm, ← mul_sum, sum_ite_cycleOf_eq_self]
+
+lemma cayleySum_fibre_remainder_of_moves {α : Type*} [Fintype α] [DecidableEq α]
+    [LinearOrder α] (x : α → ℂ) (p : α) (τ : Perm α) (hp : τ p ≠ p) :
+    (∑ σ : Perm α,
+        if σ * (σ.cycleOf p)⁻¹ = τ then
+          (if (oddLongPoints σ).Nonempty then (0 : ℂ) else cayleyWeight x σ)
+        else 0) = 0 := by
+  refine Fintype.sum_eq_zero _ fun σ => ?_
+  have hne : σ * (σ.cycleOf p)⁻¹ ≠ τ := fun h =>
+    hp (h ▸ remainder_fixes_cycle_base σ p)
+  simp [hne]
+
+open scoped Classical in
+lemma cayleySum_complementary_eq_sum_fibres {α : Type*}
+    [Fintype α] [DecidableEq α] [LinearOrder α] (p : α) (x : α → ℂ) :
+    (∑ σ : Perm α,
+        if σ * (σ.cycleOf p)⁻¹ = 1 then 0
+        else if (oddLongPoints σ).Nonempty then 0 else cayleyWeight x σ) =
+      ∑ τ : Perm α,
+        if τ = 1 then 0
+        else (∑ σ : Perm α,
+          if σ * (σ.cycleOf p)⁻¹ = τ then
+            (if (oddLongPoints σ).Nonempty then (0 : ℂ) else cayleyWeight x σ)
+          else 0) := by
+  have hsplit : ∀ σ : Perm α,
+      (if σ * (σ.cycleOf p)⁻¹ = 1 then (0 : ℂ)
+        else if (oddLongPoints σ).Nonempty then 0 else cayleyWeight x σ) =
+        ∑ τ : Perm α,
+          if σ * (σ.cycleOf p)⁻¹ = τ then
+            (if τ = 1 then 0
+              else if (oddLongPoints σ).Nonempty then 0 else cayleyWeight x σ)
+          else 0 := by
+    intro σ
+    have hsum :
+        (∑ τ : Perm α,
+            if σ * (σ.cycleOf p)⁻¹ = τ then
+              (if τ = 1 then (0 : ℂ)
+                else if (oddLongPoints σ).Nonempty then 0 else cayleyWeight x σ)
+            else 0) =
+          if σ * (σ.cycleOf p)⁻¹ = σ * (σ.cycleOf p)⁻¹ then
+            (if σ * (σ.cycleOf p)⁻¹ = 1 then 0
+              else if (oddLongPoints σ).Nonempty then 0 else cayleyWeight x σ)
+          else 0 :=
+      Fintype.sum_eq_single _ (fun τ hτ => if_neg (Ne.symm hτ))
+    rw [hsum, if_pos rfl]
+  rw [Fintype.sum_congr _ _ hsplit, sum_comm]
+  refine Fintype.sum_congr _ _ fun τ => ?_
+  by_cases h1 : τ = 1
+  · rw [if_pos h1]
+    refine Fintype.sum_eq_zero _ fun σ => ?_
+    simp [h1]
+  · rw [if_neg h1]
+    refine Fintype.sum_congr _ _ fun σ => ?_
+    simp [h1]
+
+open scoped Classical in
+lemma cayleySum_complementary_eq_inner {α : Type*}
+    [Fintype α] [DecidableEq α] [LinearOrder α] (p : α) (x : α → ℂ) :
+    (∑ σ : Perm α,
+        if σ * (σ.cycleOf p)⁻¹ = 1 then 0
+        else if (oddLongPoints σ).Nonempty then 0 else cayleyWeight x σ) =
+      ∑ τ : Perm α,
+        if h : τ p = p then
+          if τ = 1 then 0
+          else (if (oddLongPoints τ).Nonempty then 0 else cayleyWeight x τ) *
+            (1 + evenCycleSumThrough
+              (⟨p, mem_support_compl_of_fixes h⟩ : {a // a ∈ τ.supportᶜ})
+              (fun a => x a.1))
+        else 0 := by
+  rw [cayleySum_complementary_eq_sum_fibres]
+  refine Fintype.sum_congr _ _ fun τ => ?_
+  by_cases hpτ : τ p = p
+  · rw [dif_pos hpτ]
+    by_cases h1 : τ = 1
+    · rw [if_pos h1, if_pos h1]
+    · rw [if_neg h1, if_neg h1, cayleySum_fibre_remainder x p τ hpτ]
+  · rw [dif_neg hpτ]
+    have hne1 : τ ≠ 1 := fun hτ1 => hpτ (by simp [hτ1])
+    rw [if_neg hne1, cayleySum_fibre_remainder_of_moves x p τ hpτ]
+
 #check (OeisA1818.conjecture1 :
     ∀ (n : ℕ), 1 ≤ n → ∀ (ζ : ℂ), IsPrimitiveRoot ζ (2 * n) →
       (sunMatrix n ζ).permanent = (a n : ℂ))
@@ -5741,5 +6135,25 @@ lemma remainder_mul_of_cycleOf_eq {α : Type*} [Fintype α] [DecidableEq α]
 #print axioms cayleySum_eq_one_add_even_cycles_of_card_two
 #print axioms cycleOf_mul_of_fixes
 #print axioms remainder_mul_of_cycleOf_eq
+#print axioms disjoint_ofSubtype_support_compl
+#print axioms cayleyWeight_ofSubtype_mul_of_support_compl
+#print axioms mem_support_compl_of_fixes
+#print axioms support_cycleOf_subset_remainder_compl
+#print axioms cycleOf_eq_self_of_support_eq
+#print axioms cycleOf_eq_self_iff
+#print axioms cycleOf_cycleOf
+#print axioms cycleOf_ofSubtype_eq_of_cycleOf_eq
+#print axioms cycleOf_eq_self_of_ofSubtype_cycleOf_eq
+#print axioms remainder_ofSubtype_mul
+#print axioms remainder_ofSubtype_mul_iff
+#print axioms cycleOf_subtypePerm_eq_self
+#print axioms remainderFibre_support_cycleOf
+#print axioms remainderFibreEquiv
+#print axioms cayleyWeight_ofSubtype_mul_oddLong
+#print axioms sum_ite_cycleOf_eq_self
+#print axioms cayleySum_fibre_remainder
+#print axioms cayleySum_fibre_remainder_of_moves
+#print axioms cayleySum_complementary_eq_sum_fibres
+#print axioms cayleySum_complementary_eq_inner
 
 end A001818C1

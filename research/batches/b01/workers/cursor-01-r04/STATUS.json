@@ -21,7 +21,7 @@
   "novelty_status": "known_mathematics_formalization",
   "mathematical_novelty": "known_mathematics_She_Sun_Xia_2022_Thm1_3_ii",
   "formalization_novelty": "no_prior_exact_public_lean_found_in_checked_sources_audit_incomplete_until_stop",
-  "last_updated_utc": "2026-09-13T08:15:00Z",
+  "last_updated_utc": "2026-09-13T08:33:00Z",
   "proof_declarations": [
     "A001818C1.conjecture1_of_one",
     "A001818C1.zpow_sub_ne_one",
@@ -150,12 +150,20 @@
     "A001818C1.cayleySum_remainder_one",
     "A001818C1.cayleySum_eq_one_add_even_cycles_add_complementary",
     "A001818C1.remainderThrough_eq_one_of_card_two",
-    "A001818C1.cayleySum_eq_one_add_even_cycles_of_card_two"
+    "A001818C1.cayleySum_eq_one_add_even_cycles_of_card_two",
+    "A001818C1.remainder_mul_of_cycleOf_eq",
+    "A001818C1.cayleyWeight_ofSubtype_mul_of_support_compl",
+    "A001818C1.cycleOf_eq_self_iff",
+    "A001818C1.cycleOf_ofSubtype_eq_of_cycleOf_eq",
+    "A001818C1.remainderFibreEquiv",
+    "A001818C1.cayleySum_fibre_remainder",
+    "A001818C1.cayleySum_complementary_eq_sum_fibres",
+    "A001818C1.cayleySum_complementary_eq_inner"
   ],
   "unresolved_gaps": [
-    "General n>=1 C1 identity still open. Have per(M-J)=a n, Sigma1/Sigma2, Lemma 2.3, paper (3.5), s_1=-1, long even-cycle sums, Lemma 3.1 per(A_n)=0, the card-2 vanishing base cayleySumOn_pair, and evenCycleSumThrough = binomial combination of s_k when x p = 0. Need complementary even permutations in Sigma3, identity (3.9), recurrence (4.8), and Thm 1.1."
+    "General n>=1 C1 identity still open. Have per(M-J)=a n, Sigma1/Sigma2, Lemma 2.3, paper (3.5), s_1=-1, long even-cycle sums, Lemma 3.1 per(A_n)=0, card-2 vanishing, even-cycle binomial expansion, remainder split, and complementary fibres equal to cayleyWeight(tau)*(1+evenCycleSumThrough on Fix(tau)). Need complementary cancellation by IH, identity (3.9) via the sign-matrix limit, recurrence (4.8), and Thm 1.1."
   ],
-  "next_step": "Use remainder factorization and IH on Fix(tau) to cancel complementary even permutations when x p = 0, obtain (3.8)/(3.9), then recurrence (4.8).",
+  "next_step": "Prove 1+evenCycleSumThrough=0 on even-cardinality types with x p = 0 by the sign-matrix limit, so complementary fibres vanish, then obtain (3.8)/(3.9) and recurrence (4.8).",
   "self_review": "not a candidate yet; cannot set independently_verified",
   "excluded_from_this_worker": [
     "OeisA1818.conjecture2",

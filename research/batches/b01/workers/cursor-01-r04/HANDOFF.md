@@ -45,7 +45,9 @@ She–Sun–Xia Lemma 3.1 is proved: `per(A_n)=0` for `n≥1` (`permanent_signMa
 
 Card-2 base with a zero coordinate: `cayleySumOn {p,q} = 0` when `x p = 0` (`cayleySumOn_pair`). Conjugation by a type equivalence preserves `cayleySum` (`cayleySum_permCongr`). Even-length cycles through `p` expand as `∑_k \binom{N-1}{2k-1} s_k` when `x` is injective and `x p = 0` (`evenCycleSumThrough_eq_binom`), using `s_1 = -1` on transpositions. A permutation splits as its cycle through `p` times a disjoint remainder that fixes `p`. The even-cycle Cayley sum is `1` plus the even cycles through `p` plus complementary remainder terms (`cayleySum_eq_one_add_even_cycles_add_complementary`). On a two-point type the remainder is always `1`, so those complementary terms vanish.
 
-Still needed: complementary even permutations in Σ3, identity (3.9), recurrence (4.8) / Theorem 1.1 matching formula, then She–Sun–Xia 1.3(i).
+Complementary terms group by remainder `τ`. If `τ p ≠ p` the fibre is empty. If `τ p = p`, permutations with that remainder are `ofSubtype u * τ` for `u` on `Fix(τ)` with `u.cycleOf ⟨p⟩ = u`, and the fibre equals `cayleyWeight τ * (1 + evenCycleSumThrough ⟨p⟩)` on the complementary subtype (`cayleySum_fibre_remainder`, `cayleySum_complementary_eq_inner`).
+
+Still needed: complementary cancellation by induction plus identity (3.9), recurrence (4.8) / Theorem 1.1 matching formula, then She–Sun–Xia 1.3(i).
 
 ## Attribution
 
