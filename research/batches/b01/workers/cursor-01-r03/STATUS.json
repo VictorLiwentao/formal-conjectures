@@ -1,0 +1,50 @@
+{
+  "worker_id": "cursor-01-r03",
+  "slot": "cursor-01",
+  "predecessor": "cursor-01-r02",
+  "target_id": "A051903-C2",
+  "declaration": "OeisA51903.conjecture2",
+  "actual_branch": "cursor/b01-cursor-01-r03-2609",
+  "preferred_branch": "codex/b01-cursor-01-r03",
+  "seed_commit": "1ee796fa5606a0027266111e53f9b6c5d11d62a6",
+  "baseline_commit": "1ee796fa5606a0027266111e53f9b6c5d11d62a6",
+  "source_commit": "a2f4a1bb12a28e04a969da78feefac7d1ce49565",
+  "lean_toolchain": "leanprover/lean4:v4.33.1",
+  "source_file": "FormalConjectures/OEIS/51903.lean",
+  "source_sha256": "3a694eccc4bd92c14e28e609563bad0ecdfb8895f45c6de887b46fcfcd483db4",
+  "source_sha256_verified": true,
+  "session_start_utc": "2026-09-13T02:22:16Z",
+  "deadline_utc": "2026-09-13T10:22:16Z",
+  "clock_reset": false,
+  "current_status": "candidate_proof",
+  "novelty_status": "known_mathematics_formalization",
+  "mathematical_novelty": "known_mathematics_elementary_corollary",
+  "formalization_novelty": "no_prior_exact_public_lean_found_in_checked_sources",
+  "last_updated_utc": "2026-09-13T02:35:13Z",
+  "proof_sha256": "88417287b950e6e0fdde7387ffb624dc5185efea62e7075c917137018d10593c",
+  "proof_declarations": [
+    "A051903C2.no_odd_universal",
+    "A051903C2.conjecture2"
+  ],
+  "unresolved_gaps": [
+    "Coordinator independent audit pending. Self-review cannot set independently_verified."
+  ],
+  "next_step": "Stop for coordinator independent audit. Do not start C1, C3, or any other target.",
+  "self_review": "candidate_proof only; cannot set independently_verified",
+  "excluded_from_this_worker": [
+    "OeisA51903.conjecture1",
+    "OeisA51903.conjecture3"
+  ],
+  "reserved_sequence_groups": [
+    "A051903-C2",
+    "A051903",
+    "A327295"
+  ],
+  "ai_assistance": "Cursor Grok 4.6 Extra High, 2026-09-13",
+  "credits": {
+    "question": "Thomas Ordowski",
+    "original_lean": "The Formal Conjectures Authors",
+    "new_lean_development": "Wentao Li",
+    "related_prior_mathematics": "Dutta and Dutta, viXra:2602.0018, Theorem 1 (classification; no explicit odd corollary or Lean)"
+  }
+}
