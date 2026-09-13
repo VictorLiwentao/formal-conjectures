@@ -38,6 +38,10 @@ which type-checks. The original `a` is used. The admitted `OeisA1818.conjecture1
 'A001818C1.sum_cycleEdgeWeight_ncycles' depends on axioms: [propext, Classical.choice, Quot.sound]
 'A001818C1.cycleEdgeWeight_zeta' depends on axioms: [propext, Classical.choice, Quot.sound]
 'A001818C1.listing_support_univ' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.listing_inv_one_sub_sum' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.ncycleToListing_listingPerm' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.listingPerm_ncycleToListing' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.ncycle_inv_one_sub_sum' depends on axioms: [propext, Classical.choice, Quot.sound]
 ```
 
 No `sorryAx`, `native_decide`, or `Lean.trustCompiler` in those lemmas. The general `n ≥ 1` identity is not yet proved.

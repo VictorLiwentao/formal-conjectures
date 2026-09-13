@@ -27,9 +27,9 @@ No PRs. No other branches. No subagents. No shared-control edits. No C2 / A00245
 
 In progress toward an exact C1 candidate. Not independently verified. Not a solution until the frozen statement compiles with allowlisted axioms only.
 
-Proved in worker Lean (allowlisted axioms only): `n=1` case; denominator nonvanishing; Calogero kernel sums and Fourier diagonalization; `det(calogero) = (-1)^n a n`; `per(M-J) = 2^{2n}` times the unsigned derangement sum of `(1-ζ^{σi-i})⁻¹`; signed derangement sum `= (-1)^n a n / 2^{2n}`; Guo 3.1 insertion kernel, rotate-class sum, and the sum over all listings through a fixed point (`sum_cycleEdgeWeight_ncycles`); `cycleEdgeWeight` equals a support-constant times the `(1-ζ)^{-1}` product (`cycleEdgeWeight_zeta`); listings through a fixed point are n-cycles with full support.
+Proved in worker Lean (allowlisted axioms only): `n=1` case; denominator nonvanishing; Calogero kernel sums and Fourier diagonalization; `det(calogero) = (-1)^n a n`; `per(M-J) = 2^{2n}` times the unsigned derangement sum of `(1-ζ^{σi-i})⁻¹`; signed derangement sum `= (-1)^n a n / 2^{2n}`; Guo 3.1 insertion kernel, rotate-class sum, and the sum over all listings through a fixed point (`sum_cycleEdgeWeight_ncycles`); `cycleEdgeWeight` equals a support-constant times the `(1-ζ)^{-1}` product (`cycleEdgeWeight_zeta`); listings through a fixed point are N-cycles with full support; those listings biject with `{σ | σ.IsCycle ∧ σ.support = univ}`; the `(1-ζ)^{-1}` weights of all N-cycles sum to 0 (`ncycle_inv_one_sub_sum`).
 
-Still needed: vanish long-cycle derangement terms, even-size sign cancellation, `per M = per(M-J)`.
+Still needed: vanish mixed long-cycle derangement terms, even-size sign cancellation, `per M = per(M-J)`.
 
 ## Attribution
 

@@ -1358,6 +1358,215 @@ lemma listing_support_univ {α : Type*} [Fintype α] [DecidableEq α] {p : α}
     refine ⟨e.symm ⟨q, hqp⟩, ?_⟩
     simp
 
+/-- Cycle determined by a listing of the remaining points after a fixed `p`. -/
+noncomputable def listingPerm {α : Type*} [Fintype α] [DecidableEq α] {p : α}
+    (e : Fin (Fintype.card {q : α // q ≠ p}) ≃ {q : α // q ≠ p}) : Perm α :=
+  List.formPerm (p :: List.ofFn fun i => (e i).1)
+
+lemma listingPerm_isCycle {α : Type*} [Fintype α] [DecidableEq α] {p : α}
+    (e : Fin (Fintype.card {q : α // q ≠ p}) ≃ {q : α // q ≠ p})
+    (hcard : 2 ≤ Fintype.card {q : α // q ≠ p}) :
+    (listingPerm e).IsCycle := by
+  delta listingPerm
+  exact listing_isCycle e hcard
+
+lemma listingPerm_support_univ {α : Type*} [Fintype α] [DecidableEq α] {p : α}
+    (e : Fin (Fintype.card {q : α // q ≠ p}) ≃ {q : α // q ≠ p})
+    (hcard : 2 ≤ Fintype.card {q : α // q ≠ p}) :
+    (listingPerm e).support = (univ : Finset α) := by
+  delta listingPerm
+  exact listing_support_univ e hcard
+
+lemma derangement_support_univ {α : Type*} [Fintype α] [DecidableEq α] {σ : Perm α}
+    (h : ∀ i, σ i ≠ i) : σ.support = univ := by
+  ext i
+  simp [Equiv.Perm.mem_support, h]
+
+lemma cycleEdgeWeight_zeta_univ {N : ℕ} [NeZero N] {ζ : ℂ} (hζ : IsPrimitiveRoot ζ N)
+    {σ : Perm (Fin N)} (hsup : σ.support = univ) :
+    cycleEdgeWeight (fun i => ζ ^ i.val) σ =
+      (∏ i : Fin N, (-ζ ^ i.val)⁻¹) *
+        ∏ i : Fin N, (1 - ζ ^ ((σ i).val - i.val : ℤ))⁻¹ := by
+  rw [cycleEdgeWeight_zeta hζ, hsup]
+
+lemma zeta_inv_prod_ne_zero {N : ℕ} [NeZero N] {ζ : ℂ} (hζ : IsPrimitiveRoot ζ N) :
+    (∏ i : Fin N, (-ζ ^ i.val)⁻¹) ≠ 0 :=
+  prod_ne_zero_iff.2 fun i _ =>
+    inv_ne_zero (neg_ne_zero.2 (pow_ne_zero i.val (zeta_ne_zero hζ)))
+
+lemma listing_inv_one_sub_sum {N : ℕ} [NeZero N] {ζ : ℂ}
+    (hζ : IsPrimitiveRoot ζ N) (p : Fin N)
+    (hcard : 2 ≤ Fintype.card {q : Fin N // q ≠ p}) :
+    ∑ e : Fin (Fintype.card {q : Fin N // q ≠ p}) ≃ {q : Fin N // q ≠ p},
+      ∏ i : Fin N, (1 - ζ ^ (((listingPerm e) i).val - i.val : ℤ))⁻¹ = 0 := by
+  have hsum := sum_cycleEdgeWeight_ncycles (fun i => ζ ^ i.val)
+    (zeta_pow_fin_injective hζ) p hcard
+  have hterm : ∀ e,
+      cycleEdgeWeight (fun i => ζ ^ i.val)
+          (List.formPerm (p :: List.ofFn fun i => (e i).1)) =
+        (∏ i : Fin N, (-ζ ^ i.val)⁻¹) *
+          ∏ i : Fin N, (1 - ζ ^ (((listingPerm e) i).val - i.val : ℤ))⁻¹ := fun e => by
+    have hsup := listingPerm_support_univ e hcard
+    have := cycleEdgeWeight_zeta_univ hζ hsup
+    exact this
+  simp_rw [hterm] at hsum
+  rw [← mul_sum] at hsum
+  exact (mul_eq_zero.mp hsum).resolve_left (zeta_inv_prod_ne_zero hζ)
+
+lemma isCycle_univ_ne {α : Type*} [Fintype α] [DecidableEq α]
+    {σ : Perm α} (hsup : σ.support = univ) (p : α) : σ p ≠ p :=
+  Equiv.Perm.mem_support.mp (by rw [hsup]; exact mem_univ p)
+
+lemma orderOf_isCycle_univ {α : Type*} [Fintype α] [DecidableEq α]
+    {σ : Perm α} (hσ : σ.IsCycle) (hsup : σ.support = univ) :
+    orderOf σ = Fintype.card α := by
+  rw [hσ.orderOf, hsup, card_univ]
+
+lemma card_subtype_ne_lt_card {α : Type*} [Fintype α] [DecidableEq α]
+    (p : α) (i : Fin (Fintype.card {q : α // q ≠ p})) :
+    i.val + 1 < Fintype.card α := by
+  have hle : i.val + 1 ≤ Fintype.card {q : α // q ≠ p} := Nat.succ_le_of_lt i.isLt
+  have hcard := card_subtype_ne p
+  have hpos : 0 < Fintype.card α := Fintype.card_pos_iff.2 ⟨p⟩
+  omega
+
+lemma isCycle_pow_succ_ne {α : Type*} [Fintype α] [DecidableEq α]
+    {σ : Perm α} (hσ : σ.IsCycle) (hsup : σ.support = univ) (p : α)
+    (i : Fin (Fintype.card {q : α // q ≠ p})) :
+    (σ ^ (i.val + 1)) p ≠ p := by
+  have hp := isCycle_univ_ne hsup p
+  intro h
+  have h1 : σ ^ (i.val + 1) = 1 := (hσ.pow_eq_one_iff' hp).2 h
+  have hdvd : orderOf σ ∣ i.val + 1 := orderOf_dvd_iff_pow_eq_one.2 h1
+  have hlt : i.val + 1 < orderOf σ := by
+    rw [orderOf_isCycle_univ hσ hsup]
+    exact card_subtype_ne_lt_card p i
+  exact Nat.not_dvd_of_pos_of_lt (Nat.succ_pos _) hlt hdvd
+
+noncomputable def ncycleToListingFun {α : Type*} [Fintype α] [DecidableEq α] {p : α}
+    {σ : Perm α} (hσ : σ.IsCycle) (hsup : σ.support = univ)
+    (i : Fin (Fintype.card {q : α // q ≠ p})) : {q : α // q ≠ p} :=
+  ⟨(σ ^ (i.val + 1)) p, isCycle_pow_succ_ne hσ hsup p i⟩
+
+lemma ncycleToListingFun_injective {α : Type*} [Fintype α] [DecidableEq α] {p : α}
+    {σ : Perm α} (hσ : σ.IsCycle) (hsup : σ.support = univ) :
+    Function.Injective (ncycleToListingFun (p := p) hσ hsup) := by
+  intro i j hij
+  have hij' : (σ ^ (i.val + 1)) p = (σ ^ (j.val + 1)) p :=
+    congrArg Subtype.val hij
+  have hp := isCycle_univ_ne hsup p
+  have heq : σ ^ (i.val + 1) = σ ^ (j.val + 1) :=
+    (hσ.pow_eq_pow_iff).2 ⟨p, hp, hij'⟩
+  have hmod := pow_inj_mod.mp heq
+  have hlt : ∀ k : Fin (Fintype.card {q : α // q ≠ p}),
+      k.val + 1 < orderOf σ := fun k => by
+    rw [orderOf_isCycle_univ hσ hsup]
+    exact card_subtype_ne_lt_card p k
+  rw [Nat.mod_eq_of_lt (hlt i), Nat.mod_eq_of_lt (hlt j)] at hmod
+  exact Fin.ext (Nat.succ_injective hmod)
+
+lemma ncycleToListingFun_surjective {α : Type*} [Fintype α] [DecidableEq α] {p : α}
+    {σ : Perm α} (hσ : σ.IsCycle) (hsup : σ.support = univ) :
+    Function.Surjective (ncycleToListingFun (p := p) hσ hsup) := by
+  intro q
+  have hp := isCycle_univ_ne hsup p
+  have hq := isCycle_univ_ne hsup q.1
+  have hsc : Equiv.Perm.SameCycle σ p q.1 :=
+    ((Equiv.Perm.isCycle_iff_sameCycle hp).1 hσ).mpr hq
+  obtain ⟨k, hklt, hk⟩ := Equiv.Perm.SameCycle.exists_pow_eq' hsc
+  have hk0 : k ≠ 0 := by
+    intro h0
+    rw [h0, pow_zero, Perm.one_apply] at hk
+    exact q.2 hk.symm
+  have hkpos : 1 ≤ k := Nat.pos_of_ne_zero hk0
+  have hord := orderOf_isCycle_univ hσ hsup
+  have hi : k - 1 < Fintype.card {q : α // q ≠ p} := by
+    rw [card_subtype_ne, ← hord]
+    omega
+  refine ⟨⟨k - 1, hi⟩, ?_⟩
+  apply Subtype.ext
+  change (σ ^ (k - 1 + 1)) p = q.1
+  rw [Nat.sub_add_cancel hkpos, hk]
+
+noncomputable def ncycleToListing {α : Type*} [Fintype α] [DecidableEq α] {p : α}
+    {σ : Perm α} (hσ : σ.IsCycle) (hsup : σ.support = univ) :
+    Fin (Fintype.card {q : α // q ≠ p}) ≃ {q : α // q ≠ p} :=
+  Equiv.ofBijective (ncycleToListingFun (p := p) hσ hsup)
+    ⟨ncycleToListingFun_injective hσ hsup, ncycleToListingFun_surjective hσ hsup⟩
+
+lemma ncycleToListing_apply {α : Type*} [Fintype α] [DecidableEq α] {p : α}
+    {σ : Perm α} (hσ : σ.IsCycle) (hsup : σ.support = univ)
+    (i : Fin (Fintype.card {q : α // q ≠ p})) :
+    (ncycleToListing (p := p) hσ hsup i).1 = (σ ^ (i.val + 1)) p :=
+  rfl
+
+lemma toList_eq_cons_ofFn {α : Type*} [Fintype α] [DecidableEq α]
+    {σ : Perm α} (hσ : σ.IsCycle) (hsup : σ.support = univ) (p : α) :
+    Equiv.Perm.toList σ p =
+      p :: List.ofFn fun i : Fin (Fintype.card {q : α // q ≠ p}) =>
+        (σ ^ (i.val + 1)) p := by
+  have hp := isCycle_univ_ne hsup p
+  have hlen : (Equiv.Perm.toList σ p).length = Fintype.card α := by
+    rw [Equiv.Perm.length_toList, hσ.cycleOf_eq hp, hsup, card_univ]
+  refine List.ext_getElem ?_ ?_
+  · have hpos : 0 < Fintype.card α := Fintype.card_pos_iff.2 ⟨p⟩
+    rw [hlen, List.length_cons, List.length_ofFn, card_subtype_ne]
+    omega
+  · intro n hn _hn'
+    rw [Equiv.Perm.getElem_toList]
+    cases n with
+    | zero =>
+      simp [pow_zero]
+    | succ k =>
+      simp [List.getElem_ofFn]
+
+lemma ncycleToListing_listingPerm {α : Type*} [Fintype α] [DecidableEq α] {p : α}
+    (e : Fin (Fintype.card {q : α // q ≠ p}) ≃ {q : α // q ≠ p})
+    (hcard : 2 ≤ Fintype.card {q : α // q ≠ p}) :
+    ncycleToListing (listingPerm_isCycle e hcard) (listingPerm_support_univ e hcard) = e := by
+  ext i
+  rw [ncycleToListing_apply]
+  have hnodup := listing_nodup (p := p) e
+  have hlt' : i.val + 1 < Fintype.card {q : α // q ≠ p} + 1 := Nat.succ_lt_succ i.isLt
+  have hpow := List.formPerm_pow_apply_head p (List.ofFn fun j => (e j).1) hnodup (i.val + 1)
+  delta listingPerm
+  rw [hpow]
+  simp only [List.length_cons, List.length_ofFn, Nat.mod_eq_of_lt hlt',
+    List.getElem_cons_succ, List.getElem_ofFn]
+
+lemma listingPerm_ncycleToListing {α : Type*} [Fintype α] [DecidableEq α] {p : α}
+    {σ : Perm α} (hσ : σ.IsCycle) (hsup : σ.support = univ) :
+    listingPerm (ncycleToListing (p := p) hσ hsup) = σ := by
+  have hp := isCycle_univ_ne hsup p
+  have hlist :
+      (p :: List.ofFn fun i : Fin (Fintype.card {q : α // q ≠ p}) =>
+          (ncycleToListing (p := p) hσ hsup i).1) =
+        Equiv.Perm.toList σ p := by
+    simp_rw [ncycleToListing_apply]
+    exact (toList_eq_cons_ofFn hσ hsup p).symm
+  delta listingPerm
+  rw [hlist, Equiv.Perm.formPerm_toList, hσ.cycleOf_eq hp]
+
+noncomputable def listingEquiv {α : Type*} [Fintype α] [DecidableEq α] (p : α)
+    (hcard : 2 ≤ Fintype.card {q : α // q ≠ p}) :
+    (Fin (Fintype.card {q : α // q ≠ p}) ≃ {q : α // q ≠ p}) ≃
+      {σ : Perm α // σ.IsCycle ∧ σ.support = univ} where
+  toFun e := ⟨listingPerm e, listingPerm_isCycle e hcard, listingPerm_support_univ e hcard⟩
+  invFun σ := ncycleToListing σ.2.1 σ.2.2
+  left_inv e := ncycleToListing_listingPerm e hcard
+  right_inv σ := Subtype.ext (listingPerm_ncycleToListing σ.2.1 σ.2.2)
+
+open scoped Classical in
+lemma ncycle_inv_one_sub_sum {N : ℕ} [NeZero N] {ζ : ℂ}
+    (hζ : IsPrimitiveRoot ζ N) (p : Fin N)
+    (hcard : 2 ≤ Fintype.card {q : Fin N // q ≠ p}) :
+    ∑ σ : {σ : Perm (Fin N) // σ.IsCycle ∧ σ.support = univ},
+      ∏ i : Fin N, (1 - ζ ^ ((σ.1 i).val - i.val : ℤ))⁻¹ = 0 := by
+  rw [← Equiv.sum_comp (listingEquiv p hcard)
+    (fun σ => ∏ i : Fin N, (1 - ζ ^ ((σ.1 i).val - i.val : ℤ))⁻¹)]
+  dsimp only [listingEquiv]
+  exact listing_inv_one_sub_sum hζ p hcard
+
 #check (OeisA1818.conjecture1 :
     ∀ (n : ℕ), 1 ≤ n → ∀ (ζ : ℂ), IsPrimitiveRoot ζ (2 * n) →
       (sunMatrix n ζ).permanent = (a n : ℂ))
@@ -1387,5 +1596,12 @@ lemma listing_support_univ {α : Type*} [Fintype α] [DecidableEq α] {p : α}
 #print axioms cycleEdgeWeight_zeta
 #print axioms listing_isCycle
 #print axioms listing_support_univ
+#print axioms listing_inv_one_sub_sum
+#print axioms cycleEdgeWeight_zeta_univ
+#print axioms ncycleToListingFun_injective
+#print axioms ncycleToListingFun_surjective
+#print axioms ncycleToListing_listingPerm
+#print axioms listingPerm_ncycleToListing
+#print axioms ncycle_inv_one_sub_sum
 
 end A001818C1

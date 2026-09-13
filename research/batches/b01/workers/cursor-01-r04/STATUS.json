@@ -21,7 +21,7 @@
   "novelty_status": "known_mathematics_formalization",
   "mathematical_novelty": "known_mathematics_She_Sun_Xia_2022_Thm1_3_ii",
   "formalization_novelty": "no_prior_exact_public_lean_found_in_checked_sources_audit_incomplete_until_stop",
-  "last_updated_utc": "2026-09-13T04:35:10Z",
+  "last_updated_utc": "2026-09-13T04:51:30Z",
   "proof_declarations": [
     "A001818C1.conjecture1_of_one",
     "A001818C1.zpow_sub_ne_one",
@@ -50,12 +50,21 @@
     "A001818C1.zeta_pow_sub",
     "A001818C1.cycleEdgeWeight_zeta",
     "A001818C1.listing_isCycle",
-    "A001818C1.listing_support_univ"
+    "A001818C1.listing_support_univ",
+    "A001818C1.listingPerm_isCycle",
+    "A001818C1.listingPerm_support_univ",
+    "A001818C1.cycleEdgeWeight_zeta_univ",
+    "A001818C1.listing_inv_one_sub_sum",
+    "A001818C1.ncycleToListingFun_injective",
+    "A001818C1.ncycleToListingFun_surjective",
+    "A001818C1.ncycleToListing_listingPerm",
+    "A001818C1.listingPerm_ncycleToListing",
+    "A001818C1.ncycle_inv_one_sub_sum"
   ],
   "unresolved_gaps": [
-    "General n>=1 C1 identity still open. Have Guo 3.1 listing sum and the identity relating cycleEdgeWeight to (1-ζ^{σi-i})⁻¹. Need vanishing of long-cycle derangement terms, even-size sign cancellation, and per M = per(M-J)."
+    "General n>=1 C1 identity still open. Have Guo 3.1 for N-cycles: the (1-ζ)^{-1} weights of all N-cycles sum to 0. Need vanishing of mixed long-cycle derangement terms, even-size sign cancellation, and per M = per(M-J)."
   ],
-  "next_step": "Use cycleEdgeWeight_zeta and listing_support_univ to vanish n-cycle (1-ζ)^{-1} weights, then even-size sign cancellation so the unsigned derangement sum equals a n / 2^{2n}.",
+  "next_step": "Lift Guo 3.1 to a distinguished cycle of length at least 3 via ofSubtype. Then even-size sign cancellation so the unsigned derangement sum equals a n / 2^{2n}.",
   "self_review": "not a candidate yet; cannot set independently_verified",
   "excluded_from_this_worker": [
     "OeisA1818.conjecture2",
