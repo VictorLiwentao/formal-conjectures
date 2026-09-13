@@ -67,6 +67,7 @@ def main() -> None:
     limit = int(sys.argv[1]) if len(sys.argv) > 1 else 100000
     primes = sieve_primes(limit)
     fails = []
+    fails8 = []
     worst: list[tuple[int, int, int]] = []
     tight_candidates = []
     for q in primes:
@@ -75,6 +76,8 @@ def main() -> None:
         got = first_injector_k(q, q + 2)
         if got is None:
             fails.append(q)
+            if first_injector_k(q, q + 8) is None:
+                fails8.append(q)
             r_next = first_injector_k(q, 50 * q)
             tight = q * (q + 2) + 2
             tight_candidates.append(
@@ -86,6 +89,7 @@ def main() -> None:
     worst.sort(reverse=True)
     print(f"limit={limit}")
     print("window failures k>q+2:", fails)
+    print("window failures k>q+8:", fails8)
     print("worst k:", worst[:15])
     if tight_candidates:
         print("tight p=q(q+2)+2 for failures:", tight_candidates[:20])

@@ -55,6 +55,11 @@ Hence McEachen at `p` is equivalent to `gcd(x (p-3), p-2) > 1`, i.e. some prime 
    - `89 ∣ x n` for `n ≥ 443`.
    - `97 ∣ x n` for `n ≥ 677`.
    - `101 ∣ x n` for `n ≥ 503`.
+   - `107 ∣ x n` for `n ≥ 2459` (`23·107-2 = 2459` prime).
+   - `163 ∣ x n` for `n ≥ 4073` (`25·163-2 = 4073` prime).
+   - `167 ∣ x n` for `n ≥ 2837` (`17·167-2 = 2837` prime).
+   - `179 ∣ x n` for `n ≥ 3041` (`17·179-2 = 3041` prime).
+   - `227 ∣ x n` for `n ≥ 6581` (`29·227-2 = 6581` prime).
    The general form is `conjecture_of_injected` / `conjecture_of_prime_injector` / `conjecture_of_prime_index` / `conjecture_of_five_prime_injector`.
 5. Remaining primes with `lpf(p-2) ≤ 29` (`conjecture_of_minFac_le_twenty_nine`), `lpf(p-2) ≤ 59` or a larger-twin least factor (`conjecture_of_minFac_le_fifty_nine_or_twin`), `lpf(p-2) ≤ 101` or a larger-twin least factor (`conjecture_of_minFac_le_one_hundred_one_or_twin`), and `lpf(p-2) ≤ 107` or a larger-twin least factor (`conjecture_of_minFac_le_one_hundred_seven_or_twin`). The factor `107` enters at index `23·107-2 = 2459`.
 
@@ -95,7 +100,11 @@ The first-entry mechanism is now explicit: `dvd_x_succ_of_dvd_a_add_two`, `not_p
 
 Any injector with `k ≤ q+2` lies in the square window (`k_mul_sub_two_le_square`, `q_dvd_x_square_window_of_k_le`). Remaining McEachen follows if some prime injector of `lpf(p-2)` has `k ≤ q+2` (`conjecture_of_minFac_k_le`). This does not prove existence of such a `k`. For `q ≡ 2 (mod 3)` one has `q ≡ 5 (mod 6)` (`q_mod_six_five`), so `k = q` is an admissible residue; primality of `q²-2` is sufficient (`q_dvd_x_square_window_of_sq_sub_two`) but not necessary. Square-window lemmas for `k = 17,19,23,25,29` are instances of `k ≤ q+2`.
 
-After overlap `q+2 ∣ p-2` is excluded, a remaining least factor `q ≡ 2 (mod 3)` satisfies `p-2 ≥ q(q+8)` (`remaining_minFac_mul_add_eight_le`). First-entry by index `q(q+8)-1` is then enough (`conjecture_of_minFac_entered_add_eight`). An injector with `k ≤ q+8` fills that window (`conjecture_of_minFac_k_le_add_eight`, `conjecture_of_minFac_mod_two_overlap_or_k_le_add_eight`). That extra candidate `k = q+6` does not prove existence.
+The actual McEachen window for a factor `q` of `p-2` is `k ≤ (p-2)/q` (`k_mul_sub_two_le_of_cofactor`, `conjecture_of_factor_k_le_cofactor`, `conjecture_of_exists_factor_injector`). That is the remaining sufficient arithmetic condition. Existence is not proved.
+
+After overlap `q+2 ∣ p-2` is excluded, a remaining least factor `q ≡ 2 (mod 3)` satisfies `p-2 ≥ q(q+8)` (`remaining_minFac_mul_add_eight_le`). First-entry by index `q(q+8)-1` is then enough (`conjecture_of_minFac_entered_add_eight`). An injector with `k ≤ q+8` fills that window (`conjecture_of_minFac_k_le_add_eight`, `conjecture_of_minFac_mod_two_overlap_or_k_le_add_eight`). The extra candidate `k = q+6` is packaged as `q_dvd_x_add_eight_window_of_add_six`; `k = q` is `q_dvd_x_add_eight_window_of_sq_sub_two`. Primality of those values is not proved.
+
+First-entry of leftover least factors `163` (`k=25`, index `4073`), `167` (`k=17`, index `2837`), `179` (`k=17`, index `3041`) and `227` (`k=29`, index `6581`) is proved, and remaining McEachen follows for those least factors (`conjecture_of_minFac_one_hundred_sixty_three` and companions). That is not `∀p`.
 
 McEachen also holds if some prime `q ≡ 2 (mod 3)` with `q ≤ p-3` satisfies `gcd(q+2, p-2) > 1` (`conjecture_of_add_two_overlap`, `conjecture_of_remaining_add_two_overlap`). Then a factor of `q+2` already divides `x q` and divides `p-2`. Among leftover primes `p < 200000` this overlap is rare (5 of 466). It is a proper subfamily.
 
@@ -109,7 +118,7 @@ would finish McEachen for a factor `q ≡ 2 (mod 3)`. Even `k` makes `kq-2` even
 
 Composite injection is also available: if `gcd(x(kq-3), kq-2)=1`, then `q` enters even when `kq-2` is composite (`q_dvd_x_of_coprime_shift`). When `kq-2` is prime the gcd is 1 by the mod-3 theorem. A scan of first entries for primes `11 ≤ q ≤ 4000` up to `n = 30000` found **no** composite `kq-2` first entries: every recorded first entry was a prime injector. That scan is not a proof, but it indicates that composites in the window do not remove the Linnik barrier.
 
-Deterministic experiments (`injector_bound.py`, `injector_mod.py`, `first_entry_shape.py`, `injector_window.py`, `window_miller.py`, `paired_injectors.py`, `leftover_injectors.py`): for every prime `q ≡ 2 (mod 3)` with `11 ≤ q ≤ 30000`, a `k ≡ 5 (mod 6)` injector exists with `k ≤ q+2` (trial division). Miller–Rabin to `q ≤ 1000000` found **no** window failures; the worst first `k` was `257` at `q = 40973`. No McEachen failure and no composite `a(n)` to `n = 80000`. For `n ≥ 3`, no `a(n)` was divisible by `3`; the only index with `v_3(n+1) > v_3(x n)` was `n = 2`. For leftover remaining primes `p < 200000` (466 such primes), **every** prime has some factor `r` of `p-2` with an admissible prime injector `k ≤ (p-2)/r`. There is no McEachen-window gap in that range. The 5/7 pairing covers 332 of them; `k ∈ {5,11,17,23}` and `{7,13,19,25}` covers 463; the three misses are `(54709, 227, 241)`, `(136429, 227, 601)`, `(166393, 227, 733)`, all with first injector `k=29` at `q=227`. Finite checks are not a resolution.
+Deterministic experiments (`injector_bound.py`, `injector_mod.py`, `first_entry_shape.py`, `injector_window.py`, `window_miller.py`, `paired_injectors.py`, `leftover_injectors.py`, `chebyshev_gap.py`): for every prime `q ≡ 2 (mod 3)` with `11 ≤ q ≤ 30000`, a `k ≡ 5 (mod 6)` injector exists with `k ≤ q+2` (trial division). Miller–Rabin to `q ≤ 2000000` found **no** square-window or add-eight-window failures; the worst first `k` in that range was `311` at `q = 1944791`. An exact factorization scan to `n = 40000` found no McEachen failure (`3612` checked). For leftover remaining primes `p < 400000` (1077 such primes), **every** prime has some factor `r` of `p-2` with an admissible prime injector `k ≤ (p-2)/r`. There is no McEachen-window gap in that range. New leftover least factors above `227` include `251` (`k=35`) and `389` (`k=29`). Finite checks are not a resolution.
 
 Cloitre’s route (assume `C₁`, then Theorem 6.2) is recorded as the implication `conjecture_of_C1`. `C₁` is stronger than McEachen and remains open.
 
@@ -133,6 +142,9 @@ Proved: `v2(gcd)`, `v2(a n)`, `v2(x(n+1))`, odd-increment stability, dyadic bloc
 - Treating `conjecture_of_minFac_k_le` as a `∀p` proof. It needs a prime injector with `k ≤ q+2`.
 - Treating `conjecture_of_minFac_k_le_add_eight` as a `∀p` proof. It needs a prime injector with `k ≤ q+8` after overlap is excluded.
 - Treating `a 12 = 1`, `a 13 = 7`, `a 14 = 1`, or the 3-adic lifts `59049` and `531441` as remaining McEachen.
+- Using Mathlib Chebyshev `θ(x) ≤ (log 4) x` on the product of leftover candidates `kq-2`. The resulting smoothness contradiction does not close at leftover `q ≥ 113` (`chebyshev_gap.py`).
+- Treating first-entry of `163`, `167`, `179`, `227` as a `∀p` proof. Those are explicit leftover minFac families.
+- Treating `conjecture_of_factor_k_le_cofactor` / `conjecture_of_exists_factor_injector` as a `∀p` proof. They need an in-window injector for some factor of `p-2`.
 
 ## Status
 

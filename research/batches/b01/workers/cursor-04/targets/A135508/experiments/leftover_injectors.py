@@ -11,6 +11,7 @@ candidate would need no such k for any prime factor of p-2.
 
 from __future__ import annotations
 
+import sys
 from math import isqrt
 
 
@@ -102,7 +103,7 @@ def covered_by_k(p: int, facs: list[int], k_mod2: list[int], k_mod1: list[int]) 
 
 
 def main() -> None:
-    n = 200000
+    n = int(sys.argv[1]) if len(sys.argv) > 1 else 200000
     sp = sieve(n + 10)
     primes = [i for i in range(2, n + 10) if sp[i]]
     leftover: list[tuple[int, int, int, list[int]]] = []
@@ -165,17 +166,25 @@ def main() -> None:
         for row in uncovered[:20]:
             print(row)
 
+    qlim = min(n, 200000)
     fails = []
+    fails8 = []
     worst = (0, 0, 0)
     for q in primes:
-        if q < 5 or q >= 50000:
+        if q < 5 or q >= qlim:
+            continue
+        if q % 3 != 2:
             continue
         found = first_injector(q, q + 2)
         if found is None:
             fails.append(q)
+            found8 = first_injector(q, q + 8)
+            if found8 is None:
+                fails8.append(q)
         elif found[0] > worst[0]:
             worst = (found[0], q, found[1])
-    print("square-window failures for primes q < 50000:", fails)
+    print(f"square-window failures for leftover-class primes q < {qlim}:", fails)
+    print(f"add-eight-window failures for leftover-class primes q < {qlim}:", fails8)
     print("worst first k in that range:", worst)
 
 

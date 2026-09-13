@@ -30,6 +30,9 @@ python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/windo
 python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/cofactor_seven.py
 python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/paired_injectors.py
 python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/leftover_injectors.py
+python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/leftover_injectors.py 400000
+python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/window_miller.py 2000000
+python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/chebyshev_gap.py
 ```
 
 No `lake clean`, `lake update`, or full default `lake build`.
@@ -103,11 +106,12 @@ not_prime_dvd_x_succ / prime_dvd_a_add_two_of_first_entry / a_12 / a_13 / not_se
 a_14 : propext, Quot.sound
 remaining_minFac_mul_add_eight_le / conjecture_of_minFac_entered_add_eight / q_dvd_x_add_eight_window_of_k_le / conjecture_of_minFac_k_le_add_eight / conjecture_of_minFac_mod_two_overlap_or_k_le_add_eight : propext, Classical.choice, Quot.sound
 k_mul_sub_two_le_add_eight : propext
+one_hundred_sixty_three_dvd_x_4073 / conjecture_of_one_hundred_sixty_three_dvd / one_hundred_sixty_seven_dvd_x_2837 / conjecture_of_one_hundred_sixty_seven_dvd / one_hundred_seventy_nine_dvd_x_3041 / conjecture_of_one_hundred_seventy_nine_dvd / two_hundred_twenty_seven_dvd_x_6581 / conjecture_of_two_hundred_twenty_seven_dvd : propext, Classical.choice, Quot.sound
+k_mul_sub_two_le_of_cofactor : propext
+conjecture_of_factor_k_le_cofactor / conjecture_of_exists_factor_injector / q_dvd_x_add_eight_window_of_sq_sub_two / q_dvd_x_add_eight_window_of_add_six / remaining_p_ge_one_hundred_sixty_three / conjecture_of_minFac_one_hundred_sixty_three / remaining_p_ge_one_hundred_sixty_seven / conjecture_of_minFac_one_hundred_sixty_seven / remaining_p_ge_one_hundred_seventy_nine / conjecture_of_minFac_one_hundred_seventy_nine / remaining_p_ge_two_hundred_twenty_seven / conjecture_of_minFac_two_hundred_twenty_seven : propext, Classical.choice, Quot.sound
 ```
 
-No `sorryAx`, `native_decide`, or `Lean.trustCompiler` on these declarations. `Classical.choice` enters through `Nat.find` in `exists_least_dvd` and through Mathlib `decide` instances. Full log: `experiments/a135508_axioms.log`. Recompiled 2026-09-13T04:47Z.
-
-No `sorryAx`, `native_decide`, or `Lean.trustCompiler` on these declarations. `Classical.choice` enters through `Nat.find` in `exists_least_dvd` and through Mathlib `decide` instances. Full log: `experiments/a135508_axioms.log`.
+No `sorryAx`, `native_decide`, or `Lean.trustCompiler` on these declarations. `Classical.choice` enters through `Nat.find` in `exists_least_dvd` and through Mathlib `decide` instances. Full log: `experiments/a135508_axioms.log`. Recompiled 2026-09-13T05:20Z.
 
 ## Formalization audit (summary)
 

@@ -31,7 +31,8 @@ They also prove Cloitre's 2-adic staircase `a(2 · 4^k - 1) = 2`, the
 remaining-class factor `q ≡ 2 (mod 3)` of `p-2`, injection of a factor of
 `p-2` when some `kq-2` is a prime `≡ 2 (mod 3)`, McEachen when a factor of
 `p-2` is a larger twin, Cloitre's valuation barrier, remaining McEachen
-when `lpf(p-2) ≤ 107` or that least factor is a larger twin, Dirichlet
+when `lpf(p-2) ≤ 107` or that least factor is a larger twin, first-entry of
+`163`, `167`, `179` and `227` at the recorded injector indices, Dirichlet
 existence of some (unbounded) prime injector for every prime `q ≥ 5`,
 that `3 ∣ a n` for `n ≥ 3` forces `9 ∣ n+1`, that `3 ∣ a n` for `n ≥ 6`
 forces `81 ∣ n+1`, that `3 ∣ a n` for `n ≥ 7` forces `729 ∣ n+1`, that
@@ -43,9 +44,12 @@ that `3 ∣ a n` for `n ≥ 13` forces `59049 ∣ n+1`, that `3 ∣ a n` for
 `gcd(q+2, p-2) > 1` for a prime `q ≡ 2 (mod 3)`, Cloitre Corollary 6.6 as an
 implication from `C₁`, remaining McEachen if a first aligned injector of
 `lpf(p-2)` or of a complementary cofactor is prime, remaining McEachen if
-some prime injector of `lpf(p-2)` has `k ≤ q+2`, and that the frozen
-statement follows from first-entry of every prime `q ≥ 5` by the
-square-window index `q(q+2)-1`. Existence of such a `k ≤ q+2` is not proved.
+some prime injector of `lpf(p-2)` has `k ≤ q+2`, remaining McEachen if
+some prime factor of `p-2` has an injector with `k ≤ (p-2)/q`, leftover
+polynomial candidates `k = q` and `k = q+6` in the add-eight window, and
+that the frozen statement follows from first-entry of every prime
+`q ≥ 5` by the square-window index `q(q+2)-1`. Existence of such a
+`k ≤ q+2` is not proved.
 -/
 
 namespace OeisA135508
@@ -1960,6 +1964,54 @@ theorem conjecture_of_one_hundred_seven_dvd {p : ℕ} (hp : p.Prime)
   conjecture_of_factor_dvd_x hp (by omega) (by decide : 1 < 107) h107
     (one_hundred_seven_dvd_x (by omega : 2459 ≤ p - 3))
 
+lemma one_hundred_sixty_three_dvd_x_4073 : 163 ∣ x 4073 :=
+  q_dvd_x_of_prime_index (k := 25) (q := 163)
+    (by norm_num) (by decide) (by decide)
+
+lemma one_hundred_sixty_three_dvd_x {n : ℕ} (hn : 4073 ≤ n) : 163 ∣ x n :=
+  one_hundred_sixty_three_dvd_x_4073.trans (x_dvd_of_le (by decide : 0 < 4073) hn)
+
+theorem conjecture_of_one_hundred_sixty_three_dvd {p : ℕ} (hp : p.Prime)
+    (hp4076 : 4076 ≤ p) (h163 : 163 ∣ p - 2) : a (p - 1) = p :=
+  conjecture_of_factor_dvd_x hp (by omega) (by decide : 1 < 163) h163
+    (one_hundred_sixty_three_dvd_x (by omega : 4073 ≤ p - 3))
+
+lemma one_hundred_sixty_seven_dvd_x_2837 : 167 ∣ x 2837 :=
+  q_dvd_x_of_prime_index (k := 17) (q := 167)
+    (by norm_num) (by decide) (by decide)
+
+lemma one_hundred_sixty_seven_dvd_x {n : ℕ} (hn : 2837 ≤ n) : 167 ∣ x n :=
+  one_hundred_sixty_seven_dvd_x_2837.trans (x_dvd_of_le (by decide : 0 < 2837) hn)
+
+theorem conjecture_of_one_hundred_sixty_seven_dvd {p : ℕ} (hp : p.Prime)
+    (hp2840 : 2840 ≤ p) (h167 : 167 ∣ p - 2) : a (p - 1) = p :=
+  conjecture_of_factor_dvd_x hp (by omega) (by decide : 1 < 167) h167
+    (one_hundred_sixty_seven_dvd_x (by omega : 2837 ≤ p - 3))
+
+lemma one_hundred_seventy_nine_dvd_x_3041 : 179 ∣ x 3041 :=
+  q_dvd_x_of_prime_index (k := 17) (q := 179)
+    (by norm_num) (by decide) (by decide)
+
+lemma one_hundred_seventy_nine_dvd_x {n : ℕ} (hn : 3041 ≤ n) : 179 ∣ x n :=
+  one_hundred_seventy_nine_dvd_x_3041.trans (x_dvd_of_le (by decide : 0 < 3041) hn)
+
+theorem conjecture_of_one_hundred_seventy_nine_dvd {p : ℕ} (hp : p.Prime)
+    (hp3044 : 3044 ≤ p) (h179 : 179 ∣ p - 2) : a (p - 1) = p :=
+  conjecture_of_factor_dvd_x hp (by omega) (by decide : 1 < 179) h179
+    (one_hundred_seventy_nine_dvd_x (by omega : 3041 ≤ p - 3))
+
+lemma two_hundred_twenty_seven_dvd_x_6581 : 227 ∣ x 6581 :=
+  q_dvd_x_of_prime_index (k := 29) (q := 227)
+    (by norm_num) (by decide) (by decide)
+
+lemma two_hundred_twenty_seven_dvd_x {n : ℕ} (hn : 6581 ≤ n) : 227 ∣ x n :=
+  two_hundred_twenty_seven_dvd_x_6581.trans (x_dvd_of_le (by decide : 0 < 6581) hn)
+
+theorem conjecture_of_two_hundred_twenty_seven_dvd {p : ℕ} (hp : p.Prime)
+    (hp6584 : 6584 ≤ p) (h227 : 227 ∣ p - 2) : a (p - 1) = p :=
+  conjecture_of_factor_dvd_x hp (by omega) (by decide : 1 < 227) h227
+    (two_hundred_twenty_seven_dvd_x (by omega : 6581 ≤ p - 3))
+
 lemma remaining_minFac_ge_five {p : ℕ} (hp : p.Prime) (hp7 : 7 ≤ p)
     (hmod : p % 3 = 1) : 5 ≤ Nat.minFac (p - 2) := by
   have hn : 1 < p - 2 := by omega
@@ -2137,6 +2189,169 @@ theorem conjecture_of_minFac_mod_two_overlap_or_k_le_add_eight {p k : ℕ}
       (Nat.minFac_dvd _) hqmod h7q hgt
   · exact conjecture_of_minFac_k_le_add_eight hp hp7 hmod hcomp hqmod hov
       hpr h7r hrmod hk
+
+/-- If `q ∣ p-2` and `k ≤ (p-2)/q`, then the injector index `kq-2` is at
+most `p-3`. This is the actual McEachen window for that factor. -/
+lemma k_mul_sub_two_le_of_cofactor {p q k : ℕ}
+    (hd : q ∣ p - 2) (_hq : 0 < q) (_hp2 : 2 ≤ p) (hk : k ≤ (p - 2) / q)
+    (_h2 : 2 ≤ k * q) : k * q - 2 ≤ p - 3 := by
+  have hmul : k * q ≤ ((p - 2) / q) * q := Nat.mul_le_mul_right q hk
+  have hcancel : ((p - 2) / q) * q = p - 2 := by
+    rw [Nat.mul_comm]
+    exact Nat.mul_div_cancel' hd
+  have hle : k * q ≤ p - 2 := by rwa [hcancel] at hmul
+  have h1 : k * q - 2 ≤ p - 2 - 2 := Nat.sub_le_sub_right hle 2
+  have hsub : p - 2 - 2 = p - 4 := Nat.sub_sub p 2 2
+  have h34 : p - 4 ≤ p - 3 := Nat.sub_le_sub_left (by decide : 3 ≤ 4) p
+  exact (hsub ▸ h1).trans h34
+
+/-- McEachen at `p` if some prime factor `q` of `p-2` has a prime injector
+with `k ≤ (p-2)/q`. Existence of such a pair is not proved. -/
+theorem conjecture_of_factor_k_le_cofactor {p q k : ℕ}
+    (hp : p.Prime) (hp5 : 5 ≤ p) (hq1 : 1 < q) (hqp : q ∣ p - 2)
+    (hpr : (k * q - 2).Prime) (h7 : 7 ≤ k * q - 2)
+    (hmod : (k * q - 2) % 3 = 2) (hk : k ≤ (p - 2) / q) :
+    a (p - 1) = p := by
+  have hqpos : 0 < q := Nat.zero_lt_of_lt hq1
+  have hp2 : 2 ≤ p := le_trans (by decide : 2 ≤ 5) hp5
+  have h2 : 2 ≤ k * q :=
+    (le_trans (by decide : 2 ≤ 7) h7).trans (Nat.sub_le (k * q) 2)
+  have hle := k_mul_sub_two_le_of_cofactor hqp hqpos hp2 hk h2
+  exact conjecture_of_prime_index hp hp5 hpr h7 hmod hle hqp hq1
+
+/-- McEachen at `p` if some prime factor of `p-2` has an in-window injector.
+This is the remaining sufficient arithmetic condition. Existence is not
+proved. -/
+theorem conjecture_of_exists_factor_injector {p : ℕ} (hp : p.Prime)
+    (hp5 : 5 ≤ p)
+    (hex : ∃ q k, 1 < q ∧ q ∣ p - 2 ∧ (k * q - 2).Prime ∧
+      7 ≤ k * q - 2 ∧ (k * q - 2) % 3 = 2 ∧ k ≤ (p - 2) / q) :
+    a (p - 1) = p := by
+  rcases hex with ⟨q, k, hq1, hqp, hpr, h7, hmod, hk⟩
+  exact conjecture_of_factor_k_le_cofactor hp hp5 hq1 hqp hpr h7 hmod hk
+
+/-- `k = q` always lies in the leftover add-eight window. Primality of
+`q²-2` is not proved. -/
+lemma q_dvd_x_add_eight_window_of_sq_sub_two {q : ℕ}
+    (hpr : (q * q - 2).Prime) (h7 : 7 ≤ q) (hmodq : q % 3 = 2) :
+    q ∣ x (q * (q + 8) - 1) := by
+  have h7r : 7 ≤ q * q - 2 := by
+    have : 49 ≤ q * q := Nat.mul_le_mul h7 h7
+    exact le_trans (by decide : 7 ≤ 47) (Nat.sub_le_sub_right this 2)
+  have h4 : 4 ≤ q * q :=
+    le_trans (by decide : 4 ≤ 49) (Nat.mul_le_mul h7 h7)
+  have hmod : (q * q - 2) % 3 = 2 :=
+    mul_sub_two_mod_three hmodq hmodq h4
+  exact q_dvd_x_add_eight_window_of_k_le hpr h7r hmod (Nat.le_add_right q 8)
+
+/-- `k = q+6` is the extra leftover candidate after overlap is excluded.
+It is admissible for `q ≡ 2 (mod 3)`. Primality of `q(q+6)-2` is not
+proved. -/
+lemma q_dvd_x_add_eight_window_of_add_six {q : ℕ}
+    (hpr : ((q + 6) * q - 2).Prime) (h7 : 7 ≤ q) (hmodq : q % 3 = 2) :
+    q ∣ x (q * (q + 8) - 1) := by
+  have hk : q + 6 ≤ q + 8 := Nat.add_le_add_left (by decide : 6 ≤ 8) q
+  have h7r : 7 ≤ (q + 6) * q - 2 := by
+    have hmul : 7 * 7 ≤ (q + 6) * q :=
+      Nat.mul_le_mul (Nat.le_trans h7 (Nat.le_add_right q 6)) h7
+    exact le_trans (by decide : 7 ≤ 47) (Nat.sub_le_sub_right hmul 2)
+  have h4 : 4 ≤ (q + 6) * q := by
+    have : 7 * 7 ≤ (q + 6) * q :=
+      Nat.mul_le_mul (Nat.le_trans h7 (Nat.le_add_right q 6)) h7
+    exact le_trans (by decide : 4 ≤ 49) this
+  have hk3 : (q + 6) % 3 = 2 := by
+    have hadd : (q + 6) % 3 = (q % 3 + 6 % 3) % 3 := Nat.add_mod q 6 3
+    have h6 : (6 : ℕ) % 3 = 0 := by decide
+    have hzero : (q % 3 + 0) % 3 = q % 3 := by
+      rw [Nat.add_zero, Nat.mod_mod]
+    rw [hadd, h6, hzero, hmodq]
+  have hmod : ((q + 6) * q - 2) % 3 = 2 :=
+    mul_sub_two_mod_three hk3 hmodq h4
+  exact q_dvd_x_add_eight_window_of_k_le hpr h7r hmod hk
+
+lemma remaining_p_ge_one_hundred_sixty_three {p : ℕ}
+    (hp : p.Prime) (hp7 : 7 ≤ p) (hmod : p % 3 = 1)
+    (hcomp : ¬ (p - 2).Prime)
+    (h163 : Nat.minFac (p - 2) = 163) : 4076 ≤ p := by
+  have hbound := remaining_minFac_mul_add_two_le hp hp7 hmod hcomp
+  rw [h163] at hbound
+  have h2le : 2 ≤ p := le_trans (by decide : 2 ≤ 7) hp7
+  have hnum : 163 * (163 + 2) + 2 = 26897 := by decide
+  have : 163 * (163 + 2) + 2 ≤ p - 2 + 2 := Nat.add_le_add_right hbound 2
+  rw [hnum, Nat.sub_add_cancel h2le] at this
+  exact le_trans (by decide : 4076 ≤ 26897) this
+
+/-- Remaining McEachen if `lpf(p-2) = 163`. The injector is `k = 25`. -/
+theorem conjecture_of_minFac_one_hundred_sixty_three {p : ℕ}
+    (hp : p.Prime) (hp7 : 7 ≤ p) (hmod : p % 3 = 1)
+    (hcomp : ¬ (p - 2).Prime)
+    (h163 : Nat.minFac (p - 2) = 163) : a (p - 1) = p :=
+  conjecture_of_one_hundred_sixty_three_dvd hp
+    (remaining_p_ge_one_hundred_sixty_three hp hp7 hmod hcomp h163)
+    (h163 ▸ Nat.minFac_dvd (p - 2))
+
+lemma remaining_p_ge_one_hundred_sixty_seven {p : ℕ}
+    (hp : p.Prime) (hp7 : 7 ≤ p) (hmod : p % 3 = 1)
+    (hcomp : ¬ (p - 2).Prime)
+    (h167 : Nat.minFac (p - 2) = 167) : 2840 ≤ p := by
+  have hbound := remaining_minFac_mul_add_two_le hp hp7 hmod hcomp
+  rw [h167] at hbound
+  have h2le : 2 ≤ p := le_trans (by decide : 2 ≤ 7) hp7
+  have hnum : 167 * (167 + 2) + 2 = 28225 := by decide
+  have : 167 * (167 + 2) + 2 ≤ p - 2 + 2 := Nat.add_le_add_right hbound 2
+  rw [hnum, Nat.sub_add_cancel h2le] at this
+  exact le_trans (by decide : 2840 ≤ 28225) this
+
+/-- Remaining McEachen if `lpf(p-2) = 167`. The injector is `k = 17`. -/
+theorem conjecture_of_minFac_one_hundred_sixty_seven {p : ℕ}
+    (hp : p.Prime) (hp7 : 7 ≤ p) (hmod : p % 3 = 1)
+    (hcomp : ¬ (p - 2).Prime)
+    (h167 : Nat.minFac (p - 2) = 167) : a (p - 1) = p :=
+  conjecture_of_one_hundred_sixty_seven_dvd hp
+    (remaining_p_ge_one_hundred_sixty_seven hp hp7 hmod hcomp h167)
+    (h167 ▸ Nat.minFac_dvd (p - 2))
+
+lemma remaining_p_ge_one_hundred_seventy_nine {p : ℕ}
+    (hp : p.Prime) (hp7 : 7 ≤ p) (hmod : p % 3 = 1)
+    (hcomp : ¬ (p - 2).Prime)
+    (h179 : Nat.minFac (p - 2) = 179) : 3044 ≤ p := by
+  have hbound := remaining_minFac_mul_add_two_le hp hp7 hmod hcomp
+  rw [h179] at hbound
+  have h2le : 2 ≤ p := le_trans (by decide : 2 ≤ 7) hp7
+  have hnum : 179 * (179 + 2) + 2 = 32401 := by decide
+  have : 179 * (179 + 2) + 2 ≤ p - 2 + 2 := Nat.add_le_add_right hbound 2
+  rw [hnum, Nat.sub_add_cancel h2le] at this
+  exact le_trans (by decide : 3044 ≤ 32401) this
+
+/-- Remaining McEachen if `lpf(p-2) = 179`. The injector is `k = 17`. -/
+theorem conjecture_of_minFac_one_hundred_seventy_nine {p : ℕ}
+    (hp : p.Prime) (hp7 : 7 ≤ p) (hmod : p % 3 = 1)
+    (hcomp : ¬ (p - 2).Prime)
+    (h179 : Nat.minFac (p - 2) = 179) : a (p - 1) = p :=
+  conjecture_of_one_hundred_seventy_nine_dvd hp
+    (remaining_p_ge_one_hundred_seventy_nine hp hp7 hmod hcomp h179)
+    (h179 ▸ Nat.minFac_dvd (p - 2))
+
+lemma remaining_p_ge_two_hundred_twenty_seven {p : ℕ}
+    (hp : p.Prime) (hp7 : 7 ≤ p) (hmod : p % 3 = 1)
+    (hcomp : ¬ (p - 2).Prime)
+    (h227 : Nat.minFac (p - 2) = 227) : 6584 ≤ p := by
+  have hbound := remaining_minFac_mul_add_two_le hp hp7 hmod hcomp
+  rw [h227] at hbound
+  have h2le : 2 ≤ p := le_trans (by decide : 2 ≤ 7) hp7
+  have hnum : 227 * (227 + 2) + 2 = 51985 := by decide
+  have : 227 * (227 + 2) + 2 ≤ p - 2 + 2 := Nat.add_le_add_right hbound 2
+  rw [hnum, Nat.sub_add_cancel h2le] at this
+  exact le_trans (by decide : 6584 ≤ 51985) this
+
+/-- Remaining McEachen if `lpf(p-2) = 227`. The injector is `k = 29`. -/
+theorem conjecture_of_minFac_two_hundred_twenty_seven {p : ℕ}
+    (hp : p.Prime) (hp7 : 7 ≤ p) (hmod : p % 3 = 1)
+    (hcomp : ¬ (p - 2).Prime)
+    (h227 : Nat.minFac (p - 2) = 227) : a (p - 1) = p :=
+  conjecture_of_two_hundred_twenty_seven_dvd hp
+    (remaining_p_ge_two_hundred_twenty_seven hp hp7 hmod hcomp h227)
+    (h227 ▸ Nat.minFac_dvd (p - 2))
 
 /-- Remaining McEachen if `5·lpf(p-2)-2` is prime. For `lpf ≡ 2 (mod 3)`
 this is the first remaining injector and always fits in the square window.
@@ -3761,5 +3976,26 @@ lemma v2_x_two_four_pow_pred (k : ℕ) :
 #print axioms q_dvd_x_add_eight_window_of_k_le
 #print axioms conjecture_of_minFac_k_le_add_eight
 #print axioms conjecture_of_minFac_mod_two_overlap_or_k_le_add_eight
+#print axioms one_hundred_sixty_three_dvd_x_4073
+#print axioms conjecture_of_one_hundred_sixty_three_dvd
+#print axioms one_hundred_sixty_seven_dvd_x_2837
+#print axioms conjecture_of_one_hundred_sixty_seven_dvd
+#print axioms one_hundred_seventy_nine_dvd_x_3041
+#print axioms conjecture_of_one_hundred_seventy_nine_dvd
+#print axioms two_hundred_twenty_seven_dvd_x_6581
+#print axioms conjecture_of_two_hundred_twenty_seven_dvd
+#print axioms k_mul_sub_two_le_of_cofactor
+#print axioms conjecture_of_factor_k_le_cofactor
+#print axioms conjecture_of_exists_factor_injector
+#print axioms q_dvd_x_add_eight_window_of_sq_sub_two
+#print axioms q_dvd_x_add_eight_window_of_add_six
+#print axioms remaining_p_ge_one_hundred_sixty_three
+#print axioms conjecture_of_minFac_one_hundred_sixty_three
+#print axioms remaining_p_ge_one_hundred_sixty_seven
+#print axioms conjecture_of_minFac_one_hundred_sixty_seven
+#print axioms remaining_p_ge_one_hundred_seventy_nine
+#print axioms conjecture_of_minFac_one_hundred_seventy_nine
+#print axioms remaining_p_ge_two_hundred_twenty_seven
+#print axioms conjecture_of_minFac_two_hundred_twenty_seven
 
 end OeisA135508
