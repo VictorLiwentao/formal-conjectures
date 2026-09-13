@@ -11,7 +11,7 @@
   "novelty_status": "no_exact_public_solution_found_in_checked_sources",
   "statement_audit": "matches_intended_mceachen_statement",
   "oeis_editability": "unknown",
-  "last_updated_utc": "2026-09-13T07:07:00Z",
+  "last_updated_utc": "2026-09-13T07:12:00Z",
   "session_kickoff_utc": "2026-09-12T23:12:00Z",
   "session_hard_stop_utc": "2026-09-13T07:12:00Z",
   "proof_declarations": [
@@ -289,6 +289,6 @@
     "Dirichlet, Linnik L=5, and the usual GRH bound do not give r ≤ q(q+2)-1. Finite injector checks are not a proof.",
     "Cloitre C1 and Cor. 6.6 are not an unconditional solution."
   ],
-  "next_step": "Prove an unconditional first-entry bound q | x(q(q+2)-1) for remaining primes q ≥ 263 not in the explicit families, or find a Lean-checkable counterexample. Complementary k≡1 (mod 6) and Type B k≤q^2 still need a prime in the AP. Extending minFac does not finish ∀p. Session hard stop is 2026-09-13 07:12 UTC. Do not claim completion.",
+  "next_step": "Session hard stop 2026-09-13 07:12 UTC reached with the frozen type unproved. Remaining work is an unconditional first-entry bound q | x(q(q+2)-1) for leftover q ≥ 263, or a Lean-checkable counterexample. Complementary Type A injectors and Type B k≤q^2 still need a prime in an AP. Extending minFac does not finish ∀p. Do not claim completion.",
   "handoff_research_commit": "7d4e6154"
 }
