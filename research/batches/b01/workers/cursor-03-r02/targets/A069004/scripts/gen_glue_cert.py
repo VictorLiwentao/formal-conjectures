@@ -81,7 +81,7 @@ def main() -> None:
         "theorem hflat : okChain 512720 0 chunks.flatten = true :=\n"
         "  okChunks_flatten 512720 chunks 0 hchunks\n\n"
         "theorem hlen : chunks.flatten.length = 42494 := by\n"
-        f"  simp [chunks, List.length_flatten, {hlen_names}]\n"
+        f"  simp [chunks, {hlen_names}]\n"
     )
     (ROOT / "GlueCert.lean").write_text("\n".join(parts))
     print("wrote GlueCert.lean", n, "chunks")
