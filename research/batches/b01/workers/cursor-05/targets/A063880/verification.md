@@ -28,11 +28,11 @@ Command:
 LEAN_NUM_THREADS=2 lake env lean -DwarningAsError=true research/batches/b01/workers/cursor-05/targets/A063880/A063880.lean
 ```
 
-Result on 2026-09-13T03:08Z: exit code 0, no warnings, no `sorry` declaration in this file.
+Result on 2026-09-13T03:20Z: exit code 0, no warnings, no `sorry` declaration in this file.
 
 This is **not** a compile of the frozen theorems. The frozen `sorry` theorems in `FormalConjectures/OEIS/63880.lean` were not used as proof steps.
 
-New lemmas compiled in this checkpoint include `not_seven_sigma_of_three_sq_primes_five_eleven`, `not_seven_sigma_of_three_sq_primes_five_thirteen`, `not_seven_sigma_of_three_sq_primes_five_seventeen`, `not_seven_sigma_of_three_sq_primes_five_large`, and `not_seven_sigma_of_three_sq_primes_five`. Together with `not_seven_sigma_of_three_sq_primes_ge_seven` and `not_seven_sigma_of_three_sq_primes_five_seven`, leftover `10/7` is closed at ω=3. Previous leftover `6/5` and leftover `10/7` family lemmas remain.
+New lemmas compiled in this checkpoint include `five_sigma_eq_six_of_three_squareful`, `not_five_sigma_of_three_sq_primes_eleven_thirteen_small`, `not_five_sigma_of_three_sq_primes_eleven_seventeen_small`, and `not_five_sigma_of_three_sq_primes_eleven_seventeen_large`. Leftover `10/7` remains closed at ω=3. Previous leftover `6/5` and leftover `10/7` family lemmas remain.
 
 No `#print axioms` audit of a completed target theorem exists, because those theorems are not proved.
 
