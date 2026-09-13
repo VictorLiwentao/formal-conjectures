@@ -2,9 +2,9 @@
   "automation_id": "maintain-seven-cursor-math-workers",
   "interval_minutes": 15,
   "target_cursor_slots": 7,
-  "updated_at_utc": "2026-09-13T00:55:35.680645+00:00",
+  "updated_at_utc": "2026-09-13T01:20:54.130080+00:00",
   "accept_known_informal_proofs_for_new_lean_formalization": true,
-  "note": "Seven active goals verified in authenticated Cursor browser this heartbeat. All workers show ongoing proof or experiment activity; no stopped worker, exact completion, replacement or user action needed. Prior concern about cursor-03-r02 limited visible progress is resolved by new certificate compilation and pushed checkpoint.",
+  "note": "Replacement in progress: six OEIS goals active; non-OEIS predecessor stopped after independent result/prior-proof audit; WOWII101 reserved, launch pending.",
   "slots": [
     {
       "slot": "cursor-01",
@@ -124,15 +124,26 @@
     },
     {
       "slot": "cursor-07",
-      "run_id": "cursor-07",
-      "agent_url": "https://cursor.com/agents/bc-c4e9245b-94f8-4ba9-a87c-6eb5b962ca94",
-      "state": "researching",
-      "actual_branch": "cursor/b01-cursor-07-ca94",
+      "run_id": "cursor-07-r02",
+      "agent_url": null,
+      "state": "reserved_for_replacement",
+      "actual_branch": null,
       "replacements": [],
       "last_checked_at_utc": "2026-09-13T00:55:35.680645+00:00",
-      "progress_note": "Goal active with Stop control; worker reports Chung helper lemmas compile and is developing shortened-path construction and inductive WOWII31 theorem. Known mathematics formalization; no exact completion claimed.",
-      "goal_active_verified": true,
-      "goal_verified_at_utc": "2026-09-13T00:55:35.680645+00:00"
+      "progress_note": "WOWII31 retired: candidate and earlier exact public Lean proof independently compiled. Old worker goal/timers stopped, credits corrected. WOWII101 successor reserved and prompt prepared; launch pending.",
+      "goal_active_verified": false,
+      "goal_verified_at_utc": "2026-09-13T00:55:35.680645+00:00",
+      "history": [
+        {
+          "run_id": "cursor-07",
+          "agent_url": "https://cursor.com/agents/bc-c4e9245b-94f8-4ba9-a87c-6eb5b962ca94",
+          "actual_branch": "cursor/b01-cursor-07-ca94",
+          "retired_at_utc": "2026-09-13T01:20:54.130080+00:00",
+          "result": "candidate_and_prior_public_lean_independently_verified",
+          "audit": "research/batches/b01/control/audits/cursor-07.md"
+        }
+      ],
+      "predecessor": "cursor-07"
     }
   ],
   "last_heartbeat": {

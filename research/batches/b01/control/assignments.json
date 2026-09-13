@@ -177,24 +177,6 @@
       "notes": "These closely related sums belong to one owner. Start A003161; transfer to A003162 only with a proved integrality/normalization bridge. The full exponent 3k may require substantial p-adic machinery. Read existing public partial work and verify the original attribution against live OEIS; the local source attribution may differ."
     },
     {
-      "worker_id": "cursor-07",
-      "title": "Non-OEIS discovery and proof worker",
-      "platform": "Cursor Cloud",
-      "requested_model": "Grok 4.6 Extra (select in UI if available; no substitution)",
-      "branch": "codex/b01-cursor-07",
-      "status": "researching_goal_active",
-      "novelty_status": "discovery_scope_not_screened",
-      "reserved_sequence_groups": [],
-      "reserved_source_prefixes": [
-        "FormalConjectures/WrittenOnTheWallII/",
-        "FormalConjectures/Mathoverflow/",
-        "FormalConjectures/GreensOpenProblems/",
-        "FormalConjectures/ErdosProblems/"
-      ],
-      "targets": [],
-      "notes": "Exclusive non-OEIS discovery scope. Build and record a screened queue before proof work. No specific conjecture in this scope is certified open or tractable. Exclude mathematical equivalents of every assigned or excluded OEIS problem. Keep queue under this worker folder; do not edit global assignments."
-    },
-    {
       "worker_id": "cursor-03-r02",
       "slot": "cursor-03",
       "predecessor": "cursor-03",
@@ -250,6 +232,38 @@
         }
       ],
       "notes": "Known ASM product formula; prove natural quotient integrality and positivity before rational cancellation. Credit Robbins/Kuperberg/Razumov\u2013Stroganov accurately; not new mathematical enumeration. Old defective formulation and old counterexample irrelevant. See replacement-screening-01.md and prompts/cursor-01-r02.md."
+    },
+    {
+      "worker_id": "cursor-07-r02",
+      "slot": "cursor-07",
+      "predecessor": "cursor-07",
+      "title": "WOWII101 Hajnal independence-core inequality",
+      "platform": "Cursor Cloud",
+      "requested_model": "Cursor Grok 4.6 Extra High",
+      "branch": "codex/b01-cursor-07-r02",
+      "status": "reserved_for_replacement",
+      "novelty_status": "known_mathematics_formalization_candidate",
+      "reserved_sequence_groups": [
+        "WOWII101"
+      ],
+      "reserved_source_prefixes": [
+        "FormalConjectures/WrittenOnTheWallII/",
+        "FormalConjectures/Mathoverflow/",
+        "FormalConjectures/GreensOpenProblems/",
+        "FormalConjectures/ErdosProblems/"
+      ],
+      "targets": [
+        {
+          "id": "WOWII101",
+          "source_file": "FormalConjectures/WrittenOnTheWallII/GraphConjecture101.lean",
+          "source_sha256": "870cd77d2cb8bf98fcbe4bdeee7c52620009af97368fc4358dc595af716046c6",
+          "declarations": [
+            "WrittenOnTheWallII.GraphConjecture101.conjecture101"
+          ],
+          "source_url": "https://github.com/google-deepmind/formal-conjectures/blob/a2f4a1bb12a28e04a969da78feefac7d1ce49565/FormalConjectures/WrittenOnTheWallII/GraphConjecture101.lean"
+        }
+      ],
+      "notes": "Known Hajnal core/corona inequality; exact deletion-core equivalence required. Only WOWII101 is assigned. Non-OEIS prefixes remain reserved to this slot to prevent other workers exploring them; no autonomous target switch. See replacement-screening-02.md and prompts/cursor-07-r02.md."
     }
   ],
   "excluded": {
@@ -280,7 +294,8 @@
     "A141057": "Accepted Epoch result located.",
     "A211417": "Accepted Epoch result located.",
     "A076141": "Exact public Lean proof independently compiled, allowlisted axioms: KitaKen1/oeis-a076141-binary-word b4e179767fa3041c43e019b559ee77e6737317aa. Retired cursor-03.",
-    "A237271": "Corrected Carmichael observation independently verified in this batch; preserve other known results, do not restart same sequence group."
+    "A237271": "Corrected Carmichael observation independently verified in this batch; preserve other known results, do not restart same sequence group.",
+    "WOWII31": "Earlier exact public Lean proof by Kenta Kitamura/KitaKen1 a948e9fc07e11b786aee8dadb1376b4d938454d6 independently compiled; batch implementation also valid but not first formalization. Retired cursor-07."
   },
   "accept_known_informal_proofs_for_new_lean_formalization": true,
   "retired_workers": [
@@ -344,6 +359,33 @@
       "retired_at_utc": "2026-09-13T00:11:52.305832+00:00",
       "successor": "cursor-01-r02",
       "audit_file": "research/batches/b01/control/audits/cursor-01.md"
+    },
+    {
+      "worker_id": "cursor-07",
+      "title": "Non-OEIS discovery and proof worker",
+      "platform": "Cursor Cloud",
+      "requested_model": "Grok 4.6 Extra (select in UI if available; no substitution)",
+      "branch": "codex/b01-cursor-07",
+      "status": "retired_prior_lean_solution",
+      "novelty_status": "discovery_scope_not_screened",
+      "reserved_sequence_groups": [
+        "WOWII31"
+      ],
+      "reserved_source_prefixes": [
+        "FormalConjectures/WrittenOnTheWallII/",
+        "FormalConjectures/Mathoverflow/",
+        "FormalConjectures/GreensOpenProblems/",
+        "FormalConjectures/ErdosProblems/"
+      ],
+      "targets": [],
+      "notes": "WOWII31 candidate and earlier Kitamura exact public Lean proof independently compiled. Other non-OEIS screening preserved with retired worker; no active ownership.",
+      "actual_branch": "cursor/b01-cursor-07-ca94",
+      "final_commit": "20a7d73f546ff2a012ca56724fdc8a834537eafb",
+      "retired_at_utc": "2026-09-13T01:20:54.130080+00:00",
+      "successor": "cursor-07-r02",
+      "audit_file": "research/batches/b01/control/audits/cursor-07.md",
+      "mathematical_novelty": "known_mathematics",
+      "formalization_novelty": "prior_exact_public_lean_independently_verified"
     }
   ],
   "exclusion_changes": [
