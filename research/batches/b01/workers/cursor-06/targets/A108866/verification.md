@@ -115,6 +115,20 @@ Compile log: `/opt/cursor/artifacts/a108866_lean_wfail_layer.log`, exit 0, no `s
 If `v_p(U0)=1` then `v_p(T(p^e))=3-e<2e`. Evaluating `v_p(U0)=1` exactly is not yet kernel-checked.
 The file still does not prove the frozen iff.
 
+Kernel-checked `p^e` converse when `p^2` does not divide `oddInnerNum p`, plus all powers of 5, same axioms, `#print axioms` on 2026-09-13:
+
+```
+'OeisA108866.not_n_sq_dvd_num_of_prime_pow'
+'OeisA108866.not_n_sq_dvd_num_of_five_pow'
+'OeisA108866.choose_pred_eq_one_sub_harmonic_zmod'
+'OeisA108866.oddInnerNum_zmod_sq_harmonic'
+'OeisA108866.not_pow_dvd_oddInnerNum_iff'
+```
+
+Compile log: `/opt/cursor/artifacts/a108866_lean_wfail_primepow_inner.log`, exit 0, no `sorryAx`.
+`oddInnerNum 5 = 960` by `norm_num` after unfolding, not `native_decide`.
+`decide` on the `ZMod (p^2)` unit sum for `p=11,13` stuck on `ZMod.inv`; do not use `native_decide`.
+
 Kernel-checked exact evaluations `n=9,25,27,49` and packaging lemmas remain in the same file, same axioms.
 
 Exact type of the prime-direction theorem, from `#print OeisA108866.n_sq_dvd_num_of_prime`:

@@ -54,7 +54,9 @@ index of maximal `p`-valuation is `p^e`, so `v_p(T(3 p^e))=-e<2e`.
 For `p^e` with `p≥5` and `e≥2`, the rest product is `1+O(p^2)`, so
 `C(p^e-1, a p^{e-1}-1) ≡ C(p-1, a-1)` with valuation gap at least 2,
 and the leading odd sum `U` satisfies `v_p(U)=v_p(U0)` whenever
-`v_p(U0)<2`. The remaining odd-composite cases are not proved here.
+`v_p(U0)<2`. In `ZMod (p^2)`, `C(p-1,a-1) ≡ 1 - p H_{a-1}` for odd
+`a`, so `p^2 ∤ T(p).num` inner numerator is equivalent to a unit sum.
+The remaining odd-composite cases are not proved here.
 -/
 
 open Finset
@@ -4032,11 +4034,470 @@ lemma not_n_sq_dvd_num_of_prime_pow_of_leading {p e : ℕ}
     exact this
   exact not_n_sq_dvd_num_of_padicVal_lt hp (dvd_pow_self p (by omega)) hn0 hTne hlt
 
+/- First-order harmonic expansion of `U0` and the `ZMod (p^2)` form of `C(p-1,a-1)`. -/
+
+def oddHarmonicCombo (p : ℕ) : ℚ :=
+  ∑ a ∈ (range p).filter Odd,
+    (1 - (p : ℚ) * ∑ b ∈ Icc 1 (a - 1), (1 : ℚ) / b) / (a : ℚ) ^ 2
+
+lemma eq_or_two_le_padicValRat_oddLeadingSum0_sub_combo {p : ℕ} [Fact p.Prime] :
+    oddLeadingSum0 p - oddHarmonicCombo p = 0 ∨
+      2 ≤ padicValRat p (oddLeadingSum0 p - oddHarmonicCombo p) := by
+  have hrewrite :
+      oddLeadingSum0 p - oddHarmonicCombo p =
+        ∑ a ∈ (range p).filter Odd,
+          ((((p - 1).choose (a - 1) : ℚ) -
+              (1 - (p : ℚ) * ∑ b ∈ Icc 1 (a - 1), (1 : ℚ) / b)) /
+            (a : ℚ) ^ 2) := by
+    simp only [oddLeadingSum0, oddHarmonicCombo, ← sum_sub_distrib, sub_div]
+  rw [hrewrite]
+  refine le_padicValRat_sum_or_zero _ ?_
+  intro a ha
+  have ha' := mem_filter.mp ha
+  have hlt : a < p := mem_range.mp ha'.1
+  have hodd : Odd a := ha'.2
+  have ha0 : 0 < a := Odd.pos hodd
+  have hap : a ≤ p := hlt.le
+  have hnd : ¬ p ∣ a := Nat.not_dvd_of_pos_of_lt ha0 hlt
+  have hane : (a : ℚ) ≠ 0 := Nat.cast_ne_zero.mpr (Nat.pos_iff_ne_zero.mp ha0)
+  have hpow : (a : ℚ) ^ 2 ≠ 0 := pow_ne_zero _ hane
+  rcases eq_or_two_le_padicValRat_choose_pred_sub_harmonic hodd hap with hC | hv
+  · left
+    rw [hC]
+    exact div_eq_zero_iff.mpr (Or.inl rfl)
+  · right
+    have hdiffne :
+        ((p - 1).choose (a - 1) : ℚ) -
+            (1 - (p : ℚ) * ∑ b ∈ Icc 1 (a - 1), (1 : ℚ) / b) ≠ 0 := by
+      intro h0
+      have h0' :
+          ((p - 1).choose (a - 1) : ℚ) -
+              (1 - (p : ℚ) * ∑ b ∈ Icc 1 (a - 1), (b : ℚ)⁻¹) = 0 := by
+        simpa [one_div] using h0
+      simp [h0'] at hv
+    have hval :
+        padicValRat p
+            ((((p - 1).choose (a - 1) : ℚ) -
+                (1 - (p : ℚ) * ∑ b ∈ Icc 1 (a - 1), (1 : ℚ) / b)) /
+              (a : ℚ) ^ 2) =
+          padicValRat p
+            (((p - 1).choose (a - 1) : ℚ) -
+              (1 - (p : ℚ) * ∑ b ∈ Icc 1 (a - 1), (1 : ℚ) / b)) := by
+      rw [padicValRat.div hdiffne hpow, padicValRat.pow, padicValRat.of_nat]
+      have : padicValNat p a = 0 := padicValNat.eq_zero_of_not_dvd hnd
+      simp [this]
+    rwa [hval]
+
+lemma padicValRat_oddLeadingSum0_eq_combo {p : ℕ} [Fact p.Prime]
+    (hne0 : oddHarmonicCombo p ≠ 0)
+    (h0 : padicValRat p (oddHarmonicCombo p) < 2) :
+    padicValRat p (oddLeadingSum0 p) = padicValRat p (oddHarmonicCombo p) := by
+  have hU : oddLeadingSum0 p =
+      (oddLeadingSum0 p - oddHarmonicCombo p) + oddHarmonicCombo p := by ring
+  rcases eq_or_two_le_padicValRat_oddLeadingSum0_sub_combo (p := p) with hEq | hv
+  · rw [sub_eq_zero.mp hEq]
+  · have hdiffne : oddLeadingSum0 p - oddHarmonicCombo p ≠ 0 := by
+      intro hdiff0
+      simp [hdiff0] at hv
+    have hUne : oddLeadingSum0 p ≠ 0 := by
+      intro hz
+      have : oddLeadingSum0 p - oddHarmonicCombo p = - oddHarmonicCombo p := by
+        rw [hz]
+        ring
+      have hval : padicValRat p (oddLeadingSum0 p - oddHarmonicCombo p) =
+          padicValRat p (oddHarmonicCombo p) := by
+        rw [this, padicValRat.neg]
+      linarith
+    have hlt : padicValRat p (oddHarmonicCombo p) <
+        padicValRat p (oddLeadingSum0 p - oddHarmonicCombo p) :=
+      lt_of_lt_of_le h0 hv
+    have hsumne : oddHarmonicCombo p + (oddLeadingSum0 p - oddHarmonicCombo p) ≠ 0 := by
+      rwa [add_comm, ← hU]
+    rw [hU, add_comm, padicValRat.add_eq_of_lt hsumne hne0 hdiffne hlt]
+
+lemma oddLeadingSum0_eq_num_div_denom {p : ℕ} (hn1 : 1 < p) :
+    oddLeadingSum0 p = (oddInnerNum p : ℚ) / oddDenom p := by
+  rw [oddLeadingSum0_eq_inner hn1, oddInnerSum_eq_div hn1]
+
+lemma padicValRat_oddLeadingSum0_eq_one_of_not_pow_dvd {p : ℕ}
+    (hp : p.Prime) (h5 : 5 ≤ p) (h : ¬ p ^ 2 ∣ oddInnerNum p) :
+    padicValRat p (oddLeadingSum0 p) = 1 := by
+  have : Fact p.Prime := ⟨hp⟩
+  have hn1 : 1 < p := lt_of_lt_of_le (by decide : 1 < 5) h5
+  have hS : oddLeadingSum0 p = (oddInnerNum p : ℚ) / oddDenom p :=
+    oddLeadingSum0_eq_num_div_denom hn1
+  have hNne : (oddInnerNum p : ℚ) ≠ 0 := by
+    exact_mod_cast (oddInnerNum_ne_zero (hp.odd_of_ne_two
+      (ne_of_gt (lt_of_lt_of_le (by decide : 2 < 5) h5))) hn1)
+  have hDne : (oddDenom p : ℚ) ≠ 0 := Nat.cast_ne_zero.mpr oddDenom_ne_zero
+  have hNpos : oddInnerNum p ≠ 0 := by exact_mod_cast hNne
+  have hv1 : 1 ≤ padicValNat p (oddInnerNum p) :=
+    one_le_padicValNat_of_dvd hNpos (dvd_oddInnerNum hp h5)
+  have hv2 : ¬ 2 ≤ padicValNat p (oddInnerNum p) := by
+    intro hle
+    exact h ((padicValNat_dvd_iff_le hNpos).2 hle)
+  have hNval : padicValNat p (oddInnerNum p) = 1 := by omega
+  have hDval : padicValRat p (oddDenom p : ℚ) = 0 := by
+    rw [padicValRat.of_nat]
+    exact_mod_cast padicValNat.eq_zero_of_not_dvd (not_dvd_oddDenom hp)
+  rw [hS, padicValRat.div hNne hDne, padicValRat.of_nat, hDval, hNval]
+  simp
+
+lemma not_n_sq_dvd_num_of_prime_pow {p e : ℕ}
+    (hp : p.Prime) (h5 : 5 ≤ p) (he : 2 ≤ e)
+    (h : ¬ p ^ 2 ∣ oddInnerNum p) :
+    ¬ (ratExpression (p ^ e)).num ≡ 0 [ZMOD ((p ^ e) ^ 2 : ℤ)] :=
+  not_n_sq_dvd_num_of_prime_pow_of_leading hp h5 he
+    (padicValRat_oddLeadingSum0_eq_one_of_not_pow_dvd hp h5 h)
+
+private instance : Fact (Nat.Prime 5) := ⟨by decide⟩
+
+lemma oddInnerNum_five : oddInnerNum 5 = 960 := by
+  unfold oddInnerNum oddDenom
+  rw [show (4 : ℕ).factorial = 24 by decide]
+  rw [sum_range_succ, sum_range_succ, sum_range_succ, sum_range_succ, sum_range_zero]
+  simp [Nat.choose]
+  norm_num
+
+lemma not_pow_dvd_oddInnerNum_five : ¬ 5 ^ 2 ∣ oddInnerNum 5 := by
+  rw [oddInnerNum_five]
+  decide
+
+lemma not_n_sq_dvd_num_of_five_pow {e : ℕ} (he : 2 ≤ e) :
+    ¬ (ratExpression (5 ^ e)).num ≡ 0 [ZMOD ((5 ^ e) ^ 2 : ℤ)] :=
+  not_n_sq_dvd_num_of_prime_pow (by decide : Nat.Prime 5) (by decide) he
+    not_pow_dvd_oddInnerNum_five
+
+lemma n_mul_self_eq_zero (n : ℕ) : (n : ZMod (n ^ 2)) * n = 0 := by
+  rw [← Nat.cast_mul, ← pow_two, ZMod.natCast_self]
+
+lemma prod_one_add_eq_one_add_sum {n : ℕ} {s : Finset ℕ} (f : ℕ → ZMod (n ^ 2))
+    (hf : ∀ i ∈ s, ∃ c : ZMod (n ^ 2), f i = (n : ZMod (n ^ 2)) * c) :
+    ∏ i ∈ s, (1 + f i) = 1 + ∑ i ∈ s, f i := by
+  induction s using Finset.induction_on with
+  | empty => simp
+  | insert a s ha ih =>
+    have ih' := ih (fun i hi => hf i (mem_insert_of_mem hi))
+    obtain ⟨ca, hca⟩ := hf a (mem_insert_self a s)
+    have hmul : f a * ∑ i ∈ s, f i = 0 := by
+      rw [mul_sum]
+      refine sum_eq_zero fun i hi => ?_
+      obtain ⟨ci, hci⟩ := hf i (mem_insert_of_mem hi)
+      rw [hca, hci]
+      have hnn : (n : ZMod (n ^ 2)) * n = 0 := n_mul_self_eq_zero n
+      have : (n : ZMod (n ^ 2)) * ca * ((n : ZMod (n ^ 2)) * ci) =
+          ((n : ZMod (n ^ 2)) * n) * (ca * ci) := by ring
+      rw [this, hnn, zero_mul]
+    rw [prod_insert ha, sum_insert ha, ih']
+    have hexp : (1 + f a) * (1 + ∑ i ∈ s, f i) =
+        1 + ∑ i ∈ s, f i + f a + f a * ∑ i ∈ s, f i := by ring
+    rw [hexp, hmul, add_zero]
+    ac_rfl
+
+lemma coprime_sq_of_lt_prime {p r : ℕ} (hp : p.Prime) (hr : 0 < r) (hrp : r < p) :
+    r.Coprime (p ^ 2) :=
+  (Nat.coprime_pow_right_iff (by decide : 0 < 2) r p).mpr
+    (Nat.coprime_comm.mp (hp.coprime_iff_not_dvd.2 (Nat.not_dvd_of_pos_of_lt hr hrp)))
+
+lemma coprime_sq_of_mem_Icc_pred {p a b : ℕ} (hp : p.Prime) (hap : a ≤ p)
+    (hb : b ∈ Icc 1 (a - 1)) : b.Coprime (p ^ 2) := by
+  have hb' := mem_Icc.mp hb
+  have hlt : b < p := (Nat.le_sub_one_iff_lt hp.pos).1
+    (le_trans hb'.2 (Nat.sub_le_sub_right hap 1))
+  exact coprime_sq_of_lt_prime hp (Nat.zero_lt_of_lt hb'.1) hlt
+
+lemma nat_div_sq_cast_sq {p r D : ℕ} (hp : p.Prime) (hr : 0 < r) (hrp : r < p)
+    (hdvd : r ^ 2 ∣ D) :
+    ((D / r ^ 2 : ℕ) : ZMod (p ^ 2)) =
+      (D : ZMod (p ^ 2)) * (r : ZMod (p ^ 2))⁻¹ ^ 2 := by
+  have : NeZero (p ^ 2) := ⟨pow_ne_zero 2 hp.ne_zero⟩
+  have hcop := coprime_sq_of_lt_prime hp hr hrp
+  have hunit : (r : ZMod (p ^ 2)) ^ 2 * (r : ZMod (p ^ 2))⁻¹ ^ 2 = 1 := by
+    rw [← mul_pow, ZMod.coe_mul_inv_eq_one r hcop, one_pow]
+  have hmul : ((D / r ^ 2 : ℕ) : ZMod (p ^ 2)) * (r : ZMod (p ^ 2)) ^ 2 = D := by
+    rw [← Nat.cast_pow, ← Nat.cast_mul, Nat.div_mul_cancel hdvd]
+  calc
+    ((D / r ^ 2 : ℕ) : ZMod (p ^ 2)) =
+        ((D / r ^ 2 : ℕ) : ZMod (p ^ 2)) * 1 := by rw [mul_one]
+    _ = ((D / r ^ 2 : ℕ) : ZMod (p ^ 2)) *
+          ((r : ZMod (p ^ 2)) ^ 2 * (r : ZMod (p ^ 2))⁻¹ ^ 2) := by
+      rw [hunit]
+    _ = ((D / r ^ 2 : ℕ) : ZMod (p ^ 2)) * (r : ZMod (p ^ 2)) ^ 2 *
+          (r : ZMod (p ^ 2))⁻¹ ^ 2 := by
+      rw [mul_assoc]
+    _ = (D : ZMod (p ^ 2)) * (r : ZMod (p ^ 2))⁻¹ ^ 2 := by rw [hmul]
+
+lemma factorial_pred_cast_prod (p a : ℕ) :
+    ((a - 1).factorial : ZMod (p ^ 2)) =
+      ∏ i ∈ range (a - 1), ((i + 1 : ℕ) : ZMod (p ^ 2)) := by
+  rw [Nat.factorial_eq_prod_range_add_one, Nat.cast_prod]
+
+lemma descFactorial_pred_cast_prod (p a : ℕ) :
+    ((p - 1).descFactorial (a - 1) : ZMod (p ^ 2)) =
+      ∏ i ∈ range (a - 1), ((p - 1 - i : ℕ) : ZMod (p ^ 2)) := by
+  rw [Nat.descFactorial_eq_prod_range, Nat.cast_prod]
+
+lemma prod_range_succ_eq_prod_Icc_zmod (p a : ℕ) :
+    ∏ i ∈ range (a - 1), ((i + 1 : ℕ) : ZMod (p ^ 2)) =
+      ∏ b ∈ Icc 1 (a - 1), (b : ZMod (p ^ 2)) := by
+  refine prod_nbij (fun i => i + 1) ?_ ?_ ?_ ?_
+  · intro i hi
+    have : i < a - 1 := mem_range.mp hi
+    exact mem_Icc.mpr ⟨Nat.succ_pos i, Nat.succ_le_of_lt this⟩
+  · intro i _ hi' _ h
+    exact Nat.succ_injective h
+  · intro b hb
+    have hb' := mem_Icc.mp hb
+    refine ⟨b - 1, mem_range.mpr ?_, Nat.sub_add_cancel hb'.1⟩
+    exact Nat.sub_lt_right_of_lt_add hb'.1 (by omega)
+  · intro i _hi
+    simp [Nat.cast_succ]
+
+lemma prod_desc_range_eq_prod_Icc_zmod {p a : ℕ} (ha : 1 ≤ a) (hap : a ≤ p) :
+    ∏ i ∈ range (a - 1), ((p - 1 - i : ℕ) : ZMod (p ^ 2)) =
+      ∏ b ∈ Icc 1 (a - 1), ((p - b : ℕ) : ZMod (p ^ 2)) := by
+  refine prod_nbij (fun i => i + 1) ?_ ?_ ?_ ?_
+  · intro i hi
+    have : i < a - 1 := mem_range.mp hi
+    exact mem_Icc.mpr ⟨Nat.succ_pos i, Nat.succ_le_of_lt this⟩
+  · intro i _ hi' _ h
+    exact Nat.succ_injective h
+  · intro b hb
+    have hb' := mem_Icc.mp hb
+    refine ⟨b - 1, mem_range.mpr ?_, Nat.sub_add_cancel hb'.1⟩
+    exact Nat.sub_lt_right_of_lt_add hb'.1 (by omega)
+  · intro i hi
+    have : i < a - 1 := mem_range.mp hi
+    have hle : i + 1 ≤ p := by omega
+    congr 1
+    omega
+
+lemma choose_pred_eq_prod_zmod {p a : ℕ} (hp : p.Prime) (ha : 1 ≤ a) (hap : a ≤ p) :
+    ((p - 1).choose (a - 1) : ZMod (p ^ 2)) =
+      ∏ b ∈ Icc 1 (a - 1),
+        ((p - b : ℕ) : ZMod (p ^ 2)) * (b : ZMod (p ^ 2))⁻¹ := by
+  have : NeZero (p ^ 2) := ⟨pow_ne_zero 2 hp.ne_zero⟩
+  have hmul : (a - 1).factorial * (p - 1).choose (a - 1) =
+      (p - 1).descFactorial (a - 1) :=
+    (Nat.descFactorial_eq_factorial_mul_choose (p - 1) (a - 1)).symm
+  have hcast : ((a - 1).factorial : ZMod (p ^ 2)) *
+        ((p - 1).choose (a - 1) : ZMod (p ^ 2)) =
+      ((p - 1).descFactorial (a - 1) : ZMod (p ^ 2)) := by
+    rw [← Nat.cast_mul, hmul]
+  have hfac :
+      ((a - 1).factorial : ZMod (p ^ 2)) =
+        ∏ b ∈ Icc 1 (a - 1), (b : ZMod (p ^ 2)) := by
+    rw [factorial_pred_cast_prod, prod_range_succ_eq_prod_Icc_zmod]
+  have hdesc :
+      ((p - 1).descFactorial (a - 1) : ZMod (p ^ 2)) =
+        ∏ b ∈ Icc 1 (a - 1), ((p - b : ℕ) : ZMod (p ^ 2)) := by
+    rw [descFactorial_pred_cast_prod, prod_desc_range_eq_prod_Icc_zmod ha hap]
+  have hprod :
+      (∏ b ∈ Icc 1 (a - 1), (b : ZMod (p ^ 2))) *
+        ((p - 1).choose (a - 1) : ZMod (p ^ 2)) =
+      ∏ b ∈ Icc 1 (a - 1), ((p - b : ℕ) : ZMod (p ^ 2)) := by
+    rw [← hfac, hcast, hdesc]
+  have hinv :
+      ∏ b ∈ Icc 1 (a - 1),
+          ((b : ZMod (p ^ 2)) * (b : ZMod (p ^ 2))⁻¹) = 1 :=
+    prod_eq_one fun b hb =>
+      ZMod.coe_mul_inv_eq_one b (coprime_sq_of_mem_Icc_pred hp hap hb)
+  calc
+    ((p - 1).choose (a - 1) : ZMod (p ^ 2)) =
+        ((p - 1).choose (a - 1) : ZMod (p ^ 2)) * 1 := by rw [mul_one]
+    _ = ((p - 1).choose (a - 1) : ZMod (p ^ 2)) *
+          ∏ b ∈ Icc 1 (a - 1),
+            ((b : ZMod (p ^ 2)) * (b : ZMod (p ^ 2))⁻¹) := by
+      rw [hinv]
+    _ = ((p - 1).choose (a - 1) : ZMod (p ^ 2)) *
+          ((∏ b ∈ Icc 1 (a - 1), (b : ZMod (p ^ 2))) *
+            ∏ b ∈ Icc 1 (a - 1), (b : ZMod (p ^ 2))⁻¹) := by
+      rw [prod_mul_distrib]
+    _ = ((∏ b ∈ Icc 1 (a - 1), (b : ZMod (p ^ 2))) *
+          ((p - 1).choose (a - 1) : ZMod (p ^ 2))) *
+          ∏ b ∈ Icc 1 (a - 1), (b : ZMod (p ^ 2))⁻¹ := by
+      ac_rfl
+    _ = (∏ b ∈ Icc 1 (a - 1), ((p - b : ℕ) : ZMod (p ^ 2))) *
+          ∏ b ∈ Icc 1 (a - 1), (b : ZMod (p ^ 2))⁻¹ := by
+      rw [hprod]
+    _ = ∏ b ∈ Icc 1 (a - 1),
+          ((p - b : ℕ) : ZMod (p ^ 2)) * (b : ZMod (p ^ 2))⁻¹ := by
+      rw [prod_mul_distrib]
+
+lemma choose_pred_eq_prod_one_sub_zmod {p a : ℕ} (hp : p.Prime)
+    (hodd : Odd a) (hap : a ≤ p) :
+    ((p - 1).choose (a - 1) : ZMod (p ^ 2)) =
+      ∏ b ∈ Icc 1 (a - 1),
+        (1 - (p : ZMod (p ^ 2)) * (b : ZMod (p ^ 2))⁻¹) := by
+  have ha : 1 ≤ a := Odd.pos hodd
+  have heven : Even (a - 1) := by
+    have : ¬ Odd (a - 1) := by
+      have : Odd (a - 1 + 1) := by rwa [Nat.sub_add_cancel ha]
+      simpa [Nat.odd_add_one] using this
+    exact Nat.not_odd_iff_even.mp this
+  have hterm : ∀ b ∈ Icc 1 (a - 1),
+      ((p - b : ℕ) : ZMod (p ^ 2)) * (b : ZMod (p ^ 2))⁻¹ =
+        - (1 - (p : ZMod (p ^ 2)) * (b : ZMod (p ^ 2))⁻¹) := by
+    intro b hb
+    have hb' := mem_Icc.mp hb
+    have hle : b ≤ p := le_trans hb'.2 (le_trans (Nat.sub_le a 1) hap)
+    have hcop := coprime_sq_of_mem_Icc_pred hp hap hb
+    have hsub : ((p - b : ℕ) : ZMod (p ^ 2)) = (p : ZMod (p ^ 2)) - b :=
+      Nat.cast_sub hle
+    rw [hsub, sub_mul, ZMod.coe_mul_inv_eq_one b hcop]
+    ring
+  rw [choose_pred_eq_prod_zmod hp ha hap, prod_congr rfl hterm, prod_neg,
+    Nat.card_Icc]
+  have hcard : a - 1 + 1 - 1 = a - 1 := by omega
+  rw [hcard, Even.neg_one_pow heven, one_mul]
+
+lemma choose_pred_eq_one_sub_harmonic_zmod {p a : ℕ} (hp : p.Prime)
+    (hodd : Odd a) (hap : a ≤ p) :
+    ((p - 1).choose (a - 1) : ZMod (p ^ 2)) =
+      1 - (p : ZMod (p ^ 2)) *
+        ∑ b ∈ Icc 1 (a - 1), (b : ZMod (p ^ 2))⁻¹ := by
+  rw [choose_pred_eq_prod_one_sub_zmod hp hodd hap]
+  set f := fun b : ℕ => -((p : ZMod (p ^ 2)) * (b : ZMod (p ^ 2))⁻¹)
+  have hf : ∀ b ∈ Icc 1 (a - 1), ∃ c : ZMod (p ^ 2),
+      f b = (p : ZMod (p ^ 2)) * c := by
+    intro b _hb
+    exact ⟨-((b : ZMod (p ^ 2))⁻¹), by simp [f]⟩
+  have hprod : ∏ b ∈ Icc 1 (a - 1),
+      (1 - (p : ZMod (p ^ 2)) * (b : ZMod (p ^ 2))⁻¹) =
+      ∏ b ∈ Icc 1 (a - 1), (1 + f b) := by
+    refine prod_congr rfl fun b _ => sub_eq_add_neg _ _
+  have hsum : ∑ b ∈ Icc 1 (a - 1), f b =
+      -((p : ZMod (p ^ 2)) * ∑ b ∈ Icc 1 (a - 1), (b : ZMod (p ^ 2))⁻¹) := by
+    simp only [f, sum_neg_distrib, mul_sum]
+  rw [hprod, prod_one_add_eq_one_add_sum f hf, hsum]
+  ring
+
+lemma oddInnerNum_zmod_sq {p : ℕ} (hp : p.Prime) (h5 : 5 ≤ p) :
+    (oddInnerNum p : ZMod (p ^ 2)) =
+      (oddDenom p : ZMod (p ^ 2)) *
+        ∑ r ∈ (range p).filter Odd,
+          ((p - 1).choose (r - 1) : ZMod (p ^ 2)) *
+            ((r : ZMod (p ^ 2))⁻¹) ^ 2 := by
+  have : NeZero (p ^ 2) := ⟨pow_ne_zero 2 hp.ne_zero⟩
+  have hn1 : 1 < p := lt_of_lt_of_le (by decide : 1 < 5) h5
+  unfold oddInnerNum
+  rw [Nat.cast_sum]
+  have hsum :
+      ∑ i ∈ range (p - 1),
+        ((if Odd (i + 1) then
+            (p - 1).choose i * (oddDenom p / (i + 1) ^ 2) else 0 : ℕ) :
+          ZMod (p ^ 2)) =
+      ∑ i ∈ range (p - 1),
+        (if Odd (i + 1) then
+          ((p - 1).choose i : ZMod (p ^ 2)) *
+            ((oddDenom p : ZMod (p ^ 2)) * ((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹ ^ 2)
+        else 0) := by
+    refine sum_congr rfl fun i hi => ?_
+    by_cases hodd : Odd (i + 1)
+    · have hi' : i < p - 1 := mem_range.mp hi
+      have hrpos : 0 < i + 1 := Nat.succ_pos i
+      have hrp : i + 1 < p := by omega
+      have hdvd := succ_sq_dvd_oddDenom hn1 hi
+      simp only [if_pos hodd, Nat.cast_mul]
+      rw [nat_div_sq_cast_sq hp hrpos hrp hdvd]
+    · simp [if_neg hodd]
+  rw [hsum]
+  have hinner :
+      ∑ i ∈ range (p - 1),
+          (if Odd (i + 1) then
+            ((p - 1).choose i : ZMod (p ^ 2)) *
+              ((oddDenom p : ZMod (p ^ 2)) *
+                ((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹ ^ 2)
+          else 0) =
+        (oddDenom p : ZMod (p ^ 2)) *
+          ∑ r ∈ (range p).filter Odd,
+            ((p - 1).choose (r - 1) : ZMod (p ^ 2)) *
+              ((r : ZMod (p ^ 2))⁻¹) ^ 2 := by
+    have hreindex :=
+      sum_reindex_odd
+        (fun r =>
+          ((p - 1).choose (r - 1) : ZMod (p ^ 2)) *
+            ((oddDenom p : ZMod (p ^ 2)) * ((r : ZMod (p ^ 2))⁻¹) ^ 2))
+        hn1
+    have hfun :
+        ∀ i ∈ range (p - 1),
+          (if Odd (i + 1) then
+            ((p - 1).choose i : ZMod (p ^ 2)) *
+              ((oddDenom p : ZMod (p ^ 2)) *
+                ((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹ ^ 2)
+          else 0) =
+          (if Odd (i + 1) then
+            ((p - 1).choose ((i + 1) - 1) : ZMod (p ^ 2)) *
+              ((oddDenom p : ZMod (p ^ 2)) *
+                ((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹ ^ 2)
+          else 0) := by
+      intro i _hi
+      simp
+    rw [sum_congr rfl hfun, hreindex, mul_sum]
+    refine sum_congr rfl fun r _hr => by ring
+  rw [hinner]
+
+lemma oddInnerNum_zmod_sq_harmonic {p : ℕ} (hp : p.Prime) (h5 : 5 ≤ p) :
+    (oddInnerNum p : ZMod (p ^ 2)) =
+      (oddDenom p : ZMod (p ^ 2)) *
+        ∑ r ∈ (range p).filter Odd,
+          (1 - (p : ZMod (p ^ 2)) *
+            ∑ b ∈ Icc 1 (r - 1), (b : ZMod (p ^ 2))⁻¹) *
+            ((r : ZMod (p ^ 2))⁻¹) ^ 2 := by
+  rw [oddInnerNum_zmod_sq hp h5]
+  congr 1
+  refine sum_congr rfl fun r hr => ?_
+  have hr' := mem_filter.mp hr
+  have hodd : Odd r := hr'.2
+  have hap : r ≤ p := (mem_range.mp hr'.1).le
+  rw [choose_pred_eq_one_sub_harmonic_zmod hp hodd hap]
+
+lemma coprime_oddDenom_pow {p : ℕ} (hp : p.Prime) :
+    (oddDenom p).Coprime (p ^ 2) := by
+  have hcop : p.Coprime (oddDenom p) :=
+    hp.coprime_iff_not_dvd.2 (not_dvd_oddDenom hp)
+  exact (Nat.coprime_pow_right_iff (by decide : 0 < 2) (oddDenom p) p).mpr
+    (Nat.coprime_comm.mp hcop)
+
+lemma oddDenom_mul_inv_eq_one {p : ℕ} (hp : p.Prime) :
+    (oddDenom p : ZMod (p ^ 2)) * (oddDenom p : ZMod (p ^ 2))⁻¹ = 1 :=
+  ZMod.coe_mul_inv_eq_one (oddDenom p) (coprime_oddDenom_pow hp)
+
+lemma oddInnerNum_eq_zero_zmod_sq_iff {p : ℕ} (hp : p.Prime) (h5 : 5 ≤ p) :
+    (oddInnerNum p : ZMod (p ^ 2)) = 0 ↔
+      ∑ r ∈ (range p).filter Odd,
+          ((p - 1).choose (r - 1) : ZMod (p ^ 2)) *
+            ((r : ZMod (p ^ 2))⁻¹) ^ 2 = 0 := by
+  rw [oddInnerNum_zmod_sq hp h5]
+  constructor
+  · intro h
+    have := congrArg (fun x => (oddDenom p : ZMod (p ^ 2))⁻¹ * x) h
+    have hcomm : (oddDenom p : ZMod (p ^ 2))⁻¹ * oddDenom p = 1 := by
+      rw [mul_comm, oddDenom_mul_inv_eq_one hp]
+    rw [mul_zero, ← mul_assoc, hcomm, one_mul] at this
+    exact this
+  · intro h
+    rw [h, mul_zero]
+
+lemma not_pow_dvd_oddInnerNum_iff {p : ℕ} (hp : p.Prime) (h5 : 5 ≤ p) :
+    ¬ p ^ 2 ∣ oddInnerNum p ↔
+      ∑ r ∈ (range p).filter Odd,
+          ((p - 1).choose (r - 1) : ZMod (p ^ 2)) *
+            ((r : ZMod (p ^ 2))⁻¹) ^ 2 ≠ 0 := by
+  exact Iff.not <|
+    (ZMod.natCast_eq_zero_iff (oddInnerNum p) (p ^ 2)).symm.trans
+      (oddInnerNum_eq_zero_zmod_sq_iff hp h5)
+
 #print axioms OeisA108866.one_le_padicValRat_oddLeadingSum0
 #print axioms OeisA108866.padicValRat_inner_prime_pow_of_leading
 #print axioms OeisA108866.not_n_sq_dvd_num_of_prime_pow_of_leading
 #print axioms OeisA108866.eq_or_two_le_padicValRat_choose_sub
 #print axioms OeisA108866.padicValRat_leading_eq_of_lt
+#print axioms OeisA108866.eq_or_two_le_padicValRat_oddLeadingSum0_sub_combo
+#print axioms OeisA108866.choose_pred_eq_one_sub_harmonic_zmod
+#print axioms OeisA108866.oddInnerNum_zmod_sq_harmonic
+#print axioms OeisA108866.not_n_sq_dvd_num_of_prime_pow
+#print axioms OeisA108866.not_n_sq_dvd_num_of_five_pow
 #print axioms OeisA108866.p_mul_ratExpression_sq_sub_pos
 #print axioms OeisA108866.padicValRat_ratExpression_sq_eq_min_sub_one
 #print axioms OeisA108866.ratExpression_nine

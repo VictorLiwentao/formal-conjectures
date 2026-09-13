@@ -121,8 +121,23 @@ sum at `n=p^e` has valuation `3-2e`, since the rest layer is at least
 `not_n_sq_dvd_num_of_prime_pow_of_leading`: the converse at `n=p^e`
 for `p≥5` and `e≥2` if `v_p(U0)=1`. Kernel-checked; axioms
 `propext`, `Classical.choice`, `Quot.sound`. This is not the frozen iff.
-The remaining gap for prime powers is `v_p(U0)=1` exactly
-(empirically except `p=7`, where `v=2`).
+
+`padicValRat_oddLeadingSum0_eq_one_of_not_pow_dvd`: `v_p(U0)=1`
+whenever `p^2` does not divide `oddInnerNum p`. Combined with the
+previous lemma this gives `not_n_sq_dvd_num_of_prime_pow`.
+
+`not_n_sq_dvd_num_of_five_pow`: `oddInnerNum 5 = 960` and `25 ∤ 960`,
+so the converse holds for every `n=5^e` with `e≥2`.
+
+`choose_pred_eq_one_sub_harmonic_zmod`: for odd `a ≤ p`,
+`C(p-1,a-1) ≡ 1 - p H_{a-1}` exactly in `ZMod (p^2)`, because the
+product `∏(1-p/b)` truncates after the linear term. Therefore
+`¬ p^2 ∣ oddInnerNum p` iff
+`∑_{odd r < p} C(p-1,r-1) r^{-2} ≠ 0` in `ZMod (p^2)`.
+
+The remaining gap for prime powers is this nonvanishing, equivalently
+`v_p(U0)=1`. Empirically it holds except at `p=7` where `v=2`, and
+it would fail at Wolstenholme primes (`p | B_{p-3}`).
 
 ## Odd composite converse
 
@@ -149,7 +164,7 @@ Kernel-checked fragments of the converse:
 - all `n=3 p^e` for primes `p≥5` and `e≥1` (`v_p(T(3 p^e))=-e`)
 - `p^e` leading binomials: `C ≡ C0` with valuation gap at least 2,
   so `v_p(U)=v_p(U0)` whenever `v_p(U0)<2`
-- converse at `n=p^e` whenever `v_p(U0)=1`
+- converse at `n=p^e` whenever `v_p(U0)=1`, including all `n=5^e`
 
 Remaining odd composites include prime powers `p^e` for `p≥5` and products
 where `L(m/p^e)=0` for every eligible prime (for example `n=1027=13·79`),
