@@ -76,6 +76,17 @@
       "launch_verified": true,
       "goal_active_verified": true,
       "checked_at_utc": "2026-09-13T00:15:43.701432+00:00"
+    },
+    {
+      "worker_id": "cursor-07-r02",
+      "slot": "cursor-07",
+      "agent_url": "https://cursor.com/agents/bc-bfb4a7ed-1a88-4b50-8844-80eadcee05fb",
+      "starting_commit": "dc6f750f34db0ca579f76bc358082157072f2083",
+      "launch_verified": true,
+      "goal_active_verified": true,
+      "checked_at_utc": "2026-09-13T01:23:53.961154+00:00",
+      "environment_build": "bld-20260912-716b23c3-d124-4da8-ab69-743e1fb16843",
+      "model": "Cursor Grok 4.6 Extra High"
     }
   ]
 }

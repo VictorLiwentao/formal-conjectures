@@ -2,16 +2,16 @@
   "automation_id": "maintain-seven-cursor-math-workers",
   "interval_minutes": 15,
   "target_cursor_slots": 7,
-  "updated_at_utc": "2026-09-13T01:20:54.130080+00:00",
+  "updated_at_utc": "2026-09-13T01:23:53.961154+00:00",
   "accept_known_informal_proofs_for_new_lean_formalization": true,
-  "note": "Replacement in progress: six OEIS goals active; non-OEIS predecessor stopped after independent result/prior-proof audit; WOWII101 reserved, launch pending.",
+  "note": "Seven active Cursor goals verified after one non-OEIS replacement. WOWII31 candidate and prior public exact Lean proof both independently compiled; predecessor paused with timers cancelled and credits corrected. WOWII101 successor now active in prepared environment. A108866 diagnostic follow-up acknowledged and productive work resumed.",
   "slots": [
     {
       "slot": "cursor-01",
       "run_id": "cursor-01-r02",
       "agent_url": "https://cursor.com/agents/bc-25b34f4b-3076-4e2d-93c5-d2bd6b630918",
       "state": "researching",
-      "actual_branch": null,
+      "actual_branch": "cursor/b01-cursor-01-r02-0918",
       "replacements": [
         {
           "run_id": "cursor-01-r02",
@@ -19,8 +19,8 @@
           "launched_at_utc": "2026-09-13T00:14:28.257975+00:00"
         }
       ],
-      "last_checked_at_utc": "2026-09-13T00:55:35.680645+00:00",
-      "progress_note": "Goal active with Stop control; A109074 binary-recursion and popcount inequalities in development. Exact factorial-ratio theorem unresolved.",
+      "last_checked_at_utc": "2026-09-13T01:23:19.748216+00:00",
+      "progress_note": "Goal active; A109074 2-adic integrality reportedly proved, odd-modulus floor inequalities under development. Remote checkpoint bf50ce58 is partial; exact ratio unresolved.",
       "history": [
         {
           "run_id": "cursor-01",
@@ -36,7 +36,7 @@
       "launch_verified_at_utc": "2026-09-13T00:14:28.257975+00:00",
       "goal_command_submitted": true,
       "goal_active_verified": true,
-      "goal_verified_at_utc": "2026-09-13T00:55:35.680645+00:00",
+      "goal_verified_at_utc": "2026-09-13T01:23:19.748216+00:00",
       "environment_build": "bld-20260912-716b23c3-d124-4da8-ab69-743e1fb16843",
       "model": "Cursor Grok 4.6 Extra High"
     },
@@ -47,10 +47,10 @@
       "state": "researching",
       "actual_branch": "cursor/b01-cursor-02-13c0",
       "replacements": [],
-      "last_checked_at_utc": "2026-09-13T00:55:35.680645+00:00",
-      "progress_note": "Goal active with Stop control; A108081 recursive word/Catalan first-peel experiments and proof development continue. Remote branch advanced; no exact completion claimed.",
+      "last_checked_at_utc": "2026-09-13T01:23:19.748216+00:00",
+      "progress_note": "Goal active; recursive word enumeration/Catalan peel research continues; remote checkpoint ae35b556 advanced. Exact identity unresolved.",
       "goal_active_verified": true,
-      "goal_verified_at_utc": "2026-09-13T00:55:35.680645+00:00"
+      "goal_verified_at_utc": "2026-09-13T01:23:19.748216+00:00"
     },
     {
       "slot": "cursor-03",
@@ -65,8 +65,8 @@
           "launched_at_utc": "2026-09-13T00:12:48.331188+00:00"
         }
       ],
-      "last_checked_at_utc": "2026-09-13T00:55:35.680645+00:00",
-      "progress_note": "Goal active with Stop control; substantial progress since last check. A069004 Pratt-certificate and prime-count chunks compiling; pilot successes reported, glued exact theorems and full axiom audit pending. No intervention needed.",
+      "last_checked_at_utc": "2026-09-13T01:23:19.748216+00:00",
+      "progress_note": "Goal active; A069004 certificate chunks running, waiting for count-block/failure signals. No full exact certificate or axiom audit yet.",
       "history": [
         {
           "run_id": "cursor-03",
@@ -82,7 +82,7 @@
       "launch_verified_at_utc": "2026-09-13T00:12:48.331188+00:00",
       "goal_command_submitted": true,
       "goal_active_verified": true,
-      "goal_verified_at_utc": "2026-09-13T00:55:35.680645+00:00",
+      "goal_verified_at_utc": "2026-09-13T01:23:19.748216+00:00",
       "environment_build": "bld-20260912-716b23c3-d124-4da8-ab69-743e1fb16843",
       "model": "Cursor Grok 4.6 Extra High"
     },
@@ -93,10 +93,10 @@
       "state": "researching",
       "actual_branch": "cursor/a135508-lcm-primes-770d",
       "replacements": [],
-      "last_checked_at_utc": "2026-09-13T00:55:35.680645+00:00",
-      "progress_note": "Goal active with Stop control; worker reports compiled Cloitre 2-adic staircase helper and continues the first-entry/injector gap. Exact McEachen conjecture explicitly unresolved.",
+      "last_checked_at_utc": "2026-09-13T01:23:19.748216+00:00",
+      "progress_note": "Goal active; first-entry/injector gap remains, continued Lean/library exploration and pushed checkpoint e796bddb. No exact result claimed.",
       "goal_active_verified": true,
-      "goal_verified_at_utc": "2026-09-13T00:55:35.680645+00:00"
+      "goal_verified_at_utc": "2026-09-13T01:23:19.748216+00:00"
     },
     {
       "slot": "cursor-05",
@@ -105,10 +105,10 @@
       "state": "researching",
       "actual_branch": "cursor/b01-cursor-05-cb88",
       "replacements": [],
-      "last_checked_at_utc": "2026-09-13T00:55:35.680645+00:00",
-      "progress_note": "Goal active with Stop control; A063880 v3=3 complement lemma and leftover sigma/usigma case analysis developed. Full statements explicitly unresolved.",
+      "last_checked_at_utc": "2026-09-13T01:23:19.748216+00:00",
+      "progress_note": "Goal active; developing prime-power ratio/cap bounds and leftover case analysis; full A063880 statements unresolved.",
       "goal_active_verified": true,
-      "goal_verified_at_utc": "2026-09-13T00:55:35.680645+00:00"
+      "goal_verified_at_utc": "2026-09-13T01:23:19.748216+00:00"
     },
     {
       "slot": "cursor-06",
@@ -117,22 +117,28 @@
       "state": "researching",
       "actual_branch": "cursor/b01-cursor-06-a108866-efe4",
       "replacements": [],
-      "last_checked_at_utc": "2026-09-13T00:55:35.680645+00:00",
-      "progress_note": "Goal active with Stop control; A108866 odd-identity Lean compilation repairs continue. No exact iff completion claimed.",
+      "last_checked_at_utc": "2026-09-13T01:23:19.748216+00:00",
+      "progress_note": "Goal active. Bounded coordinator diagnostic follow-up sent after unchanged visible activity across checks; worker acknowledged, checked jobs/deadline and resumed odd-converse searches/Lean work. Same branch and original cutoff retained; no persistent failure established.",
       "goal_active_verified": true,
-      "goal_verified_at_utc": "2026-09-13T00:55:35.680645+00:00"
+      "goal_verified_at_utc": "2026-09-13T01:23:19.748216+00:00"
     },
     {
       "slot": "cursor-07",
       "run_id": "cursor-07-r02",
-      "agent_url": null,
-      "state": "reserved_for_replacement",
+      "agent_url": "https://cursor.com/agents/bc-bfb4a7ed-1a88-4b50-8844-80eadcee05fb",
+      "state": "researching",
       "actual_branch": null,
-      "replacements": [],
-      "last_checked_at_utc": "2026-09-13T00:55:35.680645+00:00",
-      "progress_note": "WOWII31 retired: candidate and earlier exact public Lean proof independently compiled. Old worker goal/timers stopped, credits corrected. WOWII101 successor reserved and prompt prepared; launch pending.",
-      "goal_active_verified": false,
-      "goal_verified_at_utc": "2026-09-13T00:55:35.680645+00:00",
+      "replacements": [
+        {
+          "run_id": "cursor-07-r02",
+          "agent_url": "https://cursor.com/agents/bc-bfb4a7ed-1a88-4b50-8844-80eadcee05fb",
+          "launched_at_utc": "2026-09-13T01:22:48.830413+00:00"
+        }
+      ],
+      "last_checked_at_utc": "2026-09-13T01:23:53.961154+00:00",
+      "progress_note": "WOWII101 replacement Environment ready and Goal active verified. Worker confirms source SHA/coordination seed match; beginning literature and Mathlib audit. Known mathematics formalization, not new mathematical discovery.",
+      "goal_active_verified": true,
+      "goal_verified_at_utc": "2026-09-13T01:23:53.961154+00:00",
       "history": [
         {
           "run_id": "cursor-07",
@@ -143,15 +149,21 @@
           "audit": "research/batches/b01/control/audits/cursor-07.md"
         }
       ],
-      "predecessor": "cursor-07"
+      "predecessor": "cursor-07",
+      "starting_commit": "dc6f750f34db0ca579f76bc358082157072f2083",
+      "launch_verified_at_utc": "2026-09-13T01:22:48.830413+00:00",
+      "goal_command_submitted": true,
+      "model": "Cursor Grok 4.6 Extra High",
+      "environment_build": "bld-20260912-716b23c3-d124-4da8-ab69-743e1fb16843"
     }
   ],
   "last_heartbeat": {
-    "scheduled_at_utc": "2026-09-13T00:49:47.992Z",
-    "completed_at_utc": "2026-09-13T00:55:35.680645+00:00",
+    "scheduled_at_utc": "2026-09-13T01:11:18.541Z",
+    "completed_at_utc": "2026-09-13T01:23:53.961154+00:00",
     "occupied_slots": 7,
-    "replacements": 0,
+    "replacements": 1,
     "resumes": 0,
-    "notifications": 0
+    "diagnostic_followups": 1,
+    "notifications": 1
   }
 }
