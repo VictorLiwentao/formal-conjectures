@@ -11,3 +11,7 @@
 'OeisA135508.conjecture_of_five_dvd' depends on axioms: [propext, Classical.choice, Quot.sound]
 'OeisA135508.conjecture_two' depends on axioms: [propext]
 'OeisA135508.conjecture_three' depends on axioms: [propext]
+'OeisA135508.a_pos' depends on axioms: [propext, Quot.sound]
+'OeisA135508.v2_a' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.v2_x_succ' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.a_two_four_pow_zero' depends on axioms: [propext]

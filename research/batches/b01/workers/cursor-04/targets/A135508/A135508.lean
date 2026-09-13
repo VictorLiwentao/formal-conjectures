@@ -523,11 +523,11 @@ lemma v2_x_two : padicValNat 2 (x 2) = 2 := by
   have : x 2 = 4 := by decide
   rw [this, show (4 : ℕ) = 2 ^ 2 from rfl, padicValNat.prime_pow]
 
-lemma exists_block {n : ℕ} (hn : 2 ≤ n) :
-    ∃ k, 2 * 4 ^ k ≤ n ∧ n ≤ 2 * 4 ^ (k + 1) - 1 := by
+lemma log4_block {n : ℕ} (hn : 2 ≤ n) :
+    2 * 4 ^ Nat.log 4 (n / 2) ≤ n ∧ n ≤ 2 * 4 ^ (Nat.log 4 (n / 2) + 1) - 1 := by
   have hb : 1 < (4 : ℕ) := by decide
   have hpos : 0 < n / 2 := Nat.div_pos (le_trans (by decide : 2 ≤ 2) hn) (by decide)
-  refine ⟨Nat.log 4 (n / 2), ?_, ?_⟩
+  refine ⟨?_, ?_⟩
   · have hle : 4 ^ Nat.log 4 (n / 2) ≤ n / 2 := Nat.pow_log_le_self 4 hpos.ne'
     have : 2 * 4 ^ Nat.log 4 (n / 2) ≤ 2 * (n / 2) := Nat.mul_le_mul_left 2 hle
     exact this.trans (Nat.mul_div_le n 2)
@@ -536,6 +536,10 @@ lemma exists_block {n : ℕ} (hn : 2 ≤ n) :
       have h := (Nat.div_lt_iff_lt_mul (by decide : 0 < 2)).1 hlt
       rwa [mul_comm] at h
     exact Nat.le_sub_one_of_lt hlt'
+
+lemma exists_block {n : ℕ} (hn : 2 ≤ n) :
+    ∃ k, 2 * 4 ^ k ≤ n ∧ n ≤ 2 * 4 ^ (k + 1) - 1 :=
+  ⟨Nat.log 4 (n / 2), log4_block hn⟩
 
 /-- Cloitre's 2-adic identity in Lean indexing at the first staircase step. -/
 theorem a_two_four_pow_zero : a (2 * 4 ^ 0 - 1) = 2 := a_1
