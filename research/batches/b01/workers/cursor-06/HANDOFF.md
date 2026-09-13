@@ -22,7 +22,7 @@ python3 research/batches/b01/workers/cursor-06/targets/A108866/experiments/leadi
 python3 research/batches/b01/workers/cursor-06/targets/A108866/experiments/combo_coeff_fp.py
 ```
 
-Final math commit SHA: `accb6ab2`.
+Final math commit SHA: `2dcef6b5`.
 
 ## Status
 
@@ -50,6 +50,8 @@ Partial. Kernel-checked so far:
 - `v_p(U0)=1` iff that coefficient is nonzero in `𝔽_p`
 - cube pairing `k^{-3}+(p-k)^{-3}=-3p k^{-4}`
 - Fermat lift `k^{p-1}=1+p c` and `k^{-2}=k^{p-3}(1-p c)`
+- inverse-square sum `I = ∑ k^{p-3} - p ∑ q_k k^{p-3}`
+- `∑ k^{p-3}` is a multiple of `p` in `ZMod (p^2)`
 - `v_7(U0)=2`: `padicValRat_oddLeadingSum0_seven`
 - `v_7(T(49))=2`: `padicValRat_ratExpression_forty_nine`
 - `C(p-1,a-1) ≡ 1 - p H_{a-1}` in `ZMod (p^2)` for odd `a`
