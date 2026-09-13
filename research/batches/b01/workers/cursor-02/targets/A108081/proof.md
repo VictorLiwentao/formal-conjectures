@@ -33,7 +33,11 @@ Proved:
 - `|X_1| = 1 = a 0`, `|X_2| = 2 = a 1`, `|X_3| = 7 = a 2`.
 - Right-irreducible words (no right parse) end in `0`.
 - `YWord` is the smallest set containing `[0]` and closed under `u ++ r v` for `v ∈ X`; every `YWord` is an `XWord`. Concatenating any Xia word with the tail of a `YWord` stays in `X`.
-- `PWord`: Xia words with a unique `0`. Concatenation of two Xia words has at least two zeros, so a `PWord` is concatenation-prime. A right-constructed `PWord` has `PWord` left factor and no `-1` in the right factor, hence that factor is nonnegative.
+- `PWord`: Xia words with a unique `0`. Concatenation of two Xia words has at least two zeros, so a `PWord` is concatenation-prime. A right-constructed `PWord` has `PWord` left factor and no `-1` in the right factor, hence that factor is nonnegative. Dual left-constructed facts give a nonpositive left factor.
+- Sign pattern (`XWord.pword_sign`): letters before the unique `0` are strictly negative and letters after it are strictly positive.
+- Unique right parse of `[0] ++ r v` when `v` is a `PWord`: that parse is `([0], v)`.
+- Catalan split: `w.take (idxOf 0) ++ [0]` and `0 :: w.drop (idxOf 0 + 1)` are `PWord`s, and concatenating them recovers `w`.
+- Reverse-and-negate preserves `PWord`. A `PWord` that starts with `0` is a `YWord`. Gluing `p ++ q.tail` stays a `PWord` when `q` starts with `0`. Two start-with-`0` `PWord`s may be combined by `u ++ r v`.
 
 ## Experimental decomposition (not a proof)
 
@@ -58,11 +62,11 @@ Public c5-k4 already checked `|X_n| = a(n-1)` through `n = 14`. Those counts are
 An exact proof can be assembled from three Xia-specific statements plus one generating-function identity:
 
 1. Unique greedy right-core bijection: every Xia word is uniquely `c ++ y.tail` with `c` right-irreducible and `y` a `YWord`.
-2. `|Y_n| = H_{n-1}`, equivalently `|P_k| = C_k` with unique Catalan first-peel decomposition of `YWord`s. The sign pattern around the unique `0` is the intended Catalan bijection.
+2. `|Y_n| = H_{n-1}`, equivalently `|P_k| = C_k` with unique Catalan first-peel decomposition of `YWord`s. The sign pattern around the unique `0` is now proved. The remaining Catalan count is the factorization of start-with-`0` `PWord`s: experimentally `u ++ r v` is a bijection `Right_i × Right_j → Right_{i+j}` with generating function `S = x + S^2`, hence `|Right_n| = C_{n-1}`, and the unique-`0` index histogram is `C_k C_{n-1-k}`.
 3. `|I_n| = A081696(n-1)` (Wilf irreducible composition pairs of `n-1`, or the D-finite recurrence for that sequence).
 4. Algebraic identity `I(x) H(x) = x G(x)` with `G` the OEIS gf of `a`. This does not mention Xia words and can be proved independently.
 
-None of (1)–(3) is proved in Lean. Partial lemmas, the length-3 count, and the finite convolution check do not close the conjecture.
+(1) and `|P_n| = C_n` are not proved in Lean. The length-3 count and the finite convolution check do not close the conjecture.
 
 ## Approaches that failed or stalled
 

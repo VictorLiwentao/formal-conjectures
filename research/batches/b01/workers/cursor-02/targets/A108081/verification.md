@@ -41,6 +41,7 @@ python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/decom
 python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/bijection_search.py
 python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/catalan_peels.py
 python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/pword_signs.py
+python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/pword_catalan_split.py
 ```
 
 Guard: PASS (worker path only). Source SHA-256 matches.
@@ -63,6 +64,14 @@ Guard: PASS (worker path only). Source SHA-256 matches.
 #print axioms PWord.not_isAppend
 -- [propext, Quot.sound]
 #print axioms PWord.of_step_right
+-- [propext, Quot.sound]
+#print axioms XWord.pword_sign
+-- [propext, Classical.choice, Quot.sound]
+#print axioms PWord.eq_of_isRightParse_cons_zero_r
+-- [propext, Classical.choice, Quot.sound]
+#print axioms PWord.take_idxOf_concat_zero
+-- [propext, Classical.choice, Quot.sound]
+#print axioms PWord.yWord_of_head_eq_zero
 -- [propext, Quot.sound]
 #print axioms xN_finite
 -- [propext, Classical.choice, Quot.sound]

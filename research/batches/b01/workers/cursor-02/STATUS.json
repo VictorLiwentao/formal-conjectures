@@ -6,7 +6,7 @@
   "coordination_commit": "238f78bdd5701ae4c97a0d70d4e22e2d45770d7a",
   "current_status": "partial",
   "novelty_status": "provisional_no_public_solution_found",
-  "last_updated_utc": "2026-09-13T00:30:00Z",
+  "last_updated_utc": "2026-09-13T00:58:00Z",
   "kickoff_utc": "2026-09-12T23:10:00Z",
   "session_limit_utc": "2026-09-13T07:10:00Z",
   "proof_declarations": [
@@ -21,14 +21,21 @@
     "OeisA108081.XWord.append_zero_of_getLast_eq_one",
     "OeisA108081.XWord.append_YWord_tail",
     "OeisA108081.PWord.not_isAppend",
-    "OeisA108081.PWord.of_step_right"
+    "OeisA108081.PWord.of_step_right",
+    "OeisA108081.XWord.pword_sign",
+    "OeisA108081.PWord.eq_of_isRightParse_cons_zero_r",
+    "OeisA108081.PWord.take_idxOf_concat_zero",
+    "OeisA108081.PWord.cons_zero_drop_succ_idxOf",
+    "OeisA108081.PWord.yWord_of_head_eq_zero",
+    "OeisA108081.PWord.step_right_of_heads_eq_zero"
   ],
   "unresolved_gaps": [
     "The quantified identity |X_n| = a(n-1) is not proved.",
     "Greedy right-core bijection with Y-words is only experimental.",
+    "|P_n| = C_n is unproved; start-0 PWord factorization S = x + S^2 is experimental.",
     "|Y_n| = H_{n-1} via |P_k| = C_k is unproved.",
     "|I_n| = A081696(n-1) is unproved.",
     "Partial lemmas and n<=8 (or public n<=14) counts are not a resolution."
   ],
-  "next_step": "Prove PWord sign pattern and unique first peel of [0]++r(v), then |P_k|=C_k, then the I×Y rebuild bijection."
+  "next_step": "Prove that u ++ r v is a bijection on start-with-0 PWords (S = x + S^2), hence |Right_n| = C_{n-1} and |P_n| = C_n, then the I×Y rebuild bijection."
 }

@@ -42,6 +42,24 @@ lemma length_l (w : Word) : (l w).length = w.length := by
 lemma length_r (w : Word) : (r w).length = w.length := by
   simp [r]
 
+lemma getElem_l {u : Word} {i : ℕ} (hi : i < (l u).length) :
+    (l u)[i] =
+      u[u.length - 1 - i]'(Nat.sub_one_sub_lt_of_lt (by simpa [length_l] using hi)) - 1 := by
+  simp [l]
+
+lemma getElem_r {v : Word} {i : ℕ} (hi : i < (r v).length) :
+    (r v)[i] =
+      v[v.length - 1 - i]'(Nat.sub_one_sub_lt_of_lt (by simpa [length_r] using hi)) + 1 := by
+  simp [r]
+
+lemma take_r (v : Word) (j : ℕ) :
+    (r v).take j = r (v.drop (v.length - j)) := by
+  simp [r, take_reverse]
+
+lemma drop_r (v : Word) (j : ℕ) :
+    (r v).drop j = r (v.take (v.length - j)) := by
+  simp [r, drop_reverse]
+
 lemma l_r (w : Word) : l (r w) = w := by
   simp [l, r]
   change w.map (fun x => x + 1 - 1) = w
@@ -601,6 +619,319 @@ lemma PWord.step_left_factor_nonpos {u v : Word} (hu : XWord u) (hv : XWord v)
     simpa [count_eq_zero] using hones
   exact hu.nonpos_of_not_mem_one hmem hx
 
+lemma PWord.idxOf_lt_length {w : Word} (hw : PWord w) :
+    w.idxOf 0 < w.length :=
+  idxOf_lt_length_of_mem hw.1.zero_mem
+
+lemma PWord.getElem_idxOf_zero {w : Word} (hw : PWord w) :
+    w[w.idxOf 0]'(hw.idxOf_lt_length) = 0 :=
+  getElem_idxOf _
+
+/-- Letters of a one-zero Xia word are strictly negative before the unique `0`
+and strictly positive after it. -/
+lemma XWord.pword_sign {w : Word} (hw : XWord w) (hc : w.count 0 = 1)
+    (i : ℕ) (hi : i < w.length) :
+    (i < w.idxOf 0 → w[i] < 0) ∧ (w.idxOf 0 < i → 0 < w[i]) :=
+  match w, hw with
+  | _, .base => by
+    simp at hi
+    constructor
+    · intro hlt
+      simp [idxOf_cons_self] at hlt
+    · intro hgt
+      simp [idxOf_cons_self] at hgt
+      omega
+  | _, @XWord.step_left u v hu hv => by
+    have hp : PWord (l u ++ v) := ⟨XWord.step_left hu hv, hc⟩
+    have hvP := (PWord.of_step_left hu hv hp).1
+    have hones := (PWord.of_step_left hu hv hp).2
+    have h1u : (1 : ℤ) ∉ u := by simpa [count_eq_zero] using hones
+    have h0lu : (0 : ℤ) ∉ l u := fun hmem => h1u (mem_l_iff.mp hmem)
+    have hidx : (l u ++ v).idxOf 0 = (l u).length + v.idxOf 0 :=
+      idxOf_append_of_notMem h0lu
+    have ih (j : ℕ) (hj : j < v.length) := XWord.pword_sign hv hvP.2 j hj
+    by_cases hleft : i < (l u).length
+    · have hget : (l u ++ v)[i] = (l u)[i] := getElem_append_left hleft
+      have hx : u[u.length - 1 - i]'(Nat.sub_one_sub_lt_of_lt
+          (by simpa [length_l] using hleft)) ∈ u := getElem_mem _
+      have hle := PWord.step_left_factor_nonpos hu hv hp hx
+      rw [hget, getElem_l hleft]
+      constructor
+      · intro _hlt
+        omega
+      · intro hgt
+        have : i < (l u ++ v).idxOf 0 := by
+          simp [hidx]
+          omega
+        omega
+    · have hge : (l u).length ≤ i := Nat.le_of_not_gt hleft
+      have hjlen : i - (l u).length < v.length := by
+        have hsum : (l u ++ v).length = (l u).length + v.length := length_append
+        omega
+      have hget : (l u ++ v)[i] = v[i - (l u).length] := getElem_append_right hge
+      have ihj := ih (i - (l u).length) hjlen
+      rw [hget]
+      constructor
+      · intro hlt
+        refine ihj.1 ?_
+        omega
+      · intro hgt
+        refine ihj.2 ?_
+        omega
+  | _, @XWord.step_right u v hu hv => by
+    have hp : PWord (u ++ r v) := ⟨XWord.step_right hu hv, hc⟩
+    have huP := (PWord.of_step_right hu hv hp).1
+    have hneg := (PWord.of_step_right hu hv hp).2
+    have hneg1 : (-1 : ℤ) ∉ v := by simpa [count_eq_zero] using hneg
+    have h0u : (0 : ℤ) ∈ u := hu.zero_mem
+    have hidx : (u ++ r v).idxOf 0 = u.idxOf 0 := idxOf_append_of_mem h0u
+    have ih (j : ℕ) (hj : j < u.length) := XWord.pword_sign hu huP.2 j hj
+    by_cases hleft : i < u.length
+    · have hget : (u ++ r v)[i] = u[i] := getElem_append_left hleft
+      have ihj := ih i hleft
+      rw [hget, hidx]
+      exact ihj
+    · have hge : u.length ≤ i := Nat.le_of_not_gt hleft
+      have hjlen : i - u.length < (r v).length := by
+        have hsum : (u ++ r v).length = u.length + (r v).length := length_append
+        omega
+      have hget : (u ++ r v)[i] = (r v)[i - u.length] := getElem_append_right hge
+      have hx : v[v.length - 1 - (i - u.length)]'(Nat.sub_one_sub_lt_of_lt
+          (by simpa [length_r] using hjlen)) ∈ v := getElem_mem _
+      have hle := PWord.step_right_factor_nonneg hu hv hp hx
+      rw [hget, getElem_r hjlen]
+      constructor
+      · intro hlt
+        have : i < u.length := by
+          have hidxu := idxOf_lt_length_of_mem h0u
+          omega
+        omega
+      · intro _hgt
+        omega
+
+lemma PWord.getElem_neg_of_lt_idxOf {w : Word} (hw : PWord w) {i : ℕ}
+    (hi : i < w.idxOf 0) :
+    w[i]'(hi.trans hw.idxOf_lt_length) < 0 :=
+  (XWord.pword_sign hw.1 hw.2 i (hi.trans hw.idxOf_lt_length)).1 hi
+
+lemma PWord.getElem_pos_of_gt_idxOf {w : Word} (hw : PWord w) {i : ℕ}
+    (h1 : w.idxOf 0 < i) (h2 : i < w.length) : 0 < w[i] :=
+  (XWord.pword_sign hw.1 hw.2 i h2).2 h1
+
+lemma PWord.idxOf_eq_zero_of_head_eq_zero {w : Word} (hw : PWord w)
+    (hhead : w.head hw.1.ne_nil = 0) : w.idxOf 0 = 0 :=
+  (idxOf_eq_zero_iff_head_eq hw.1.ne_nil).mpr hhead
+
+lemma PWord.not_mem_neg_one_of_head_eq_zero {w : Word} (hw : PWord w)
+    (hhead : w.head hw.1.ne_nil = 0) : (-1 : ℤ) ∉ w := by
+  have hidx0 : w.idxOf 0 = 0 := PWord.idxOf_eq_zero_of_head_eq_zero hw hhead
+  intro hmem
+  have hne : w.idxOf (-1) ≠ 0 := by
+    intro heq
+    have : (0 : ℤ) = -1 :=
+      (idxOf_inj hw.1.zero_mem).mp (hidx0.trans heq.symm)
+    omega
+  have hlt : w.idxOf (-1) < w.length := idxOf_lt_length_of_mem hmem
+  have hpos : 0 < w[w.idxOf (-1)]'(hlt) :=
+    PWord.getElem_pos_of_gt_idxOf hw (by omega) hlt
+  have : w[w.idxOf (-1)]'(hlt) = -1 := getElem_idxOf _
+  omega
+
+lemma PWord.step_right_of_heads_eq_zero {u v : Word} (hu : PWord u) (hv : PWord v)
+    (hu0 : u.head hu.1.ne_nil = 0) (hv0 : v.head hv.1.ne_nil = 0) :
+    PWord (u ++ r v) := by
+  have := hu0
+  have hneg : (-1 : ℤ) ∉ v := PWord.not_mem_neg_one_of_head_eq_zero hv hv0
+  have hx : XWord (u ++ r v) := XWord.step_right hu.1 hv.1
+  have hcount : (u ++ r v).count 0 = 1 := by
+    have hr0 : (r v).count 0 = 0 := by
+      simpa [count_zero_r, count_eq_zero] using hneg
+    simp [count_append, hu.2, hr0]
+  exact ⟨hx, hcount⟩
+
+lemma PWord.isRightParse_cons_zero_r {v : Word} (hv : PWord v) :
+    IsRightParse ([0] ++ r v) [0] v :=
+  ⟨XWord.base, hv.1, rfl⟩
+
+lemma PWord.eq_of_isRightParse_cons_zero_r {v u v' : Word} (hv : PWord v)
+    (h : IsRightParse ([0] ++ r v) u v') : u = [0] ∧ v' = v := by
+  have huX := h.1
+  have hv'X := h.2.1
+  have hw := h.2.2
+  have hk : u.length = 1 ∨ 2 ≤ u.length := by
+    have := h.pos_left
+    omega
+  rcases hk with hk | hk
+  · have hu0 : u = [0] :=
+      match u, huX with
+      | _, .base => rfl
+      | _, @XWord.step_left u0 v0 hu0 hv0 => by
+          have hsum : u0.length + v0.length = 1 := by simpa [l] using hk
+          have := hu0.length_pos
+          have := hv0.length_pos
+          omega
+      | _, @XWord.step_right u0 v0 hu0 hv0 => by
+          have hsum : u0.length + v0.length = 1 := by simpa [r] using hk
+          have := hu0.length_pos
+          have := hv0.length_pos
+          omega
+    have hr : r v = r v' := by
+      have := hw
+      simp [hu0] at this
+      exact this
+    exact ⟨hu0, r_injective hr.symm⟩
+  · let k := u.length - 1
+    have hsucc : u.length = Nat.succ k := by omega
+    have htake : ([0] ++ r v).take u.length = 0 :: (r v).take k := by
+      rw [show ([0] ++ r v) = 0 :: r v from rfl, hsucc, take_succ_cons]
+    have hdrop : ([0] ++ r v).drop u.length = (r v).drop k := by
+      rw [show ([0] ++ r v) = 0 :: r v from rfl, hsucc, drop_succ_cons]
+    have hm_add : k + v'.length = v.length := by
+      have hsum := h.length_add
+      have : ([0] ++ r v).length = v.length + 1 := by simp [length_r]
+      omega
+    have hule : k ≤ v.length := by omega
+    let m := v.length - k
+    have hsne : v.drop m ≠ [] := by
+      have : 0 < k := by omega
+      simp [m, drop_eq_nil_iff]
+      omega
+    have hv'_eq : v' = v.take m := by
+      have hr := h.drop
+      have : r v' = r (v.take m) := by
+        calc
+          r v' = ([0] ++ r v).drop u.length := hr.symm
+          _ = (r v).drop k := hdrop
+          _ = r (v.take (v.length - k)) := drop_r _ _
+          _ = r (v.take m) := rfl
+      exact r_injective this
+    have h0take : (0 : ℤ) ∈ v.take m := by
+      simpa [hv'_eq] using hv'X.zero_mem
+    have hidxlt : v.idxOf 0 < m :=
+      (mem_take_iff_idxOf_lt hv.1.zero_mem).mp h0take
+    have hm_lt : m < v.length := by
+      simp [drop_eq_nil_iff] at hsne
+      omega
+    have hheadpos : 0 < (v.drop m).head hsne := by
+      rw [head_drop hsne]
+      exact PWord.getElem_pos_of_gt_idxOf hv hidxlt hm_lt
+    have h1le : 1 ≤ (v.drop m).head hsne := by omega
+    have hnot : ¬ XWord ([0] ++ r (v.drop m)) :=
+      not_xWord_cons_zero_r_of_one_le_head hsne h1le
+    have hu_eq : u = [0] ++ r (v.drop m) := by
+      have hpre := h.take
+      have : u = 0 :: (r v).take k := by
+        calc
+          u = ([0] ++ r v).take u.length := hpre.symm
+          _ = 0 :: (r v).take k := htake
+      rw [this, take_r]
+      have : v.length - k = m := rfl
+      simp [this]
+    exact (hnot (hu_eq ▸ huX)).elim
+
+lemma count_zero_rho (w : Word) : (rho w).count 0 = w.count 0 := by
+  simp [rho, count_eq_countP, countP_map]
+  congr 1
+  ext x
+  simp
+
+lemma PWord.rho {w : Word} (hw : PWord w) : PWord (rho w) :=
+  ⟨hw.1.rho_mem, (count_zero_rho w).trans hw.2⟩
+
+lemma XWord.take_idxOf_concat_zero {w : Word} (hw : XWord w) (hc : w.count 0 = 1) :
+    PWord (w.take (w.idxOf 0) ++ [0]) :=
+  match w, hw with
+  | _, .base => by
+    simpa [idxOf_cons_self] using PWord.base
+  | _, @XWord.step_left u v hu hv => by
+    have hp : PWord (l u ++ v) := ⟨XWord.step_left hu hv, hc⟩
+    have hvP := (PWord.of_step_left hu hv hp).1
+    have hones := (PWord.of_step_left hu hv hp).2
+    have h1u : (1 : ℤ) ∉ u := by simpa [count_eq_zero] using hones
+    have h0lu : (0 : ℤ) ∉ l u := fun hmem => h1u (mem_l_iff.mp hmem)
+    have hidx : (l u ++ v).idxOf 0 = (l u).length + v.idxOf 0 :=
+      idxOf_append_of_notMem h0lu
+    have ih := XWord.take_idxOf_concat_zero hv hvP.2
+    have htake : (l u ++ v).take ((l u ++ v).idxOf 0) ++ [0] =
+        l u ++ (v.take (v.idxOf 0) ++ [0]) := by
+      rw [hidx, take_length_add_append, append_assoc]
+    have hx : XWord (l u ++ (v.take (v.idxOf 0) ++ [0])) :=
+      XWord.step_left hu ih.1
+    have hcount : (l u ++ (v.take (v.idxOf 0) ++ [0])).count 0 = 1 := by
+      have hlu0 : (l u).count 0 = 0 := by
+        simpa [count_zero_l] using hones
+      simp [count_append, hlu0, ih.2]
+    exact htake ▸ ⟨hx, hcount⟩
+  | _, @XWord.step_right u v hu hv => by
+    have hp : PWord (u ++ r v) := ⟨XWord.step_right hu hv, hc⟩
+    have huP := (PWord.of_step_right hu hv hp).1
+    have h0u : (0 : ℤ) ∈ u := hu.zero_mem
+    have hidx : (u ++ r v).idxOf 0 = u.idxOf 0 := idxOf_append_of_mem h0u
+    have ih := XWord.take_idxOf_concat_zero hu huP.2
+    have hklt : u.idxOf 0 ≤ u.length := (idxOf_lt_length_of_mem h0u).le
+    have htake : (u ++ r v).take ((u ++ r v).idxOf 0) ++ [0] =
+        u.take (u.idxOf 0) ++ [0] := by
+      rw [hidx, take_append_of_le_length hklt]
+    exact htake ▸ ih
+
+lemma PWord.take_idxOf_concat_zero {w : Word} (hw : PWord w) :
+    PWord (w.take (w.idxOf 0) ++ [0]) :=
+  XWord.take_idxOf_concat_zero hw.1 hw.2
+
+lemma XWord.cons_zero_drop_succ_idxOf {w : Word} (hw : XWord w) (hc : w.count 0 = 1) :
+    PWord (0 :: w.drop (w.idxOf 0 + 1)) :=
+  match w, hw with
+  | _, .base => by
+    simpa [idxOf_cons_self] using PWord.base
+  | _, @XWord.step_left u v hu hv => by
+    have hp : PWord (l u ++ v) := ⟨XWord.step_left hu hv, hc⟩
+    have hvP := (PWord.of_step_left hu hv hp).1
+    have hones := (PWord.of_step_left hu hv hp).2
+    have h1u : (1 : ℤ) ∉ u := by simpa [count_eq_zero] using hones
+    have h0lu : (0 : ℤ) ∉ l u := fun hmem => h1u (mem_l_iff.mp hmem)
+    have hidx : (l u ++ v).idxOf 0 = (l u).length + v.idxOf 0 :=
+      idxOf_append_of_notMem h0lu
+    have ih := XWord.cons_zero_drop_succ_idxOf hv hvP.2
+    have hdrop : 0 :: (l u ++ v).drop ((l u ++ v).idxOf 0 + 1) =
+        0 :: v.drop (v.idxOf 0 + 1) := by
+      rw [hidx, Nat.add_assoc, drop_length_add_append]
+    exact hdrop ▸ ih
+  | _, @XWord.step_right u v hu hv => by
+    have hp : PWord (u ++ r v) := ⟨XWord.step_right hu hv, hc⟩
+    have huP := (PWord.of_step_right hu hv hp).1
+    have hneg := (PWord.of_step_right hu hv hp).2
+    have h0u : (0 : ℤ) ∈ u := hu.zero_mem
+    have hidx : (u ++ r v).idxOf 0 = u.idxOf 0 := idxOf_append_of_mem h0u
+    have ih := XWord.cons_zero_drop_succ_idxOf hu huP.2
+    have hklt : u.idxOf 0 < u.length := idxOf_lt_length_of_mem h0u
+    have hle : u.idxOf 0 + 1 ≤ u.length := Nat.succ_le_of_lt hklt
+    have hdrop : 0 :: (u ++ r v).drop ((u ++ r v).idxOf 0 + 1) =
+        (0 :: u.drop (u.idxOf 0 + 1)) ++ r v := by
+      rw [hidx, drop_append_of_le_length hle, cons_append]
+    have hx : XWord ((0 :: u.drop (u.idxOf 0 + 1)) ++ r v) :=
+      XWord.step_right ih.1 hv
+    have hcount : ((0 :: u.drop (u.idxOf 0 + 1)) ++ r v).count 0 = 1 := by
+      have hr0 : (r v).count 0 = 0 := by
+        simpa [count_zero_r] using hneg
+      rw [count_append, ih.2, hr0]
+    exact hdrop ▸ ⟨hx, hcount⟩
+
+lemma PWord.cons_zero_drop_succ_idxOf {w : Word} (hw : PWord w) :
+    PWord (0 :: w.drop (w.idxOf 0 + 1)) :=
+  XWord.cons_zero_drop_succ_idxOf hw.1 hw.2
+
+lemma PWord.take_idxOf_concat_zero_append_drop {w : Word} (hw : PWord w) :
+    w.take (w.idxOf 0) ++ [0] ++ w.drop (w.idxOf 0 + 1) = w := by
+  have hlt := hw.idxOf_lt_length
+  have h0 := hw.getElem_idxOf_zero
+  have htake : w.take (w.idxOf 0 + 1) = w.take (w.idxOf 0) ++ [0] := by
+    simpa [h0] using take_succ_eq_append_getElem hlt
+  calc
+    w.take (w.idxOf 0) ++ [0] ++ w.drop (w.idxOf 0 + 1) =
+        w.take (w.idxOf 0 + 1) ++ w.drop (w.idxOf 0 + 1) := by
+      simp [htake]
+    _ = w := take_append_drop _ _
+
 lemma exists_left_parse_of_head_eq_neg_one {w : Word} (hw : XWord w)
     (h : w.head hw.ne_nil = -1) :
     ∃ u v, IsLeftParse w u v :=
@@ -905,6 +1236,38 @@ lemma YWord.head_eq_zero {w : Word} (hw : YWord w) :
     rw [this]
     exact YWord.head_eq_zero hu
 
+lemma XWord.yWord_of_pword_head_zero {w : Word} (hw : XWord w) (hc : w.count 0 = 1)
+    (hhead : w.head hw.ne_nil = 0) : YWord w :=
+  match w, hw with
+  | _, .base => YWord.base
+  | _, @XWord.step_left u v hu hv => by
+    have hp : PWord (l u ++ v) := ⟨XWord.step_left hu hv, hc⟩
+    have hones := (PWord.of_step_left hu hv hp).2
+    have h1u : (1 : ℤ) ∉ u := by simpa [count_eq_zero] using hones
+    have hu_ne := hu.ne_nil
+    have hhd : (l u ++ v).head (XWord.ne_nil (XWord.step_left hu hv)) =
+        (l u).head (l_ne_nil hu_ne) :=
+      head_append_of_ne_nil (l_ne_nil hu_ne)
+    have hlast1 : u.getLast hu_ne = 1 := by
+      have : u.getLast hu_ne - 1 = 0 := by
+        rw [← head_l hu_ne, ← hhd, hhead]
+      omega
+    exact (h1u (by simpa [hlast1] using List.getLast_mem hu_ne)).elim
+  | _, @XWord.step_right u v hu hv => by
+    have hp : PWord (u ++ r v) := ⟨XWord.step_right hu hv, hc⟩
+    have huP := (PWord.of_step_right hu hv hp).1
+    have hu_ne := hu.ne_nil
+    have hhead_u : u.head hu_ne = 0 := by
+      have : (u ++ r v).head (XWord.ne_nil (XWord.step_right hu hv)) =
+          u.head hu_ne :=
+        head_append_of_ne_nil hu_ne
+      exact this ▸ hhead
+    exact YWord.step (XWord.yWord_of_pword_head_zero hu huP.2 hhead_u) hv
+
+lemma PWord.yWord_of_head_eq_zero {w : Word} (hw : PWord w)
+    (hhead : w.head hw.1.ne_nil = 0) : YWord w :=
+  XWord.yWord_of_pword_head_zero hw.1 hw.2 hhead
+
 /-- Concatenating an arbitrary Xia word with the tail of a `YWord` stays in `X`.
 This is the easy half of the experimental rebuild map. -/
 lemma XWord.append_YWord_tail {c y : Word} (hc : XWord c) (hy : YWord y) :
@@ -917,6 +1280,21 @@ lemma XWord.append_YWord_tail {c y : Word} (hc : XWord c) (hy : YWord y) :
     have : (u ++ r v).tail = u.tail ++ r v := tail_append_of_ne_nil hu_ne
     rw [this, ← append_assoc]
     exact XWord.step_right (XWord.append_YWord_tail hc hu) hv
+
+lemma PWord.append_tail_of_head_eq_zero {p q : Word} (hp : PWord p) (hq : PWord q)
+    (hhead : q.head hq.1.ne_nil = 0) : PWord (p ++ q.tail) := by
+  have hy := PWord.yWord_of_head_eq_zero hq hhead
+  have hx := XWord.append_YWord_tail hp.1 hy
+  have hqeq : q = 0 :: q.tail := by
+    have h := (cons_head_tail hq.1.ne_nil).symm
+    simpa [hhead] using h
+  have htail0 : q.tail.count 0 = 0 := by
+    have hcount := hq.2
+    rw [hqeq, count_cons_self] at hcount
+    omega
+  have hcount : (p ++ q.tail).count 0 = 1 := by
+    simp [count_append, hp.2, htail0]
+  exact ⟨hx, hcount⟩
 
 lemma YWord.exists_right_parse_of_length_ge_two {w : Word} (hw : YWord w)
     (hlen : 2 ≤ w.length) : ∃ u v, IsRightParse w u v :=
@@ -948,6 +1326,16 @@ lemma exists_right_parse_append_YWord_tail {c y : Word} (hc : XWord c)
 #print axioms PWord.step_right_factor_nonneg
 #print axioms PWord.step_left_factor_nonpos
 #print axioms PWord.of_step_left
+#print axioms XWord.pword_sign
+#print axioms PWord.getElem_neg_of_lt_idxOf
+#print axioms PWord.eq_of_isRightParse_cons_zero_r
+#print axioms PWord.step_right_of_heads_eq_zero
+#print axioms PWord.take_idxOf_concat_zero
+#print axioms PWord.cons_zero_drop_succ_idxOf
+#print axioms PWord.take_idxOf_concat_zero_append_drop
+#print axioms PWord.rho
+#print axioms PWord.yWord_of_head_eq_zero
+#print axioms PWord.append_tail_of_head_eq_zero
 #print axioms xN_finite
 #print axioms XWord.rho_mem
 #print axioms XWord.cons_zero_of_head_eq_neg_one
