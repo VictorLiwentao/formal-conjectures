@@ -12,7 +12,7 @@ Incomplete research session. No exact proof or disproof. Do not treat this as a 
 - source SHA-256: `b50d00e13735613cbe37bd3a25c19130874e8f036ca2a0e3c1aceb177a33c683`
 - original kickoff (UTC): 2026-09-12T23:12Z
 - this checkpoint (UTC): 2026-09-13T03:05Z
-- final commit SHA: (recorded after commit)
+- final commit SHA: `2e83c1845e949f02864e7c1a7c1f57f94454a080`
 
 ## Reproduction
 
@@ -40,9 +40,9 @@ Do not run a full `lake build`, `lake clean`, or `lake update`.
 
 ## Proved this checkpoint (infrastructure only)
 
-- `{5^a, 7^b}` with `a,b ≥ 2` overshoots leftover `6/5` after any extra positive factor (`not_five_sigma_eq_six_usigma_five_seven_mul`).
-- `{11^2, 13^2, p^k}` cannot fill leftover `6/5` for `p ≥ 17` and `k ≥ 2`. For `p ≤ 43` every `a,b,k ≥ 2` overshoots.
-- Previous checkpoint still holds: leftover `6/5` closed at ω≤2; leftover `10/7` family-complete including `{5^a,7^b,p}` for `p≥11`; CRT reduction; `v₂≥3 ⇒ v₃<2`.
+- Leftover `10/7` cannot be three squareful primes `7 ≤ p < q < r` times a squarefree coprime factor (`not_seven_sigma_of_three_sq_primes_ge_seven`).
+- Leftover `10/7` cannot be three squareful primes `5,7,r` with `r ≥ 11` times a squarefree coprime factor (`not_seven_sigma_of_three_sq_primes_five_seven`).
+- Previous checkpoint still holds: leftover `6/5` closed at ω≤2; `{5,7}` extra factors overshoot leftover `6/5`; `{11^2,13^2,p}` closed; leftover `10/7` family-complete including `{5^a,7^b,p}` for `p≥11`; CRT reduction; `v₂≥3 ⇒ v₃<2`.
 
 ## Next step
 
