@@ -290,5 +290,5 @@
     "Cloitre C1 and Cor. 6.6 are not an unconditional solution."
   ],
   "next_step": "Prove an unconditional first-entry bound q | x(q(q+2)-1) for remaining primes q ≥ 263 not in the explicit families, or find a Lean-checkable counterexample. Complementary k≡1 (mod 6) and Type B k≤q^2 still need a prime in the AP. Extending minFac does not finish ∀p. Session hard stop is 2026-09-13 07:12 UTC. Do not claim completion.",
-  "handoff_research_commit": "pending"
+  "handoff_research_commit": "7d4e6154"
 }
