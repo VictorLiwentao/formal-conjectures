@@ -6555,6 +6555,80 @@ lemma not_five_sigma_of_three_sq_primes_eleven_sq_thirteen_large {m p : ℕ}
   exact (five_sigma_lt_six_usigma_eleven_sq_thirteen_large hp hp67
     (by omega) (by omega)).ne heq
 
+lemma five_mul_twenty_five_q_r_cap {q r : ℕ} (hq : 313 ≤ q) (hqr : q < r) :
+    5 * q * r * 31 ≤ 6 * (q - 1) * (r - 1) * 26 := by
+  have hq1 : 1 ≤ q := by omega
+  have hr1 : 1 ≤ r := by omega
+  have hq' : (313 : ℤ) ≤ q := Int.ofNat_le.mpr hq
+  have hr' : (q : ℤ) + 1 ≤ r := Int.ofNat_le.mpr (Nat.succ_le_of_lt hqr)
+  have hL : ((5 * q * r * 31 : ℕ) : ℤ) =
+      (5 : ℤ) * q * r * 31 := by
+    rw [Nat.cast_mul, Nat.cast_mul, Nat.cast_mul]; rfl
+  have hR : ((6 * (q - 1) * (r - 1) * 26 : ℕ) : ℤ) =
+      (6 : ℤ) * ((q : ℤ) - 1) * ((r : ℤ) - 1) * 26 := by
+    rw [Nat.cast_mul, Nat.cast_mul, Nat.cast_mul, Nat.cast_sub hq1, Nat.cast_sub hr1]
+    rfl
+  have : (5 : ℤ) * q * r * 31 ≤ 6 * (q - 1) * (r - 1) * 26 := by nlinarith
+  exact Nat.cast_le.mp (by rw [hL, hR]; exact this)
+
+/-- `{5^2, q^b, r^c}` undershoots leftover `6/5` for `313 ≤ q < r`. -/
+lemma five_sigma_lt_six_usigma_five_sq_two_large {q r b c : ℕ}
+    (hq : q.Prime) (hr : r.Prime) (hq313 : 313 ≤ q) (hqr : q < r)
+    (hb : 0 < b) (hc : 0 < c) :
+    5 * σ 1 (5 ^ 2) * σ 1 (q ^ b) * σ 1 (r ^ c) <
+      6 * usigma (5 ^ 2) * usigma (q ^ b) * usigma (r ^ c) := by
+  have hσ5 : σ 1 (5 ^ 2) = 31 := by
+    rw [sigma_prime_pow_two Nat.prime_five]
+    decide
+  rw [hσ5, usigma_five_pow_two]
+  have hqcap := sigma_lt_cap_usigma hq hb
+  have hrcap := sigma_lt_cap_usigma hr hc
+  have huq : 0 < usigma (q ^ b) := by
+    rw [usigma_prime_pow hq hb]
+    exact Nat.add_pos_left (by decide : 0 < 1) _
+  have hcap := five_mul_twenty_five_q_r_cap hq313 hqr
+  have hthis := six_five_of_two_caps_times_const (A := q - 1) (B := q)
+    (X := σ 1 (q ^ b)) (Y := usigma (q ^ b)) (C := r - 1) (D := r)
+    (P := σ 1 (r ^ c)) (Q := usigma (r ^ c)) (S := 26) (T := 31)
+    hqcap hrcap hcap (by omega : 0 < q) huq (by decide : 0 < 31)
+  have hL : 5 * σ 1 (q ^ b) * σ 1 (r ^ c) * 31 =
+      5 * 31 * σ 1 (q ^ b) * σ 1 (r ^ c) := by ring
+  have hR : 6 * usigma (q ^ b) * usigma (r ^ c) * 26 =
+      6 * 26 * usigma (q ^ b) * usigma (r ^ c) := by ring
+  rw [← hL, ← hR]
+  exact hthis
+
+/-- Leftover `6/5` cannot be three squareful primes `5^2 < q < r` with
+`313 ≤ q` times a squarefree coprime factor. -/
+lemma not_five_sigma_of_three_sq_primes_five_sq_two_large {m q r : ℕ}
+    (hm : m ≠ 0) (hq : q.Prime) (hr : r.Prime) (hq313 : 313 ≤ q) (hqr : q < r)
+    (h : 5 * σ 1 m = 6 * usigma m)
+    (hk5 : padicValNat 5 m = 2) (hkq : 2 ≤ padicValNat q m)
+    (hkr : 2 ≤ padicValNat r m)
+    (hs : Squarefree (ordCompl[r] (ordCompl[q] (ordCompl[5] m)))) : False := by
+  have hp5 : Nat.Prime 5 := Nat.prime_five
+  have hpq_ne : (5 : ℕ) ≠ q :=
+    Nat.ne_of_lt (lt_of_lt_of_le (by decide : 5 < 313) hq313)
+  have hpr_ne : (5 : ℕ) ≠ r :=
+    Nat.ne_of_lt (lt_of_lt_of_le (lt_of_lt_of_le (by decide : 5 < 313) hq313)
+      (Nat.le_of_lt hqr))
+  have hqr_ne : q ≠ r := Nat.ne_of_lt hqr
+  have heq := five_sigma_eq_six_of_three_squareful hm hp5 hq hr hpq_ne hpr_ne
+    hqr_ne h hs
+  have hproj_p : ordProj[5] m = 5 ^ padicValNat 5 m := by
+    simp [Nat.factorization_def m hp5]
+  have hproj_q : ordProj[q] (ordCompl[5] m) =
+      q ^ padicValNat q (ordCompl[5] m) := by
+    simp [Nat.factorization_def (ordCompl[5] m) hq]
+  have hproj_r : ordProj[r] (ordCompl[q] (ordCompl[5] m)) =
+      r ^ padicValNat r (ordCompl[q] (ordCompl[5] m)) := by
+    simp [Nat.factorization_def (ordCompl[q] (ordCompl[5] m)) hr]
+  rw [hproj_r, padicValNat_ordCompl_of_ne hr hqr_ne,
+    padicValNat_ordCompl_of_ne hr hpr_ne, hproj_q,
+    padicValNat_ordCompl_of_ne hq hpq_ne, hproj_p, hk5] at heq
+  exact (five_sigma_lt_six_usigma_five_sq_two_large hq hr hq313 hqr
+    (by omega) (by omega)).ne heq
+
 end Unitary
 
 section Congruence
