@@ -11,7 +11,7 @@
   "novelty_status": "no_exact_public_solution_found_in_checked_sources",
   "statement_audit": "matches_intended_mceachen_statement",
   "oeis_editability": "unknown",
-  "last_updated_utc": "2026-09-13T04:25:00Z",
+  "last_updated_utc": "2026-09-13T04:32:00Z",
   "session_kickoff_utc": "2026-09-12T23:12:00Z",
   "session_hard_stop_utc": "2026-09-13T07:12:00Z",
   "proof_declarations": [
@@ -126,7 +126,9 @@
     "OeisA135508.six_thousand_five_hundred_sixty_one_dvd_succ_of_three_dvd_a",
     "OeisA135508.one_hundred_seven_dvd_x_2459",
     "OeisA135508.conjecture_of_one_hundred_seven_dvd",
-    "OeisA135508.remaining_prime_eq_one_hundred_seven"
+    "OeisA135508.remaining_prime_eq_one_hundred_seven",
+    "OeisA135508.a_11",
+    "OeisA135508.nineteen_thousand_six_hundred_eighty_three_dvd_succ_of_three_dvd_a"
   ],
   "unresolved_gaps": [
     "Frozen OeisA135508.conjecture is still sorry.",
@@ -139,7 +141,7 @@
     "conjecture_of_paired_injectors is a proper subfamily (5q-2, 7q-2, 5s-2, or 7s-2 prime). Scan of remaining p<200000: 332 of 466 covered; 134 uncovered by that pairing.",
     "leftover_injectors.py: all 466 leftover p<200000 have some factor injector k ≤ (p-2)/r. Zero McEachen-window gaps in that range. Not a proof.",
     "conjecture_of_add_two_overlap needs gcd(q+2, p-2)>1. Only 5 of those 466 leftover primes.",
-    "If n≥9 and 3∣a n then 2187∣n+1. If n≥10 and 3∣a n then 6561∣n+1. Those are not McEachen.",
+    "If n≥9 and 3∣a n then 2187∣n+1. If n≥10 and 3∣a n then 6561∣n+1. If n≥12 and 3∣a n then 19683∣n+1. Those are not McEachen.",
     "Need a prime r = kq-2 with r ≤ q(q+2)-1. For q ≡ 2 (mod 3) the candidates are k ≡ 5 (mod 6).",
     "Dirichlet, Linnik L=5, and the usual GRH bound do not give r ≤ q(q+2)-1. Finite injector checks are not a proof.",
     "Miller-Rabin to q ≤ 1000000 found no window failures (worst k=257 at q=40973). Not a proof.",

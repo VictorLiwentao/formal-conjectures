@@ -3105,6 +3105,61 @@ theorem a_two_four_pow_zero : a (2 * 4 ^ 0 - 1) = 2 :=
 
 lemma a_7 : a 7 = 2 := by simpa using a_two_four_pow 1
 
+lemma twelve_dvd_x_eleven : 12 ∣ x 11 := by
+  have h3 : 3 ∣ x 11 := three_dvd_x (by decide : 4 ≤ 11)
+  have hv := v2_x_ge_two 11 (by decide : 2 ≤ 11)
+  have hlog : Nat.log 4 (11 / 2) = 1 := by
+    have : 11 / 2 = 5 := by decide
+    rw [this]
+    exact Nat.log_eq_of_pow_le_of_lt_pow (by decide : (4 : ℕ) ^ 1 ≤ 5)
+      (by decide : 5 < (4 : ℕ) ^ 2)
+  have hge : 4 ≤ padicValNat 2 (x 11) := by
+    rw [hv, hlog]
+  have h16 : 16 ∣ x 11 := by
+    have hpowdvd : (2 : ℕ) ^ 4 ∣ x 11 :=
+      (padicValNat_dvd_iff_le (x_pos (by decide : 0 < (11 : ℕ))).ne').2 hge
+    have hpow : (2 : ℕ) ^ 4 = 16 := by decide
+    rwa [hpow] at hpowdvd
+  have h4 : 4 ∣ x 11 := dvd_trans (by decide : 4 ∣ 16) h16
+  have hcop : Nat.Coprime 4 3 := by decide
+  exact hcop.mul_dvd_of_dvd_of_dvd h4 h3
+
+lemma a_11 : a 11 = 1 := by
+  have hn : 0 < (11 : ℕ) := by decide
+  have hg : Nat.gcd (x 11) 12 = 12 := Nat.gcd_eq_right twelve_dvd_x_eleven
+  rw [a_eq hn, show (11 : ℕ) + 1 = 12 from rfl, hg,
+    Nat.div_self (by decide : 0 < 12)]
+
+lemma six_thousand_five_hundred_sixty_one_dvd_x_twelve : 6561 ∣ x 12 := by
+  have hx : x 12 = x 11 * (a 11 + 2) := x_succ_a (by decide : 0 < (11 : ℕ))
+  rw [hx, a_11, show (1 : ℕ) + 2 = 3 from rfl]
+  exact Nat.mul_dvd_mul_right
+    (two_thousand_one_hundred_eighty_seven_dvd_x (by decide : 10 ≤ 11)) 3
+
+lemma six_thousand_five_hundred_sixty_one_dvd_x {n : ℕ} (hn : 12 ≤ n) :
+    6561 ∣ x n :=
+  six_thousand_five_hundred_sixty_one_dvd_x_twelve.trans
+    (x_dvd_of_le (by decide : 0 < 12) hn)
+
+/-- If `n ≥ 12` and `3 ∣ a n`, then `19683 ∣ n+1`. -/
+lemma nineteen_thousand_six_hundred_eighty_three_dvd_succ_of_three_dvd_a
+    {n : ℕ} (hn : 12 ≤ n) (h3 : 3 ∣ a n) : 19683 ∣ n + 1 := by
+  have hn0 : 0 < n := lt_of_lt_of_le (by decide : 0 < 12) hn
+  have hx : 3 ∣ x n := three_dvd_x (le_trans (by decide : 4 ≤ 12) hn)
+  have hv := prime_dvd_a_padic hn0 hx h3
+  have h6561 : 6561 ∣ x n := six_thousand_five_hundred_sixty_one_dvd_x hn
+  have hpow : (3 : ℕ) ^ 8 = 6561 := by decide
+  have hge : 8 ≤ padicValNat 3 (x n) :=
+    (padicValNat_dvd_iff_le (x_pos hn0).ne').1 (hpow ▸ h6561)
+  have : 9 ≤ padicValNat 3 (n + 1) :=
+    (show 8 + 1 ≤ padicValNat 3 (x n) + 1 from Nat.add_le_add_right hge 1).trans hv
+  exact (padicValNat_dvd_iff_le (Nat.succ_ne_zero n)).2 this
+
+lemma not_three_dvd_a_of_not_nineteen_thousand_six_hundred_eighty_three
+    {n : ℕ} (hn : 12 ≤ n) (h19683 : ¬ 19683 ∣ n + 1) : ¬ 3 ∣ a n :=
+  fun h => h19683
+    (nineteen_thousand_six_hundred_eighty_three_dvd_succ_of_three_dvd_a hn h)
+
 lemma v2_x_two_four_pow_pred (k : ℕ) :
     padicValNat 2 (x (2 * 4 ^ k - 1)) = 2 * k := by
   cases k with
@@ -3260,5 +3315,8 @@ lemma v2_x_two_four_pow_pred (k : ℕ) :
 #print axioms a_10
 #print axioms two_thousand_one_hundred_eighty_seven_dvd_x
 #print axioms six_thousand_five_hundred_sixty_one_dvd_succ_of_three_dvd_a
+#print axioms a_11
+#print axioms six_thousand_five_hundred_sixty_one_dvd_x
+#print axioms nineteen_thousand_six_hundred_eighty_three_dvd_succ_of_three_dvd_a
 
 end OeisA135508

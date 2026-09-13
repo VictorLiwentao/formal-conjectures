@@ -146,3 +146,8 @@
 'OeisA135508.six_thousand_five_hundred_sixty_one_dvd_succ_of_three_dvd_a' depends on axioms: [propext,
  Classical.choice,
  Quot.sound]
+'OeisA135508.a_11' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.six_thousand_five_hundred_sixty_one_dvd_x' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.nineteen_thousand_six_hundred_eighty_three_dvd_succ_of_three_dvd_a' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
