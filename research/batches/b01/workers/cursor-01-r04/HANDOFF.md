@@ -47,6 +47,8 @@ Card-2 base with a zero coordinate: `cayleySumOn {p,q} = 0` when `x p = 0` (`cay
 
 Complementary terms group by remainder `τ`. If `τ p ≠ p` the fibre is empty. If `τ p = p`, permutations with that remainder are `ofSubtype u * τ` for `u` on `Fix(τ)` with `u.cycleOf ⟨p⟩ = u`, and the fibre equals `cayleyWeight τ * (1 + evenCycleSumThrough ⟨p⟩)` on the complementary subtype (`cayleySum_fibre_remainder`, `cayleySum_complementary_eq_inner`). The Cayley kernel matrix has permanent equal to `cayleySum` (`permanent_cayleyMatrix_eq_cayleySum`), and `sunMatrix` is that matrix on roots of unity.
 
+The geometric assignment `cayleyPowZero` has a zero at index 0 and values `ε^{n-i}` off zero. For real `0<ε<1` it is injective. Its Cayley matrix tends pointwise to the transpose of the sign matrix, so on even size the Cayley sum tends to 0 (`tendsto_cayleySum_powZero`). Hamiltonian even-cycle sums transport along `permCongr` (`evenCycleSumThrough_permCongr`).
+
 Still needed: complementary cancellation by induction plus identity (3.9), recurrence (4.8) / Theorem 1.1 matching formula, then She–Sun–Xia 1.3(i).
 
 ## Attribution

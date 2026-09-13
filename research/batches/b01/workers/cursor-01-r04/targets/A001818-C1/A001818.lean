@@ -6140,6 +6140,228 @@ lemma cayleyMatrix_powZero_of_val_gt {n : ℕ} {ε : ℂ} {i j : Fin n}
   have hden : ε ^ (n - i.val) ≠ 0 := pow_ne_zero _ hε
   field_simp [hden]
 
+lemma tendsto_coe_pow_nhdsWithin_zero {k : ℕ} (hk : 1 ≤ k) :
+    Filter.Tendsto (fun ε : ℝ => (ε : ℂ) ^ k)
+      (nhdsWithin 0 (Set.Ioi 0)) (nhds 0) := by
+  have hcont : Continuous fun ε : ℝ => (ε : ℂ) ^ k :=
+    Complex.continuous_ofReal.pow k
+  have h0 : Filter.Tendsto (fun ε : ℝ => (ε : ℂ) ^ k)
+      (nhds 0) (nhds (((0 : ℝ) : ℂ) ^ k)) :=
+    hcont.tendsto 0
+  have hz : ((0 : ℝ) : ℂ) ^ k = 0 := by
+    rw [Complex.ofReal_zero, zero_pow (Nat.pos_iff_ne_zero.mp hk)]
+  rw [hz] at h0
+  exact h0.mono_left nhdsWithin_le_nhds
+
+lemma tendsto_one_add_div_one_sub_pow {k : ℕ} (hk : 1 ≤ k) :
+    Filter.Tendsto
+      (fun ε : ℝ => (1 + (ε : ℂ) ^ k) / (1 - (ε : ℂ) ^ k))
+      (nhdsWithin 0 (Set.Ioo 0 1)) (nhds 1) := by
+  have hpow :
+      Filter.Tendsto (fun ε : ℝ => (ε : ℂ) ^ k)
+        (nhdsWithin 0 (Set.Ioo 0 1)) (nhds 0) :=
+    (tendsto_coe_pow_nhdsWithin_zero hk).mono_left
+      (nhdsWithin_mono _ Set.Ioo_subset_Ioi_self)
+  have hnum : Filter.Tendsto (fun ε : ℝ => (1 : ℂ) + (ε : ℂ) ^ k)
+      (nhdsWithin 0 (Set.Ioo 0 1)) (nhds (1 + 0)) :=
+    tendsto_const_nhds.add hpow
+  have hden : Filter.Tendsto (fun ε : ℝ => (1 : ℂ) - (ε : ℂ) ^ k)
+      (nhdsWithin 0 (Set.Ioo 0 1)) (nhds (1 - 0)) :=
+    tendsto_const_nhds.sub hpow
+  have hden0 : (1 : ℂ) - 0 ≠ 0 := by simp
+  have hdiv := hnum.div hden hden0
+  have heq : (1 + 0 : ℂ) / (1 - 0) = 1 := by simp
+  rw [heq] at hdiv
+  exact hdiv
+
+lemma tendsto_pow_add_one_div_pow_sub_one {k : ℕ} (hk : 1 ≤ k) :
+    Filter.Tendsto
+      (fun ε : ℝ => ((ε : ℂ) ^ k + 1) / ((ε : ℂ) ^ k - 1))
+      (nhdsWithin 0 (Set.Ioo 0 1)) (nhds (-1)) := by
+  have hpow :
+      Filter.Tendsto (fun ε : ℝ => (ε : ℂ) ^ k)
+        (nhdsWithin 0 (Set.Ioo 0 1)) (nhds 0) :=
+    (tendsto_coe_pow_nhdsWithin_zero hk).mono_left
+      (nhdsWithin_mono _ Set.Ioo_subset_Ioi_self)
+  have hnum : Filter.Tendsto (fun ε : ℝ => (ε : ℂ) ^ k + 1)
+      (nhdsWithin 0 (Set.Ioo 0 1)) (nhds (0 + 1)) :=
+    hpow.add tendsto_const_nhds
+  have hden : Filter.Tendsto (fun ε : ℝ => (ε : ℂ) ^ k - 1)
+      (nhdsWithin 0 (Set.Ioo 0 1)) (nhds (0 - 1)) :=
+    hpow.sub tendsto_const_nhds
+  have hden0 : (0 : ℂ) - 1 ≠ 0 := by simp
+  have hdiv := hnum.div hden hden0
+  have heq : (0 + 1 : ℂ) / (0 - 1) = -1 := by simp
+  rw [heq] at hdiv
+  exact hdiv
+
+lemma ofReal_mem_Ioo_ne_zero {ε : ℝ} (hε : ε ∈ Set.Ioo (0 : ℝ) 1) :
+    (ε : ℂ) ≠ 0 :=
+  Complex.ofReal_ne_zero.mpr hε.1.ne'
+
+lemma tendsto_cayleyMatrix_powZero {n : ℕ} [NeZero n] (i j : Fin n) :
+    Filter.Tendsto (fun ε : ℝ => cayleyMatrix (cayleyPowZero n (ε : ℂ)) i j)
+      (nhdsWithin 0 (Set.Ioo 0 1)) (nhds ((signMatrixOf n)ᵀ i j)) := by
+  change Filter.Tendsto (fun ε : ℝ => cayleyMatrix (cayleyPowZero n (ε : ℂ)) i j)
+      (nhdsWithin 0 (Set.Ioo 0 1)) (nhds (signMatrixOf n j i))
+  by_cases hij : i = j
+  · subst hij
+    have hfun : (fun ε : ℝ => cayleyMatrix (cayleyPowZero n (ε : ℂ)) i i) =
+        fun _ => (1 : ℂ) := by
+      funext ε
+      exact cayleyMatrix_apply_eq _ i
+    have hsign : signMatrixOf n i i = 1 := by
+      simp [signMatrixOf]
+    rw [hfun, hsign]
+    exact tendsto_const_nhds
+  · by_cases hj0 : j.val = 0
+    · have hj : j = 0 := Fin.eq_of_val_eq (by rw [hj0, Fin.val_zero])
+      have hi : i ≠ 0 := fun hi => hij (hi.trans hj.symm)
+      have hsign : signMatrixOf n j i = -1 := by
+        rw [signMatrixOf, hj]
+        have : ¬ i.val ≤ 0 :=
+          not_le.mpr (Nat.pos_of_ne_zero (Fin.val_ne_of_ne hi))
+        simp [this]
+      have hf :
+          Filter.Tendsto (fun _ : ℝ => (-1 : ℂ))
+            (nhdsWithin 0 (Set.Ioo 0 1)) (nhds (-1)) :=
+        tendsto_const_nhds
+      subst hj
+      rw [hsign]
+      refine tendsto_nhdsWithin_congr ?_ hf
+      intro ε hε
+      exact (cayleyMatrix_powZero_col_zero hi (ofReal_mem_Ioo_ne_zero hε)).symm
+    · by_cases hi0 : i.val = 0
+      · have hi : i = 0 := Fin.eq_of_val_eq (by rw [hi0, Fin.val_zero])
+        have hj : j ≠ 0 := fun hj => hij (hi.trans hj.symm)
+        have hsign : signMatrixOf n j i = 1 := by
+          rw [signMatrixOf, hi]
+          simp
+        have hf :
+            Filter.Tendsto (fun _ : ℝ => (1 : ℂ))
+              (nhdsWithin 0 (Set.Ioo 0 1)) (nhds 1) :=
+          tendsto_const_nhds
+        subst hi
+        rw [hsign]
+        refine tendsto_nhdsWithin_congr ?_ hf
+        intro ε hε
+        exact (cayleyMatrix_powZero_row_zero hj (ofReal_mem_Ioo_ne_zero hε)).symm
+      · rcases lt_trichotomy i.val j.val with hlt | hval | hgt
+        · have hk : 1 ≤ j.val - i.val := Nat.succ_le_iff.mpr (Nat.sub_pos_of_lt hlt)
+          have hsign : signMatrixOf n j i = 1 := by
+            rw [signMatrixOf, if_pos (Nat.le_of_lt hlt)]
+          rw [hsign]
+          refine tendsto_nhdsWithin_congr ?_ (tendsto_one_add_div_one_sub_pow hk)
+          intro ε hε
+          exact (cayleyMatrix_powZero_of_val_lt hi0 hj0 hlt
+            (ofReal_mem_Ioo_ne_zero hε)).symm
+        · exact (hij (Fin.eq_of_val_eq hval)).elim
+        · have hk : 1 ≤ i.val - j.val := Nat.succ_le_iff.mpr (Nat.sub_pos_of_lt hgt)
+          have hsign : signMatrixOf n j i = -1 := by
+            rw [signMatrixOf, if_neg (not_le.mpr hgt)]
+          rw [hsign]
+          refine tendsto_nhdsWithin_congr ?_ (tendsto_pow_add_one_div_pow_sub_one hk)
+          intro ε hε
+          exact (cayleyMatrix_powZero_of_val_gt hi0 hj0 hgt
+            (ofReal_mem_Ioo_ne_zero hε)).symm
+
+lemma tendsto_permanent {α : Type*} [Fintype α] [DecidableEq α]
+    {ι : Type*} {f : ι → Matrix α α ℂ} {M : Matrix α α ℂ} {l : Filter ι}
+    (h : ∀ i j, Filter.Tendsto (fun ε => f ε i j) l (nhds (M i j))) :
+    Filter.Tendsto (fun ε => (f ε).permanent) l (nhds M.permanent) := by
+  simp only [Matrix.permanent]
+  exact tendsto_finsetSum _ fun σ _ =>
+    tendsto_finsetProd _ fun k _ => h (σ k) k
+
+lemma tendsto_permanent_cayleyMatrix_powZero {n : ℕ} [NeZero n] :
+    Filter.Tendsto (fun ε : ℝ => (cayleyMatrix (cayleyPowZero n (ε : ℂ))).permanent)
+      (nhdsWithin 0 (Set.Ioo 0 1)) (nhds (signMatrixOf n)ᵀ.permanent) :=
+  tendsto_permanent fun i j => tendsto_cayleyMatrix_powZero i j
+
+lemma permanent_signMatrixOf_even {n : ℕ} (hn2 : 2 ≤ n) (he : Even n) :
+    (signMatrixOf n).permanent = 0 := by
+  have hk : 1 ≤ n / 2 := by omega
+  have hsz : 2 * (n / 2) = n := Nat.two_mul_div_two_of_even he
+  have hmat :
+      signMatrixOf (2 * (n / 2)) =
+        (signMatrixOf n).submatrix (finCongr hsz) (finCongr hsz) := by
+    ext i j
+    simp [signMatrixOf, submatrix_apply]
+  have hper := permanent_signMatrix (n := n / 2) hk
+  have hs : signMatrix (n / 2) = signMatrixOf (2 * (n / 2)) := rfl
+  rw [hs] at hper
+  rw [hmat, permanent_submatrix_equiv] at hper
+  exact hper
+
+lemma tendsto_cayleySum_powZero {n : ℕ} (hn2 : 2 ≤ n) (he : Even n) :
+    Filter.Tendsto (fun ε : ℝ => cayleySum (cayleyPowZero n (ε : ℂ)))
+      (nhdsWithin 0 (Set.Ioo 0 1)) (nhds 0) := by
+  have : NeZero n := ⟨by omega⟩
+  have hper := tendsto_permanent_cayleyMatrix_powZero (n := n)
+  have h0 : (signMatrixOf n)ᵀ.permanent = 0 := by
+    rw [permanent_transpose]
+    exact permanent_signMatrixOf_even hn2 he
+  rw [h0] at hper
+  exact hper.congr fun ε =>
+    permanent_cayleyMatrix_eq_cayleySum (cayleyPowZero n (ε : ℂ))
+
+lemma isCycle_permCongr_iff {α β : Type*} (e : α ≃ β) {σ : Perm α} :
+    (e.permCongr σ).IsCycle ↔ σ.IsCycle := by
+  constructor
+  · intro h
+    have hσ : e.symm.permCongr (e.permCongr σ) = σ := by
+      ext x
+      simp
+    have := isCycle_permCongr e.symm h
+    rwa [hσ] at this
+  · exact isCycle_permCongr e
+
+open scoped Classical in
+lemma evenCycleSumThrough_permCongr {α β : Type*} [Fintype α] [Fintype β]
+    [DecidableEq α] [DecidableEq β]
+    (e : α ≃ β) (p : α) (y : β → ℂ) :
+    evenCycleSumThrough p (y ∘ e) = evenCycleSumThrough (e p) y := by
+  unfold evenCycleSumThrough
+  refine Fintype.sum_equiv e.permCongr
+    (fun σ =>
+      if σ.IsCycle ∧ p ∈ σ.support ∧ Even σ.support.card then
+        cayleyWeight (y ∘ e) σ else 0)
+    (fun ρ =>
+      if ρ.IsCycle ∧ e p ∈ ρ.support ∧ Even ρ.support.card then
+        cayleyWeight y ρ else 0) fun σ => ?_
+  rw [cayleyWeight_permCongr]
+  have hcy : (e.permCongr σ).IsCycle ↔ σ.IsCycle := isCycle_permCongr_iff e
+  have hmem : e p ∈ (e.permCongr σ).support ↔ p ∈ σ.support := by
+    simp [support_permCongr]
+  have hcard : Even (e.permCongr σ).support.card ↔ Even σ.support.card := by
+    simp [support_permCongr]
+  refine if_congr ?_ rfl rfl
+  exact ⟨fun h => ⟨hcy.mpr h.1, hmem.mpr h.2.1, hcard.mpr h.2.2⟩,
+    fun h => ⟨hcy.mp h.1, hmem.mp h.2.1, hcard.mp h.2.2⟩⟩
+
+lemma even_sum_of_even_mem {m : Multiset ℕ} (h : ∀ n ∈ m, Even n) : Even m.sum := by
+  induction m using Multiset.induction with
+  | empty =>
+    simp
+  | cons n m ih =>
+    rw [Multiset.sum_cons]
+    obtain ⟨a, ha⟩ := h n (Multiset.mem_cons_self n m)
+    obtain ⟨b, hb⟩ := ih fun k hk => h k (Multiset.mem_cons_of_mem hk)
+    exact ⟨a + b, by omega⟩
+
+lemma even_card_support_of_oddLongPoints_empty {α : Type*} [Fintype α] [DecidableEq α]
+    {σ : Perm α} (h : ¬ (oddLongPoints σ).Nonempty) :
+    Even σ.support.card := by
+  rw [← Equiv.Perm.sum_cycleType]
+  refine even_sum_of_even_mem fun m hm => ?_
+  obtain ⟨c, hc, rfl⟩ : ∃ c ∈ σ.cycleFactorsFinset, c.support.card = m := by
+    simp only [Equiv.Perm.cycleType_def, Multiset.mem_map, Function.comp_apply] at hm
+    obtain ⟨c, hc, rfl⟩ := hm
+    exact ⟨c, Finset.mem_def.mp hc, rfl⟩
+  have : ¬ Odd c.support.card := fun hodd =>
+    h ((oddLongPoints_nonempty_iff (σ := σ)).mpr ⟨c, hc, hodd⟩)
+  exact Nat.not_odd_iff_even.mp this
+
 #check (OeisA1818.conjecture1 :
     ∀ (n : ℕ), 1 ≤ n → ∀ (ζ : ℂ), IsPrimitiveRoot ζ (2 * n) →
       (sunMatrix n ζ).permanent = (a n : ℂ))
@@ -6317,5 +6539,16 @@ lemma cayleyMatrix_powZero_of_val_gt {n : ℕ} {ε : ℂ} {i j : Fin n}
 #print axioms injective_cayleyPowZero
 #print axioms cayleyMatrix_powZero_of_val_lt
 #print axioms cayleyMatrix_powZero_of_val_gt
+#print axioms tendsto_coe_pow_nhdsWithin_zero
+#print axioms tendsto_one_add_div_one_sub_pow
+#print axioms tendsto_pow_add_one_div_pow_sub_one
+#print axioms tendsto_cayleyMatrix_powZero
+#print axioms tendsto_permanent
+#print axioms tendsto_permanent_cayleyMatrix_powZero
+#print axioms permanent_signMatrixOf_even
+#print axioms tendsto_cayleySum_powZero
+#print axioms isCycle_permCongr_iff
+#print axioms evenCycleSumThrough_permCongr
+#print axioms even_card_support_of_oddLongPoints_empty
 
 end A001818C1
