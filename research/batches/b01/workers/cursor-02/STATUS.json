@@ -6,7 +6,7 @@
   "coordination_commit": "238f78bdd5701ae4c97a0d70d4e22e2d45770d7a",
   "current_status": "partial",
   "novelty_status": "provisional_no_public_solution_found",
-  "last_updated_utc": "2026-09-13T04:21:00Z",
+  "last_updated_utc": "2026-09-13T04:45:00Z",
   "kickoff_utc": "2026-09-12T23:10:00Z",
   "session_limit_utc": "2026-09-13T07:10:00Z",
   "proof_declarations": [
@@ -38,14 +38,19 @@
     "OeisA108081.LeftWord.append_rIrreducible",
     "OeisA108081.ncard_iN_ge_sum_catalan_iN",
     "OeisA108081.LeftWord.concat_one_l_append_zero_rIrreducible",
-    "OeisA108081.XWord.dropLast_of_getLast_eq_one_of_penultimate_eq_zero"
+    "OeisA108081.XWord.dropLast_of_getLast_eq_one_of_penultimate_le_one",
+    "OeisA108081.XWord.tail_of_head_zero_second_nonpos",
+    "OeisA108081.XWord.of_cons_zero_head_le_zero",
+    "OeisA108081.XWord.of_cons_zero_head_neg_one",
+    "OeisA108081.LeftWord.concat_one_append_rIrreducible",
+    "OeisA108081.not_xWord_cons_zero_zero"
   ],
   "unresolved_gaps": [
     "The quantified identity |X_n| = a(n-1) is not proved.",
-    "|X_n| = ∑_k |I_k| H_{n-k} is proved. Left-gluing gives |I_n| ≥ ∑_k C_{k-1} |I_{n-k}|, and C_{n-1} ≤ |I_n| ≤ H_{n-1}, but |I_n| = A081696(n-1) is not proved.",
-    "The 01 extra P-factors Left++[1] give I when glued to [0]. The 11 slice, stability of G_k in the remainder, and |G_k|=2 C_{k-1} are not proved.",
+    "|X_n| = ∑_k |I_k| H_{n-k} is proved. Left-gluing and 01-gluing give extra I-words, and C_{n-1} ≤ |I_n| ≤ H_{n-1}, but |I_n| = A081696(n-1) is not proved.",
+    "The 01 extra P-factors Left++[1] give I when glued to every I-remainder. The 11 slice (every PWord s++[1]), stability of G_k in the remainder, and |G_k|=2 C_{k-1} are not proved.",
     "Paul Barry's gf is H(x)F(x); that algebraic identity is unproved from Lean's Fibonacci-binomial a.",
     "Partial lemmas and n<=8 (or public n<=14) counts are not a resolution."
   ],
-  "next_step": "Prove that 0::w Xia and w.head=-1 imply w Xia, glue L(Left++[1]) onto every I-remainder, then identify G with Left ∪ {s++[1] | s in P} so |I_n| satisfies the A081696 recurrence."
+  "next_step": "Prove that L(s ++ [1]) ++ v is I for every PWord s and every I-word v, so G_k has size 2 C_{k-1} and |I_n| satisfies the A081696 recurrence."
 }

@@ -54,7 +54,7 @@ Guard: PASS (worker path only). Source SHA-256 matches.
 
 ## Lean axioms
 
-`lake --wfail env lean` on `A108081.lean` succeeded on 2026-09-13 04:21Z.
+`lake --wfail env lean` on `A108081.lean` succeeded on 2026-09-13 04:45Z.
 
 ```
 #print axioms ncard_xN_one
@@ -141,7 +141,17 @@ Guard: PASS (worker path only). Source SHA-256 matches.
 -- [propext, Classical.choice, Quot.sound]
 #print axioms LeftWord.concat_one_l_append_zero_rIrreducible
 -- [propext, Classical.choice, Quot.sound]
-#print axioms XWord.dropLast_of_getLast_eq_one_of_penultimate_eq_zero
+#print axioms not_xWord_cons_zero_zero
+-- [propext, Classical.choice, Quot.sound]
+#print axioms XWord.dropLast_of_getLast_eq_one_of_penultimate_le_one
+-- [propext, Classical.choice, Quot.sound]
+#print axioms XWord.tail_of_head_zero_second_nonpos
+-- [propext, Classical.choice, Quot.sound]
+#print axioms XWord.of_cons_zero_head_le_zero
+-- [propext, Classical.choice, Quot.sound]
+#print axioms XWord.of_cons_zero_head_neg_one
+-- [propext, Classical.choice, Quot.sound]
+#print axioms LeftWord.concat_one_append_rIrreducible
 -- [propext, Classical.choice, Quot.sound]
 #print axioms xN_finite
 -- [propext, Classical.choice, Quot.sound]
