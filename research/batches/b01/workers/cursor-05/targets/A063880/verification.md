@@ -28,11 +28,11 @@ Command:
 LEAN_NUM_THREADS=2 lake env lean -DwarningAsError=true research/batches/b01/workers/cursor-05/targets/A063880/A063880.lean
 ```
 
-Result on 2026-09-13T01:40Z: exit code 0, no warnings, no `sorry` declaration in this file.
+Result on 2026-09-13T01:56Z: exit code 0, no warnings, no `sorry` declaration in this file.
 
 This is **not** a compile of the frozen theorems. The frozen `sorry` theorems in `FormalConjectures/OEIS/63880.lean` were not used as proof steps.
 
-New lemmas compiled in this checkpoint include `sigma_usigma_ratio_strict_mono`, `not_seven_sigma_eq_ten_usigma_five_seven`, `not_seven_sigma_of_two_sq_primes`, `seven_sigma_lt_ten_usigma_three_large`, `seven_sigma_lt_ten_usigma_five_seven_sq_large`, and `twenty_five_forty_nine_eleven_sq_overshoot`.
+New lemmas compiled in this checkpoint include `ten_seven_overshoot_mono_three`, `seven_sigma_lt_ten_usigma_five_sq_eleven_large`, `not_seven_sigma_eq_ten_usigma_five_eleven_thirteen`, `not_seven_sigma_eq_ten_usigma_five_eleven_seventeen`, `not_seven_sigma_eq_ten_usigma_five_eleven_nineteen`, `not_seven_sigma_eq_ten_usigma_five_cube_seven_sq`, `not_seven_sigma_eq_ten_usigma_five_sq_seven_cube`, and `five_seven_eleven_mul_overshoot`.
 
 No `#print axioms` audit of a completed target theorem exists, because those theorems are not proved.
 
@@ -63,7 +63,13 @@ Exact `Fraction` ω=1 and ω=2 leftover classification. Only one-prime hit: `3^3
 python3 research/batches/b01/workers/cursor-05/targets/A063880/experiments/omega3_ten_seven.py
 ```
 
-Exact `Fraction` ω=3 search for leftover `10/7` with primes `≥ 5`. Output: no hits; stops at `p = 7` because `{7,11,13}` has cap below leftover. Explicitly unverified as a proof. ω=3 with a factor `5` is not a Lean exclusion yet. ω≥4 is not covered.
+Exact `Fraction` ω=3 search for leftover `10/7` with primes `≥ 5`. Output: no hits; stops at `p = 7` because `{7,11,13}` has cap below leftover. Explicitly unverified as a proof. ω≥4 is not covered.
+
+```text
+python3 research/batches/b01/workers/cursor-05/targets/A063880/experiments/omega3_five_triples.py
+```
+
+Exact `Fraction` map of leftover `10/7` triples that include `5`. Used only to choose Lean case splits. Explicitly unverified as a proof.
 
 ## Formalization audit
 
