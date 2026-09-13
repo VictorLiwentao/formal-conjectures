@@ -92,9 +92,11 @@ which type-checks. The original `a` is used. The admitted `OeisA1818.conjecture1
 'A001818C1.sum_cayleyWeight_listings_eq_of_eqOn_compl' depends on axioms: [propext, Classical.choice, Quot.sound]
 'A001818C1.sum_cayleyWeight_hamiltonian_eq_of_eqOn_compl' depends on axioms: [propext, Classical.choice, Quot.sound]
 'A001818C1.sum_cayleyWeight_hamiltonian_eq_of_injective' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.sum_cayleyWeight_hamiltonian_eq_of_card_eq' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.sum_cayleyWeight_hamiltonian_subtype_eq_fin' depends on axioms: [propext, Classical.choice, Quot.sound]
 ```
 
-No `sorryAx`, `native_decide`, or `Lean.trustCompiler` in those lemmas. The general `n ≥ 1` identity is not yet proved. `per(M-J) = a n` is proved and `per M` equals the even-cycle Cayley sum. Paper Σ1 and Σ2 at a distinguished point are proved. Hamiltonian Cayley sums on a type of cardinality at least 3 are constant on injective assignments. Equal-cardinality subtypes, Σ3, and recurrence (4.8) remain, so `per M = per(M-J)` remains.
+No `sorryAx`, `native_decide`, or `Lean.trustCompiler` in those lemmas. The general `n ≥ 1` identity is not yet proved. `per(M-J) = a n` is proved and `per M` equals the even-cycle Cayley sum. Paper Σ1 and Σ2 at a distinguished point are proved. Hamiltonian Cayley sums depend only on cardinality for injective assignments on types of cardinality at least 3. Binomial cycle counting, Σ3, and recurrence (4.8) remain, so `per M = per(M-J)` remains.
 
 ## Boundary
 

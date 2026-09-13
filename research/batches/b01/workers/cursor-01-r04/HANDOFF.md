@@ -37,9 +37,9 @@ Two-point evaluation: `1 + cayleyWeight (swap a b) = -4 xa xb / (xa-xb)^2`. On `
 
 Paper Σ1/Σ2: even-cycle Cayley sums split by the cycle of a distinguished point `p`. Permutations fixing `p` match `cayleySumOn ({p}ᶜ)` (`cayleySum_sigma1`). Permutations whose cycle through `p` is a transposition equal `∑_{q ≠ p} cayleyWeight (swap p q) * cayleySumOn ({p,q}ᶜ)` (`cayleySum_sigma2`). The remainder is the sum over cycle length at least 4 (`cayleySum_eq_sigma1_add_sigma2_add`). Algebraic identity (2.4) (`cayley_triple_identity`) and Hamiltonian listing products (`cayleyWeight_formPerm`, `cayleyWeight_formPerm_cons`) are in place for Lemma 2.3.
 
-Rotate-class insertion: after clearing the skipped edge, the weight of `p :: L.rotate k` equals `-cayleyPathWeight(L.rotate k)` minus a telescoping term in `x p`. Summing over rotations cancels the telescope (`sum_cayleyWeight_cons_rotate`). Path weights ignore `p`, so the Hamiltonian listing sum through `p` is unchanged if `x` is altered only at `p`. Parking through unused complex values therefore makes the Hamiltonian sum depend only on the type, for injective assignments on a type of cardinality at least 3 (`sum_cayleyWeight_hamiltonian_eq_of_injective`).
+Rotate-class insertion: after clearing the skipped edge, the weight of `p :: L.rotate k` equals `-cayleyPathWeight(L.rotate k)` minus a telescoping term in `x p`. Summing over rotations cancels the telescope (`sum_cayleyWeight_cons_rotate`). Path weights ignore `p`, so the Hamiltonian listing sum through `p` is unchanged if `x` is altered only at `p`. Parking through unused complex values therefore makes the Hamiltonian sum depend only on the type, for injective assignments on a type of cardinality at least 3 (`sum_cayleyWeight_hamiltonian_eq_of_injective`). Conjugation by a type equivalence preserves Cayley weights, so the sum depends only on cardinality (`sum_cayleyWeight_hamiltonian_eq_of_card_eq`), including on subtypes (`sum_cayleyWeight_hamiltonian_subtype_eq_fin`).
 
-Still needed: the same constant on equal-cardinality subtypes, then Σ3, recurrence (4.8) / Theorem 1.1 matching formula, then `per M = per(M-J)`.
+Still needed: binomial counting of even cycles through a point (paper (3.5)), then Σ3, recurrence (4.8) / Theorem 1.1 matching formula, then `per M = per(M-J)`.
 
 ## Attribution
 

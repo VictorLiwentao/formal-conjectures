@@ -4226,6 +4226,140 @@ lemma sum_cayleyWeight_hamiltonian_eq_of_injective {α : Type*} [Fintype α] [De
   rw [hxu, hx'u, updateOn_eq_of_forall_mem (L := L) x u hnd hmem,
     updateOn_eq_of_forall_mem (L := L) x' u hnd hmem]
 
+lemma permCongr_mul {α β : Type*} (e : α ≃ β) (σ τ : Perm α) :
+    e.permCongr (σ * τ) = e.permCongr σ * e.permCongr τ := by
+  ext x
+  simp [Equiv.permCongr_apply]
+
+lemma permCongr_one {α β : Type*} (e : α ≃ β) : e.permCongr (1 : Perm α) = 1 :=
+  Equiv.permCongr_refl e
+
+lemma permCongr_inv {α β : Type*} (e : α ≃ β) (σ : Perm α) :
+    e.permCongr σ⁻¹ = (e.permCongr σ)⁻¹ := by
+  have h : e.permCongr σ * e.permCongr σ⁻¹ = (1 : Perm β) := by
+    rw [← permCongr_mul, mul_inv_cancel, permCongr_one]
+  exact (mul_eq_one_iff_inv_eq.mp h).symm
+
+lemma permCongr_pow {α β : Type*} (e : α ≃ β) (σ : Perm α) (n : ℕ) :
+    e.permCongr σ ^ n = e.permCongr (σ ^ n) := by
+  induction n with
+  | zero => simp [permCongr_one]
+  | succ n ih =>
+    rw [pow_succ, pow_succ, ih, permCongr_mul]
+
+lemma permCongr_zpow {α β : Type*} (e : α ≃ β) (σ : Perm α) (n : ℤ) :
+    e.permCongr σ ^ n = e.permCongr (σ ^ n) := by
+  cases n with
+  | ofNat n =>
+    simp [permCongr_pow]
+  | negSucc n =>
+    rw [zpow_negSucc, zpow_negSucc, permCongr_pow, permCongr_inv]
+
+lemma support_permCongr {α β : Type*} [Fintype α] [Fintype β] [DecidableEq α] [DecidableEq β]
+    (e : α ≃ β) (σ : Perm α) :
+    (e.permCongr σ).support = σ.support.map e.toEmbedding := by
+  ext b
+  simp only [Equiv.Perm.mem_support, Equiv.permCongr_apply, mem_map, Equiv.toEmbedding_apply]
+  constructor
+  · intro h
+    refine ⟨e.symm b, ?_, e.apply_symm_apply b⟩
+    intro hf
+    exact h (by rw [hf, e.apply_symm_apply])
+  · rintro ⟨a, ha, rfl⟩
+    intro hf
+    have : σ a = a := e.injective (by simpa using hf)
+    exact ha this
+
+lemma cayleyWeight_permCongr {α β : Type*} [Fintype α] [Fintype β] [DecidableEq α] [DecidableEq β]
+    (e : α ≃ β) (y : β → ℂ) (σ : Perm α) :
+    cayleyWeight (y ∘ e) σ = cayleyWeight y (e.permCongr σ) := by
+  simp only [cayleyWeight]
+  rw [support_permCongr, prod_map]
+  refine prod_congr rfl fun a _ => ?_
+  simp [Function.comp, Equiv.permCongr_apply]
+
+lemma isCycle_permCongr {α β : Type*} (e : α ≃ β) {σ : Perm α} (hσ : σ.IsCycle) :
+    (e.permCongr σ).IsCycle := by
+  obtain ⟨x, hx, hsame⟩ := hσ
+  refine ⟨e x, ?_, ?_⟩
+  · intro hfix
+    simp [Equiv.permCongr_apply] at hfix
+    exact hx hfix
+  · intro y hy
+    have hy' : σ (e.symm y) ≠ e.symm y := by
+      intro hf
+      apply hy
+      simp [Equiv.permCongr_apply, hf]
+    obtain ⟨n, hn⟩ := hsame hy'
+    refine ⟨n, ?_⟩
+    rw [permCongr_zpow, Equiv.permCongr_apply, e.symm_apply_apply, hn, e.apply_symm_apply]
+
+lemma support_univ_permCongr {α β : Type*} [Fintype α] [Fintype β] [DecidableEq α] [DecidableEq β]
+    (e : α ≃ β) {σ : Perm α} (h : σ.support = univ) :
+    (e.permCongr σ).support = univ := by
+  ext b
+  simp only [support_permCongr, h, mem_map, mem_univ, true_and, Equiv.toEmbedding_apply,
+    iff_true]
+  exact ⟨e.symm b, e.apply_symm_apply b⟩
+
+open scoped Classical in
+lemma sum_cayleyWeight_hamiltonian_permCongr {α β : Type*}
+    [Fintype α] [Fintype β] [DecidableEq α] [DecidableEq β]
+    (e : α ≃ β) (y : β → ℂ) :
+    ∑ σ : {σ : Perm α // σ.IsCycle ∧ σ.support = univ}, cayleyWeight (y ∘ e) σ.1 =
+      ∑ τ : {τ : Perm β // τ.IsCycle ∧ τ.support = univ}, cayleyWeight y τ.1 := by
+  let φ : {σ : Perm α // σ.IsCycle ∧ σ.support = univ} ≃
+      {τ : Perm β // τ.IsCycle ∧ τ.support = univ} :=
+    { toFun := fun σ =>
+        ⟨e.permCongr σ.1, isCycle_permCongr e σ.2.1, support_univ_permCongr e σ.2.2⟩
+      invFun := fun τ =>
+        ⟨e.symm.permCongr τ.1, isCycle_permCongr e.symm τ.2.1,
+          support_univ_permCongr e.symm τ.2.2⟩
+      left_inv := fun σ => by
+        ext1
+        change e.symm.permCongr (e.permCongr σ.1) = σ.1
+        ext x
+        simp [Equiv.permCongr_apply]
+      right_inv := fun τ => by
+        ext1
+        change e.permCongr (e.symm.permCongr τ.1) = τ.1
+        ext x
+        simp [Equiv.permCongr_apply] }
+  rw [← Equiv.sum_comp φ (fun τ => cayleyWeight y τ.1)]
+  refine Fintype.sum_congr _ _ fun σ => ?_
+  exact cayleyWeight_permCongr e y σ.1
+
+open scoped Classical in
+lemma sum_cayleyWeight_hamiltonian_eq_of_card_eq {α β : Type*}
+    [Fintype α] [Fintype β] [DecidableEq α] [DecidableEq β]
+    (x : α → ℂ) (y : β → ℂ) (hx : Function.Injective x) (hy : Function.Injective y)
+    (hα : 3 ≤ Fintype.card α) (hcard : Fintype.card α = Fintype.card β) :
+    ∑ σ : {σ : Perm α // σ.IsCycle ∧ σ.support = univ}, cayleyWeight x σ.1 =
+      ∑ τ : {τ : Perm β // τ.IsCycle ∧ τ.support = univ}, cayleyWeight y τ.1 := by
+  let e : α ≃ β :=
+    (Fintype.equivFin α).trans ((finCongr hcard).trans (Fintype.equivFin β).symm)
+  have hy' : Function.Injective (y ∘ e) := hy.comp e.injective
+  have hxeq := sum_cayleyWeight_hamiltonian_eq_of_injective x (y ∘ e) hx hy' hα
+  rw [hxeq, sum_cayleyWeight_hamiltonian_permCongr e y]
+
+open scoped Classical in
+lemma sum_cayleyWeight_hamiltonian_subtype_eq_fin {α : Type*} [Fintype α] [DecidableEq α]
+    (s : Finset α) (x : α → ℂ) (y : Fin s.card → ℂ)
+    (hx : Function.Injective x) (hy : Function.Injective y)
+    (hs : 3 ≤ s.card) :
+    ∑ u : {u : Perm {a // a ∈ s} // u.IsCycle ∧ u.support = univ},
+        cayleyWeight (fun a : {a // a ∈ s} => x a.1) u.1 =
+      ∑ τ : {τ : Perm (Fin s.card) // τ.IsCycle ∧ τ.support = univ},
+        cayleyWeight y τ.1 := by
+  have hx' : Function.Injective (fun a : {a // a ∈ s} => x a.1) :=
+    hx.comp Subtype.val_injective
+  have hα : 3 ≤ Fintype.card {a // a ∈ s} := by
+    simpa [Fintype.card_coe] using hs
+  have hcard : Fintype.card {a // a ∈ s} = Fintype.card (Fin s.card) := by
+    simp [Fintype.card_coe]
+  exact sum_cayleyWeight_hamiltonian_eq_of_card_eq
+    (fun a : {a // a ∈ s} => x a.1) y hx' hy hα hcard
+
 #check (OeisA1818.conjecture1 :
     ∀ (n : ℕ), 1 ≤ n → ∀ (ζ : ℂ), IsPrimitiveRoot ζ (2 * n) →
       (sunMatrix n ζ).permanent = (a n : ℂ))
@@ -4336,5 +4470,10 @@ lemma sum_cayleyWeight_hamiltonian_eq_of_injective {α : Type*} [Fintype α] [De
 #print axioms sum_cayleyWeight_hamiltonian_eq_update
 #print axioms sum_cayleyWeight_hamiltonian_eq_updateOn
 #print axioms sum_cayleyWeight_hamiltonian_eq_of_injective
+#print axioms cayleyWeight_permCongr
+#print axioms isCycle_permCongr
+#print axioms sum_cayleyWeight_hamiltonian_permCongr
+#print axioms sum_cayleyWeight_hamiltonian_eq_of_card_eq
+#print axioms sum_cayleyWeight_hamiltonian_subtype_eq_fin
 
 end A001818C1
