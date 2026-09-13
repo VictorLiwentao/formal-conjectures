@@ -7,7 +7,7 @@
   "source_sha256": "afa95297bd177a882fb72b03f32f1da68ecae58d9126981567562462b73266f8",
   "current_status": "partial",
   "novelty_status": "no_public_exact_solution_in_checked_sources",
-  "last_updated_utc": "2026-09-13T06:25:00Z",
+  "last_updated_utc": "2026-09-13T06:40:00Z",
   "proof_declarations": [
     "OeisA108866.not_n_sq_dvd_num_of_even",
     "OeisA108866.n_sq_dvd_num_of_prime",
@@ -57,14 +57,25 @@
     "OeisA108866.not_pow_dvd_oddInnerNum_iff_combo",
     "OeisA108866.odd_combo_eq_seven_eight",
     "OeisA108866.odd_combo_eq_p_mul_coeff",
+    "OeisA108866.cast_eq_zero_iff_mul_p",
+    "OeisA108866.odd_combo_ne_iff_coeff_cast",
+    "OeisA108866.not_pow_dvd_oddInnerNum_of_coeff_cast",
+    "OeisA108866.inv_cube_pair_zmod",
+    "OeisA108866.inv_cube_sum_eq_neg_three_p",
+    "OeisA108866.odd_combo_coeff_eq",
+    "OeisA108866.odd_combo_eq_p_mul_simple",
+    "OeisA108866.cast_pow_pred_eq_one",
+    "OeisA108866.pow_pred_eq_one_add_mul_p",
+    "OeisA108866.inv_one_add_mul_p",
+    "OeisA108866.inv_sq_eq_pow_mul_one_sub",
     "OeisA108866.choose_pred_eq_one_sub_harmonic_zmod",
     "OeisA108866.not_pow_dvd_oddInnerNum_iff",
     "OeisA108866.conjecture_of_odd_composite_converse"
   ],
   "unresolved_gaps": [
-    "Odd composite converse is not finished. Kernel-checked so far includes even converse, prime direction, L-criterion, n=3^e, n=3 p^e, p^e when v_p(U0)=1, all p^e for p in {5,11,13,17,19,23,29,31}, square pairing in ZMod(p^2), v_p(H_{p-1})>=2, v_7(U0)=2, the 7/8 odd inverse-square identity, and v_7(T(49))=2.",
-    "Remaining: general v_p(U0)=1 (empirically true except p=7 where v=2, and Wolstenholme primes), mixed 3^a q^b with a>=2, L-zero products such as 13*79, and p=7 higher powers beyond 49 (v(U0)=2 equals the rest-layer bound 4-2e).",
+    "Odd composite converse is not finished. Kernel-checked so far includes even converse, prime direction, L-criterion, n=3^e, n=3 p^e, p^e when v_p(U0)=1, all p^e for p in {5,11,13,17,19,23,29,31}, square pairing, cube pairing, Fermat lift k^{p-1}=1+pc, v_p(H_{p-1})>=2, v_7(U0)=2, the 7/8 identity, combo = p*((7/4)c+2 S3-tau), and v_7(T(49))=2.",
+    "Remaining: prove the F_p coefficient is -7/24 B_{p-3} (Python through p=79, not kernel-checked), then v_p(U0)=1 except p=7 and Wolstenholme primes. Still open: p=7 higher powers, mixed 3^a q^b with a>=2, L-zero products such as 13*79.",
     "Independently_verified is not claimed. This is not the frozen iff."
   ],
-  "next_step": "Prove the F_p coefficient 7*4^{-1}(c+S3)+4^{-1}S3-tau is a unit for p≠7. Then extra rest-layer valuation so v(U0)=2 closes 7^e. Do not claim the frozen iff."
+  "next_step": "Prove kappa ≡ -7/24 B_{p-3} in F_p via Glaisher plus the Fermat lift. That gives v_p(U0)=1 for p≠7 non-Wolstenholme. Then extra rest-layer valuation so v(U0)=2 closes 7^e. Do not claim the frozen iff."
 }

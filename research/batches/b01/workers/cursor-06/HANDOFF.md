@@ -19,9 +19,10 @@ python3 research/batches/b01/workers/cursor-06/targets/A108866/experiments/padic
 python3 research/batches/b01/workers/cursor-06/targets/A108866/experiments/remaining_odd.py
 python3 research/batches/b01/workers/cursor-06/targets/A108866/experiments/prime_power_leading.py
 python3 research/batches/b01/workers/cursor-06/targets/A108866/experiments/leading_mod_p2.py
+python3 research/batches/b01/workers/cursor-06/targets/A108866/experiments/combo_coeff_fp.py
 ```
 
-Final math commit SHA: `b0711a61`.
+Final math commit SHA: `accb6ab2`.
 
 ## Status
 
@@ -45,7 +46,10 @@ Partial. Kernel-checked so far:
 - `v_p(H_{p-1})≥2` in `ℚ`: `two_le_padicValRat_harmonic_pred`
 - square pairing `inv_sq_pair_zmod` and half-range split `inv_sq_sum_eq_two_half_add_p`
 - odd inverse-square identity `inv_sq_odd_eq_seven_eight`
-- combo coefficient `odd_combo_eq_p_mul_coeff`
+- combo coefficient `odd_combo_eq_p_mul_coeff` and simplified form `(7/4)c + 2 S3 - τ`
+- `v_p(U0)=1` iff that coefficient is nonzero in `𝔽_p`
+- cube pairing `k^{-3}+(p-k)^{-3}=-3p k^{-4}`
+- Fermat lift `k^{p-1}=1+p c` and `k^{-2}=k^{p-3}(1-p c)`
 - `v_7(U0)=2`: `padicValRat_oddLeadingSum0_seven`
 - `v_7(T(49))=2`: `padicValRat_ratExpression_forty_nine`
 - `C(p-1,a-1) ≡ 1 - p H_{a-1}` in `ZMod (p^2)` for odd `a`
