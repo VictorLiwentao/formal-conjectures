@@ -11,7 +11,7 @@
   "novelty_status": "no_exact_public_solution_found_in_checked_sources",
   "statement_audit": "matches_intended_mceachen_statement",
   "oeis_editability": "unknown",
-  "last_updated_utc": "2026-09-13T01:04:46Z",
+  "last_updated_utc": "2026-09-13T01:10:00Z",
   "session_kickoff_utc": "2026-09-12T23:12:00Z",
   "session_hard_stop_utc": "2026-09-13T07:12:00Z",
   "proof_declarations": [
@@ -37,6 +37,7 @@
     "OeisA135508.conjecture_of_cases",
     "OeisA135508.q_dvd_x_of_prime_injector",
     "OeisA135508.q_dvd_x_of_coprime_shift",
+    "OeisA135508.conjecture_of_minFac_le_twentythree",
     "OeisA135508.not_q_dvd_x_le",
     "OeisA135508.not_prime_kq_sub_two_of_even",
     "OeisA135508.not_prime_kq_sub_two_of_k_mod_one",
@@ -53,12 +54,12 @@
   ],
   "unresolved_gaps": [
     "Frozen OeisA135508.conjecture is still sorry.",
-    "Remaining class: primes p ≡ 1 (mod 3) with p-2 composite. conjecture_of_cases reduces this to an injector kq-2 ≤ p-3 with k ≡ 2 (mod 3).",
+    "Remaining class: primes p ≡ 1 (mod 3) with p-2 composite and lpf(p-2) ≥ 29. conjecture_of_cases reduces this to an injector kq-2 ≤ p-3 with k ≡ 2 (mod 3).",
     "Even k and k ≡ 1 (mod 3) cannot be prime injectors. The remaining candidates are k ≡ 5 (mod 6).",
     "Need a prime r = kq-2 with k ≡ 5 (mod 6) and r ≤ q(q+2)-1, or gcd(x(kq-3), kq-2)=1 in that range.",
     "Dirichlet, Linnik L=5, and the usual GRH bound do not give r ≤ q(q+2)-1. Finite injector checks are not a proof.",
     "Cloitre C1 and Cor. 6.6 are not used and are not an unconditional solution."
   ],
   "next_step": "Prove an unconditional first-entry bound q | x(q(q+2)-1) for primes q ≡ 2 (mod 3), or find a different invariant. Do not claim completion. Continue until an exact candidate, a verified prior solution, a defective-target report, or the original 8-hour kickoff limit.",
-  "handoff_research_commit": "2d25e3dc"
+  "handoff_research_commit": "pending_after_commit"
 }

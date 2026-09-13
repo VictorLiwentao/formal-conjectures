@@ -43,6 +43,7 @@ Hence McEachen at `p` is equivalent to `gcd(x (p-3), p-2) > 1`, i.e. some prime 
    - `17 ∣ x n` for `n ≥ 83` (`5·17-2 = 83` prime).
    - `23 ∣ x n` for `n ≥ 113` (`5·23-2 = 113` prime).
    The general form is `conjecture_of_injected` / `conjecture_of_prime_injector` / `conjecture_of_five_prime_injector`.
+5. Remaining primes with `lpf(p-2) ≤ 23` (`conjecture_of_minFac_le_twentythree`). The window `q(q+2) ≤ p-2` supplies the entry-index bounds.
 
 ## Twin primes without `C₁` (proved)
 
@@ -59,7 +60,7 @@ This is not McEachen (McEachen excludes `p-2` prime). It is the twin-detection h
 
 ## Remaining gap (not proved)
 
-The leftover primes are `p ≡ 1 (mod 3)` with `p-2` composite. Then `p-2 ≡ 2 (mod 3)`, so some prime factor `q` of `p-2` is `≡ 2 (mod 3)` (`exists_remaining_factor`). If `q = 5` we are done. If `q ≥ 11`, the mod-3 theorem gives `a(q-1)=q`, so `q` does **not** divide `x(q-1)`. One needs a later injection: some index `r ≤ p-3` with `q ∣ a(r-1)+2`.
+The leftover primes are `p ≡ 1 (mod 3)` with `p-2` composite and `lpf(p-2) ≥ 29`. Then `p-2 ≡ 2 (mod 3)`, so some prime factor `q` of `p-2` is `≡ 2 (mod 3)` (`exists_remaining_factor`). If `q = 5` we are done. If `q ≥ 11`, the mod-3 theorem gives `a(q-1)=q`, so `q` does **not** divide `x(q-1)`. One needs a later injection: some index `r ≤ p-3` with `q ∣ a(r-1)+2`.
 
 If `r` itself is a prime `≡ 2 (mod 3)`, then `r ≡ -2 (mod q)` and `r ≤ p-3` suffices (`q_dvd_x_of_prime_injector`, `conjecture_of_prime_injector`). For `lpf(p-2)=q` one has `p-2 ≥ q(q+2)` (`remaining_minFac_mul_add_two_le`). The square `p = q^2+2` is never an odd prime for `q > 3`. So a prime
 

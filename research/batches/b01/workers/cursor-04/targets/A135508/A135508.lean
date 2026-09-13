@@ -945,6 +945,106 @@ theorem conjecture_of_twentythree_dvd {p : ℕ} (hp : p.Prime) (hp116 : 116 ≤ 
   conjecture_of_factor_dvd_x hp (by omega) (by decide : 1 < 23) h23
     (twentythree_dvd_x (by omega : 113 ≤ p - 3))
 
+lemma remaining_minFac_ge_five {p : ℕ} (hp : p.Prime) (hp7 : 7 ≤ p)
+    (hmod : p % 3 = 1) : 5 ≤ Nat.minFac (p - 2) := by
+  have hn : 1 < p - 2 := by omega
+  have hminp : (Nat.minFac (p - 2)).Prime := Nat.minFac_prime (ne_of_gt hn)
+  have hd : Nat.minFac (p - 2) ∣ p - 2 := Nat.minFac_dvd _
+  have hq2 : Nat.minFac (p - 2) ≠ 2 := by
+    intro h
+    have : 2 ∣ p - 2 := by rwa [h] at hd
+    have hpeq : p = p - 2 + 2 := by omega
+    have : 2 ∣ p := by
+      rw [hpeq]
+      exact Nat.dvd_add this (by decide)
+    have : p = 2 := ((Nat.prime_dvd_prime_iff_eq Nat.prime_two hp).1 this).symm
+    omega
+  have hq3 : Nat.minFac (p - 2) ≠ 3 := by
+    intro h
+    have : 3 ∣ p - 2 := by rwa [h] at hd
+    have : (p - 2) % 3 = 0 := Nat.mod_eq_zero_of_dvd this
+    have : (p - 2) % 3 = 2 :=
+      p_sub_two_mod (le_trans (by decide : 4 ≤ 7) hp7) hmod
+    omega
+  have h2 : 2 ≤ Nat.minFac (p - 2) := hminp.two_le
+  have hgt2 : 2 < Nat.minFac (p - 2) := lt_of_le_of_ne h2 hq2.symm
+  have hge3 : 3 ≤ Nat.minFac (p - 2) := hgt2
+  have hgt3 : 3 < Nat.minFac (p - 2) := lt_of_le_of_ne hge3 hq3.symm
+  have hge4 : 4 ≤ Nat.minFac (p - 2) := hgt3
+  have hne4 : Nat.minFac (p - 2) ≠ 4 := by
+    intro h4
+    rw [h4] at hminp
+    exact (by decide : ¬ Nat.Prime 4) hminp
+  omega
+
+lemma prime_le_twentythree {q : ℕ} (hq : q.Prime) (h5 : 5 ≤ q) (h23 : q ≤ 23) :
+    q = 5 ∨ q = 7 ∨ q = 11 ∨ q = 13 ∨ q = 17 ∨ q = 19 ∨ q = 23 := by
+  interval_cases q
+  · exact Or.inl rfl
+  · exact ((by decide : ¬ Nat.Prime 6) hq).elim
+  · exact Or.inr (Or.inl rfl)
+  · exact ((by decide : ¬ Nat.Prime 8) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 9) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 10) hq).elim
+  · exact Or.inr (Or.inr (Or.inl rfl))
+  · exact ((by decide : ¬ Nat.Prime 12) hq).elim
+  · exact Or.inr (Or.inr (Or.inr (Or.inl rfl)))
+  · exact ((by decide : ¬ Nat.Prime 14) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 15) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 16) hq).elim
+  · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inl rfl))))
+  · exact ((by decide : ¬ Nat.Prime 18) hq).elim
+  · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl rfl)))))
+  · exact ((by decide : ¬ Nat.Prime 20) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 21) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 22) hq).elim
+  · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr rfl)))))
+
+/-- Remaining McEachen primes whose least prime factor is at most `23`.
+The window `q(q+2) ≤ p-2` supplies the entry-index bounds used below. -/
+theorem conjecture_of_minFac_le_twentythree {p : ℕ} (hp : p.Prime) (hp7 : 7 ≤ p)
+    (hmod : p % 3 = 1) (hcomp : ¬ (p - 2).Prime)
+    (hmin : Nat.minFac (p - 2) ≤ 23) : a (p - 1) = p := by
+  have hq5 := remaining_minFac_ge_five hp hp7 hmod
+  have hpr : (Nat.minFac (p - 2)).Prime :=
+    Nat.minFac_prime (by omega : p - 2 ≠ 1)
+  have hd : Nat.minFac (p - 2) ∣ p - 2 := Nat.minFac_dvd _
+  have hcases := prime_le_twentythree hpr hq5 hmin
+  have hbound := remaining_minFac_mul_add_two_le hp hp7 hmod hcomp
+  rcases hcases with h | h | h | h | h | h | h
+  · have hd5 : 5 ∣ p - 2 := by rwa [h] at hd
+    exact conjecture_of_five_dvd hp hp7 hd5
+  · have hd7 : 7 ∣ p - 2 := by rwa [h] at hd
+    have hp50 : 50 ≤ p := by
+      rw [h] at hbound
+      omega
+    exact conjecture_of_seven_dvd hp hp50 hd7
+  · have hd11 : 11 ∣ p - 2 := by rwa [h] at hd
+    have hp56 : 56 ≤ p := by
+      rw [h] at hbound
+      omega
+    exact conjecture_of_eleven_dvd hp hp56 hd11
+  · have hd13 : 13 ∣ p - 2 := by rwa [h] at hd
+    have hp14 : 14 ≤ p := by
+      rw [h] at hbound
+      omega
+    exact conjecture_of_thirteen_dvd hp hp14 hd13
+  · have hd17 : 17 ∣ p - 2 := by rwa [h] at hd
+    have hp86 : 86 ≤ p := by
+      rw [h] at hbound
+      omega
+    exact conjecture_of_seventeen_dvd hp hp86 hd17
+  · have hd19 : 19 ∣ p - 2 := by rwa [h] at hd
+    have hp20 : 20 ≤ p := by
+      rw [h] at hbound
+      omega
+    exact conjecture_of_nineteen_dvd hp hp20 hd19
+  · have hd23 : 23 ∣ p - 2 := by rwa [h] at hd
+    have hp116 : 116 ≤ p := by
+      rw [h] at hbound
+      omega
+    exact conjecture_of_twentythree_dvd hp hp116 hd23
+
 private instance : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
 
 lemma a_pos {n : ℕ} (hn : 0 < n) : 0 < a n :=
@@ -1236,5 +1336,8 @@ lemma v2_x_two_four_pow_pred (k : ℕ) :
 #print axioms conjecture_of_cases
 #print axioms conjecture_of_seventeen_dvd
 #print axioms conjecture_of_twentythree_dvd
+#print axioms conjecture_of_minFac_le_twentythree
+#print axioms remaining_minFac_ge_five
+#print axioms prime_le_twentythree
 
 end OeisA135508

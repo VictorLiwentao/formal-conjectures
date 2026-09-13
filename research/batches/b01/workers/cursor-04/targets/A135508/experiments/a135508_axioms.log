@@ -35,3 +35,6 @@
 'OeisA135508.conjecture_of_cases' depends on axioms: [propext, Classical.choice, Quot.sound]
 'OeisA135508.conjecture_of_seventeen_dvd' depends on axioms: [propext, Classical.choice, Quot.sound]
 'OeisA135508.conjecture_of_twentythree_dvd' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.conjecture_of_minFac_le_twentythree' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.remaining_minFac_ge_five' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.prime_le_twentythree' depends on axioms: [propext, Classical.choice, Quot.sound]

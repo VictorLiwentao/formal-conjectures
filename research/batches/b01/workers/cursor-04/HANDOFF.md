@@ -34,6 +34,7 @@ python3 research/batches/b01/control/check_assignments.py --repo . --worker curs
 - Unconditional twin inhibition for pairs with smaller member `≥ 11` (Cloitre 6.3 without `C₁`).
 - Cloitre 2-adic staircase `a(2·4^k-1)=2` for every `k`.
 - Remaining-class reduction: a factor `q ≡ 2 (mod 3)` of `p-2`, the bound `q(q+2) ≤ p-2` on the least prime factor, prime and coprime injectors.
+- Remaining McEachen when `lpf(p-2) ≤ 23` (`conjecture_of_minFac_le_twentythree`).
 - `not_q_dvd_x_le`: such a `q ≥ 7` does not divide `x n` for `0 < n ≤ q`.
 - Even `k` and `k ≡ 1 (mod 3)` cannot give prime injectors; remaining candidates are `k ≡ 5 (mod 6)`.
 - `conjecture_of_cases` is the frozen type plus an injector hypothesis on the remaining class.
@@ -44,6 +45,5 @@ See `proof.md`. Remaining McEachen primes need a first-entry bound for some fact
 
 ## Commit SHA
 
-Research commit: `2d25e3dc`
-Previous structural commit: `fa641c9d`
+Research commit: pending after this commit
 Branch: `cursor/a135508-lcm-primes-770d`

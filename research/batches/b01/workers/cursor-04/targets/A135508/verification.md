@@ -60,6 +60,7 @@ not_prime_kq_sub_two_of_even : propext, Quot.sound
 not_prime_kq_sub_two_of_k_mod_one : propext, Classical.choice, Quot.sound
 conjecture_of_five_prime_injector / remaining_injector / cases : propext, Classical.choice, Quot.sound
 conjecture_of_seventeen_dvd / twentythree_dvd : propext, Classical.choice, Quot.sound
+conjecture_of_minFac_le_twentythree : propext, Classical.choice, Quot.sound
 ```
 
 No `sorryAx`, `native_decide`, or `Lean.trustCompiler` on these declarations. `Classical.choice` enters through `Nat.find` in `exists_least_dvd` and through Mathlib `decide` instances. Full log: `experiments/a135508_axioms.log`.
