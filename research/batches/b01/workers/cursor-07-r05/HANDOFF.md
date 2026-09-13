@@ -14,8 +14,8 @@ Source SHA256: `b24ee6ea69c547654647cdad7102ce95e64dc8a455fbd9aa12f7214b3d3c3968
 Candidate SHA256: `c85feea04b8babc79e8fd9a5c227f74ed725534edaa101a63f7e4d0ef1e3244c`
 Kickoff UTC: `2026-09-13T03:44:44Z`
 Deadline UTC: `2026-09-13T11:44:44Z` (eight hours, never reset)
-Worker stopped: `2026-09-13T04:05:20Z`
-Candidate commit: recorded in the documentation follow-up commit after this file is first committed.
+Worker stopped: `2026-09-13T04:06:00Z`
+Candidate commit: `c8ff6949525cb4aa23a697ed5fa57578914d91bd`
 
 Proof file: `research/batches/b01/workers/cursor-07-r05/targets/WOWII7/WOWII7.lean`
 Audit file: `research/batches/b01/workers/cursor-07-r05/targets/WOWII7/WOWII7_audit.lean`
