@@ -166,6 +166,106 @@ lemma XWord.zero_mem {w : Word} (hw : XWord w) : (0 : ℤ) ∈ w :=
   | .step_left hu hv => mem_append.mpr (Or.inr (XWord.zero_mem hv))
   | .step_right hu hv => mem_append.mpr (Or.inl (XWord.zero_mem hu))
 
+lemma mem_l_iff {u : Word} {y : ℤ} : y ∈ l u ↔ y + 1 ∈ u := by
+  simp [l, sub_eq_iff_eq_add]
+
+lemma mem_r_iff {v : Word} {y : ℤ} : y ∈ r v ↔ y - 1 ∈ v := by
+  simp [r, mem_map, mem_reverse]
+  constructor
+  · rintro ⟨a, ha, rfl⟩
+    simpa
+  · intro h
+    exact ⟨y - 1, h, by omega⟩
+
+lemma XWord.neg_one_mem_l {u : Word} (hu : XWord u) : (-1 : ℤ) ∈ l u :=
+  mem_l_iff.mpr (by simpa using hu.zero_mem)
+
+lemma XWord.one_mem_r {v : Word} (hv : XWord v) : (1 : ℤ) ∈ r v :=
+  mem_r_iff.mpr (by simpa using hv.zero_mem)
+
+/-- The letters of a Xia word form an integer interval. -/
+lemma XWord.convex {w : Word} (hw : XWord w) {x y z : ℤ}
+    (hx : x ∈ w) (hz : z ∈ w) (hxy : x ≤ y) (hyz : y ≤ z) : y ∈ w :=
+  match w, hw with
+  | _, .base => by
+    simp only [mem_cons, not_mem_nil, or_false] at hx hz
+    subst hx
+    subst hz
+    have : y = 0 := le_antisymm hyz hxy
+    simp [this]
+  | _, @XWord.step_left u v hu hv => by
+    have h0v := hv.zero_mem
+    have hm1 := hu.neg_one_mem_l
+    have h0w : (0 : ℤ) ∈ l u ++ v := mem_append.mpr (Or.inr h0v)
+    by_cases h0y : y = 0
+    · simpa [h0y] using h0w
+    have hx' := mem_append.mp hx
+    have hz' := mem_append.mp hz
+    have hyne : y ≠ 0 := h0y
+    rcases hx' with hxI | hxJ
+    · rcases hz' with hzI | hzJ
+      · exact mem_append.mpr (Or.inl (mem_l_iff.mpr
+          (hu.convex (mem_l_iff.mp hxI) (mem_l_iff.mp hzI) (by linarith) (by linarith))))
+      · rcases le_total y 0 with hy0 | hypos
+        · have hyle : y ≤ -1 := by omega
+          exact mem_append.mpr (Or.inl (mem_l_iff.mpr
+            (hu.convex (mem_l_iff.mp hxI) (mem_l_iff.mp hm1)
+              (by linarith) (by linarith))))
+        · exact mem_append.mpr (Or.inr
+            (hv.convex h0v hzJ (by linarith) hyz))
+    · rcases hz' with hzI | hzJ
+      · rcases le_total y 0 with hy0 | hypos
+        · exact mem_append.mpr (Or.inr (hv.convex hxJ h0v hxy (by omega)))
+        · exact mem_append.mpr (Or.inl (mem_l_iff.mpr
+            (hu.convex (mem_l_iff.mp hm1) (mem_l_iff.mp hzI)
+              (by linarith) (by linarith))))
+      · exact mem_append.mpr (Or.inr (hv.convex hxJ hzJ hxy hyz))
+  | _, @XWord.step_right u v hu hv => by
+    have h0u := hu.zero_mem
+    have h1 := hv.one_mem_r
+    have h0w : (0 : ℤ) ∈ u ++ r v := mem_append.mpr (Or.inl h0u)
+    by_cases h0y : y = 0
+    · simpa [h0y] using h0w
+    have hx' := mem_append.mp hx
+    have hz' := mem_append.mp hz
+    rcases hx' with hxI | hxJ
+    · rcases hz' with hzI | hzJ
+      · exact mem_append.mpr (Or.inl (hu.convex hxI hzI hxy hyz))
+      · rcases le_total y 0 with hy0 | hypos
+        · exact mem_append.mpr (Or.inl (hu.convex hxI h0u hxy (by omega)))
+        · have hy1 : 1 ≤ y := by omega
+          exact mem_append.mpr (Or.inr (mem_r_iff.mpr
+            (hv.convex (mem_r_iff.mp h1) (mem_r_iff.mp hzJ)
+              (by linarith) (by linarith))))
+    · rcases hz' with hzI | hzJ
+      · rcases le_total y 0 with hy0 | hypos
+        · exact mem_append.mpr (Or.inr (mem_r_iff.mpr
+            (hv.convex (mem_r_iff.mp hxJ) (mem_r_iff.mp h1)
+              (by linarith) (by linarith))))
+        · have hy1 : 1 ≤ y := by omega
+          exact mem_append.mpr (Or.inl (hu.convex h0u hzI (by linarith) hyz))
+      · exact mem_append.mpr (Or.inr (mem_r_iff.mpr
+          (hv.convex (mem_r_iff.mp hxJ) (mem_r_iff.mp hzJ)
+            (by linarith) (by linarith))))
+
+lemma XWord.neg_one_mem_of_neg {w : Word} (hw : XWord w) {x : ℤ}
+    (hx : x ∈ w) (hneg : x < 0) : (-1 : ℤ) ∈ w :=
+  hw.convex hx hw.zero_mem (by omega) (by omega)
+
+lemma XWord.one_mem_of_pos {w : Word} (hw : XWord w) {x : ℤ}
+    (hx : x ∈ w) (hpos : 0 < x) : (1 : ℤ) ∈ w :=
+  hw.convex hw.zero_mem hx (by omega) (by omega)
+
+lemma XWord.nonneg_of_not_mem_neg_one {w : Word} (hw : XWord w)
+    (h : (-1 : ℤ) ∉ w) {x : ℤ} (hx : x ∈ w) : 0 ≤ x := by
+  by_contra hx'
+  exact h (hw.neg_one_mem_of_neg hx (by omega))
+
+lemma XWord.nonpos_of_not_mem_one {w : Word} (hw : XWord w)
+    (h : (1 : ℤ) ∉ w) {x : ℤ} (hx : x ∈ w) : x ≤ 0 := by
+  by_contra hx'
+  exact h (hw.one_mem_of_pos hx (by omega))
+
 -- Entry bounds and finiteness of `xN`
 
 lemma XWord.mem_bounds {w : Word} (hw : XWord w) {x : ℤ} (hx : x ∈ w) :
@@ -307,6 +407,193 @@ lemma eq_of_right_parse_eq {u u' v v' : Word} (h : u ++ r v = u' ++ r v')
   have hsplit := append_inj h hlen
   exact ⟨hsplit.1, r_injective hsplit.2⟩
 
+lemma IsRightParse.length_add {w u v : Word} (h : IsRightParse w u v) :
+    u.length + v.length = w.length := by
+  rcases h with ⟨_, _, hw⟩
+  simp [hw, r]
+
+lemma IsRightParse.take {w u v : Word} (h : IsRightParse w u v) :
+    w.take u.length = u := by
+  rcases h with ⟨_, _, hw⟩
+  simp [hw]
+
+lemma IsRightParse.drop {w u v : Word} (h : IsRightParse w u v) :
+    w.drop u.length = r v := by
+  rcases h with ⟨_, _, hw⟩
+  simp [hw]
+
+lemma IsRightParse.pos_left {w u v : Word} (h : IsRightParse w u v) :
+    0 < u.length :=
+  (h.1).length_pos
+
+lemma IsRightParse.pos_right {w u v : Word} (h : IsRightParse w u v) :
+    0 < v.length :=
+  (h.2.1).length_pos
+
+lemma IsRightParse.left_lt_length {w u v : Word} (h : IsRightParse w u v) :
+    u.length < w.length := by
+  have := h.length_add
+  have := h.pos_right
+  omega
+
+lemma isRightParse_take_drop {w : Word} {k : ℕ} (_hk0 : 0 < k)
+    (_hkl : k < w.length) :
+    IsRightParse w (w.take k) (l (w.drop k)) ↔
+      XWord (w.take k) ∧ XWord (l (w.drop k)) := by
+  constructor
+  · intro h
+    exact ⟨h.1, h.2.1⟩
+  · intro ⟨hu, hv⟩
+    refine ⟨hu, hv, ?_⟩
+    simp [r_l, take_append_drop]
+
+lemma exists_shortest_right_parse {w : Word} (h : ∃ u v, IsRightParse w u v) :
+    ∃ u v, IsRightParse w u v ∧
+      ∀ u' v', IsRightParse w u' v' → v.length ≤ v'.length := by
+  classical
+  obtain ⟨u0, v0, hp0⟩ := h
+  let S : Finset ℕ :=
+    (Finset.range w.length).filter (fun k =>
+      0 < k ∧ XWord (w.take k) ∧ XWord (l (w.drop k)))
+  have huS : u0.length ∈ S := by
+    refine Finset.mem_filter.mpr ⟨Finset.mem_range.mpr hp0.left_lt_length, ?_⟩
+    refine ⟨hp0.pos_left, ?_, ?_⟩
+    · simpa [hp0.take] using hp0.1
+    · have hdrop := hp0.drop
+      simpa [hdrop, l_r] using hp0.2.1
+  have hSne : S.Nonempty := ⟨u0.length, huS⟩
+  let k := S.max' hSne
+  have hkmem := S.max'_mem hSne
+  have hk := (Finset.mem_filter.mp hkmem).2
+  have hklt : k < w.length := Finset.mem_range.mp (Finset.mem_filter.mp hkmem).1
+  refine ⟨w.take k, l (w.drop k), (isRightParse_take_drop hk.1 hklt).mpr ⟨hk.2.1, hk.2.2⟩, ?_⟩
+  intro u' v' hp'
+  have huS' : u'.length ∈ S := by
+    refine Finset.mem_filter.mpr ⟨Finset.mem_range.mpr hp'.left_lt_length, ?_⟩
+    refine ⟨hp'.pos_left, ?_, ?_⟩
+    · simpa [hp'.take] using hp'.1
+    · have hdrop := hp'.drop
+      simpa [hdrop, l_r] using hp'.2.1
+  have hle : u'.length ≤ k := Finset.le_max' S u'.length huS'
+  have hsum := hp'.length_add
+  have hk_le : k ≤ w.length := hklt.le
+  have hu_lt := hp'.left_lt_length
+  have hvlen : (l (w.drop k)).length = w.length - k := by
+    simp [length_l, length_drop]
+  omega
+
+lemma shortest_right_parse_unique {w u v u' v' : Word}
+    (h : IsRightParse w u v) (h' : IsRightParse w u' v')
+    (hmin : ∀ u₂ v₂, IsRightParse w u₂ v₂ → v.length ≤ v₂.length)
+    (hmin' : ∀ u₂ v₂, IsRightParse w u₂ v₂ → v'.length ≤ v₂.length) :
+    u = u' ∧ v = v' := by
+  have hv : v.length = v'.length :=
+    Nat.le_antisymm (hmin u' v' h') (hmin' u v h)
+  have hsum := h.length_add
+  have hsum' := h'.length_add
+  have hlen : u.length = u'.length := by omega
+  exact eq_of_right_parse_eq (h.2.2.symm.trans h'.2.2) hlen
+
+lemma XWord.count_zero_pos {w : Word} (hw : XWord w) : 0 < w.count 0 :=
+  count_pos_iff.mpr hw.zero_mem
+
+lemma XWord.not_isAppend_of_count_zero_eq_one {u v w : Word}
+    (hu : XWord u) (hv : XWord v) (hw : w = u ++ v)
+    (h1 : w.count 0 = 1) : False := by
+  have hsum : w.count 0 = u.count 0 + v.count 0 := by
+    simp [hw, count_append]
+  have := hu.count_zero_pos
+  have := hv.count_zero_pos
+  omega
+
+/-- Xia words of length `k` with a unique `0`. Experimentally these are
+the Catalan-many first peels of `YWord`s. -/
+def PWord (w : Word) : Prop :=
+  XWord w ∧ w.count 0 = 1
+
+lemma PWord.not_isAppend {u v w : Word} (hw : PWord w) (hu : XWord u)
+    (hv : XWord v) (h : w = u ++ v) : False :=
+  XWord.not_isAppend_of_count_zero_eq_one hu hv h hw.2
+
+lemma XWord.getLast_eq_zero_or_one {w : Word} (hw : XWord w) :
+    w.getLast hw.ne_nil = 0 ∨ w.getLast hw.ne_nil = 1 :=
+  mem_endpointSet'.mp hw.getLast_mem
+
+lemma not_xWord_of_getLast_ge_two {w : Word} (h : w ≠ [])
+    (ht : 2 ≤ w.getLast h) : ¬ XWord w := by
+  intro hw
+  have hlast := hw.getLast_eq_zero_or_one
+  have : w.getLast hw.ne_nil = w.getLast h := rfl
+  omega
+
+lemma getLast_cons_zero_r {s : Word} (hs : s ≠ []) :
+    ([0] ++ r s).getLast (append_ne_nil_of_right_ne_nil _ (r_ne_nil hs)) =
+      s.head hs + 1 := by
+  have h := getLast_append_of_right_ne_nil (l₁ := ([0] : Word)) (l₂ := r s)
+    (r_ne_nil hs)
+  rw [h, getLast_r hs]
+
+lemma not_xWord_cons_zero_r_of_one_le_head {s : Word} (hs : s ≠ [])
+    (hpos : 1 ≤ s.head hs) : ¬ XWord ([0] ++ r s) := by
+  intro hw
+  have hne : [0] ++ r s ≠ [] := append_ne_nil_of_right_ne_nil _ (r_ne_nil hs)
+  have hlast := getLast_cons_zero_r hs
+  have hge : 2 ≤ ([0] ++ r s).getLast hne := by
+    have : ([0] ++ r s).getLast hne = s.head hs + 1 := hlast
+    omega
+  exact not_xWord_of_getLast_ge_two hne hge hw
+
+lemma PWord.base : PWord [0] := by
+  refine ⟨XWord.base, ?_⟩
+  decide
+
+lemma PWord.neg_one_zero : PWord [-1, 0] := by
+  refine ⟨XWord.step_left XWord.base XWord.base, ?_⟩
+  decide
+
+lemma PWord.zero_one : PWord [0, 1] := by
+  refine ⟨XWord.step_right XWord.base XWord.base, ?_⟩
+  decide
+
+lemma count_zero_r (v : Word) : (r v).count 0 = v.count (-1) := by
+  simp [r, count_eq_countP, countP_map]
+  congr 1
+  ext x
+  simp [eq_neg_iff_add_eq_zero]
+
+lemma count_zero_l (u : Word) : (l u).count 0 = u.count 1 := by
+  simp [l, count_eq_countP, countP_map]
+  congr 1
+  ext x
+  simp [sub_eq_zero]
+
+lemma PWord.of_step_left {u v : Word} (_hu : XWord u) (hv : XWord v)
+    (h : PWord (l u ++ v)) : PWord v ∧ u.count 1 = 0 := by
+  have hsum : (l u ++ v).count 0 = u.count 1 + v.count 0 := by
+    simp [count_append, count_zero_l]
+  have hv0 := hv.count_zero_pos
+  have h1 : u.count 1 + v.count 0 = 1 := hsum.symm.trans h.2
+  have hones : u.count 1 = 0 := by omega
+  have hv1 : v.count 0 = 1 := by omega
+  exact ⟨⟨hv, hv1⟩, hones⟩
+
+lemma PWord.of_step_right {u v : Word} (hu : XWord u) (_hv : XWord v)
+    (h : PWord (u ++ r v)) : PWord u ∧ v.count (-1) = 0 := by
+  have hsum : (u ++ r v).count 0 = u.count 0 + v.count (-1) := by
+    simp [count_append, count_zero_r]
+  have hu0 := hu.count_zero_pos
+  have h1 : u.count 0 + v.count (-1) = 1 := hsum.symm.trans h.2
+  have hneg : v.count (-1) = 0 := by omega
+  have hu1 : u.count 0 = 1 := by omega
+  exact ⟨⟨hu, hu1⟩, hneg⟩
+
+lemma PWord.step_right_factor_nonneg {u v : Word} (hu : XWord u) (hv : XWord v)
+    (h : PWord (u ++ r v)) {x : ℤ} (hx : x ∈ v) : 0 ≤ x := by
+  have hneg := (PWord.of_step_right hu hv h).2
+  have hmem : (-1 : ℤ) ∉ v := by
+    simpa [count_eq_zero] using hneg
+  exact hv.nonneg_of_not_mem_neg_one hmem hx
+
 lemma exists_left_parse_of_head_eq_neg_one {w : Word} (hw : XWord w)
     (h : w.head hw.ne_nil = -1) :
     ∃ u v, IsLeftParse w u v :=
@@ -438,6 +725,118 @@ lemma ncard_xN_two : (xN 2).ncard = a 1 := by
   have := xN_finite 2
   rw [xN_two, Set.ncard_pair (by simp), a_1]
 
+lemma XWord.eq_of_length_three {w : Word} (hw : XWord w) (h : w.length = 3) :
+    w = [-1, -2, 0] ∨ w = [-1, -1, 0] ∨ w = [-1, 0, 1] ∨
+      w = [0, -1, 0] ∨ w = [0, 1, 0] ∨ w = [0, 1, 1] ∨ w = [0, 2, 1] :=
+  match w, hw with
+  | _, .base => by simp at h
+  | _, @XWord.step_left u v hu hv => by
+    have hsum : u.length + v.length = 3 := by
+      simpa [l] using h
+    have hsplit : u.length = 1 ∨ u.length = 2 := by
+      have := hu.length_pos
+      have := hv.length_pos
+      omega
+    rcases hsplit with hu1 | hu2
+    · have hv2 : v.length = 2 := by omega
+      have hu0 := XWord.eq_base_of_length_one hu hu1
+      rcases XWord.eq_of_length_two hv hv2 with hv0 | hv0
+      · subst u; subst v; simp [l]
+      · subst u; subst v; simp [l]
+    · have hv1 : v.length = 1 := by omega
+      have hv0 := XWord.eq_base_of_length_one hv hv1
+      rcases XWord.eq_of_length_two hu hu2 with hu0 | hu0
+      · subst u; subst v; simp [l]
+      · subst u; subst v; simp [l]
+  | _, @XWord.step_right u v hu hv => by
+    have hsum : u.length + v.length = 3 := by
+      simpa [r] using h
+    have hsplit : u.length = 1 ∨ u.length = 2 := by
+      have := hu.length_pos
+      have := hv.length_pos
+      omega
+    rcases hsplit with hu1 | hu2
+    · have hv2 : v.length = 2 := by omega
+      have hu0 := XWord.eq_base_of_length_one hu hu1
+      rcases XWord.eq_of_length_two hv hv2 with hv0 | hv0
+      · subst u; subst v; simp [r]
+      · subst u; subst v; simp [r]
+    · have hv1 : v.length = 1 := by omega
+      have hv0 := XWord.eq_base_of_length_one hv hv1
+      rcases XWord.eq_of_length_two hu hu2 with hu0 | hu0
+      · subst u; subst v; simp [r]
+      · subst u; subst v; simp [r]
+
+def xN3Finset : Finset Word :=
+  {[-1, -2, 0], [-1, -1, 0], [-1, 0, 1], [0, -1, 0], [0, 1, 0], [0, 1, 1],
+    [0, 2, 1]}
+
+lemma length_three_words : xN3Finset.card = 7 := by
+  decide
+
+lemma XWord.neg_one_neg_two_zero : XWord [-1, -2, 0] := by
+  have h : l [-1, 0] ++ [0] = [-1, -2, 0] := by simp [l]
+  have hu : XWord [-1, 0] := by
+    simpa [l] using XWord.step_left XWord.base XWord.base
+  exact h ▸ XWord.step_left hu XWord.base
+
+lemma XWord.neg_one_neg_one_zero : XWord [-1, -1, 0] := by
+  have h : l [0] ++ [-1, 0] = [-1, -1, 0] := by simp [l]
+  have hv : XWord [-1, 0] := by
+    simpa [l] using XWord.step_left XWord.base XWord.base
+  exact h ▸ XWord.step_left XWord.base hv
+
+lemma XWord.neg_one_zero_one : XWord [-1, 0, 1] := by
+  have h : l [0] ++ [0, 1] = [-1, 0, 1] := by simp [l]
+  have hv : XWord [0, 1] := by
+    simpa [r] using XWord.step_right XWord.base XWord.base
+  exact h ▸ XWord.step_left XWord.base hv
+
+lemma XWord.zero_neg_one_zero : XWord [0, -1, 0] := by
+  have h : l [0, 1] ++ [0] = [0, -1, 0] := by simp [l]
+  have hu : XWord [0, 1] := by
+    simpa [r] using XWord.step_right XWord.base XWord.base
+  exact h ▸ XWord.step_left hu XWord.base
+
+lemma XWord.zero_one_zero : XWord [0, 1, 0] := by
+  have h : [0] ++ r [-1, 0] = [0, 1, 0] := by simp [r]
+  have hv : XWord [-1, 0] := by
+    simpa [l] using XWord.step_left XWord.base XWord.base
+  exact h ▸ XWord.step_right XWord.base hv
+
+lemma XWord.zero_one_one : XWord [0, 1, 1] := by
+  have h : [0, 1] ++ r [0] = [0, 1, 1] := by simp [r]
+  have hu : XWord [0, 1] := by
+    simpa [r] using XWord.step_right XWord.base XWord.base
+  exact h ▸ XWord.step_right hu XWord.base
+
+lemma XWord.zero_two_one : XWord [0, 2, 1] := by
+  have h : [0] ++ r [0, 1] = [0, 2, 1] := by simp [r]
+  have hv : XWord [0, 1] := by
+    simpa [r] using XWord.step_right XWord.base XWord.base
+  exact h ▸ XWord.step_right XWord.base hv
+
+lemma xN_three : xN 3 = ↑xN3Finset := by
+  ext w
+  constructor
+  · intro hw
+    rcases XWord.eq_of_length_three hw.1 hw.2 with
+      h | h | h | h | h | h | h <;> simp [xN3Finset, h]
+  · intro hw
+    simp [xN3Finset] at hw
+    rcases hw with h | h | h | h | h | h | h
+    · exact ⟨h ▸ XWord.neg_one_neg_two_zero, by simp [h]⟩
+    · exact ⟨h ▸ XWord.neg_one_neg_one_zero, by simp [h]⟩
+    · exact ⟨h ▸ XWord.neg_one_zero_one, by simp [h]⟩
+    · exact ⟨h ▸ XWord.zero_neg_one_zero, by simp [h]⟩
+    · exact ⟨h ▸ XWord.zero_one_zero, by simp [h]⟩
+    · exact ⟨h ▸ XWord.zero_one_one, by simp [h]⟩
+    · exact ⟨h ▸ XWord.zero_two_one, by simp [h]⟩
+
+lemma ncard_xN_three : (xN 3).ncard = a 2 := by
+  have := xN_finite 3
+  rw [xN_three, Set.ncard_coe_finset, length_three_words, a_2]
+
 -- Right-irreducible words and right combs from `[0]`
 
 /-- Words in `X` with no right parse. -/
@@ -488,12 +887,65 @@ lemma RIrreducible.getLast_eq_zero {w : Word} (h : RIrreducible w) :
   · exact h0
   · exact (h.getLast_ne_one h1).elim
 
+lemma YWord.head_eq_zero {w : Word} (hw : YWord w) :
+    w.head hw.ne_nil = 0 :=
+  match w, hw with
+  | _, .base => by simp
+  | _, @YWord.step u v hu hv => by
+    have : (u ++ r v).head (YWord.ne_nil (YWord.step hu hv)) =
+        u.head hu.xWord.ne_nil :=
+      head_append_of_ne_nil hu.xWord.ne_nil
+    rw [this]
+    exact YWord.head_eq_zero hu
+
+/-- Concatenating an arbitrary Xia word with the tail of a `YWord` stays in `X`.
+This is the easy half of the experimental rebuild map. -/
+lemma XWord.append_YWord_tail {c y : Word} (hc : XWord c) (hy : YWord y) :
+    XWord (c ++ y.tail) :=
+  match y, hy with
+  | _, .base => by
+    simpa using hc
+  | _, @YWord.step u v hu hv => by
+    have hu_ne := hu.ne_nil
+    have : (u ++ r v).tail = u.tail ++ r v := tail_append_of_ne_nil hu_ne
+    rw [this, ← append_assoc]
+    exact XWord.step_right (XWord.append_YWord_tail hc hu) hv
+
+lemma YWord.exists_right_parse_of_length_ge_two {w : Word} (hw : YWord w)
+    (hlen : 2 ≤ w.length) : ∃ u v, IsRightParse w u v :=
+  match w, hw with
+  | _, .base => by
+    simp at hlen
+  | _, @YWord.step u v hu hv =>
+    ⟨u, v, hu.xWord, hv, rfl⟩
+
+lemma exists_right_parse_append_YWord_tail {c y : Word} (hc : XWord c)
+    (hy : YWord y) (hlen : 2 ≤ y.length) :
+    ∃ u v, IsRightParse (c ++ y.tail) u v :=
+  match y, hy with
+  | _, .base => by
+    simp at hlen
+  | _, @YWord.step u v hu hv => by
+    refine ⟨c ++ u.tail, v, XWord.append_YWord_tail hc hu, hv, ?_⟩
+    have hu_ne := hu.ne_nil
+    simp [tail_append_of_ne_nil hu_ne]
+
 #print axioms ncard_xN_one
 #print axioms ncard_xN_two
+#print axioms ncard_xN_three
+#print axioms exists_shortest_right_parse
+#print axioms PWord.not_isAppend
+#print axioms not_xWord_cons_zero_r_of_one_le_head
+#print axioms PWord.of_step_right
+#print axioms XWord.convex
+#print axioms PWord.step_right_factor_nonneg
+#print axioms PWord.of_step_left
 #print axioms xN_finite
 #print axioms XWord.rho_mem
 #print axioms XWord.cons_zero_of_head_eq_neg_one
 #print axioms XWord.append_zero_of_getLast_eq_one
 #print axioms RIrreducible.getLast_eq_zero
+#print axioms XWord.append_YWord_tail
+#print axioms exists_right_parse_append_YWord_tail
 
 end OeisA108081

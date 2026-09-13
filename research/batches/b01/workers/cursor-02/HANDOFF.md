@@ -5,7 +5,7 @@ Baseline: `a2f4a1bb12a28e04a969da78feefac7d1ce49565`
 Coordination: `238f78bdd5701ae4c97a0d70d4e22e2d45770d7a`
 Kickoff UTC: 2026-09-12T23:10Z. Session budget: eight hours from kickoff (until 2026-09-13T07:10Z). This follow-up does not restart that budget.
 
-Final commit SHA: `10ebb2af9a8c6b1101d8bf280153a248d953f0b1`.
+Final commit SHA: recorded after the next commit on this branch.
 
 ## Reproduction
 
@@ -16,6 +16,9 @@ python3 research/batches/b01/control/check_assignments.py --repo . --worker curs
 python3 research/batches/b01/control/check_assignments.py --repo . --worker cursor-02 --against 238f78bdd5701ae4c97a0d70d4e22e2d45770d7a
 python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/enumerate_structure.py
 python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/decomposition.py
+python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/bijection_search.py
+python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/catalan_peels.py
+python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/pword_signs.py
 LEAN_NUM_THREADS=2 lake --wfail env lean research/batches/b01/workers/cursor-02/targets/A108081/A108081.lean
 ```
 
@@ -23,4 +26,6 @@ LEAN_NUM_THREADS=2 lake --wfail env lean research/batches/b01/workers/cursor-02/
 
 `partial`. No public exact proof/disproof found. Finite counts through `n=14` are already public (c5-k4) and are not a resolution. Statement uses `a(n-1)`, matching Xia’s listed cardinalities `1,2,7`, not the OEIS prose `a(n+1)`.
 
-Lean proves structural lemmas and `|X_1|=a(0)`, `|X_2|=a(1)`. The quantified identity is open. The experimental path is a uniform fibre decomposition `|X_n| = sum_k I_k H_{n-k}` with `I_n = A081696(n-1)` and `H_m = C(2m-1,m-1)`.
+Lean now proves structural lemmas including letter-set convexity, unique shortest right parse, `|X_1|=a(0)`, `|X_2|=a(1)`, `|X_3|=a(2)`, and the `PWord` (unique-zero) concatenation obstruction. The quantified identity is open.
+
+The experimental path is `|X_n| = sum_k I_k H_{n-k}` with `I_n = A081696(n-1)`, `H_m = C(2m-1,m-1)`, and first peels of `YWord`s equal to the Catalan family of one-zero Xia words.

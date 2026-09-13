@@ -1,6 +1,6 @@
 # A108081 verification
 
-Checked 2026-09-12.
+Checked 2026-09-13.
 
 ## Frozen source
 
@@ -38,28 +38,33 @@ python3 research/batches/b01/control/check_assignments.py --repo . --worker curs
 LEAN_NUM_THREADS=2 lake --wfail env lean research/batches/b01/workers/cursor-02/targets/A108081/A108081.lean
 python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/enumerate_structure.py
 python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/decomposition.py
+python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/bijection_search.py
+python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/catalan_peels.py
+python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/pword_signs.py
 ```
 
-Guard: PASS (worker path only).
+Guard: PASS (worker path only). Source SHA-256 matches.
 
 ## Lean axioms
 
-`lake --wfail env lean` on `A108081.lean` succeeded on 2026-09-12.
+`lake --wfail env lean` on `A108081.lean` succeeded on 2026-09-13.
 
 ```
 #print axioms ncard_xN_one
 -- [propext, Classical.choice, Quot.sound]
 #print axioms ncard_xN_two
 -- [propext, Classical.choice, Quot.sound]
-#print axioms xN_finite
+#print axioms ncard_xN_three
 -- [propext, Classical.choice, Quot.sound]
-#print axioms XWord.rho_mem
+#print axioms exists_shortest_right_parse
+-- [propext, Classical.choice, Quot.sound]
+#print axioms XWord.convex
+-- [propext, Classical.choice, Quot.sound]
+#print axioms PWord.not_isAppend
 -- [propext, Quot.sound]
-#print axioms XWord.cons_zero_of_head_eq_neg_one
--- [propext, Classical.choice, Quot.sound]
-#print axioms XWord.append_zero_of_getLast_eq_one
--- [propext, Classical.choice, Quot.sound]
-#print axioms RIrreducible.getLast_eq_zero
+#print axioms PWord.of_step_right
+-- [propext, Quot.sound]
+#print axioms xN_finite
 -- [propext, Classical.choice, Quot.sound]
 ```
 
@@ -71,9 +76,10 @@ The repository declaration remains `sorry`. This worker file does not restate it
 
 - `(xN 1).ncard = a 0`
 - `(xN 2).ncard = a 1`
+- `(xN 3).ncard = a 2`
 
 These are not the quantified statement.
 
 ## Novelty (repeat before any completion claim)
 
-See `literature.md`. No public exact proof or disproof was found on 2026-09-12. Fried arXiv:2607.24832 treats A108080, not A108081. Do not claim completion.
+See `literature.md`. No public exact proof or disproof was found on 2026-09-13. Fried arXiv:2607.24832 treats A108080, not A108081. Do not claim completion.
