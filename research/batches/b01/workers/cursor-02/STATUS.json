@@ -1,0 +1,27 @@
+{
+  "worker_id": "cursor-02",
+  "target_id": "A108081",
+  "actual_branch": "cursor/b01-cursor-02-13c0",
+  "baseline_commit": "a2f4a1bb12a28e04a969da78feefac7d1ce49565",
+  "coordination_commit": "238f78bdd5701ae4c97a0d70d4e22e2d45770d7a",
+  "current_status": "partial",
+  "novelty_status": "provisional_no_public_solution_found",
+  "last_updated_utc": "2026-09-12T23:59:59Z",
+  "kickoff_utc": "2026-09-12T23:10:00Z",
+  "session_limit_utc": "2026-09-13T07:10:00Z",
+  "proof_declarations": [
+    "OeisA108081.ncard_xN_one",
+    "OeisA108081.ncard_xN_two",
+    "OeisA108081.xN_finite",
+    "OeisA108081.XWord.rho_mem",
+    "OeisA108081.XWord.cons_zero_of_head_eq_neg_one",
+    "OeisA108081.XWord.append_zero_of_getLast_eq_one"
+  ],
+  "unresolved_gaps": [
+    "The quantified identity |X_n| = a(n-1) is not proved.",
+    "Greedy right-core bijection with Y-words is only experimental.",
+    "|Y_n| = H_{n-1} and |I_n| = A081696(n-1) are unproved.",
+    "Partial lemmas and n<=8 (or public n<=14) counts are not a resolution."
+  ],
+  "next_step": "Prove rebuild preserves greedy peels for right-irreducible cores, then |Y_n|=H_{n-1} and the A081696 identification of I_n."
+}
