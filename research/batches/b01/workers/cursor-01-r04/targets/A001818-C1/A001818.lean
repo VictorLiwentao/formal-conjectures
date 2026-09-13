@@ -4746,6 +4746,313 @@ lemma sum_cayleyWeight_long_even_cycles_through {α : Type*} [Fintype α] [Decid
   have hk2 : 2 ≤ k := (mem_Icc.mp hk).1
   exact sum_cayleyWeight_even_cycles_through x hx p hk2
 
+/-- Sign matrix of size `m`, She–Sun–Xia (3.1) without the even-size constraint. -/
+noncomputable def signMatrixOf (m : ℕ) : Matrix (Fin m) (Fin m) ℂ :=
+  fun i j => if j.val ≤ i.val then (1 : ℂ) else -1
+
+/-- Sign matrix `A_n` from She–Sun–Xia (3.1), 0-based. -/
+noncomputable def signMatrix (n : ℕ) : Matrix (Fin (2 * n)) (Fin (2 * n)) ℂ :=
+  signMatrixOf (2 * n)
+
+lemma signMatrix_apply (n : ℕ) (i j : Fin (2 * n)) :
+    signMatrix n i j = if j.val ≤ i.val then (1 : ℂ) else -1 :=
+  rfl
+
+lemma signMatrixOf_eq_iverson {m : ℕ} (i j : Fin m) :
+    signMatrixOf m i j = if i.val < j.val then (-1 : ℂ) else 1 := by
+  simp only [signMatrixOf]
+  by_cases h : j.val ≤ i.val
+  · have : ¬ i.val < j.val := not_lt.mpr h
+    simp [h, this]
+  · have : i.val < j.val := Nat.lt_of_not_ge h
+    simp [h, this]
+
+lemma signMatrixOf_col_zero {m : ℕ} [NeZero m] (i : Fin m) :
+    signMatrixOf m i 0 = 1 := by
+  simp [signMatrixOf]
+
+lemma signMatrix_one : (signMatrix 1).permanent = 0 := by
+  have h : (signMatrix 1).permanent = (signMatrixOf 2).permanent := rfl
+  rw [h, permanent_fin_two]
+  simp [signMatrixOf]
+
+lemma permanent_submatrix_equiv {α β : Type*} [Fintype α] [DecidableEq α]
+    [Fintype β] [DecidableEq β] {R : Type*} [CommSemiring R]
+    (e : α ≃ β) (M : Matrix β β R) :
+    (M.submatrix e e).permanent = M.permanent := by
+  simp only [permanent, submatrix_apply]
+  refine Fintype.sum_equiv e.permCongr
+    (fun σ : Perm α => ∏ i, M (e (σ i)) (e i))
+    (fun ρ : Perm β => ∏ j, M (ρ j) j) fun σ => ?_
+  exact Fintype.prod_equiv e
+    (fun i => M (e (σ i)) (e i))
+    (fun j => M (e.permCongr σ j) j)
+    (fun i => by simp [permCongr_apply])
+
+/-- Laplace expansion of a permanent along column 0. -/
+lemma permanent_succ_column_zero {n : ℕ} {R : Type*} [CommSemiring R]
+    (A : Matrix (Fin n.succ) (Fin n.succ) R) :
+    A.permanent =
+      ∑ i, A i 0 * (A.submatrix i.succAbove Fin.succ).permanent := by
+  rw [permanent, univ_perm_fin_succ, ← univ_product_univ]
+  simp only [sum_map, Equiv.toEmbedding_apply, sum_product]
+  refine sum_congr rfl fun i _ => ?_
+  refine Fin.cases ?_ (fun i => ?_) i
+  · simp only [permanent, mul_sum]
+    refine sum_congr rfl fun σ _ => ?_
+    rw [Fin.prod_univ_succ]
+    simp [Perm.decomposeFin_symm_apply_zero, Perm.decomposeFin_symm_apply_succ,
+      Fin.succAbove_zero]
+  · have hr :
+        (A.submatrix i.succ.succAbove Fin.succ).permanent =
+          ((A.submatrix i.succ.succAbove Fin.succ).submatrix (Fin.cycleRange i) id).permanent :=
+      (permanent_permute_cols (Fin.cycleRange i) _).symm
+    rw [hr]
+    simp only [permanent, mul_sum]
+    refine sum_congr rfl fun σ _ => ?_
+    rw [Fin.prod_univ_succ, Perm.decomposeFin_symm_apply_zero]
+    simp_rw [Perm.decomposeFin_symm_apply_succ, ← Fin.succAbove_cycleRange]
+    rfl
+
+lemma signMatrixOf_minor_eq_iverson {k : ℕ} (t : Fin k.succ) (r c : Fin k) :
+    signMatrixOf k.succ (t.succAbove r) c.succ =
+      if r.val < c.val ∨ (r = c ∧ r.val < t.val) then (-1 : ℂ) else 1 := by
+  rw [signMatrixOf_eq_iverson]
+  simp only [Fin.val_succ]
+  by_cases h : r.castSucc < t
+  · rw [Fin.succAbove_of_castSucc_lt _ _ h, Fin.val_castSucc]
+    have hr : r.val < t.val := by
+      simpa [Fin.lt_def, Fin.val_castSucc] using h
+    by_cases hij : r = c
+    · subst hij
+      simp [hr]
+    · have hne : r.val ≠ c.val := Fin.val_injective.ne hij
+      have hiff : (r.val < c.val + 1) ↔ r.val < c.val := by omega
+      simp [hij, hr, hiff]
+  · have hle : t ≤ r.castSucc := le_of_not_gt h
+    rw [Fin.succAbove_of_le_castSucc _ _ hle, Fin.val_succ]
+    have hr : ¬ r.val < t.val := by
+      have : t.val ≤ r.val := by
+        simpa [Fin.le_def, Fin.val_castSucc] using hle
+      omega
+    have hiff : (r.val + 1 < c.val + 1) ↔ r.val < c.val := by omega
+    simp [hr, hiff]
+
+open scoped Classical in
+lemma prod_signMatrixOf_minor {k : ℕ} (t : Fin k.succ) (σ : Perm (Fin k)) :
+    (∏ i, signMatrixOf k.succ (t.succAbove (σ i)) i.succ) =
+      (-1 : ℂ) ^ #{i | (σ i).val < i.val ∨ (σ i = i ∧ i.val < t.val)} := by
+  have hterm : ∀ i, signMatrixOf k.succ (t.succAbove (σ i)) i.succ =
+      if (σ i).val < i.val ∨ (σ i = i ∧ i.val < t.val) then (-1 : ℂ) else 1 := by
+    intro i
+    rw [signMatrixOf_minor_eq_iverson]
+    by_cases hf : σ i = i
+    · simp [hf]
+    · simp [hf]
+  simp_rw [hterm]
+  rw [prod_ite, prod_const, prod_const, one_pow, mul_one]
+
+lemma signInv_rev_iff {k : ℕ} (t : Fin k.succ) (τ : Perm (Fin k)) (i : Fin k) :
+    (((Fin.revPerm.permCongr τ) i).val < i.val ∨
+      ((Fin.revPerm.permCongr τ) i = i ∧ i.val < t.val)) ↔
+      ((Fin.rev i).val < (τ (Fin.rev i)).val ∨
+        (τ (Fin.rev i) = Fin.rev i ∧ (Fin.rev t).val ≤ (Fin.rev i).val)) := by
+  have hσ : (Fin.revPerm.permCongr τ) i = Fin.rev (τ (Fin.rev i)) := by
+    simp [Fin.revPerm]
+  constructor
+  · intro h
+    rw [hσ] at h
+    rcases h with hlt | ⟨heq, hlt⟩
+    · left
+      have : k - ((τ (Fin.rev i)).val + 1) < i.val := by
+        simpa [Fin.val_rev] using hlt
+      have : (Fin.rev i).val < (τ (Fin.rev i)).val := by
+        simp only [Fin.val_rev] at this ⊢
+        omega
+      exact this
+    · right
+      have hfix : τ (Fin.rev i) = Fin.rev i := Fin.rev_eq_iff.mp heq
+      refine ⟨hfix, ?_⟩
+      simp only [Fin.val_rev]
+      omega
+  · intro h
+    rw [hσ]
+    rcases h with hlt | ⟨hfix, hge⟩
+    · left
+      have : (Fin.rev i).val < (τ (Fin.rev i)).val := hlt
+      simp only [Fin.val_rev] at this ⊢
+      omega
+    · right
+      refine ⟨?_, ?_⟩
+      · simp [hfix]
+      · simp only [Fin.val_rev] at hge ⊢
+        omega
+
+open scoped Classical in
+lemma card_signInv_add_rev {k : ℕ} (t : Fin k.succ) (τ : Perm (Fin k)) :
+    #{i | ((Fin.revPerm.permCongr τ) i).val < i.val ∨
+            ((Fin.revPerm.permCongr τ) i = i ∧ i.val < t.val)} +
+      #{i | (τ i).val < i.val ∨ (τ i = i ∧ i.val < (Fin.rev t).val)} = k := by
+  let Pσ : Fin k → Prop := fun i =>
+    ((Fin.revPerm.permCongr τ) i).val < i.val ∨
+      ((Fin.revPerm.permCongr τ) i = i ∧ i.val < t.val)
+  let Q : Fin k → Prop := fun q =>
+    q.val < (τ q).val ∨ (τ q = q ∧ (Fin.rev t).val ≤ q.val)
+  let R : Fin k → Prop := fun q =>
+    (τ q).val < q.val ∨ (τ q = q ∧ q.val < (Fin.rev t).val)
+  have hPQ : ∀ i, Pσ i ↔ Q (Fin.rev i) := by
+    intro i
+    exact signInv_rev_iff t τ i
+  have hQR : ∀ q, Q q ↔ ¬ R q := by
+    intro q
+    by_cases hf : τ q = q
+    · simp [Q, R, hf]
+    · have hne : (τ q).val ≠ q.val := Fin.val_injective.ne hf
+      simp [Q, R, hf]
+      omega
+  have hcardP : #{i | Pσ i} = #{q | Q q} := by
+    have e := Equiv.subtypeEquiv Fin.revPerm fun i => (hPQ i)
+    have hc := Fintype.card_congr e
+    simpa [Fintype.card_subtype] using hc
+  have hadd : #{q | Q q} + #{q | R q} = k := by
+    have : (univ : Finset (Fin k)).filter Q = univ.filter fun q => ¬ R q := by
+      ext q
+      simp [hQR]
+    rw [this, add_comm, card_filter_add_card_filter_not (s := (univ : Finset (Fin k))) (p := R),
+      card_univ, Fintype.card_fin]
+  rw [hcardP, hadd]
+
+open scoped Classical in
+lemma permanent_signMatrixOf_minor_rev {k : ℕ} (t : Fin k.succ) :
+    (signMatrixOf k.succ |>.submatrix t.succAbove Fin.succ).permanent =
+      (-1 : ℂ) ^ k *
+        (signMatrixOf k.succ |>.submatrix (Fin.rev t).succAbove Fin.succ).permanent := by
+  simp only [permanent, submatrix_apply]
+  rw [show
+      (∑ σ : Perm (Fin k), (∏ i, signMatrixOf k.succ (t.succAbove (σ i)) i.succ : ℂ)) =
+        ∑ τ : Perm (Fin k),
+          ∏ i, signMatrixOf k.succ (t.succAbove ((Fin.revPerm.permCongr τ) i)) i.succ from
+      Fintype.sum_equiv Fin.revPerm.permCongr
+        (fun σ : Perm (Fin k) => (∏ i, signMatrixOf k.succ (t.succAbove (σ i)) i.succ : ℂ))
+        (fun τ => ∏ i, signMatrixOf k.succ (t.succAbove ((Fin.revPerm.permCongr τ) i)) i.succ)
+        (fun σ => by
+          simp [Fin.revPerm])]
+  rw [mul_sum]
+  refine Fintype.sum_congr _ _ fun τ => ?_
+  rw [prod_signMatrixOf_minor, prod_signMatrixOf_minor]
+  set nP := #{i | ((Fin.revPerm.permCongr τ) i).val < i.val ∨
+      ((Fin.revPerm.permCongr τ) i = i ∧ i.val < t.val)}
+  set nR := #{i | (τ i).val < i.val ∨ (τ i = i ∧ i.val < (Fin.rev t).val)}
+  have hsum : nP + nR = k := card_signInv_add_rev t τ
+  have hsq : ((-1 : ℂ) ^ nR) ^ 2 = 1 := by
+    rw [pow_two, ← pow_add, ← two_mul, pow_mul, neg_one_sq, one_pow]
+  calc
+    (-1 : ℂ) ^ nP = (-1) ^ nP * 1 := (mul_one _).symm
+    _ = (-1) ^ nP * ((-1) ^ nR * (-1) ^ nR) := by rw [← pow_two, hsq]
+    _ = ((-1) ^ nP * (-1) ^ nR) * (-1) ^ nR := by ring
+    _ = (-1) ^ (nP + nR) * (-1) ^ nR := by rw [← pow_add]
+    _ = (-1) ^ k * (-1) ^ nR := by rw [hsum]
+
+lemma odd_two_mul_pred {n : ℕ} (hn : 1 ≤ n) : Odd (2 * n - 1) := by
+  have : 2 * n - 1 = 2 * (n - 1) + 1 := by omega
+  rw [this]
+  exact odd_two_mul_add_one _
+
+lemma two_mul_eq_succ_pred {n : ℕ} (hn : 1 ≤ n) : (2 * n - 1).succ = 2 * n := by
+  omega
+
+open scoped Classical in
+lemma sum_permanent_signMatrixOf_minor {k : ℕ} (hk : Odd k) :
+    (∑ t : Fin k.succ,
+        (signMatrixOf k.succ |>.submatrix t.succAbove Fin.succ).permanent) = 0 := by
+  have hneg : (-1 : ℂ) ^ k = -1 := Odd.neg_one_pow hk
+  have hpair : ∀ t : Fin k.succ,
+      (signMatrixOf k.succ |>.submatrix t.succAbove Fin.succ).permanent +
+        (signMatrixOf k.succ |>.submatrix (Fin.rev t).succAbove Fin.succ).permanent = 0 := by
+    intro t
+    have h := permanent_signMatrixOf_minor_rev (k := k) t
+    rw [h, hneg]
+    ring
+  have hsum :
+      ∑ t : Fin k.succ,
+          ((signMatrixOf k.succ |>.submatrix t.succAbove Fin.succ).permanent +
+            (signMatrixOf k.succ |>.submatrix (Fin.rev t).succAbove Fin.succ).permanent) = 0 :=
+    sum_eq_zero fun t _ => hpair t
+  have hrev :
+      ∑ t : Fin k.succ,
+          (signMatrixOf k.succ |>.submatrix (Fin.rev t).succAbove Fin.succ).permanent =
+        ∑ t : Fin k.succ,
+          (signMatrixOf k.succ |>.submatrix t.succAbove Fin.succ).permanent := by
+    refine (Fintype.sum_equiv Fin.revPerm
+      (fun t => (signMatrixOf k.succ |>.submatrix t.succAbove Fin.succ).permanent)
+      (fun t => (signMatrixOf k.succ |>.submatrix (Fin.rev t).succAbove Fin.succ).permanent)
+      fun t => ?_).symm
+    simp [Fin.revPerm]
+  rw [sum_add_distrib, hrev, ← two_mul] at hsum
+  exact (mul_eq_zero.mp hsum).resolve_left (by exact two_ne_zero)
+
+/-- She–Sun–Xia Lemma 3.1: `per(A_n) = 0` for `n ≥ 1`. -/
+lemma permanent_signMatrix {n : ℕ} (hn : 1 ≤ n) :
+    (signMatrix n).permanent = 0 := by
+  have hsz : (2 * n - 1).succ = 2 * n := two_mul_eq_succ_pred hn
+  have hM :
+      (signMatrixOf (2 * n)).submatrix (finCongr hsz) (finCongr hsz) =
+        signMatrixOf (2 * n - 1).succ := by
+    ext i j
+    simp [signMatrixOf, submatrix_apply]
+  have hper : (signMatrix n).permanent = (signMatrixOf (2 * n - 1).succ).permanent := by
+    have hs : signMatrix n = signMatrixOf (2 * n) := rfl
+    rw [hs, ← hM]
+    exact (permanent_submatrix_equiv (finCongr hsz) _).symm
+  rw [hper, permanent_succ_column_zero]
+  simp_rw [signMatrixOf_col_zero, one_mul]
+  exact sum_permanent_signMatrixOf_minor (odd_two_mul_pred hn)
+
+lemma cayleyWeight_swap_of_zero {α : Type*} [Fintype α] [DecidableEq α]
+    (x : α → ℂ) {p q : α} (hpq : p ≠ q) (hxp : x p = 0) (hxq : x q ≠ 0) :
+    cayleyWeight x (Equiv.swap p q) = -1 := by
+  rw [cayleyWeight_swap_sq x hpq, hxp]
+  have hden : (0 : ℂ) - x q ≠ 0 := sub_ne_zero.2 (Ne.symm hxq)
+  field_simp [hden]
+  ring
+
+lemma choose_two_mul_pred_one {n : ℕ} :
+    (2 * n - 1).choose 1 = 2 * n - 1 :=
+  Nat.choose_one_right _
+
+lemma cayleyHamConst_one_mul_choose (n : ℕ) :
+    ((2 * n - 1).choose (2 * 1 - 1) : ℂ) * cayleyHamConst 1 = - (2 * n - 1 : ℕ) := by
+  rw [cayleyHamConst_one, choose_two_mul_pred_one]
+  simp
+
+/-- Paper (3.8) rewritten with `s_1 = -1`: the `k ≥ 2` sum is `2n-2` iff
+`1 + ∑_{k=1}^n \binom{2n-1}{2k-1} s_k = 0`. -/
+lemma cayleyHamConst_binom_sum_rewrite {n : ℕ} (hn : 1 ≤ n) :
+    (1 + ∑ k ∈ Icc (1 : ℕ) n,
+        ((2 * n - 1).choose (2 * k - 1) : ℂ) * cayleyHamConst k) =
+      (∑ k ∈ Icc (2 : ℕ) n,
+        ((2 * n - 1).choose (2 * k - 1) : ℂ) * cayleyHamConst k) -
+      (2 * n - 2 : ℕ) := by
+  have hsplit :
+      (Icc (1 : ℕ) n) = insert 1 (Icc (2 : ℕ) n) := by
+    ext k
+    simp [mem_Icc]
+    omega
+  have h1 : 1 ∉ Icc (2 : ℕ) n := by simp [mem_Icc]
+  rw [hsplit, sum_insert h1, cayleyHamConst_one_mul_choose]
+  have : (1 : ℂ) + (-(2 * n - 1 : ℕ) +
+      ∑ k ∈ Icc (2 : ℕ) n,
+        ((2 * n - 1).choose (2 * k - 1) : ℂ) * cayleyHamConst k) =
+      (∑ k ∈ Icc (2 : ℕ) n,
+        ((2 * n - 1).choose (2 * k - 1) : ℂ) * cayleyHamConst k) -
+        (2 * n - 2 : ℕ) := by
+    have : (2 * n - 1 : ℕ) = (2 * n - 2 : ℕ) + 1 := by omega
+    simp [this]
+    ring
+  rw [this]
+
+
+
 #check (OeisA1818.conjecture1 :
     ∀ (n : ℕ), 1 ≤ n → ∀ (ζ : ℂ), IsPrimitiveRoot ζ (2 * n) →
       (sunMatrix n ζ).permanent = (a n : ℂ))
@@ -4873,5 +5180,11 @@ lemma sum_cayleyWeight_long_even_cycles_through {α : Type*} [Fintype α] [Decid
 #print axioms oddLongPoints_isCycle
 #print axioms cayleySum_term_isCycle
 #print axioms sum_cayleyWeight_long_even_cycles_through
+#print axioms signMatrix_one
+#print axioms permanent_succ_column_zero
+#print axioms permanent_signMatrixOf_minor_rev
+#print axioms permanent_signMatrix
+#print axioms cayleyWeight_swap_of_zero
+#print axioms cayleyHamConst_binom_sum_rewrite
 
 end A001818C1

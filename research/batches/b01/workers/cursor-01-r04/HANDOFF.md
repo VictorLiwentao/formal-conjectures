@@ -41,6 +41,8 @@ Rotate-class insertion: after clearing the skipped edge, the weight of `p :: L.r
 
 Paper (3.5) for `k ≥ 2`: cycles of support `T` match Hamiltonian cycles on the subtype (`cycleSupportEquiv`, `sum_cayleyWeight_cycles_support`). Those sums equal the cardinality constant `s_k` (`cayleyHamConst`). Counting subsets `T ∋ p` of size `2k` gives `\binom{N-1}{2k-1}` (`card_powersetCard_mem`). Therefore the `2k`-cycle sum through `p` is `\binom{N-1}{2k-1} s_k` (`sum_cayleyWeight_even_cycles_through`). Direct two-letter evaluation gives `s_1 = -1`. Summing over `k ≥ 2` gives the contribution of all even cycles of length at least 4 through `p` (`sum_cayleyWeight_long_even_cycles_through`). A single cycle has an odd long point if and only if its support has odd cardinality.
 
+She–Sun–Xia Lemma 3.1 is proved: `per(A_n)=0` for `n≥1` (`permanent_signMatrix`), by Laplace expansion of the permanent along column 0 and pairing minors at `t` and `Fin.rev t`.
+
 Still needed: complementary even permutations in Σ3, identity (3.9), recurrence (4.8) / Theorem 1.1 matching formula, then `per M = per(M-J)`.
 
 ## Attribution
