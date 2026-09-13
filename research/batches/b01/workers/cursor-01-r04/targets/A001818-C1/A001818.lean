@@ -6038,6 +6038,78 @@ lemma sunMatrix_eq_cayleyMatrix {n : ℕ} [NeZero n] {ζ : ℂ}
   · rw [sunMatrix_apply_ne hζ hij, cayleyMatrix_apply_ne _ hij]
     exact (cayley_eq_sunFactor (N := 2 * n) hζ (Ne.symm hij)).symm
 
+/-- Assignment with a zero coordinate and geometric off-zero values.
+Paper sequential limits use `0 < ε < 1`. -/
+noncomputable def cayleyPowZero (n : ℕ) (ε : ℂ) : Fin n → ℂ :=
+  fun i => if i.val = 0 then 0 else ε ^ (n - i.val)
+
+lemma cayleyPowZero_zero {n : ℕ} [NeZero n] (ε : ℂ) :
+    cayleyPowZero n ε 0 = 0 := by
+  simp [cayleyPowZero]
+
+lemma cayleyPowZero_of_ne_zero {n : ℕ} {ε : ℂ} {i : Fin n} (hi : i.val ≠ 0) :
+    cayleyPowZero n ε i = ε ^ (n - i.val) := by
+  simp [cayleyPowZero, hi]
+
+lemma cayleyPowZero_ne_zero {n : ℕ} {ε : ℂ} {i : Fin n}
+    (hi : i.val ≠ 0) (hε : ε ≠ 0) :
+    cayleyPowZero n ε i ≠ 0 := by
+  rw [cayleyPowZero_of_ne_zero hi]
+  exact pow_ne_zero _ hε
+
+lemma cayleyMatrix_powZero_col_zero {n : ℕ} [NeZero n] {ε : ℂ} {i : Fin n}
+    (hi : i ≠ 0) (hε : ε ≠ 0) :
+    cayleyMatrix (cayleyPowZero n ε) i 0 = -1 := by
+  rw [cayleyMatrix_apply_ne _ hi, cayleyPowZero_zero, zero_add, zero_sub, div_neg]
+  have hx : cayleyPowZero n ε i ≠ 0 :=
+    cayleyPowZero_ne_zero (Fin.val_ne_of_ne hi) hε
+  rw [div_self hx]
+
+lemma cayleyMatrix_powZero_row_zero {n : ℕ} [NeZero n] {ε : ℂ} {j : Fin n}
+    (hj : j ≠ 0) (hε : ε ≠ 0) :
+    cayleyMatrix (cayleyPowZero n ε) 0 j = 1 := by
+  rw [cayleyMatrix_apply_ne _ hj.symm, cayleyPowZero_zero, add_zero, sub_zero]
+  have hx : cayleyPowZero n ε j ≠ 0 :=
+    cayleyPowZero_ne_zero (Fin.val_ne_of_ne hj) hε
+  rw [div_self hx]
+
+lemma injective_pow_of_lt_one {ε : ℝ} (hε0 : 0 < ε) (hε1 : ε < 1) :
+    Function.Injective (fun k : ℕ => ε ^ k) := by
+  intro a b h
+  rcases lt_trichotomy a b with hlt | rfl | hgt
+  · exact absurd h
+      ((pow_lt_pow_iff_right_of_lt_one₀ hε0 hε1).mpr hlt).ne.symm
+  · rfl
+  · exact absurd h.symm
+      ((pow_lt_pow_iff_right_of_lt_one₀ hε0 hε1).mpr hgt).ne.symm
+
+lemma injective_cayleyPowZero {n : ℕ} {ε : ℝ} (hε0 : 0 < ε) (hε1 : ε < 1) :
+    Function.Injective (cayleyPowZero n (ε : ℂ)) := by
+  intro i j hij
+  have hεC : (ε : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr hε0.ne'
+  by_cases hi : i.val = 0
+  · have hzi : cayleyPowZero n (ε : ℂ) i = 0 := by simp [cayleyPowZero, hi]
+    have hzj : cayleyPowZero n (ε : ℂ) j = 0 := by rw [← hij, hzi]
+    have hj : j.val = 0 := by
+      by_contra hj
+      exact cayleyPowZero_ne_zero hj hεC hzj
+    exact Fin.eq_of_val_eq (hi.trans hj.symm)
+  · by_cases hj : j.val = 0
+    · have hzj : cayleyPowZero n (ε : ℂ) j = 0 := by simp [cayleyPowZero, hj]
+      have hzi : cayleyPowZero n (ε : ℂ) i = 0 := by rw [hij, hzj]
+      exact (cayleyPowZero_ne_zero hi hεC hzi).elim
+    · have hpow : ((ε : ℂ) ^ (n - i.val)) = (ε : ℂ) ^ (n - j.val) := by
+        rwa [cayleyPowZero_of_ne_zero hi, cayleyPowZero_of_ne_zero hj] at hij
+      have hre : ε ^ (n - i.val) = ε ^ (n - j.val) := by
+        apply Complex.ofReal_injective
+        rw [Complex.ofReal_pow, Complex.ofReal_pow, hpow]
+      have hidx : n - i.val = n - j.val := injective_pow_of_lt_one hε0 hε1 hre
+      have hival : i.val = j.val := by
+        have hi' : i.val ≤ n := Nat.le_of_lt i.isLt
+        have hj' : j.val ≤ n := Nat.le_of_lt j.isLt
+        omega
+      exact Fin.eq_of_val_eq hival
+
 #check (OeisA1818.conjecture1 :
     ∀ (n : ℕ), 1 ≤ n → ∀ (ζ : ℂ), IsPrimitiveRoot ζ (2 * n) →
       (sunMatrix n ζ).permanent = (a n : ℂ))
@@ -6209,5 +6281,9 @@ lemma sunMatrix_eq_cayleyMatrix {n : ℕ} [NeZero n] {ζ : ℂ}
 #print axioms permanent_cayleyMatrix
 #print axioms permanent_cayleyMatrix_eq_cayleySum
 #print axioms sunMatrix_eq_cayleyMatrix
+#print axioms cayleyPowZero_zero
+#print axioms cayleyMatrix_powZero_col_zero
+#print axioms cayleyMatrix_powZero_row_zero
+#print axioms injective_cayleyPowZero
 
 end A001818C1
