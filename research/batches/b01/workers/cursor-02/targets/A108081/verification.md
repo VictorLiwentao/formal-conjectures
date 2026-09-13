@@ -82,6 +82,8 @@ Guard: PASS (worker path only). Source SHA-256 matches.
 -- [propext, Classical.choice, Quot.sound]
 #print axioms YWord.shortest_remainder_is_pword
 -- [propext, Classical.choice, Quot.sound]
+#print axioms ncard_rightN_eq_catalan
+-- [propext, Classical.choice, Quot.sound]
 #print axioms xN_finite
 -- [propext, Classical.choice, Quot.sound]
 ```

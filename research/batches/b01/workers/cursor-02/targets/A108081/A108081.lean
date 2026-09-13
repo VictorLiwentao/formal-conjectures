@@ -19,6 +19,7 @@ New proof development and write-up: Wentao Li.
 -/
 
 import FormalConjectures.OEIS.«108081»
+import Mathlib.Combinatorics.Enumerative.Catalan.Basic
 
 /-!
 # Structural lemmas for OEIS A108081
@@ -1249,15 +1250,74 @@ lemma PWord.eq_of_step_right {u v u' v' : Word}
   have hulen : u.length = u'.length := by omega
   exact eq_of_right_parse_eq h hulen
 
-lemma XWord.append_zero_of_getLast_eq_one {w : Word} (hw : XWord w)
-    (h : w.getLast hw.ne_nil = 1) : XWord (w ++ [0]) := by
-  obtain ⟨u, v, hu, hv, hw'⟩ := exists_right_parse_of_getLast_eq_one hw h
-  have : w ++ [0] = u ++ r ([-1] ++ v) := by
-    rw [hw', r_concat_neg_one, append_assoc]
-  rw [this]
-  exact XWord.step_right hu (XWord.concat_neg_one hv)
+lemma head_eq_zero_iff_head? {w : Word} (h : w ≠ []) :
+    w.head h = 0 ↔ w.head? = some 0 := by
+  cases w with
+  | nil => exact (h rfl).elim
+  | cons a t => simp
 
--- Small lengths
+-- Start-with-0 unique-zero Xia words. Experimentally `|Right_n| = C_{n-1}`.
+def RightWord (w : Word) : Prop :=
+  PWord w ∧ w.head? = some 0
+
+lemma RightWord.pWord {w : Word} (h : RightWord w) : PWord w := h.1
+
+lemma RightWord.xWord {w : Word} (h : RightWord w) : XWord w := h.1.1
+
+lemma RightWord.head_eq_zero {w : Word} (h : RightWord w) :
+    w.head h.xWord.ne_nil = 0 :=
+  (head_eq_zero_iff_head? h.xWord.ne_nil).mpr h.2
+
+lemma RightWord.of_head_eq_zero {w : Word} (hw : PWord w)
+    (hhead : w.head hw.1.ne_nil = 0) : RightWord w :=
+  ⟨hw, (head_eq_zero_iff_head? hw.1.ne_nil).mp hhead⟩
+
+lemma length_append_r (u v : Word) : (u ++ r v).length = u.length + v.length := by
+  simp [length_r]
+
+lemma RightWord.of_step_right {u v : Word} (hu : RightWord u) (hv : RightWord v) :
+    RightWord (u ++ r v) := by
+  have hp :=
+    PWord.step_right_of_heads_eq_zero hu.pWord hv.pWord hu.head_eq_zero hv.head_eq_zero
+  have hhead : (u ++ r v).head hp.1.ne_nil = 0 := by
+    have h' := head_append_of_ne_nil (l := u) (l' := r v)
+      (w₁ := hp.1.ne_nil) hu.xWord.ne_nil
+    exact h' ▸ hu.head_eq_zero
+  exact RightWord.of_head_eq_zero hp hhead
+
+lemma RightWord.exists_step_right {w : Word} (hw : RightWord w) (hlen : 2 ≤ w.length) :
+    ∃ u v, RightWord u ∧ RightWord v ∧ w = u ++ r v := by
+  have hhead := hw.head_eq_zero
+  obtain ⟨u, v, hp, hu, hv, _⟩ :=
+    PWord.shortest_right_parse_factors hw.pWord hhead hlen
+  have hu0 : u.head hu.1.ne_nil = 0 :=
+    PWord.head_eq_zero_of_isRightParse hp.1 hp.2.1 (by
+      have h' : (u ++ r v).head (XWord.ne_nil (XWord.step_right hp.1 hp.2.1)) =
+          w.head hw.xWord.ne_nil := by
+        simp [hp.2.2]
+      exact h' ▸ hhead)
+  have hv0 := PWord.remainder_head_eq_zero hw.pWord hhead hlen hp
+  exact ⟨u, v, RightWord.of_head_eq_zero hu hu0, RightWord.of_head_eq_zero hv hv0, hp.2.2⟩
+
+def rightN (n : ℕ) : Set Word :=
+  {w | RightWord w ∧ w.length = n}
+
+lemma rightN_subset_xN (n : ℕ) : rightN n ⊆ xN n :=
+  fun _ hw => ⟨hw.1.xWord, hw.2⟩
+
+lemma rightN_finite (n : ℕ) : (rightN n).Finite :=
+  (xN_finite n).subset (rightN_subset_xN n)
+
+noncomputable def rightNFinset (n : ℕ) : Finset Word :=
+  (rightN_finite n).toFinset
+
+lemma mem_rightNFinset {n : ℕ} {w : Word} :
+    w ∈ rightNFinset n ↔ w ∈ rightN n :=
+  Set.Finite.mem_toFinset (rightN_finite n)
+
+lemma ncard_rightN_eq_card (n : ℕ) :
+    (rightN n).ncard = (rightNFinset n).card :=
+  Set.ncard_eq_toFinset_card _ (rightN_finite n)
 
 lemma XWord.eq_base_of_length_one {w : Word} (hw : XWord w) (h : w.length = 1) :
     w = [0] :=
@@ -1277,6 +1337,193 @@ lemma XWord.eq_base_of_length_one {w : Word} (hw : XWord w) (h : w.length = 1) :
       have := hv.length_pos
       omega
     omega
+
+lemma rightN_one : rightN 1 = {[0]} := by
+  ext w
+  constructor
+  · intro hw
+    have : w = [0] := XWord.eq_base_of_length_one hw.1.xWord hw.2
+    simp [this]
+  · rintro rfl
+    refine ⟨⟨PWord.base, ?_⟩, rfl⟩
+    simp
+
+lemma ncard_rightN_one : (rightN 1).ncard = catalan 0 := by
+  have := rightN_finite 1
+  rw [rightN_one, Set.ncard_singleton, catalan_zero]
+
+lemma disjoint_rightNFinset_product {i j k l : ℕ} (hij : i ≠ j) :
+    Disjoint (rightNFinset i ×ˢ rightNFinset k)
+      (rightNFinset j ×ˢ rightNFinset l) := by
+  refine Finset.disjoint_iff_ne.mpr ?_
+  intro p hp q hq hpeq
+  have hi : p.1.length = i := (mem_rightNFinset.mp (Finset.mem_product.mp hp).1).2
+  have hj : q.1.length = j := (mem_rightNFinset.mp (Finset.mem_product.mp hq).1).2
+  have : p.1.length = q.1.length := congrArg List.length (congrArg Prod.fst hpeq)
+  omega
+
+noncomputable def rightPairs (n : ℕ) : Finset (Word × Word) :=
+  (Finset.Icc 1 n).biUnion fun i =>
+    rightNFinset i ×ˢ rightNFinset (n + 1 - i)
+
+lemma mem_rightPairs {n : ℕ} {p : Word × Word} :
+    p ∈ rightPairs n ↔
+      ∃ i ∈ Finset.Icc 1 n, p.1 ∈ rightN i ∧ p.2 ∈ rightN (n + 1 - i) := by
+  simp [rightPairs, Finset.mem_biUnion, Finset.mem_product, mem_rightNFinset]
+
+lemma RightWord.of_mem_rightPairs {n : ℕ} {p : Word × Word} (hp : p ∈ rightPairs n) :
+    RightWord p.1 ∧ RightWord p.2 := by
+  obtain ⟨i, _, hu, hv⟩ := mem_rightPairs.mp hp
+  exact ⟨hu.1, hv.1⟩
+
+lemma card_rightPairs (n : ℕ) :
+    (rightPairs n).card =
+      ∑ i ∈ Finset.Icc 1 n,
+        (rightNFinset i).card * (rightNFinset (n + 1 - i)).card := by
+  have hdisj : (Finset.Icc 1 n : Set ℕ).PairwiseDisjoint
+      (fun i => rightNFinset i ×ˢ rightNFinset (n + 1 - i)) := by
+    intro i _ j _ hij
+    exact disjoint_rightNFinset_product hij
+  rw [rightPairs, Finset.card_biUnion hdisj]
+  simp [Finset.card_product]
+
+lemma injOn_append_r_rightPairs (n : ℕ) :
+    Set.InjOn (fun p : Word × Word => p.1 ++ r p.2) (rightPairs n) := by
+  intro p hp q hq heq
+  have hpR := RightWord.of_mem_rightPairs hp
+  have hqR := RightWord.of_mem_rightPairs hq
+  obtain ⟨h1, h2⟩ :=
+    PWord.eq_of_step_right hpR.1.pWord hpR.2.pWord hqR.1.pWord hqR.2.pWord heq
+  exact Prod.ext h1 h2
+
+lemma image_rightPairs (n : ℕ) (hn : 1 ≤ n) :
+    (rightPairs n).image (fun p => p.1 ++ r p.2) = rightNFinset (n + 1) := by
+  ext w
+  constructor
+  · intro hw
+    obtain ⟨p, hp, rfl⟩ := Finset.mem_image.mp hw
+    obtain ⟨i, hi, hu, hv⟩ := mem_rightPairs.mp hp
+    have hwR : RightWord (p.1 ++ r p.2) := RightWord.of_step_right hu.1 hv.1
+    have hlen : (p.1 ++ r p.2).length = n + 1 := by
+      have hi1 : 1 ≤ i ∧ i ≤ n := Finset.mem_Icc.mp hi
+      rw [length_append_r, hu.2, hv.2]
+      omega
+    exact mem_rightNFinset.mpr ⟨hwR, hlen⟩
+  · intro hw
+    have hw' := mem_rightNFinset.mp hw
+    have hlenw : w.length = n + 1 := hw'.2
+    have hlen2 : 2 ≤ w.length := by omega
+    obtain ⟨u, v, hu, hv, heq⟩ := RightWord.exists_step_right hw'.1 hlen2
+    have hsum : u.length + v.length = n + 1 := by
+      have hlen := congrArg List.length heq
+      rw [length_append_r] at hlen
+      omega
+    have hu_pos := hu.xWord.length_pos
+    have hv_pos := hv.xWord.length_pos
+    have hi : u.length ∈ Finset.Icc 1 n := by
+      simp [Finset.mem_Icc]
+      omega
+    have huN : u ∈ rightN u.length := ⟨hu, rfl⟩
+    have hvN : v ∈ rightN (n + 1 - u.length) := ⟨hv, by omega⟩
+    refine Finset.mem_image.mpr ⟨(u, v), ?_, heq.symm⟩
+    exact mem_rightPairs.mpr ⟨u.length, hi, huN, hvN⟩
+
+lemma ncard_rightN_succ (n : ℕ) (hn : 1 ≤ n) :
+    (rightN (n + 1)).ncard =
+      ∑ i ∈ Finset.Icc 1 n, (rightN i).ncard * (rightN (n + 1 - i)).ncard := by
+  have himg := image_rightPairs n hn
+  have hinj := injOn_append_r_rightPairs n
+  have hcard : (rightNFinset (n + 1)).card = (rightPairs n).card := by
+    rw [← himg, Finset.card_image_of_injOn hinj]
+  rw [ncard_rightN_eq_card, hcard, card_rightPairs]
+  simp [ncard_rightN_eq_card]
+
+lemma Icc_one_eq_map_succ (n : ℕ) :
+    Finset.Icc 1 n = (Finset.range n).map ⟨Nat.succ, Nat.succ_injective⟩ := by
+  ext k
+  constructor
+  · intro hk
+    rcases Finset.mem_Icc.mp hk with ⟨h1, h2⟩
+    refine Finset.mem_map.mpr ⟨k - 1, Finset.mem_range.mpr (by omega), ?_⟩
+    simp [Nat.succ_eq_add_one]
+    omega
+  · intro hk
+    rcases Finset.mem_map.mp hk with ⟨i, hi, hk'⟩
+    have hk1 : k = i + 1 := by
+      simpa [Nat.succ_eq_add_one] using hk'.symm
+    have : i < n := Finset.mem_range.mp hi
+    simp [Finset.mem_Icc, hk1]
+    omega
+
+lemma sum_catalan_Icc (n : ℕ) (hn : 1 ≤ n) :
+    ∑ i ∈ Finset.Icc 1 n, catalan (i - 1) * catalan (n - i) = catalan n := by
+  rw [Icc_one_eq_map_succ, Finset.sum_map]
+  simp only [Function.Embedding.coeFn_mk, Nat.succ_eq_add_one]
+  have hfun : ∀ i ∈ Finset.range n,
+      catalan (i + 1 - 1) * catalan (n - (i + 1)) =
+        catalan i * catalan (n - 1 - i) := by
+    intro i hi
+    have : i < n := Finset.mem_range.mp hi
+    have h1 : i + 1 - 1 = i := by omega
+    have h2 : n - (i + 1) = n - 1 - i := by omega
+    simp [h1, h2]
+  rw [Finset.sum_congr rfl hfun]
+  have hn' : n = n - 1 + 1 := by omega
+  rw [show catalan n = catalan (n - 1 + 1) from congrArg catalan hn',
+    catalan_succ', Finset.Nat.sum_antidiagonal_eq_sum_range_succ
+      (fun x y => catalan x * catalan y)]
+  have hsucc : (n - 1).succ = n := by
+    rw [Nat.succ_eq_add_one]
+    exact hn'.symm
+  rw [hsucc]
+
+lemma ncard_rightN_succ_eq_catalan :
+    ∀ n : ℕ, (rightN (n + 1)).ncard = catalan n := by
+  intro n
+  induction n using Nat.strong_induction_on with
+  | h n ih =>
+    cases n with
+    | zero =>
+      exact ncard_rightN_one
+    | succ n =>
+      rw [ncard_rightN_succ (n + 1) (Nat.succ_pos _)]
+      have hsum :
+          ∑ i ∈ Finset.Icc 1 (n + 1),
+              (rightN i).ncard * (rightN (n + 1 + 1 - i)).ncard =
+            ∑ i ∈ Finset.Icc 1 (n + 1), catalan (i - 1) * catalan (n + 1 - i) := by
+        refine Finset.sum_congr rfl ?_
+        intro i hi
+        have hi1 : 1 ≤ i := (Finset.mem_Icc.mp hi).1
+        have hile : i ≤ n + 1 := (Finset.mem_Icc.mp hi).2
+        have h1 : (rightN i).ncard = catalan (i - 1) := by
+          have hlt1 : i - 1 < n + 1 :=
+            Nat.lt_succ_of_le (by
+              have h := Nat.sub_le_sub_right hile 1
+              simpa using h)
+          convert ih (i - 1) hlt1
+          exact (Nat.sub_add_cancel hi1).symm
+        have h2 : (rightN (n + 2 - i)).ncard = catalan (n + 1 - i) := by
+          have hlt2 : n + 1 - i < n + 1 := Nat.sub_lt (Nat.succ_pos _) hi1
+          rw [Nat.succ_sub hile]
+          exact ih (n + 1 - i) hlt2
+        have hidx : n + 1 + 1 - i = n + 2 - i := by omega
+        rw [h1, hidx, h2]
+      rw [hsum, sum_catalan_Icc (n + 1) (Nat.succ_pos _)]
+
+lemma ncard_rightN_eq_catalan {n : ℕ} (hn : 1 ≤ n) :
+    (rightN n).ncard = catalan (n - 1) := by
+  convert ncard_rightN_succ_eq_catalan (n - 1)
+  exact (Nat.sub_add_cancel hn).symm
+
+lemma XWord.append_zero_of_getLast_eq_one {w : Word} (hw : XWord w)
+    (h : w.getLast hw.ne_nil = 1) : XWord (w ++ [0]) := by
+  obtain ⟨u, v, hu, hv, hw'⟩ := exists_right_parse_of_getLast_eq_one hw h
+  have : w ++ [0] = u ++ r ([-1] ++ v) := by
+    rw [hw', r_concat_neg_one, append_assoc]
+  rw [this]
+  exact XWord.step_right hu (XWord.concat_neg_one hv)
+
+-- Small lengths
 
 lemma xN_one : xN 1 = {[0]} := by
   ext w
@@ -1619,6 +1866,10 @@ lemma exists_right_parse_append_YWord_tail {c y : Word} (hc : XWord c)
 #print axioms PWord.remainder_head_eq_zero
 #print axioms PWord.eq_of_step_right
 #print axioms YWord.shortest_remainder_is_pword
+#print axioms ncard_rightN_one
+#print axioms ncard_rightN_succ
+#print axioms ncard_rightN_succ_eq_catalan
+#print axioms ncard_rightN_eq_catalan
 #print axioms PWord.take_idxOf_concat_zero
 #print axioms PWord.cons_zero_drop_succ_idxOf
 #print axioms PWord.take_idxOf_concat_zero_append_drop

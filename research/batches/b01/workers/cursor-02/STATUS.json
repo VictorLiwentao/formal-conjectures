@@ -6,7 +6,7 @@
   "coordination_commit": "238f78bdd5701ae4c97a0d70d4e22e2d45770d7a",
   "current_status": "partial",
   "novelty_status": "provisional_no_public_solution_found",
-  "last_updated_utc": "2026-09-13T01:37:00Z",
+  "last_updated_utc": "2026-09-13T01:54:00Z",
   "kickoff_utc": "2026-09-12T23:10:00Z",
   "session_limit_utc": "2026-09-13T07:10:00Z",
   "proof_declarations": [
@@ -32,15 +32,16 @@
     "OeisA108081.XWord.of_isRightParse_shortest",
     "OeisA108081.PWord.shortest_right_parse_factors",
     "OeisA108081.PWord.eq_of_step_right",
-    "OeisA108081.YWord.shortest_remainder_is_pword"
+    "OeisA108081.YWord.shortest_remainder_is_pword",
+    "OeisA108081.ncard_rightN_eq_catalan"
   ],
   "unresolved_gaps": [
     "The quantified identity |X_n| = a(n-1) is not proved.",
     "Greedy right-core bijection with Y-words is only experimental.",
-    "The Right×Right factorization S = x + S^2 is proved; |Right_n| = C_{n-1} and |P_n| = C_n are not.",
+    "|Right_n| = C_{n-1} is proved; |P_n| = C_n via the unique-zero split is not.",
     "Every YWord first peel is some PWord, but uniformity of the full P_k family is unproved.",
     "|I_n| = A081696(n-1) is unproved.",
     "Partial lemmas and n<=8 (or public n<=14) counts are not a resolution."
   ],
-  "next_step": "Turn the unique Right×Right factorization into |Right_n| = C_{n-1} and |P_n| = C_n, then the I×Y rebuild bijection."
+  "next_step": "Prove |P_n| = C_n from the unique-zero split and |Right_n| = C_{n-1}, then the I×Y rebuild bijection."
 }

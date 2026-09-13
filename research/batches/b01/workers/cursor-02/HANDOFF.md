@@ -29,4 +29,4 @@ LEAN_NUM_THREADS=2 lake --wfail env lean research/batches/b01/workers/cursor-02/
 
 `partial`. No public exact proof/disproof found. Finite counts through `n=14` are already public (c5-k4) and are not a resolution. Statement uses `a(n-1)`, matching Xia’s listed cardinalities `1,2,7`, not the OEIS prose `a(n+1)`.
 
-Lean now proves that a Xia word with at least two zeros splits as a concatenation of two Xia words, that the shortest right-parse remainder is always a `PWord`, and that start-with-`0` P-words of length at least 2 factor uniquely as `u ++ r v` with both factors start-with-`0` P-words. The Catalan count `|Right_n| = C_{n-1}` and the quantified Xia identity remain open.
+Lean now proves that a Xia word with at least two zeros splits as a concatenation of two Xia words, that the shortest right-parse remainder is always a `PWord`, that start-with-`0` P-words of length at least 2 factor uniquely as `u ++ r v`, and that `|Right_n| = C_{n-1}`. The unique-zero count `|P_n| = C_n` and the quantified Xia identity remain open.

@@ -40,7 +40,8 @@ Proved:
 - Reverse-and-negate preserves `PWord`. A `PWord` that starts with `0` is a `YWord`. Gluing `p ++ q.tail` stays a `PWord` when `q` starts with `0`. Two start-with-`0` `PWord`s may be combined by `u ++ r v`. If `v` is a `PWord` and `u` is Xia, every right parse of `u ++ r v` has remainder at least as long as `v`. A start-with-`0` `PWord` of length at least 2 ends in `1`.
 - Concatenation split (`XWord.exists_concat_split`): a Xia word with at least two zeros is `u ++ v` for nonempty Xia `u, v`.
 - The shortest right-parse remainder of any Xia word is a `PWord` (`XWord.of_isRightParse_shortest`). In particular this holds for `YWord`s.
-- A start-with-`0` `PWord` of length at least 2 factors uniquely as `u ++ r v` with both factors start-with-`0` `PWord`s (`PWord.shortest_right_parse_factors`, `PWord.eq_of_step_right`, `PWord.remainder_head_eq_zero`). This is the combinatorial identity `S = x + S^2`. The Catalan cardinality `|Right_n| = C_{n-1}` is not yet proved in Lean.
+- A start-with-`0` `PWord` of length at least 2 factors uniquely as `u ++ r v` with both factors start-with-`0` `PWord`s (`PWord.shortest_right_parse_factors`, `PWord.eq_of_step_right`, `PWord.remainder_head_eq_zero`). This is the combinatorial identity `S = x + S^2`.
+- Catalan cardinality (`ncard_rightN_eq_catalan`): `|Right_n| = C_{n-1}` for `n ≥ 1`, matching Mathlib `catalan`. The unique-zero index histogram `|P_n| = C_n` is not yet proved in Lean.
 
 ## Experimental decomposition (not a proof)
 
@@ -67,11 +68,11 @@ Public c5-k4 already checked `|X_n| = a(n-1)` through `n = 14`. Those counts are
 An exact proof can be assembled from three Xia-specific statements plus one generating-function identity:
 
 1. Unique greedy right-core bijection: every Xia word is uniquely `c ++ y.tail` with `c` right-irreducible and `y` a `YWord`.
-2. `|Y_n| = H_{n-1}`, equivalently `|P_k| = C_k`. The unique-zero Catalan split and the `Right × Right` factorization `S = x + S^2` are now proved. What remains is to turn that factorization into `|Right_n| = C_{n-1}` (and then `|P_n| = C_n` via the index histogram), and to prove that every first peel of a `YWord` can be an arbitrary `PWord`, not merely some `PWord`.
+2. `|Y_n| = H_{n-1}`, equivalently `|P_k| = C_k`. The unique-zero Catalan split and `|Right_n| = C_{n-1}` are now proved. What remains is `|P_n| = C_n` via the index histogram, and to prove that every first peel of a `YWord` can be an arbitrary `PWord`, not merely some `PWord`.
 3. `|I_n| = A081696(n-1)` (Wilf irreducible composition pairs of `n-1`, or the D-finite recurrence for that sequence).
 4. Algebraic identity `I(x) H(x) = x G(x)` with `G` the OEIS gf of `a`. This does not mention Xia words and can be proved independently.
 
-(1) and the Catalan cardinalities are not proved in Lean. The length-3 count and the finite convolution check do not close the conjecture.
+(1) and `|P_n| = C_n` are not proved in Lean. The length-3 count and the finite convolution check do not close the conjecture.
 
 ## Approaches that failed or stalled
 
