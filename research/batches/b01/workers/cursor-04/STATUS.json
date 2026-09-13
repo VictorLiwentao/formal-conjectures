@@ -71,5 +71,5 @@
     "Cloitre C1 and Cor. 6.6 are not used and are not an unconditional solution."
   ],
   "next_step": "Prove an unconditional first-entry bound q | x(q(q+2)-1) for primes q ≡ 2 (mod 3), or find a different invariant. Do not claim completion. Continue until an exact candidate, a verified prior solution, a defective-target report, or the original 8-hour kickoff limit.",
-  "handoff_research_commit": "pending_after_commit"
+  "handoff_research_commit": "70976a75"
 }
