@@ -27,9 +27,9 @@ No PRs. No other branches. No subagents. No shared-control edits. No C2 / A00245
 
 In progress toward an exact C1 candidate. Not independently verified. Not a solution until the frozen statement compiles with allowlisted axioms only.
 
-Proved in worker Lean (allowlisted axioms only): `n=1` case; denominator nonvanishing; Calogero kernel sums and Fourier diagonalization; `det(calogero) = (-1)^n a n`; `per(M-J) = 2^{2n}` times the unsigned derangement sum of `(1-ζ^{σi-i})⁻¹`; signed derangement sum `= (-1)^n a n / 2^{2n}`.
+Proved in worker Lean (allowlisted axioms only): `n=1` case; denominator nonvanishing; Calogero kernel sums and Fourier diagonalization; `det(calogero) = (-1)^n a n`; `per(M-J) = 2^{2n}` times the unsigned derangement sum of `(1-ζ^{σi-i})⁻¹`; signed derangement sum `= (-1)^n a n / 2^{2n}`; Guo 3.1 insertion kernel and rotate-class sum (`sum_cycleEdgeWeight_cons_rotate`).
 
-Still needed: Guo cycle vanishing (Lemma 3.1), even-size sign cancellation, `per M = per(M-J)`.
+Still needed: global n-cycle vanishing, even-size sign cancellation, `per M = per(M-J)`.
 
 ## Attribution
 

@@ -21,7 +21,7 @@
   "novelty_status": "known_mathematics_formalization",
   "mathematical_novelty": "known_mathematics_She_Sun_Xia_2022_Thm1_3_ii",
   "formalization_novelty": "no_prior_exact_public_lean_found_in_checked_sources_audit_incomplete_until_stop",
-  "last_updated_utc": "2026-09-13T03:53:23Z",
+  "last_updated_utc": "2026-09-13T04:24:22Z",
   "proof_declarations": [
     "A001818C1.conjecture1_of_one",
     "A001818C1.zpow_sub_ne_one",
@@ -38,12 +38,18 @@
     "A001818C1.det_of_zero_diag",
     "A001818C1.det_calogero_eq_signed_sum",
     "A001818C1.permanent_sunMatrix_sub_ones",
-    "A001818C1.signed_derangement_inv_sum"
+    "A001818C1.signed_derangement_inv_sum",
+    "A001818C1.two_three_cycles_cancel",
+    "A001818C1.sum_insert_kernel",
+    "A001818C1.cycleEdgeWeight_formPerm",
+    "A001818C1.cycleEdgeWeight_mul_disjoint",
+    "A001818C1.cycleEdgeWeight_formPerm_cons",
+    "A001818C1.sum_cycleEdgeWeight_cons_rotate"
   ],
   "unresolved_gaps": [
-    "General n>=1 C1 identity still open. Have Calogero det = (-1)^n a n and per(M-J) = 2^{2n} times the unsigned derangement sum. Need Guo Lemma 3.1 cycle vanishing, even-size sign cancellation (Thm 3.2), Lemma 5.2(i), and She-Sun-Xia per M = per(M-J)."
+    "General n>=1 C1 identity still open. Have Calogero det, per(M-J) expansion, signed derangement sum, and Guo 3.1 insertion/class-sum (rotating the tail after a fixed point). Need the global n-cycle sum, even-size sign cancellation (Thm 3.2), Lemma 5.2(i), and She-Sun-Xia per M = per(M-J)."
   ],
-  "next_step": "Formalize Guo Lemma 3.1 (n-cycle sums vanish for length >= 3), then even-size sign cancellation so the unsigned derangement sum equals a n / 2^{2n}.",
+  "next_step": "Lift the rotate-class sum to all n-cycles on a fixed support, then even-size sign cancellation so the unsigned derangement sum equals a n / 2^{2n}.",
   "self_review": "not a candidate yet; cannot set independently_verified",
   "excluded_from_this_worker": [
     "OeisA1818.conjecture2",

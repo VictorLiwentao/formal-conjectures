@@ -923,6 +923,285 @@ lemma signed_derangement_inv_sum {n : ℕ} (hn : 1 ≤ n) {ζ : ℂ}
   rw [hdet] at hsum
   exact eq_div_of_mul_eq h2 (by rw [mul_comm]; exact hsum.symm)
 
+/-- Guo–Li–Tao–Wei Lemma 3.1 weight along the support of `σ`. -/
+noncomputable def cycleEdgeWeight {α : Type*} [Fintype α] [DecidableEq α]
+    (x : α → ℂ) (σ : Perm α) : ℂ :=
+  ∏ i ∈ σ.support, (x (σ i) - x i)⁻¹
+
+/-- Two opposite 3-cycles cancel. This is the length-3 case of Guo Lemma 3.1. -/
+lemma two_three_cycles_cancel {x y z : ℂ} (hxy : x ≠ y) (hyz : y ≠ z) (hzx : z ≠ x) :
+    (y - x)⁻¹ * (z - y)⁻¹ * (x - z)⁻¹ +
+      (z - x)⁻¹ * (y - z)⁻¹ * (x - y)⁻¹ = 0 := by
+  have hyx : y - x ≠ 0 := sub_ne_zero.2 hxy.symm
+  have hzy : z - y ≠ 0 := sub_ne_zero.2 hyz.symm
+  have hxz : x - z ≠ 0 := sub_ne_zero.2 hzx.symm
+  have hzx' : z - x ≠ 0 := sub_ne_zero.2 hzx
+  have hyz' : y - z ≠ 0 := sub_ne_zero.2 hyz
+  have hxy' : x - y ≠ 0 := sub_ne_zero.2 hxy
+  field_simp [hyx, hzy, hxz, hzx', hyz', hxy']
+  ring
+
+lemma inv_sub_sub_eq {R : Type*} [Field R] (w y z : R) (hy : w ≠ y) (hz : w ≠ z) :
+    (z - y) / ((w - y) * (z - w)) = (w - y)⁻¹ - (w - z)⁻¹ := by
+  have h1 : w - y ≠ 0 := sub_ne_zero.2 hy
+  have h2 : w - z ≠ 0 := sub_ne_zero.2 hz
+  have h3 : z - w ≠ 0 := sub_ne_zero.2 hz.symm
+  field_simp [h1, h2, h3]
+  ring
+
+/-- Insertion kernel along a cycle of the remaining points. The sum telescopes. -/
+lemma sum_insert_kernel {m : ℕ} [NeZero m] (w : ℂ) (z : Fin m → ℂ)
+    (hw : ∀ k, w ≠ z k) :
+    ∑ k : Fin m, (z (k + 1) - z k) / ((w - z k) * (z (k + 1) - w)) = 0 := by
+  have hterm : ∀ k, (z (k + 1) - z k) / ((w - z k) * (z (k + 1) - w)) =
+      (w - z k)⁻¹ - (w - z (k + 1))⁻¹ := fun k =>
+    inv_sub_sub_eq w (z k) (z (k + 1)) (hw k) (hw (k + 1))
+  simp_rw [hterm]
+  rw [sum_sub_distrib]
+  have hperm :
+      ∑ k : Fin m, (w - z (k + 1))⁻¹ = ∑ k : Fin m, (w - z k)⁻¹ :=
+    Fintype.sum_equiv (Equiv.addRight (1 : Fin m))
+      (fun k => (w - z (k + 1))⁻¹) (fun k => (w - z k)⁻¹) (fun _ => rfl)
+  rw [hperm, sub_self]
+
+lemma prod_toFinset_getElem {α : Type*} [DecidableEq α] {R : Type*} [CommMonoid R]
+    {l : List α} (hl : l.Nodup) (g : α → R) :
+    ∏ a ∈ l.toFinset, g a = ∏ i : Fin l.length, g (l[i.val]) := by
+  refine (prod_bij (fun (i : Fin l.length) (_ : i ∈ univ) => l[i.val]) ?_ ?_ ?_ ?_).symm
+  · intro i _
+    simp
+  · intro i _ j _ h
+    exact Fin.ext (List.Nodup.getElem_inj_iff hl |>.mp h)
+  · intro a ha
+    obtain ⟨i, hi, rfl⟩ := List.getElem_of_mem (List.mem_toFinset.mp ha)
+    exact ⟨⟨i, hi⟩, mem_univ _, rfl⟩
+  · intro i _
+    rfl
+
+lemma prod_fin_eq_prod_range {n : ℕ} (f : Fin n → ℂ) :
+    ∏ i, f i = ∏ i ∈ (range n).attach, f ⟨i.1, mem_range.mp i.2⟩ := by
+  refine prod_bij (fun (i : Fin n) _ => ⟨i.val, mem_range.mpr i.isLt⟩) ?_ ?_ ?_ ?_
+  · intro i _
+    simp
+  · intro i _ j _ h
+    exact Fin.ext (congrArg Subtype.val h)
+  · intro a _
+    exact ⟨⟨a.1, mem_range.mp a.2⟩, mem_univ _, rfl⟩
+  · intro i _
+    rfl
+
+lemma cycleEdgeWeight_formPerm {α : Type*} [Fintype α] [DecidableEq α]
+    (x : α → ℂ) {l : List α} (hl : l.Nodup) (h2 : 2 ≤ l.length) :
+    cycleEdgeWeight x l.formPerm =
+      ∏ i : Fin l.length,
+        (x (l[(i.val + 1) % l.length]'(Nat.mod_lt _ (by omega))) - x (l[i.val]))⁻¹ := by
+  have hne : ∀ a : α, l ≠ [a] := by
+    intro a h
+    simp [h] at h2
+  rw [cycleEdgeWeight, List.support_formPerm_of_nodup l hl hne,
+    prod_toFinset_getElem hl]
+  refine prod_congr rfl fun i _ => ?_
+  rw [List.formPerm_apply_getElem l hl i.val i.isLt]
+
+lemma cycleEdgeWeight_mul_disjoint {α : Type*} [Fintype α] [DecidableEq α]
+    (x : α → ℂ) {σ τ : Perm α} (h : Equiv.Perm.Disjoint σ τ) :
+    cycleEdgeWeight x (σ * τ) = cycleEdgeWeight x σ * cycleEdgeWeight x τ := by
+  simp only [cycleEdgeWeight]
+  rw [h.support_mul, prod_union h.disjoint_support]
+  refine congr_arg₂ (· * ·) ?_ ?_
+  · refine prod_congr rfl fun a ha => ?_
+    have hτ : τ a = a := Equiv.Perm.notMem_support.mp (h.mem_imp ha)
+    simp [hτ]
+  · refine prod_congr rfl fun a ha => ?_
+    have hσa : σ (τ a) = τ a := by
+      have : τ a ∈ τ.support := (Equiv.Perm.apply_mem_support (f := τ)).2 ha
+      exact Equiv.Perm.notMem_support.mp (h.symm.mem_imp this)
+    simp [hσa]
+
+lemma getElem_rotate_zero {α : Type*} (L : List α) {k : ℕ} (_hk : k < L.length) :
+    (L.rotate k)[0]'(by simp [List.length_rotate]; omega) = L[k] := by
+  simp [List.getElem_rotate, Nat.mod_eq_of_lt _hk]
+
+lemma getElem_rotate_last {α : Type*} (L : List α) {k : ℕ}
+    (h2 : 2 ≤ L.length) (_hk : k < L.length) :
+    (L.rotate k)[L.length - 1]'(by simp [List.length_rotate]; omega) =
+      L[(k + (L.length - 1)) % L.length]'(Nat.mod_lt _ (by omega)) := by
+  have hlt : L.length - 1 < (L.rotate k).length := by
+    simp [List.length_rotate]; omega
+  rw [List.getElem_rotate (h := hlt), Nat.add_comm]
+
+lemma formPerm_cons_apply_head {α : Type*} [DecidableEq α] {p : α} {L : List α}
+    (hl : (p :: L).Nodup) (hLpos : 1 ≤ L.length) :
+    (p :: L).formPerm p = L[0]'(by omega) := by
+  have hlen : 1 < (p :: L).length := by simp; omega
+  simpa using List.formPerm_apply_getElem_zero (p :: L) hl hlen
+
+lemma getLast_cons_eq {α : Type*} {p : α} {L : List α} (hLne : L ≠ []) :
+    (p :: L).getLast (List.cons_ne_nil p L) = L.getLast hLne := by
+  cases L with
+  | nil => contradiction
+  | cons _ _ => rfl
+
+lemma formPerm_cons_apply_getLast {α : Type*} [DecidableEq α] {p : α} {L : List α}
+    (hLne : L ≠ []) :
+    (p :: L).formPerm (L.getLast hLne) = p := by
+  simpa [getLast_cons_eq hLne] using List.formPerm_apply_getLast p L
+
+lemma formPerm_apply_getLast_eq_head {α : Type*} [DecidableEq α] {L : List α}
+    (hL : L.Nodup) (hLne : L ≠ []) (h2 : 2 ≤ L.length) :
+    L.formPerm (L.getLast hLne) = L[0]'(by omega) := by
+  rw [List.getLast_eq_getElem, List.formPerm_apply_getElem L hL]
+  have hmod : (L.length - 1 + 1) % L.length = 0 := by
+    rw [Nat.sub_add_cancel (show 1 ≤ L.length by omega), Nat.mod_self]
+  simp [hmod]
+
+lemma formPerm_cons_apply_of_ne_getLast {α : Type*} [DecidableEq α] {p : α} {L : List α}
+    (hl : (p :: L).Nodup) (hL : L.Nodup) (hLne : L ≠ []) {a : α}
+    (ha : a ∈ L) (ha_ne : a ≠ L.getLast hLne) :
+    (p :: L).formPerm a = L.formPerm a := by
+  obtain ⟨k, hk, rfl⟩ := List.getElem_of_mem ha
+  have hk1 : k + 1 < L.length := by
+    have hk_ne : k ≠ L.length - 1 := by
+      intro hke
+      apply ha_ne
+      rw [List.getLast_eq_getElem]
+      subst hke
+      rfl
+    omega
+  have hidx : L[k] = (p :: L)[k + 1]'(by simp; omega) :=
+    (List.getElem_cons_succ p L k (by simp; omega)).symm
+  rw [List.formPerm_apply_lt_getElem L hL k hk1, hidx,
+    List.formPerm_apply_lt_getElem (p :: L) hl (k + 1) (by simp; omega)]
+  exact (List.getElem_cons_succ p L (k + 1) (by simp; omega)).symm
+
+/-- Inserting `p` on one edge of the `L`-cycle multiplies the remaining-cycle weight
+by the insertion kernel. -/
+lemma cycleEdgeWeight_formPerm_cons {α : Type*} [Fintype α] [DecidableEq α]
+    (x : α → ℂ) {p : α} {L : List α}
+    (hL : L.Nodup) (hp : p ∉ L) (h2 : 2 ≤ L.length)
+    (hx : Function.Injective x) :
+    cycleEdgeWeight x (List.formPerm (p :: L)) =
+      cycleEdgeWeight x L.formPerm *
+        (x (L[0]'(by omega)) - x (L[L.length - 1]'(by omega))) *
+        (x (L[0]'(by omega)) - x p)⁻¹ *
+        (x p - x (L[L.length - 1]'(by omega)))⁻¹ := by
+  have hl : (p :: L).Nodup := List.nodup_cons.2 ⟨hp, hL⟩
+  have hLne : L ≠ [] := List.ne_nil_of_length_pos (by omega)
+  have hneG : ∀ a : α, p :: L ≠ [a] := by
+    cases L with
+    | nil => intro a _; simp at h2
+    | cons _ _ => intro a h; simp at h
+  have hneL : ∀ a : α, L ≠ [a] := by
+    intro a h
+    have hlenL : L.length = 1 := by simp [h]
+    omega
+  unfold cycleEdgeWeight
+  rw [List.support_formPerm_of_nodup _ hl hneG,
+    List.support_formPerm_of_nodup _ hL hneL, List.toFinset_cons]
+  have hp' : p ∉ L.toFinset := by simpa using hp
+  rw [prod_insert hp', formPerm_cons_apply_head hl (by omega)]
+  have hlast_mem : L.getLast hLne ∈ L.toFinset :=
+    List.mem_toFinset.2 (List.getLast_mem hLne)
+  rw [← prod_erase_mul L.toFinset _ hlast_mem]
+  have hagree :
+      ∏ a ∈ L.toFinset.erase (L.getLast hLne),
+          (x ((p :: L).formPerm a) - x a)⁻¹ =
+        ∏ a ∈ L.toFinset.erase (L.getLast hLne),
+          (x (L.formPerm a) - x a)⁻¹ :=
+    prod_congr rfl fun a ha => by
+      rw [formPerm_cons_apply_of_ne_getLast hl hL hLne
+        (List.mem_toFinset.mp (mem_of_mem_erase ha)) (ne_of_mem_erase ha)]
+  rw [hagree, formPerm_cons_apply_getLast hLne]
+  have hLsplit :
+      (∏ i ∈ L.toFinset, (x (L.formPerm i) - x i)⁻¹) =
+        (∏ a ∈ L.toFinset.erase (L.getLast hLne), (x (L.formPerm a) - x a)⁻¹) *
+          (x (L.formPerm (L.getLast hLne)) - x (L.getLast hLne))⁻¹ :=
+    (prod_erase_mul L.toFinset (fun i => (x (L.formPerm i) - x i)⁻¹) hlast_mem).symm
+  rw [hLsplit, formPerm_apply_getLast_eq_head hL hLne h2]
+  have hlast_get : L.getLast hLne = L[L.length - 1]'(by omega) := List.getLast_eq_getElem _
+  rw [hlast_get]
+  have hx0p : x (L[0]'(by omega)) ≠ x p :=
+    hx.ne (ne_of_mem_of_not_mem (List.getElem_mem _) hp)
+  have hxpLast : x p ≠ x (L[L.length - 1]'(by omega)) :=
+    hx.ne (ne_of_mem_of_not_mem (List.getElem_mem _) hp).symm
+  have hxends : x (L[0]'(by omega)) ≠ x (L[L.length - 1]'(by omega)) := by
+    refine hx.ne ?_
+    exact (List.Nodup.getElem_inj_iff hL).not.mpr (by omega)
+  have hne1 : x (L[0]'(by omega)) - x (L[L.length - 1]'(by omega)) ≠ 0 :=
+    sub_ne_zero.2 hxends
+  have hne2 : x (L[0]'(by omega)) - x p ≠ 0 := sub_ne_zero.2 hx0p
+  have hne3 : x p - x (L[L.length - 1]'(by omega)) ≠ 0 := sub_ne_zero.2 hxpLast
+  field_simp [hne1, hne2, hne3]
+
+/-- Guo Lemma 3.1 class sum: rotating the tail after a fixed point sums to zero. -/
+lemma sum_cycleEdgeWeight_cons_rotate {α : Type*} [Fintype α] [DecidableEq α]
+    (x : α → ℂ) {p : α} {L : List α}
+    (hL : L.Nodup) (hp : p ∉ L) (h2 : 2 ≤ L.length)
+    (hx : Function.Injective x) :
+    ∑ k : Fin L.length, cycleEdgeWeight x (List.formPerm (p :: L.rotate k.val)) = 0 := by
+  have : NeZero L.length := ⟨by omega⟩
+  have hμ :
+      ∀ k : Fin L.length,
+        cycleEdgeWeight x (List.formPerm (p :: L.rotate k.val)) =
+          cycleEdgeWeight x L.formPerm *
+            (x ((L.rotate k.val)[0]'(by simp [List.length_rotate]; omega)) -
+              x ((L.rotate k.val)[L.length - 1]'(by simp [List.length_rotate]; omega))) *
+            (x ((L.rotate k.val)[0]'(by simp [List.length_rotate]; omega)) - x p)⁻¹ *
+            (x p - x ((L.rotate k.val)[L.length - 1]'(by simp [List.length_rotate]; omega)))⁻¹ := by
+    intro k
+    have hrot : (L.rotate k.val).Nodup := (List.nodup_rotate).2 hL
+    have hp' : p ∉ L.rotate k.val := by
+      simpa [List.mem_rotate] using hp
+    have h2' : 2 ≤ (L.rotate k.val).length := by simpa [List.length_rotate] using h2
+    have hcons := cycleEdgeWeight_formPerm_cons (x := x) hrot hp' h2' hx
+    rw [List.formPerm_rotate L hL k.val] at hcons
+    simpa [List.length_rotate] using hcons
+  simp_rw [hμ, mul_assoc]
+  rw [← mul_sum]
+  convert mul_zero (cycleEdgeWeight x L.formPerm)
+  let z : Fin L.length → ℂ := fun i => x (L[i.val])
+  have hw : ∀ k : Fin L.length, x p ≠ z k := fun k =>
+    hx.ne (ne_of_mem_of_not_mem (List.getElem_mem _) hp).symm
+  let extra : Fin L.length → ℂ := fun k =>
+    (x ((L.rotate k.val)[0]'(by simp [List.length_rotate]; omega)) -
+      x ((L.rotate k.val)[L.length - 1]'(by simp [List.length_rotate]; omega))) *
+      ((x ((L.rotate k.val)[0]'(by simp [List.length_rotate]; omega)) - x p)⁻¹ *
+        (x p - x ((L.rotate k.val)[L.length - 1]'(by simp [List.length_rotate]; omega)))⁻¹)
+  show ∑ k, extra k = 0
+  have hidx : ∀ k : Fin L.length,
+      ((k + 1).val + (L.length - 1)) % L.length = k.val := by
+    intro k
+    have npos : 0 < L.length := by omega
+    have hk1 : (k + 1).val = (k.val + 1) % L.length := by simp [Fin.val_add]
+    rw [hk1]
+    calc ((k.val + 1) % L.length + (L.length - 1)) % L.length
+        = (k.val + 1 + (L.length - 1)) % L.length := Nat.mod_add_mod _ _ _
+      _ = (k.val + L.length) % L.length := by
+          have : 1 + (L.length - 1) = L.length := by omega
+          rw [Nat.add_assoc, this]
+      _ = k.val := by
+          rw [Nat.add_mod, Nat.mod_self, add_zero, Nat.mod_mod, Nat.mod_eq_of_lt k.isLt]
+  have hshift : ∀ k : Fin L.length,
+      extra (k + 1) =
+        (z (k + 1) - z k) / ((x p - z k) * (z (k + 1) - x p)) := by
+    intro k
+    have h0 := getElem_rotate_zero L (k + 1).isLt
+    have hlast := getElem_rotate_last L h2 (k + 1).isLt
+    have hidxk : ((k + 1).val + (L.length - 1)) % L.length = k.val := hidx k
+    have hne1 : z (k + 1) - x p ≠ 0 := sub_ne_zero.2 (hw (k + 1)).symm
+    have hne2 : x p - z k ≠ 0 := sub_ne_zero.2 (hw k)
+    simp only [extra, h0, hlast, hidxk, z] at hne1 hne2 ⊢
+    field_simp [hne1, hne2]
+  have hreindex : ∑ k, extra (k + 1) = ∑ k, extra k :=
+    Fintype.sum_equiv (Equiv.addRight (1 : Fin L.length))
+      (fun k => extra (k + 1)) extra (fun _ => rfl)
+  have hker :
+      ∑ k, extra (k + 1) =
+        ∑ k, (z (k + 1) - z k) / ((x p - z k) * (z (k + 1) - x p)) :=
+    sum_congr rfl fun k _ => hshift k
+  rw [← hreindex, hker]
+  exact sum_insert_kernel (x p) z hw
+
 /- Type of the frozen source theorem, with `sunMatrix` in place of the inline matrix. -/
 #check (OeisA1818.conjecture1 :
     ∀ (n : ℕ), 1 ≤ n → ∀ (ζ : ℂ), IsPrimitiveRoot ζ (2 * n) →
@@ -941,5 +1220,11 @@ lemma signed_derangement_inv_sum {n : ℕ} (hn : 1 ≤ n) {ζ : ℂ}
 #print axioms det_calogero_eq_signed_sum
 #print axioms permanent_sunMatrix_sub_ones
 #print axioms signed_derangement_inv_sum
+#print axioms two_three_cycles_cancel
+#print axioms sum_insert_kernel
+#print axioms cycleEdgeWeight_formPerm
+#print axioms cycleEdgeWeight_mul_disjoint
+#print axioms cycleEdgeWeight_formPerm_cons
+#print axioms sum_cycleEdgeWeight_cons_rotate
 
 end A001818C1
