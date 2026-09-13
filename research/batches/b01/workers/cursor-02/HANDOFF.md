@@ -5,7 +5,7 @@ Baseline: `a2f4a1bb12a28e04a969da78feefac7d1ce49565`
 Coordination: `238f78bdd5701ae4c97a0d70d4e22e2d45770d7a`
 Kickoff UTC: 2026-09-12T23:10Z. Session budget: eight hours from kickoff (until 2026-09-13T07:10Z). This follow-up does not restart that budget.
 
-Final commit SHA: (recorded after the content commit).
+Final commit SHA: `6467ace6d8f169fb67ec83659abf6d53d6c64d02`.
 
 ## Reproduction
 
