@@ -37,7 +37,7 @@ Proved:
 - Sign pattern (`XWord.pword_sign`): letters before the unique `0` are strictly negative and letters after it are strictly positive.
 - Unique right parse of `[0] ++ r v` when `v` is a `PWord`: that parse is `([0], v)`.
 - Catalan split: `w.take (idxOf 0) ++ [0]` and `0 :: w.drop (idxOf 0 + 1)` are `PWord`s, and concatenating them recovers `w`.
-- Reverse-and-negate preserves `PWord`. A `PWord` that starts with `0` is a `YWord`. Gluing `p ++ q.tail` stays a `PWord` when `q` starts with `0`. Two start-with-`0` `PWord`s may be combined by `u ++ r v`.
+- Reverse-and-negate preserves `PWord`. A `PWord` that starts with `0` is a `YWord`. Gluing `p ++ q.tail` stays a `PWord` when `q` starts with `0`. Two start-with-`0` `PWord`s may be combined by `u ++ r v`. If `v` is a `PWord` and `u` is Xia, every right parse of `u ++ r v` has remainder at least as long as `v`. A start-with-`0` `PWord` of length at least 2 ends in `1`.
 
 ## Experimental decomposition (not a proof)
 

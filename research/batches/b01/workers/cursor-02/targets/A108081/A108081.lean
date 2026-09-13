@@ -1050,6 +1050,26 @@ lemma exists_right_parse_of_getLast_eq_one {w : Word} (hw : XWord w)
   have hρw := congrArg rho hparse
   simpa [rho_rho, rho_append, rho_l] using hρw
 
+lemma PWord.exists_right_parse_of_head_eq_zero {w : Word} (hw : PWord w)
+    (hhead : w.head hw.1.ne_nil = 0) (hlen : 2 ≤ w.length) :
+    ∃ u v, IsRightParse w u v :=
+  exists_right_parse_of_getLast_eq_one hw.1
+    (PWord.getLast_eq_one_of_head_eq_zero hw hhead hlen)
+
+lemma PWord.head_eq_zero_of_isRightParse {u v : Word} (hu : XWord u)
+    (hv : XWord v) (hhead : (u ++ r v).head (XWord.ne_nil (XWord.step_right hu hv)) = 0) :
+    u.head hu.ne_nil = 0 := by
+  have := head_append_of_ne_nil (l := u) (l' := r v)
+    (w₁ := XWord.ne_nil (XWord.step_right hu hv)) hu.ne_nil
+  exact this ▸ hhead
+
+lemma PWord.exists_shortest_right_parse_of_head_eq_zero {w : Word} (hw : PWord w)
+    (hhead : w.head hw.1.ne_nil = 0) (hlen : 2 ≤ w.length) :
+    ∃ u v, IsRightParse w u v ∧
+      ∀ u2 v2, IsRightParse w u2 v2 → v.length ≤ v2.length :=
+  exists_shortest_right_parse
+    (PWord.exists_right_parse_of_head_eq_zero hw hhead hlen)
+
 lemma XWord.append_zero_of_getLast_eq_one {w : Word} (hw : XWord w)
     (h : w.getLast hw.ne_nil = 1) : XWord (w ++ [0]) := by
   obtain ⟨u, v, hu, hv, hw'⟩ := exists_right_parse_of_getLast_eq_one hw h
@@ -1404,6 +1424,7 @@ lemma exists_right_parse_append_YWord_tail {c y : Word} (hc : XWord c)
 #print axioms PWord.step_right_of_heads_eq_zero
 #print axioms PWord.le_length_of_isRightParse_append_r
 #print axioms PWord.getLast_eq_one_of_head_eq_zero
+#print axioms PWord.exists_right_parse_of_head_eq_zero
 #print axioms PWord.take_idxOf_concat_zero
 #print axioms PWord.cons_zero_drop_succ_idxOf
 #print axioms PWord.take_idxOf_concat_zero_append_drop
