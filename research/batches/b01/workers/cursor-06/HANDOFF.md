@@ -21,7 +21,7 @@ python3 research/batches/b01/workers/cursor-06/targets/A108866/experiments/prime
 python3 research/batches/b01/workers/cursor-06/targets/A108866/experiments/leading_mod_p2.py
 ```
 
-Final math commit SHA: `d7b3b226`.
+Final math commit SHA: record after this commit.
 
 ## Status
 
@@ -42,6 +42,9 @@ Partial. Kernel-checked so far:
 - all `n=p^e` for `p ∈ {11,13,17,19,23,29,31}` and `e≥2`
 - pairing `inv_pair_zmod` in `ZMod (p^2)`
 - Wolstenholme for `H_{p-1}` in `ZMod (p^2)`: `harmonic_pred_eq_zero_zmod`
+- `v_p(H_{p-1})≥2` in `ℚ`: `two_le_padicValRat_harmonic_pred`
+- square pairing `inv_sq_pair_zmod` and half-range split `inv_sq_sum_eq_two_half_add_p`
+- `v_7(U0)=2`: `padicValRat_oddLeadingSum0_seven`
 - `C(p-1,a-1) ≡ 1 - p H_{a-1}` in `ZMod (p^2)` for odd `a`
 - `¬ p^2 ∣ oddInnerNum p` iff the odd unit sum is nonzero in `ZMod (p^2)`
 - reduction `conjecture_of_odd_composite_converse`
