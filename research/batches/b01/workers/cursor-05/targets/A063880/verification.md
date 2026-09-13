@@ -32,7 +32,7 @@ Result on 2026-09-13T06:54Z: exit code 0, no warnings, no `sorry` declaration in
 
 This is **not** a compile of the frozen theorems. The frozen `sorry` theorems in `FormalConjectures/OEIS/63880.lean` were not used as proof steps.
 
-New lemmas compiled in this checkpoint include `not_five_sigma_of_three_sq_primes_seven_forty_three`, which glues leftover `6/5` `{7,43,r}` for every third prime `r ≥ 47`, and `not_five_sigma_of_three_sq_primes_seven_forty_seven_of_val_seven_eq_three` together with `not_five_sigma_of_three_sq_primes_seven_forty_seven_of_val_seven_eq_four`, which glue leftover `6/5` `{7,47,r}` at `v_7 = 3` and `v_7 = 4` for every `r ≥ 53`. Remaining leftover `6/5` ω=3 includes `{7,47,r}` with `v_7 ≥ 5` and `53 ≤ r ≤ 211`, `{7,q,r}` with `53 ≤ q < 71`, `v_7 ≥ 3`, and `r < 223`, and `{5,q,r}` with `q < 313`.
+New lemmas compiled in this checkpoint include `not_five_sigma_of_three_sq_primes_seven_forty_seven_of_r_ge_one_five_one`, which glues leftover `6/5` `{7,47,r}` for every `r ≥ 151`, and `not_five_sigma_of_three_sq_primes_seven_forty_seven_of_val_seven_ge_six`, which glues the same family at `v_7 ≥ 6` for every `r ≥ 53`. Remaining leftover `6/5` ω=3 includes `{7,47,r}` with `v_7 = 5` and `53 ≤ r ≤ 149`, `{7,q,r}` with `53 ≤ q < 71`, `v_7 ≥ 3`, and `r < 223`, and `{5,q,r}` with `q < 313`.
 
 No `#print axioms` audit of a completed target theorem exists, because those theorems are not proved.
 
