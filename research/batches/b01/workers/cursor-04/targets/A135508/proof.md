@@ -173,4 +173,4 @@ Proved: `v2(gcd)`, `v2(a n)`, `v2(x(n+1))`, odd-increment stability, dyadic bloc
 
 ## Status
 
-Partial lemmas only. The exact frozen proposition is not proved or disproved.
+Partial lemmas only. The exact frozen proposition is not proved or disproved. Session hard stop 2026-09-13 07:12 UTC; leftover least factor `≥ 263`.
