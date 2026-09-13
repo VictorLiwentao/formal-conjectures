@@ -49,6 +49,8 @@ Proved:
 - Left parses of I-words: every I-word of length at least 2 has a left parse (`RIrreducible.exists_left_parse`). Any left-parse remainder is again I. The unique shortest left factor is a `PWord`.
 - Unique-zero words that end in `0` are I-words (`LeftWord.rIrreducible`). They are the `rho` dual of `RightWord`, so `|Left_n| = C_{n-1}`. Hence `C_{n-1} ≤ |I_n|`. I-words with a unique `0` are exactly the LeftWords.
 - Left combs `ZWord` are the `rho` dual of `YWord`, so `|Z_n| = H_{n-1}`. Every I-word is a `ZWord`, hence `C_{n-1} ≤ |I_n| ≤ H_{n-1}`.
+- Prefix cancellation (`LeftWord.xword_of_l_append_prefix`): if `p` is a LeftWord, `b` is a prefix of a Xia word, and `L(p) ++ b` is Xia, then `b` is Xia. The shortest left factor of `L(p) ++ b` cannot be shorter than `p` (the remainder would start with a letter `≤ -2`) and cannot be longer than `p` (that factor would be `r(s) ++ p` with `s` a nonempty prefix of a Xia word forced to start at `≤ -2`).
+- Therefore `L(Left) ++ v` is I whenever `v` is I (`LeftWord.append_rIrreducible`). Combined with the unique `P × I` enumeration of I-words (`ncard_iN_eq_card_goodPairs`), this gives `|I_n| ≥ ∑_{k=1}^{n-1} C_{k-1} |I_{n-k}|` for `n ≥ 2`.
 
 ## Experimental decomposition (not a proof)
 
@@ -68,6 +70,8 @@ Facts checked in that range, and **not** claimed for all `n`:
 5. Right-irreducible counts `I_n` equal A081696(`n-1`): generating function `x/(x+sqrt(1-4x))`. Convolution `I * H` matches `a(n-1)` through `n = 8`.
 6. Endpoint class `B_n` (first `0`, last `1`) equals `|X_{n-1}|` for `n ≥ 2`. Duality gives the same for class `C_n`.
 7. Free-magma constructors are not injective from `n = 4`.
+8. `L(Left) ++ b` Xia with `b` a prefix of some Xia word implies `b` Xia, through `n = 8` (`experiments/left_prefix_any_xia.py`). This is now a theorem.
+9. The set of `p ∈ P_k` with `L(p) ++ v` I is independent of the I-remainder `v` and has size `q(k)` (`q(1)=1`, `q(k)=2 C_{k-1}` for `k≥2`) through `n = 8`. Not a theorem.
 
 Public c5-k4 already checked `|X_n| = a(n-1)` through `n = 14`. Those counts are not novelty and are not a proof.
 
@@ -78,7 +82,7 @@ An exact proof can be assembled from three Xia-specific statements plus one gene
 1. `|I_n| = A081696(n-1)` (Wilf irreducible composition pairs of `n-1`, or the D-finite recurrence for that sequence).
 2. Algebraic identity `I(x) H(x) = x G(x)` with `G` the OEIS gf of `a`. This does not mention Xia words and can be proved independently.
 
-The unique I×Y rebuild and `|Y_n| = H_{n-1}` are proved. I-words contain the Catalan-many LeftWords and have a unique shortest left `PWord` factor with I remainder. Identifying `|I_n|` with A081696(`n-1`) and the convolution with `a` remain open. The length-3 count and the finite convolution check do not close the conjecture.
+The unique I×Y rebuild and `|Y_n| = H_{n-1}` are proved. I-words contain the Catalan-many LeftWords, are closed under `L(Left) ++ ·`, and have a unique shortest left `PWord` factor with I remainder. The Callan/A081696 recurrence needs the larger first-return counts `q(k)=2 C_{k-1}` for `k≥2`, not only the LeftWords. Identifying `|I_n|` with A081696(`n-1`) and the convolution with `a` remain open. The length-3 count and the finite convolution check do not close the conjecture.
 
 ## Approaches that failed or stalled
 

@@ -44,6 +44,7 @@ python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/pword
 python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/pword_catalan_split.py
 python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/right_pword_factor.py
 python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/iword_left_factors.py
+python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/left_prefix_any_xia.py
 ```
 
 Guard: PASS (worker path only). Source SHA-256 matches.
@@ -124,6 +125,16 @@ Guard: PASS (worker path only). Source SHA-256 matches.
 #print axioms ncard_catalan_le_iN
 -- [propext, Classical.choice, Quot.sound]
 #print axioms leftWord_iff_rIrreducible_pword
+-- [propext, Classical.choice, Quot.sound]
+#print axioms ncard_iN_eq_card_goodPairs
+-- [propext, Classical.choice, Quot.sound]
+#print axioms LeftWord.l_append_zero_rIrreducible
+-- [propext, Classical.choice, Quot.sound]
+#print axioms LeftWord.xword_of_l_append_prefix
+-- [propext, Classical.choice, Quot.sound]
+#print axioms LeftWord.append_rIrreducible
+-- [propext, Classical.choice, Quot.sound]
+#print axioms ncard_iN_ge_sum_catalan_iN
 -- [propext, Classical.choice, Quot.sound]
 #print axioms xN_finite
 -- [propext, Classical.choice, Quot.sound]

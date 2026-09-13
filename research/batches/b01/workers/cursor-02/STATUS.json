@@ -6,7 +6,7 @@
   "coordination_commit": "238f78bdd5701ae4c97a0d70d4e22e2d45770d7a",
   "current_status": "partial",
   "novelty_status": "provisional_no_public_solution_found",
-  "last_updated_utc": "2026-09-13T03:10:00Z",
+  "last_updated_utc": "2026-09-13T03:50:00Z",
   "kickoff_utc": "2026-09-12T23:10:00Z",
   "session_limit_utc": "2026-09-13T07:10:00Z",
   "proof_declarations": [
@@ -32,13 +32,18 @@
     "OeisA108081.ncard_zN_eq_H",
     "OeisA108081.iN_subset_zN",
     "OeisA108081.ncard_iN_le_H",
-    "OeisA108081.RIrreducible.zWord"
+    "OeisA108081.RIrreducible.zWord",
+    "OeisA108081.ncard_iN_eq_card_goodPairs",
+    "OeisA108081.LeftWord.xword_of_l_append_prefix",
+    "OeisA108081.LeftWord.append_rIrreducible",
+    "OeisA108081.ncard_iN_ge_sum_catalan_iN"
   ],
   "unresolved_gaps": [
     "The quantified identity |X_n| = a(n-1) is not proved.",
-    "|X_n| = ∑_k |I_k| H_{n-k} is proved, and C_{n-1} ≤ |I_n| ≤ H_{n-1}, but |I_n| = A081696(n-1) is not.",
+    "|X_n| = ∑_k |I_k| H_{n-k} is proved. Left-gluing gives |I_n| ≥ ∑_k C_{k-1} |I_{n-k}|, and C_{n-1} ≤ |I_n| ≤ H_{n-1}, but |I_n| = A081696(n-1) is not proved.",
+    "Callan first-return counts q(k)=2 C_{k-1} for the good P-factors of I-words are experimental.",
     "Paul Barry's gf is H(x)F(x); that algebraic identity is unproved from Lean's Fibonacci-binomial a.",
     "Partial lemmas and n<=8 (or public n<=14) counts are not a resolution."
   ],
-  "next_step": "Count I-words with at least two zeros, or prove |I_n|=A081696(n-1) from the unique P×I left parse, then convolve with H."
+  "next_step": "Identify the extra good P-factors beyond LeftWords so that |I_n| satisfies the A081696 first-return recurrence, then convolve with H."
 }

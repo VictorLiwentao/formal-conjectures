@@ -3201,6 +3201,484 @@ lemma ncard_xN_eq_sum_iN_H (n : ℕ) (hn : 1 ≤ n) :
     simpa [hidx] using hH
   rw [hy]
 
+-- Left-words have no `+1`, so `l p` contains no `0`.
+
+lemma LeftWord.not_mem_one {w : Word} (h : LeftWord w) : (1 : ℤ) ∉ w := by
+  intro hmem
+  have hidx : w.idxOf 0 = w.length - 1 :=
+    PWord.idxOf_of_getLast_eq_zero h.pWord h.getLast_eq_zero
+  have hlenpos := h.xWord.length_pos
+  obtain ⟨i, hi, hwi⟩ := List.mem_iff_getElem.mp hmem
+  have htri : i = w.idxOf 0 ∨ i < w.idxOf 0 ∨ w.idxOf 0 < i := by omega
+  rcases htri with hi0 | hlt | hgt
+  · have hz := PWord.getElem_idxOf_zero h.pWord
+    have : w[i] = 0 := hi0 ▸ hz
+    omega
+  · have := PWord.getElem_neg_of_lt_idxOf h.pWord hlt
+    omega
+  · have hidxlt := h.pWord.idxOf_lt_length
+    omega
+
+lemma LeftWord.zero_not_mem_l {w : Word} (h : LeftWord w) : (0 : ℤ) ∉ l w := by
+  intro h0
+  exact h.not_mem_one (mem_l_iff.mp h0)
+
+lemma take_l (u : Word) (j : ℕ) :
+    (l u).take j = l (u.drop (u.length - j)) := by
+  simp [l, take_reverse]
+
+lemma drop_l (u : Word) (j : ℕ) :
+    (l u).drop j = l (u.take (u.length - j)) := by
+  simp [l, drop_reverse]
+
+lemma take_l_append (p b : Word) (k : ℕ) :
+    (l p ++ b).take (p.length + k) = l p ++ b.take k := by
+  simpa [length_l] using take_length_add_append (l₁ := l p) (l₂ := b) k
+
+lemma drop_l_append (p b : Word) (k : ℕ) :
+    (l p ++ b).drop (p.length + k) = b.drop k := by
+  simpa [length_l] using drop_length_add_append (l₁ := l p) (l₂ := b) k
+
+lemma LeftWord.idxOf_zero {w : Word} (h : LeftWord w) :
+    w.idxOf 0 = w.length - 1 :=
+  PWord.idxOf_of_getLast_eq_zero h.pWord h.getLast_eq_zero
+
+lemma LeftWord.getLast_take_neg {w : Word} (h : LeftWord w) {m : ℕ}
+    (hm0 : 0 < m) (hm : m ≤ w.length - 1) :
+    (w.take m).getLast (by
+      simp [take_eq_nil_iff]
+      exact ⟨Nat.ne_of_gt hm0, h.xWord.ne_nil⟩) < 0 := by
+  have hlenpos := h.xWord.length_pos
+  have hm_lt : m < w.length := Nat.lt_of_le_pred hlenpos hm
+  have hne : w.take m ≠ [] := by
+    simp [take_eq_nil_iff]
+    exact ⟨Nat.ne_of_gt hm0, h.xWord.ne_nil⟩
+  have hi : m - 1 < w.length :=
+    Nat.lt_trans (Nat.sub_one_lt (Nat.ne_of_gt hm0)) hm_lt
+  have hlen : (w.take m).length = m := length_take_of_le hm_lt.le
+  have hget : (w.take m).getLast hne = w[m - 1]'hi := by
+    rw [getLast_eq_getElem hne]
+    simp [getElem_take]
+    congr 1
+    omega
+  have hidx := h.idxOf_zero
+  have hlt : m - 1 < w.idxOf 0 := by
+    rw [hidx]
+    exact Nat.pred_lt_pred (Nat.ne_of_gt hm0) hm_lt
+  have hneg := PWord.getElem_neg_of_lt_idxOf h.pWord hlt
+  omega
+
+-- `L(p) ++ [0]` has no right parse when `p` is a LeftWord.
+
+lemma LeftWord.l_append_zero_rIrreducible {p : Word} (hp : LeftWord p) :
+    RIrreducible (l p ++ [0]) := by
+  refine ⟨XWord.step_left hp.xWord XWord.base, fun u q hparse => ?_⟩
+  have h0 : (0 : ℤ) ∉ l p := hp.zero_not_mem_l
+  have htot : (l p ++ [0]).length = p.length + 1 := by
+    simp [length_l]
+  have hsum := hparse.length_add
+  have hulen : p.length < u.length := by
+    by_contra hle
+    have hle' : u.length ≤ p.length := Nat.not_lt.mp hle
+    have hule : u.length ≤ (l p).length := by
+      simpa [length_l] using hle'
+    have htake := hparse.take
+    have htake' : (l p ++ [0]).take u.length = (l p).take u.length :=
+      take_append_of_le_length hule
+    have hu : u = (l p).take u.length := by
+      simpa [htake'] using htake.symm
+    have hu0 : (0 : ℤ) ∈ u := hparse.1.zero_mem
+    have : (0 : ℤ) ∈ l p := by
+      rw [hu] at hu0
+      exact mem_of_mem_take hu0
+    exact h0 this
+  have hqpos := hparse.pos_right
+  omega
+
+lemma iN_one : iN 1 = {[0]} := by
+  ext w
+  constructor
+  · intro hw
+    have : w = [0] := XWord.eq_base_of_length_one hw.1.xWord hw.2
+    simp [this]
+  · intro hw
+    simp at hw
+    subst hw
+    refine ⟨⟨XWord.base, fun u v h => ?_⟩, by simp⟩
+    have hsum := h.length_add
+    simp at hsum
+    have := h.pos_left
+    have := h.pos_right
+    omega
+
+lemma ncard_iN_one : (iN 1).ncard = 1 := by
+  have := iN_finite 1
+  rw [iN_one, Set.ncard_singleton]
+
+lemma isLeftParse_l_append {p v : Word} (hp : PWord p) (hv : XWord v) :
+    IsLeftParse (l p ++ v) p v :=
+  ⟨hp.1, hv, rfl⟩
+
+lemma eq_of_l_append {p p' v v' : Word}
+    (hp : PWord p) (hv : XWord v) (hp' : PWord p') (hv' : XWord v')
+    (h : l p ++ v = l p' ++ v') : p = p' ∧ v = v' := by
+  have h1 : IsLeftParse (l p ++ v) p v := isLeftParse_l_append hp hv
+  have h2 : IsLeftParse (l p ++ v) p' v' := by
+    simpa [h] using isLeftParse_l_append hp' hv'
+  have hmin : ∀ u₂ v₂, IsLeftParse (l p ++ v) u₂ v₂ → p.length ≤ u₂.length :=
+    fun u₂ v₂ hparse => PWord.le_length_of_isLeftParse_l_append hp hv hparse
+  have hmin' : ∀ u₂ v₂, IsLeftParse (l p ++ v) u₂ v₂ → p'.length ≤ u₂.length := by
+    intro u₂ v₂ hparse
+    have hparse' : IsLeftParse (l p' ++ v') u₂ v₂ := by
+      simpa [h] using hparse
+    exact PWord.le_length_of_isLeftParse_l_append hp' hv' hparse'
+  exact shortest_left_parse_unique h1 h2 hmin hmin'
+
+lemma disjoint_pNFinset_iN_product {i j k l : ℕ} (hij : i ≠ j) :
+    Disjoint (pNFinset i ×ˢ iNFinset k) (pNFinset j ×ˢ iNFinset l) := by
+  refine Finset.disjoint_iff_ne.mpr ?_
+  intro p hp q hq hpeq
+  have hi : p.1.length = i := (mem_pNFinset.mp (Finset.mem_product.mp hp).1).2
+  have hj : q.1.length = j := (mem_pNFinset.mp (Finset.mem_product.mp hq).1).2
+  have : p.1.length = q.1.length := congrArg List.length (congrArg Prod.fst hpeq)
+  omega
+
+noncomputable def piPairs (n : ℕ) : Finset (Word × Word) :=
+  (Finset.Icc 1 (n - 1)).biUnion fun k =>
+    pNFinset k ×ˢ iNFinset (n - k)
+
+lemma mem_piPairs {n : ℕ} {p : Word × Word} :
+    p ∈ piPairs n ↔
+      ∃ k ∈ Finset.Icc 1 (n - 1), p.1 ∈ pN k ∧ p.2 ∈ iN (n - k) := by
+  simp [piPairs, Finset.mem_biUnion, Finset.mem_product, mem_pNFinset, mem_iNFinset]
+
+lemma card_piPairs (n : ℕ) :
+    (piPairs n).card =
+      ∑ k ∈ Finset.Icc 1 (n - 1),
+        (pNFinset k).card * (iNFinset (n - k)).card := by
+  have hdisj : (Finset.Icc 1 (n - 1) : Set ℕ).PairwiseDisjoint
+      (fun k => pNFinset k ×ˢ iNFinset (n - k)) := by
+    intro i _ j _ hij
+    exact disjoint_pNFinset_iN_product hij
+  rw [piPairs, Finset.card_biUnion hdisj]
+  simp [Finset.card_product]
+
+noncomputable def goodPairs (n : ℕ) : Finset (Word × Word) :=
+  (piPairs n).filter fun p => RIrreducible (l p.1 ++ p.2)
+
+lemma mem_goodPairs {n : ℕ} {p : Word × Word} :
+    p ∈ goodPairs n ↔
+      (∃ k ∈ Finset.Icc 1 (n - 1), p.1 ∈ pN k ∧ p.2 ∈ iN (n - k)) ∧
+        RIrreducible (l p.1 ++ p.2) := by
+  simp [goodPairs, Finset.mem_filter, mem_piPairs]
+
+lemma injOn_l_append_piPairs (n : ℕ) :
+    Set.InjOn (fun p : Word × Word => l p.1 ++ p.2) (piPairs n) := by
+  intro p hp q hq heq
+  obtain ⟨k, _, hu, hv⟩ := mem_piPairs.mp hp
+  obtain ⟨k', _, hu', hv'⟩ := mem_piPairs.mp hq
+  obtain ⟨h1, h2⟩ :=
+    eq_of_l_append hu.1 hv.1.xWord hu'.1 hv'.1.xWord heq
+  exact Prod.ext h1 h2
+
+lemma injOn_l_append_goodPairs (n : ℕ) :
+    Set.InjOn (fun p : Word × Word => l p.1 ++ p.2) (goodPairs n) :=
+  (injOn_l_append_piPairs n).mono (by
+    intro p hp
+    exact (Finset.mem_filter.mp hp).1)
+
+lemma image_goodPairs (n : ℕ) (hn : 2 ≤ n) :
+    (goodPairs n).image (fun p => l p.1 ++ p.2) = iNFinset n := by
+  ext w
+  constructor
+  · intro hw
+    obtain ⟨p, hp, rfl⟩ := Finset.mem_image.mp hw
+    obtain ⟨⟨k, hk, hu, hv⟩, hI⟩ := mem_goodPairs.mp hp
+    have hlen : (l p.1 ++ p.2).length = n := by
+      have hk1 := Finset.mem_Icc.mp hk
+      simp [length_l, hu.2, hv.2]
+      omega
+    exact mem_iNFinset.mpr ⟨hI, hlen⟩
+  · intro hw
+    have hw' := mem_iNFinset.mp hw
+    have hlenw : w.length = n := hw'.2
+    have hlen2 : 2 ≤ w.length := by omega
+    obtain ⟨p, v, hp, hpP, hvI, hmin⟩ :=
+      RIrreducible.shortest_left_factor_pword hw'.1 hlen2
+    have hsum := hp.length_add
+    have hppos := hp.pos_left
+    have hvpos := hp.pos_right
+    have hk : p.length ∈ Finset.Icc 1 (n - 1) := by
+      simp [Finset.mem_Icc]
+      omega
+    have huN : p ∈ pN p.length := ⟨hpP, rfl⟩
+    have hvN : v ∈ iN (n - p.length) := ⟨hvI, by omega⟩
+    refine Finset.mem_image.mpr ⟨(p, v), ?_, hp.2.2.symm⟩
+    exact mem_goodPairs.mpr ⟨⟨p.length, hk, huN, hvN⟩, by simpa [hp.2.2] using hw'.1⟩
+
+lemma ncard_iN_eq_card_goodPairs (n : ℕ) (hn : 2 ≤ n) :
+    (iN n).ncard = (goodPairs n).card := by
+  have himg := image_goodPairs n hn
+  have hinj := injOn_l_append_goodPairs n
+  have hcard : (iNFinset n).card = (goodPairs n).card := by
+    rw [← himg, Finset.card_image_of_injOn hinj]
+  rw [ncard_iN_eq_card, hcard]
+
+lemma LeftWord.head_l_eq_neg_one {p : Word} (hp : LeftWord p) :
+    (l p).head (l_ne_nil hp.xWord.ne_nil) = -1 := by
+  rw [head_l hp.xWord.ne_nil, hp.getLast_eq_zero]
+  simp
+
+lemma LeftWord.le_length_of_isLeftParse_l_append {p b u v : Word}
+    (hp : LeftWord p) (h : IsLeftParse (l p ++ b) u v) :
+    p.length ≤ u.length := by
+  by_contra hle
+  have hlt : u.length < p.length := Nat.not_le.mp hle
+  have hpre : u.length ≤ (l p).length := by
+    simpa [length_l] using Nat.le_of_lt hlt
+  have hv_eq : v = (l p).drop u.length ++ b := by
+    have := h.drop
+    have hdrop' : (l p ++ b).drop u.length = (l p).drop u.length ++ b :=
+      drop_append_of_le_length hpre
+    exact this.symm.trans hdrop'
+  have hm : 0 < p.length - u.length := by omega
+  have hmle : p.length - u.length ≤ p.length - 1 := by
+    have := h.pos_left
+    have := hp.xWord.length_pos
+    omega
+  have htake_ne : p.take (p.length - u.length) ≠ [] := by
+    simp [take_eq_nil_iff]
+    exact ⟨Nat.ne_of_gt hm, hp.xWord.ne_nil⟩
+  have hne : l (p.take (p.length - u.length)) ≠ [] := l_ne_nil htake_ne
+  have hdrop_l : (l p).drop u.length = l (p.take (p.length - u.length)) := by
+    simpa [length_l] using drop_l p u.length
+  have hheadv : v.head h.2.1.ne_nil =
+      (l (p.take (p.length - u.length))).head hne := by
+    have hvne : l (p.take (p.length - u.length)) ++ b ≠ [] := by
+      simpa [hv_eq, hdrop_l] using h.2.1.ne_nil
+    have hhd := head_append_of_ne_nil
+      (l := l (p.take (p.length - u.length))) (l' := b) (w₁ := hvne) hne
+    have : v.head h.2.1.ne_nil =
+        (l (p.take (p.length - u.length)) ++ b).head hvne := by
+      simp [hv_eq, hdrop_l]
+    exact this.trans hhd
+  have hneg := LeftWord.getLast_take_neg hp hm hmle
+  have hheadl := head_l htake_ne
+  have : v.head h.2.1.ne_nil ≤ -2 := by
+    omega
+  have := h.2.1.head_eq_neg_one_or_zero
+  omega
+
+lemma LeftWord.xword_of_l_append_prefix {p b v : Word}
+    (hp : LeftWord p) (hv : XWord v) (hpre : ∃ t, b ++ t = v)
+    (hw : XWord (l p ++ b)) : XWord b := by
+  have hbne : b ≠ [] := by
+    intro hb
+    subst hb
+    have h0 : (0 : ℤ) ∈ l p := by simpa using hw.zero_mem
+    exact hp.zero_not_mem_l h0
+  have hhead : (l p ++ b).head hw.ne_nil = -1 := by
+    have hne := l_ne_nil hp.xWord.ne_nil
+    have hhd := head_append_of_ne_nil (l := l p) (l' := b)
+      (w₁ := hw.ne_nil) hne
+    rw [hhd, hp.head_l_eq_neg_one]
+  obtain ⟨p', v', hp', hmin⟩ :=
+    exists_shortest_left_parse (exists_left_parse_of_head_eq_neg_one hw hhead)
+  have hpP : PWord p' := XWord.of_isLeftParse_shortest hp' hmin
+  have hge : p.length ≤ p'.length :=
+    LeftWord.le_length_of_isLeftParse_l_append hp hp'
+  by_cases hpeq : p'.length = p.length
+  · obtain ⟨_, hb⟩ :=
+      eq_of_left_parse_eq (u := p') (u' := p) (v := v') (v' := b)
+        hp'.2.2.symm (by omega)
+    exact hb ▸ hp'.2.1
+  · have hgt : p.length < p'.length := by omega
+    have hsum := hp'.length_add
+    have htot : (l p ++ b).length = p.length + b.length := by
+      simp [length_l]
+    have hk : p'.length - p.length ≤ b.length := by omega
+    let k := p'.length - p.length
+    have hkpos : 0 < k := by omega
+    have hplen : p'.length = p.length + k := by omega
+    have htake : (l p ++ b).take p'.length = l p ++ b.take k := by
+      rw [hplen, take_l_append]
+    have hs : l p' = l p ++ b.take k := by
+      exact hp'.take.symm.trans htake
+    have hp'eq : p' = r (b.take k) ++ p := by
+      calc
+        p' = r (l p') := (r_l p').symm
+        _ = r (l p ++ b.take k) := by rw [hs]
+        _ = r (b.take k) ++ r (l p) := r_append _ _
+        _ = r (b.take k) ++ p := by rw [r_l]
+    have hlast : p'.getLast hpP.1.ne_nil = 0 := by
+      have hne_p := hp.xWord.ne_nil
+      have hlast' :
+          (r (b.take k) ++ p).getLast
+            (append_ne_nil_of_right_ne_nil _ hne_p) = p.getLast hne_p :=
+        getLast_append_of_right_ne_nil _ _ hne_p
+      simpa [hp'eq] using hlast'.trans hp.getLast_eq_zero
+    have hrs_neg : ∀ i (hi : i < (r (b.take k)).length),
+        (r (b.take k))[i] < 0 := by
+      intro i hi
+      have hi' : i < p'.length := by
+        simp [hp'eq, length_r] at hi ⊢
+        have := hp.xWord.length_pos
+        omega
+      have hget : p'[i]'(hi') = (r (b.take k))[i]'(hi) := by
+        simp [hp'eq]
+        exact getElem_append_left hi
+      have hidx : p'.idxOf 0 = p'.length - 1 :=
+        PWord.idxOf_of_getLast_eq_zero hpP hlast
+      have hltidx : i < p'.idxOf 0 := by
+        have := hp.xWord.length_pos
+        simp [length_r, hidx] at hi ⊢
+        omega
+      have hneg := PWord.getElem_neg_of_lt_idxOf hpP hltidx
+      have : (r (b.take k))[i] < 0 := by
+        simpa [hget] using hneg
+      exact this
+    have hsne : b.take k ≠ [] := by
+      rw [← length_pos_iff]
+      simp [length_take]
+      omega
+    have hhead_s : (b.take k).head hsne ≤ -2 := by
+      have hj : (r (b.take k)).length - 1 < (r (b.take k)).length := by
+        have := length_pos_iff.mpr (r_ne_nil hsne)
+        omega
+      have hneg := hrs_neg _ hj
+      have hlast_r : (r (b.take k)).getLast (r_ne_nil hsne) =
+          (b.take k).head hsne + 1 :=
+        getLast_r hsne
+      have hgetLast : (r (b.take k)).getLast (r_ne_nil hsne) =
+          (r (b.take k))[(r (b.take k)).length - 1]'(hj) :=
+        getLast_eq_getElem (r_ne_nil hsne)
+      omega
+    obtain ⟨t, hbt⟩ := hpre
+    have hv_eq : v = b.take k ++ (b.drop k ++ t) := by
+      simp [← append_assoc, take_append_drop, hbt]
+    have hhead_v : v.head hv.ne_nil = (b.take k).head hsne := by
+      have hne' : b.take k ++ (b.drop k ++ t) ≠ [] :=
+        append_ne_nil_of_left_ne_nil hsne _
+      have hhd := head_append_of_ne_nil (l := b.take k)
+        (l' := b.drop k ++ t) (w₁ := hne') hsne
+      have : v.head hv.ne_nil =
+          (b.take k ++ (b.drop k ++ t)).head hne' := by
+        simp [hv_eq]
+      exact this.trans hhd
+    have : v.head hv.ne_nil ≤ -2 := by
+      omega
+    have := hv.head_eq_neg_one_or_zero
+    omega
+
+lemma LeftWord.append_rIrreducible {p v : Word}
+    (hp : LeftWord p) (hv : RIrreducible v) : RIrreducible (l p ++ v) := by
+  refine ⟨XWord.step_left hp.xWord hv.xWord, fun u q hparse => ?_⟩
+  have h0 : (0 : ℤ) ∉ l p := hp.zero_not_mem_l
+  have hulen : p.length < u.length := by
+    by_contra hle
+    have hle' : u.length ≤ p.length := Nat.not_lt.mp hle
+    have hule : u.length ≤ (l p).length := by
+      simpa [length_l] using hle'
+    have htake := hparse.take
+    have htake' : (l p ++ v).take u.length = (l p).take u.length :=
+      take_append_of_le_length hule
+    have hu : u = (l p).take u.length := by
+      simpa [htake'] using htake.symm
+    have hu0 : (0 : ℤ) ∈ u := hparse.1.zero_mem
+    have : (0 : ℤ) ∈ l p := by
+      rw [hu] at hu0
+      exact mem_of_mem_take hu0
+    exact h0 this
+  have hsum := hparse.length_add
+  have htot : (l p ++ v).length = p.length + v.length := by
+    simp [length_l]
+  have hk : u.length - p.length ≤ v.length := by omega
+  let k := u.length - p.length
+  have hkpos : 0 < k := by omega
+  have hulen' : u.length = p.length + k := by omega
+  have htake : (l p ++ v).take u.length = l p ++ v.take k := by
+    rw [hulen', take_l_append]
+  have hu_eq : u = l p ++ v.take k := hparse.take.symm.trans htake
+  have hdrop : (l p ++ v).drop u.length = v.drop k := by
+    rw [hulen', drop_l_append]
+  have hq_eq : r q = v.drop k := by
+    have := hparse.drop
+    exact this.symm.trans hdrop
+  have hbpre : v.take k ++ r q = v := by
+    rw [hq_eq]
+    exact take_append_drop k v
+  have hb : XWord (v.take k) :=
+    LeftWord.xword_of_l_append_prefix hp hv.xWord
+      ⟨r q, hbpre⟩ (hu_eq ▸ hparse.1)
+  exact hv.2 (v.take k) q ⟨hb, hparse.2.1, hbpre.symm⟩
+
+noncomputable def leftNFinset (n : ℕ) : Finset Word :=
+  (leftN_finite n).toFinset
+
+lemma mem_leftNFinset {n : ℕ} {w : Word} :
+    w ∈ leftNFinset n ↔ w ∈ leftN n :=
+  Set.Finite.mem_toFinset (leftN_finite n)
+
+lemma ncard_leftN_eq_card (n : ℕ) :
+    (leftN n).ncard = (leftNFinset n).card :=
+  Set.ncard_eq_toFinset_card _ (leftN_finite n)
+
+lemma leftN_subset_pN (n : ℕ) : leftN n ⊆ pN n :=
+  fun _ hw => ⟨hw.1.pWord, hw.2⟩
+
+lemma disjoint_leftNFinset_iN_product {i j k l : ℕ} (hij : i ≠ j) :
+    Disjoint (leftNFinset i ×ˢ iNFinset k) (leftNFinset j ×ˢ iNFinset l) := by
+  refine Finset.disjoint_iff_ne.mpr ?_
+  intro p hp q hq hpeq
+  have hi : p.1.length = i := (mem_leftNFinset.mp (Finset.mem_product.mp hp).1).2
+  have hj : q.1.length = j := (mem_leftNFinset.mp (Finset.mem_product.mp hq).1).2
+  have : p.1.length = q.1.length := congrArg List.length (congrArg Prod.fst hpeq)
+  omega
+
+noncomputable def leftIPairs (n : ℕ) : Finset (Word × Word) :=
+  (Finset.Icc 1 (n - 1)).biUnion fun k =>
+    leftNFinset k ×ˢ iNFinset (n - k)
+
+lemma mem_leftIPairs {n : ℕ} {p : Word × Word} :
+    p ∈ leftIPairs n ↔
+      ∃ k ∈ Finset.Icc 1 (n - 1), p.1 ∈ leftN k ∧ p.2 ∈ iN (n - k) := by
+  simp [leftIPairs, Finset.mem_biUnion, Finset.mem_product, mem_leftNFinset,
+    mem_iNFinset]
+
+lemma leftIPairs_subset_goodPairs (n : ℕ) : leftIPairs n ⊆ goodPairs n := by
+  intro p hp
+  obtain ⟨k, hk, hL, hv⟩ := mem_leftIPairs.mp hp
+  exact mem_goodPairs.mpr
+    ⟨⟨k, hk, leftN_subset_pN k hL, hv⟩, LeftWord.append_rIrreducible hL.1 hv.1⟩
+
+lemma card_leftIPairs (n : ℕ) :
+    (leftIPairs n).card =
+      ∑ k ∈ Finset.Icc 1 (n - 1),
+        (leftNFinset k).card * (iNFinset (n - k)).card := by
+  have hdisj : (Finset.Icc 1 (n - 1) : Set ℕ).PairwiseDisjoint
+      (fun k => leftNFinset k ×ˢ iNFinset (n - k)) := by
+    intro i _ j _ hij
+    exact disjoint_leftNFinset_iN_product hij
+  rw [leftIPairs, Finset.card_biUnion hdisj]
+  simp [Finset.card_product]
+
+lemma ncard_iN_ge_sum_catalan_iN (n : ℕ) (hn : 2 ≤ n) :
+    ∑ k ∈ Finset.Icc 1 (n - 1), catalan (k - 1) * (iN (n - k)).ncard ≤
+      (iN n).ncard := by
+  have hle : (leftIPairs n).card ≤ (goodPairs n).card :=
+    Finset.card_le_card (leftIPairs_subset_goodPairs n)
+  have hI : (iN n).ncard = (goodPairs n).card := ncard_iN_eq_card_goodPairs n hn
+  have hsum := card_leftIPairs n
+  have hrew :
+      (leftIPairs n).card =
+        ∑ k ∈ Finset.Icc 1 (n - 1), catalan (k - 1) * (iN (n - k)).ncard := by
+    rw [hsum]
+    refine Finset.sum_congr rfl ?_
+    intro k hk
+    have hk1 : 1 ≤ k := (Finset.mem_Icc.mp hk).1
+    rw [← ncard_leftN_eq_card, ncard_leftN_eq_catalan hk1, ncard_iN_eq_card]
+  omega
+
 #print axioms ncard_xN_one
 #print axioms ncard_xN_two
 #print axioms ncard_xN_three
@@ -3266,5 +3744,10 @@ lemma ncard_xN_eq_sum_iN_H (n : ℕ) (hn : 1 ≤ n) :
 #print axioms RIrreducible.getLast_eq_zero
 #print axioms XWord.append_YWord_tail
 #print axioms exists_right_parse_append_YWord_tail
+#print axioms ncard_iN_eq_card_goodPairs
+#print axioms LeftWord.l_append_zero_rIrreducible
+#print axioms LeftWord.xword_of_l_append_prefix
+#print axioms LeftWord.append_rIrreducible
+#print axioms ncard_iN_ge_sum_catalan_iN
 
 end OeisA108081
