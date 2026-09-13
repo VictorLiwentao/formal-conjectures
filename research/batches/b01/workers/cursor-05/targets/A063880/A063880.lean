@@ -5851,6 +5851,320 @@ lemma not_five_sigma_of_three_sq_primes_eleven_seventeen_mid {m p : ℕ}
   exact not_five_sigma_eq_six_usigma_eleven_seventeen_mid hp hp29 h31 hk11 hk17
     hkp heq
 
+lemma prime_thirty_seven : Nat.Prime 37 := by norm_num
+
+lemma five_mul_eleven_seventeen_sq_thirty_seven_cap :
+    5 * 11 * 37 * 307 ≤ 6 * 10 * 36 * 290 := by
+  norm_num
+
+/-- `{11^a, 17^2, 37^k}` undershoots leftover `6/5`. -/
+lemma five_sigma_lt_six_usigma_eleven_seventeen_sq_thirty_seven {a k : ℕ}
+    (ha : 0 < a) (hk : 0 < k) :
+    5 * σ 1 (11 ^ a) * σ 1 (17 ^ 2) * σ 1 (37 ^ k) <
+      6 * usigma (11 ^ a) * usigma (17 ^ 2) * usigma (37 ^ k) := by
+  rw [sigma_seventeen_pow_two, usigma_seventeen_pow_two]
+  have h11 := sigma_lt_cap_usigma (by decide : Nat.Prime 11) ha
+  have h37 := sigma_lt_cap_usigma prime_thirty_seven hk
+  have hu11 : 0 < usigma (11 ^ a) := by
+    rw [usigma_prime_pow (by decide : Nat.Prime 11) ha]
+    exact Nat.add_pos_left (by decide : 0 < 1) _
+  have hthis := six_five_of_two_caps_times_const (A := 10) (B := 11)
+    (X := σ 1 (11 ^ a)) (Y := usigma (11 ^ a)) (C := 36) (D := 37)
+    (P := σ 1 (37 ^ k)) (Q := usigma (37 ^ k)) (S := 290) (T := 307)
+    h11 h37 five_mul_eleven_seventeen_sq_thirty_seven_cap
+    (by decide : 0 < 11) hu11 (by decide : 0 < 307)
+  have hL : 5 * σ 1 (11 ^ a) * σ 1 (37 ^ k) * 307 =
+      5 * σ 1 (11 ^ a) * 307 * σ 1 (37 ^ k) := by ring
+  have hR : 6 * usigma (11 ^ a) * usigma (37 ^ k) * 290 =
+      6 * usigma (11 ^ a) * 290 * usigma (37 ^ k) := by ring
+  rw [← hL, ← hR]
+  exact hthis
+
+lemma usigma_seventeen_pow_three : usigma (17 ^ 3) = 4914 := by
+  rw [usigma_prime_pow (by decide : Nat.Prime 17) (by decide : 0 < 3)]
+  decide
+
+lemma sigma_seventeen_pow_three : σ 1 (17 ^ 3) = 5220 := by
+  rw [sigma_prime_pow_div (by decide : Nat.Prime 17)]
+  norm_num
+
+lemma usigma_seventeen_pow_four : usigma (17 ^ 4) = 83522 := by
+  rw [usigma_prime_pow (by decide : Nat.Prime 17) (by decide : 0 < 4)]
+  decide
+
+lemma sigma_seventeen_pow_four : σ 1 (17 ^ 4) = 88741 := by
+  rw [sigma_prime_pow_div (by decide : Nat.Prime 17)]
+  norm_num
+
+lemma usigma_eleven_pow_three : usigma (11 ^ 3) = 1332 := by
+  rw [usigma_prime_pow (by decide : Nat.Prime 11) (by decide : 0 < 3)]
+  decide
+
+lemma sigma_eleven_pow_three : σ 1 (11 ^ 3) = 1464 := by
+  rw [sigma_prime_pow_div (by decide : Nat.Prime 11)]
+  norm_num
+
+lemma usigma_eleven_pow_four : usigma (11 ^ 4) = 14642 := by
+  rw [usigma_prime_pow (by decide : Nat.Prime 11) (by decide : 0 < 4)]
+  decide
+
+lemma sigma_eleven_pow_four : σ 1 (11 ^ 4) = 16105 := by
+  rw [sigma_prime_pow_div (by decide : Nat.Prime 11)]
+  norm_num
+
+lemma usigma_eleven_pow_five : usigma (11 ^ 5) = 161052 := by
+  rw [usigma_prime_pow (by decide : Nat.Prime 11) (by decide : 0 < 5)]
+  decide
+
+lemma sigma_eleven_pow_five : σ 1 (11 ^ 5) = 177156 := by
+  rw [sigma_prime_pow_div (by decide : Nat.Prime 11)]
+  norm_num
+
+lemma usigma_thirty_seven_pow_two : usigma (37 ^ 2) = 1370 := by
+  rw [usigma_prime_pow prime_thirty_seven (by decide : 0 < 2)]
+  decide
+
+lemma sigma_thirty_seven_pow_two : σ 1 (37 ^ 2) = 1407 := by
+  rw [sigma_prime_pow_two prime_thirty_seven]
+  decide
+
+lemma usigma_thirty_seven_pow_three : usigma (37 ^ 3) = 50654 := by
+  rw [usigma_prime_pow prime_thirty_seven (by decide : 0 < 3)]
+  decide
+
+lemma sigma_thirty_seven_pow_three : σ 1 (37 ^ 3) = 52060 := by
+  rw [sigma_prime_pow_div prime_thirty_seven]
+  norm_num
+
+lemma five_mul_eleven_cube_seventeen_cube_thirty_seven_cap :
+    5 * 37 * 1464 * 5220 ≤ 6 * 36 * 1332 * 4914 := by
+  norm_num
+
+/-- `{11^3, 17^3, 37^k}` undershoots leftover `6/5`. -/
+lemma five_sigma_lt_six_usigma_eleven_cube_seventeen_cube_thirty_seven {k : ℕ}
+    (hk : 0 < k) :
+    5 * σ 1 (11 ^ 3) * σ 1 (17 ^ 3) * σ 1 (37 ^ k) <
+      6 * usigma (11 ^ 3) * usigma (17 ^ 3) * usigma (37 ^ k) := by
+  rw [sigma_eleven_pow_three, usigma_eleven_pow_three,
+    sigma_seventeen_pow_three, usigma_seventeen_pow_three]
+  have h37 := sigma_lt_cap_usigma prime_thirty_seven hk
+  have hthis := six_five_of_cap_times_const (A := 36) (B := 37)
+    (X := σ 1 (37 ^ k)) (Y := usigma (37 ^ k)) (S := 1332 * 4914)
+    (T := 1464 * 5220) h37 (by
+      have hL : 5 * 37 * (1464 * 5220) = 5 * 37 * 1464 * 5220 := by ring
+      have hR : 6 * 36 * (1332 * 4914) = 6 * 36 * 1332 * 4914 := by ring
+      rw [hL, hR]
+      exact five_mul_eleven_cube_seventeen_cube_thirty_seven_cap)
+    (by decide : 0 < 1464 * 5220)
+  have hL : 5 * σ 1 (37 ^ k) * (1464 * 5220) =
+      5 * 1464 * 5220 * σ 1 (37 ^ k) := by ring
+  have hR : 6 * usigma (37 ^ k) * (1332 * 4914) =
+      6 * 1332 * 4914 * usigma (37 ^ k) := by ring
+  rw [← hL, ← hR]
+  exact hthis
+
+lemma five_mul_eleven_cube_thirty_seven_sq_seventeen_cap :
+    5 * 17 * 1464 * 1407 ≤ 6 * 16 * 1332 * 1370 := by
+  norm_num
+
+/-- `{11^3, 17^b, 37^2}` undershoots leftover `6/5`. -/
+lemma five_sigma_lt_six_usigma_eleven_cube_thirty_seven_sq {b : ℕ}
+    (hb : 0 < b) :
+    5 * σ 1 (11 ^ 3) * σ 1 (17 ^ b) * σ 1 (37 ^ 2) <
+      6 * usigma (11 ^ 3) * usigma (17 ^ b) * usigma (37 ^ 2) := by
+  rw [sigma_eleven_pow_three, usigma_eleven_pow_three,
+    sigma_thirty_seven_pow_two, usigma_thirty_seven_pow_two]
+  have h17 := sigma_lt_cap_usigma (by decide : Nat.Prime 17) hb
+  have hu17 : 0 < usigma (17 ^ b) := by
+    rw [usigma_prime_pow (by decide : Nat.Prime 17) hb]
+    exact Nat.add_pos_left (by decide : 0 < 1) _
+  have hthis := six_five_of_cap_times_const (A := 16) (B := 17)
+    (X := σ 1 (17 ^ b)) (Y := usigma (17 ^ b)) (S := 1332 * 1370)
+    (T := 1464 * 1407) h17 (by
+      have hL : 5 * 17 * (1464 * 1407) = 5 * 17 * 1464 * 1407 := by ring
+      have hR : 6 * 16 * (1332 * 1370) = 6 * 16 * 1332 * 1370 := by ring
+      rw [hL, hR]
+      exact five_mul_eleven_cube_thirty_seven_sq_seventeen_cap)
+    (by decide : 0 < 1464 * 1407)
+  have hL : 5 * σ 1 (17 ^ b) * (1464 * 1407) =
+      5 * 1464 * σ 1 (17 ^ b) * 1407 := by ring
+  have hR : 6 * usigma (17 ^ b) * (1332 * 1370) =
+      6 * 1332 * usigma (17 ^ b) * 1370 := by ring
+  rw [← hL, ← hR]
+  exact hthis
+
+lemma eleven_cube_seventeen_fourth_thirty_seven_cube_overshoot :
+    6 * usigma (11 ^ 3) * usigma (17 ^ 4) * usigma (37 ^ 3) <
+      5 * σ 1 (11 ^ 3) * σ 1 (17 ^ 4) * σ 1 (37 ^ 3) := by
+  rw [usigma_eleven_pow_three, sigma_eleven_pow_three,
+    usigma_seventeen_pow_four, sigma_seventeen_pow_four,
+    usigma_thirty_seven_pow_three, sigma_thirty_seven_pow_three]
+  norm_num
+
+lemma eleven_fourth_seventeen_cube_thirty_seven_sq_under :
+    5 * σ 1 (11 ^ 4) * σ 1 (17 ^ 3) * σ 1 (37 ^ 2) <
+      6 * usigma (11 ^ 4) * usigma (17 ^ 3) * usigma (37 ^ 2) := by
+  rw [sigma_eleven_pow_four, usigma_eleven_pow_four,
+    sigma_seventeen_pow_three, usigma_seventeen_pow_three,
+    sigma_thirty_seven_pow_two, usigma_thirty_seven_pow_two]
+  norm_num
+
+lemma eleven_fourth_seventeen_cube_thirty_seven_cube_overshoot :
+    6 * usigma (11 ^ 4) * usigma (17 ^ 3) * usigma (37 ^ 3) <
+      5 * σ 1 (11 ^ 4) * σ 1 (17 ^ 3) * σ 1 (37 ^ 3) := by
+  rw [usigma_eleven_pow_four, sigma_eleven_pow_four,
+    usigma_seventeen_pow_three, sigma_seventeen_pow_three,
+    usigma_thirty_seven_pow_three, sigma_thirty_seven_pow_three]
+  norm_num
+
+lemma eleven_fifth_seventeen_cube_thirty_seven_sq_overshoot :
+    6 * usigma (11 ^ 5) * usigma (17 ^ 3) * usigma (37 ^ 2) <
+      5 * σ 1 (11 ^ 5) * σ 1 (17 ^ 3) * σ 1 (37 ^ 2) := by
+  rw [usigma_eleven_pow_five, sigma_eleven_pow_five,
+    usigma_seventeen_pow_three, sigma_seventeen_pow_three,
+    usigma_thirty_seven_pow_two, sigma_thirty_seven_pow_two]
+  norm_num
+
+lemma eleven_fourth_seventeen_fourth_thirty_seven_sq_overshoot :
+    6 * usigma (11 ^ 4) * usigma (17 ^ 4) * usigma (37 ^ 2) <
+      5 * σ 1 (11 ^ 4) * σ 1 (17 ^ 4) * σ 1 (37 ^ 2) := by
+  rw [usigma_eleven_pow_four, sigma_eleven_pow_four,
+    usigma_seventeen_pow_four, sigma_seventeen_pow_four,
+    usigma_thirty_seven_pow_two, sigma_thirty_seven_pow_two]
+  norm_num
+
+lemma not_five_sigma_eq_six_usigma_eleven_seventeen_thirty_seven {a b k : ℕ}
+    (ha : 2 ≤ a) (hb : 2 ≤ b) (hk : 2 ≤ k) :
+    ¬ 5 * σ 1 (11 ^ a) * σ 1 (17 ^ b) * σ 1 (37 ^ k) =
+        6 * usigma (11 ^ a) * usigma (17 ^ b) * usigma (37 ^ k) := by
+  intro heq
+  rcases eq_or_lt_of_le ha with ha2 | ha3
+  · rw [← ha2] at heq
+    exact (five_sigma_lt_six_usigma_eleven_sq_seventeen_large prime_thirty_seven
+      (by decide : 29 ≤ 37) (by omega) (by omega)).ne heq
+  · have ha3' : 3 ≤ a := Nat.succ_le_of_lt ha3
+    rcases eq_or_lt_of_le hb with hb2 | hb3
+    · rw [← hb2] at heq
+      exact (five_sigma_lt_six_usigma_eleven_seventeen_sq_thirty_seven
+        (by omega) (by omega)).ne heq
+    · have hb3' : 3 ≤ b := Nat.succ_le_of_lt hb3
+      rcases eq_or_lt_of_le ha3' with ha3eq | ha4
+      · rw [← ha3eq] at heq
+        rcases eq_or_lt_of_le hb3' with hb3eq | hb4
+        · rw [← hb3eq] at heq
+          exact (five_sigma_lt_six_usigma_eleven_cube_seventeen_cube_thirty_seven
+            (by omega)).ne heq
+        · have hb4' : 4 ≤ b := Nat.succ_le_of_lt hb4
+          rcases eq_or_lt_of_le hk with hk2 | hk3
+          · rw [← hk2] at heq
+            exact (five_sigma_lt_six_usigma_eleven_cube_thirty_seven_sq
+              (by omega)).ne heq
+          · have hover := six_five_overshoot_mono_three
+                (by decide : Nat.Prime 11) (by decide : Nat.Prime 17)
+                prime_thirty_seven
+                (by decide : 0 < 3) (by decide : 0 < 4) (by decide : 0 < 3)
+                (le_refl _) hb4' (Nat.succ_le_of_lt hk3)
+                eleven_cube_seventeen_fourth_thirty_seven_cube_overshoot
+            rw [← heq] at hover
+            exact lt_irrefl _ hover
+      · have ha4' : 4 ≤ a := Nat.succ_le_of_lt ha4
+        rcases eq_or_lt_of_le ha4' with ha4eq | ha5
+        · rw [← ha4eq] at heq
+          rcases eq_or_lt_of_le hb3' with hb3eq | hb4
+          · rw [← hb3eq] at heq
+            rcases eq_or_lt_of_le hk with hk2 | hk3
+            · rw [← hk2] at heq
+              exact eleven_fourth_seventeen_cube_thirty_seven_sq_under.ne heq
+            · have hover := six_five_overshoot_mono_three
+                  (by decide : Nat.Prime 11) (by decide : Nat.Prime 17)
+                  prime_thirty_seven
+                  (by decide : 0 < 4) (by decide : 0 < 3) (by decide : 0 < 3)
+                  (le_refl _) (le_refl _) (Nat.succ_le_of_lt hk3)
+                  eleven_fourth_seventeen_cube_thirty_seven_cube_overshoot
+              rw [← heq] at hover
+              exact lt_irrefl _ hover
+          · have hover := six_five_overshoot_mono_three
+                (by decide : Nat.Prime 11) (by decide : Nat.Prime 17)
+                prime_thirty_seven
+                (by decide : 0 < 4) (by decide : 0 < 4) (by decide : 0 < 2)
+                (le_refl _) (Nat.succ_le_of_lt hb4) hk
+                eleven_fourth_seventeen_fourth_thirty_seven_sq_overshoot
+            rw [← heq] at hover
+            exact lt_irrefl _ hover
+        · have ha5' : 5 ≤ a := Nat.succ_le_of_lt ha5
+          rcases eq_or_lt_of_le hb3' with hb3eq | hb4
+          · rw [← hb3eq] at heq
+            have hover := six_five_overshoot_mono_three
+                (by decide : Nat.Prime 11) (by decide : Nat.Prime 17)
+                prime_thirty_seven
+                (by decide : 0 < 5) (by decide : 0 < 3) (by decide : 0 < 2)
+                ha5' (le_refl _) hk
+                eleven_fifth_seventeen_cube_thirty_seven_sq_overshoot
+            rw [← heq] at hover
+            exact lt_irrefl _ hover
+          · have hover := six_five_overshoot_mono_three
+                (by decide : Nat.Prime 11) (by decide : Nat.Prime 17)
+                prime_thirty_seven
+                (by decide : 0 < 4) (by decide : 0 < 4) (by decide : 0 < 2)
+                ha4' (Nat.succ_le_of_lt hb4) hk
+                eleven_fourth_seventeen_fourth_thirty_seven_sq_overshoot
+            rw [← heq] at hover
+            exact lt_irrefl _ hover
+
+/-- Leftover `6/5` cannot be three squareful primes `11,17,37` times a
+squarefree coprime factor. -/
+lemma not_five_sigma_of_three_sq_primes_eleven_seventeen_thirty_seven {m : ℕ}
+    (hm : m ≠ 0) (h : 5 * σ 1 m = 6 * usigma m)
+    (hk11 : 2 ≤ padicValNat 11 m) (hk17 : 2 ≤ padicValNat 17 m)
+    (hk37 : 2 ≤ padicValNat 37 m)
+    (hs : Squarefree (ordCompl[37] (ordCompl[17] (ordCompl[11] m)))) : False := by
+  have hp11 : Nat.Prime 11 := by decide
+  have hp17 : Nat.Prime 17 := by decide
+  have hp37 := prime_thirty_seven
+  have hpq_ne : (11 : ℕ) ≠ 17 := by decide
+  have hpr_ne : (11 : ℕ) ≠ 37 := by decide
+  have hqr_ne : (17 : ℕ) ≠ 37 := by decide
+  have heq := five_sigma_eq_six_of_three_squareful hm hp11 hp17 hp37 hpq_ne
+    hpr_ne hqr_ne h hs
+  have hproj_p : ordProj[11] m = 11 ^ padicValNat 11 m := by
+    simp [Nat.factorization_def m hp11]
+  have hproj_q : ordProj[17] (ordCompl[11] m) =
+      17 ^ padicValNat 17 (ordCompl[11] m) := by
+    simp [Nat.factorization_def (ordCompl[11] m) hp17]
+  have hproj_r : ordProj[37] (ordCompl[17] (ordCompl[11] m)) =
+      37 ^ padicValNat 37 (ordCompl[17] (ordCompl[11] m)) := by
+    simp [Nat.factorization_def (ordCompl[17] (ordCompl[11] m)) hp37]
+  rw [hproj_r, padicValNat_ordCompl_of_ne hp37 hqr_ne,
+    padicValNat_ordCompl_of_ne hp37 hpr_ne, hproj_q,
+    padicValNat_ordCompl_of_ne hp17 hpq_ne, hproj_p] at heq
+  exact not_five_sigma_eq_six_usigma_eleven_seventeen_thirty_seven hk11 hk17 hk37
+    heq
+
+/-- Leftover `6/5` cannot be three squareful primes `11,17,p` with `p ≥ 19`
+times a squarefree coprime factor. -/
+lemma not_five_sigma_of_three_sq_primes_eleven_seventeen {m p : ℕ}
+    (hm : m ≠ 0) (hp : p.Prime) (hp19 : 19 ≤ p)
+    (h : 5 * σ 1 m = 6 * usigma m)
+    (hk11 : 2 ≤ padicValNat 11 m) (hk17 : 2 ≤ padicValNat 17 m)
+    (hkp : 2 ≤ padicValNat p m)
+    (hs : Squarefree (ordCompl[p] (ordCompl[17] (ordCompl[11] m)))) : False := by
+  rcases le_or_gt p 23 with h23 | h24
+  · exact not_five_sigma_of_three_sq_primes_eleven_seventeen_small hm hp hp19
+      h23 h hk11 hk17 hkp hs
+  · have hp29 : 29 ≤ p := prime_ge_twenty_four_ge_twenty_nine hp (by omega)
+    rcases le_or_gt p 31 with h31 | h32
+    · exact not_five_sigma_of_three_sq_primes_eleven_seventeen_mid hm hp hp29 h31
+        h hk11 hk17 hkp hs
+    · have hp37 : 37 ≤ p := prime_ge_thirty_two_ge_thirty_seven hp (by omega)
+      rcases le_or_gt p 37 with h37 | h38
+      · have hp37eq : p = 37 := le_antisymm h37 hp37
+        subst p
+        exact not_five_sigma_of_three_sq_primes_eleven_seventeen_thirty_seven hm h
+          hk11 hk17 hkp hs
+      · have hp41 : 41 ≤ p := prime_ge_thirty_eight_ge_forty_one hp (by omega)
+        exact not_five_sigma_of_three_sq_primes_eleven_seventeen_large hm hp hp41
+          h hk11 hk17 hkp hs
+
 end Unitary
 
 section Congruence
