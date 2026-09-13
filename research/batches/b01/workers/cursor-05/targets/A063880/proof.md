@@ -30,6 +30,7 @@ In `A063880.lean`, compiled with `lake env lean -DwarningAsError=true`:
 - If leftover `10/7` has `v₃ = 2`, the 3-free part `t` satisfies `91 σ(t) = 100 usigma(t)`. On that equation, `v₅(t) < 2`, `v₇(t) < 2`, and `v₁₁(t) < 3`. If also `v₁₁(t) = 2`, the 11-free part is not squarefree, and `v₁₃` of that part is `< 2`. After `11^2`, every prime `13 ≤ p ≤ 113` has `v_p < 2` on leftover `12200/12103`, and every `p ≥ 127` has cap `p/(p-1) ≤ 127/126 < 12200/12103`.
 - If `8m` is in `A` with `m` odd (so `v₂ = 3`), then `5 σ(m) = 6 usigma(m)` and `v₃(m) < 2`. In particular `9` cannot divide the odd part of a term with `v₂ = 3`. Also `v₅(m) < 3`. If `v₅(m) = 2`, the 5-free part is not squarefree.
 - If `A n` and `v₂(n) ≥ 3`, then `v₃(n) < 2`. Equivalently, `9` cannot divide such an `n`. This uses `ρ(8)ρ(9) = 13/6 > 2` and monotonicity in the two exponents.
+- Leftover `6/5` cannot be a single prime power times a squarefree factor: `5^2` undershoots, `5^k` for `k ≥ 3` overshoots, primes `≥ 7` have cap `≤ 7/6 < 6/5`, and `3^k` for `k ≥ 2` overshoots.
 - Every prime `p ≥ 5` undershoots leftover `10/7`: `ρ(p^k) < p/(p-1) ≤ 5/4 < 10/7`. So leftover `10/7` cannot be a single prime power `p^k` with `p ≥ 5` times a squarefree coprime factor.
 - Caps: `{5,11}` and `{7,11}` cannot reach `10/7`. The only two-prime cap product that can reach `10/7` without `3` is `{5,7}`. Algebraically `ρ(125)ρ(343) > 10/7`. The rays `ρ(25)ρ(7^k)` and `ρ(5^k)ρ(49)` stay strictly below `10/7` (checked by cap comparison; not yet a full Lean exclusion of every `{5,7}` exponent pair).
 

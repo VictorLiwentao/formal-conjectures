@@ -15,7 +15,7 @@
     "OeisA63880.unique_primitive_108 not proved",
     "Need independent proofs of sorry helpers if used: powerful_of_isPrimitiveTerm, exists_primitive_of_a",
     "v2=2 leftover 10/7: v3>=4 ruled out; v3=3 implies 3-free part squarefree; v3=2 implies leftover 100/91 with v5<2, v7<2, v11<3 and after 11^2 every 13<=p<=113 has vp<2; leftover 10/7 as a single p^k with p>=5 is ruled out; {5,7} and omega>=3 remain",
-    "v2>=3 implies v3<2, so 9 does not divide such n; leftover 6/5 without 9, leftover 34/31 and higher 2-powers, and odd leftover 2 remain"
+    "v2>=3 implies v3<2, so 9 does not divide such n; leftover 6/5 cannot be a single prime power times squarefree (v5<3; 5^2 undershoots); leftover 34/31 and higher 2-powers, leftover 6/5 with omega>=2, and odd leftover 2 remain"
   ],
   "next_step": "Close leftover 100/91 (including primes >=127 after 11^2) and leftover 10/7 without 27 (the {5,7} pair and omega>=3). Then leftover 2 (odd n). CRT plus v2=2 and v3>=3 would give mod_216_of_a."
 }

@@ -38,6 +38,7 @@ Do not run a full `lake build`, `lake clean`, or `lake update`.
 
 - `A n` and `v₂(n) ≥ 3` imply `v₃(n) < 2`, so `9 ∤ n`.
 - Leftover `10/7` cannot be a single `p^k` with `p ≥ 5` times a squarefree factor.
+- Leftover `6/5` cannot be a single prime power times a squarefree factor.
 - After leftover `11^2` on `100/91`, every prime `13 ≤ p ≤ 113` has valuation `< 2`, and every `p ≥ 127` has cap below the leftover.
 
 ## Next step

@@ -1222,6 +1222,107 @@ lemma not_nine_dvd_of_A_of_val_two_ge_three {n : ℕ} (hA : A n)
   have := padicValNat_three_lt_two_of_A_of_val_two_ge_three hA h2
   omega
 
+lemma seven_div_six_lt_six_div_five : 7 * 5 < 6 * 6 := by decide
+
+lemma not_five_sigma_eq_six_usigma_five_pow_two :
+    ¬ 5 * σ 1 (5 ^ 2) = 6 * usigma (5 ^ 2) := by
+  rw [sigma_prime_pow_two Nat.prime_five, usigma_five_pow_two]
+  decide
+
+/-- Every prime `p ≥ 7` undershoots leftover `6/5`. -/
+lemma five_sigma_lt_six_usigma_prime_pow_ge_seven {p k : ℕ}
+    (hp : p.Prime) (hp7 : 7 ≤ p) (hk : 0 < k) :
+    5 * σ 1 (p ^ k) < 6 * usigma (p ^ k) := by
+  have hcap := sigma_lt_cap_usigma hp hk
+  have hp6 : 6 ≤ p := le_trans (by decide : 6 ≤ 7) hp7
+  have h6p : 5 * p ≤ 6 * (p - 1) := by
+    have hsub : 6 * (p - 1) = 6 * p - 6 := Nat.mul_sub_left_distrib 6 p 1
+    have : 5 * p + 6 ≤ 6 * p := by nlinarith
+    have hle : 6 ≤ 6 * p := Nat.le_mul_of_pos_right 6 (by omega)
+    omega
+  have h5 : 5 * ((p - 1) * σ 1 (p ^ k)) < 5 * (p * usigma (p ^ k)) :=
+    Nat.mul_lt_mul_of_pos_left hcap (by decide)
+  have hle : 5 * p * usigma (p ^ k) ≤ 6 * (p - 1) * usigma (p ^ k) :=
+    Nat.mul_le_mul_right _ h6p
+  have hlt : (p - 1) * (5 * σ 1 (p ^ k)) < (p - 1) * (6 * usigma (p ^ k)) := by
+    have h5' : 5 * (p - 1) * σ 1 (p ^ k) < 5 * p * usigma (p ^ k) := by
+      simpa [mul_assoc, mul_left_comm, mul_comm] using h5
+    have h5'' : 5 * (p - 1) * σ 1 (p ^ k) < 6 * (p - 1) * usigma (p ^ k) :=
+      lt_of_lt_of_le h5' hle
+    simpa [mul_assoc, mul_left_comm, mul_comm] using h5''
+  exact Nat.lt_of_mul_lt_mul_left hlt
+
+lemma six_usigma_lt_five_sigma_two_pow {k : ℕ} (hk : 2 ≤ k) :
+    6 * usigma (2 ^ k) < 5 * σ 1 (2 ^ k) := by
+  have ha0 : 0 < k := by omega
+  have hu : usigma (2 ^ k) = 1 + 2 ^ k := usigma_two_pow ha0
+  have hσ : σ 1 (2 ^ k) = 2 ^ (k + 1) - 1 := sigma_two_pow k
+  have hP : 4 ≤ 2 ^ k := by
+    have : 2 ^ 2 = 4 := by decide
+    exact this ▸ Nat.pow_le_pow_right (by decide : 1 ≤ 2) hk
+  have hsucc : 2 ^ (k + 1) = 2 * 2 ^ k := by rw [Nat.pow_succ']
+  have hpos : 1 ≤ 2 * 2 ^ k := by nlinarith
+  rw [hu, hσ, hsucc]
+  have : 6 * (1 + 2 ^ k) < 5 * (2 * 2 ^ k - 1) := by
+    have hL : ((6 * (1 + 2 ^ k) : ℕ) : ℤ) = 6 * (1 + (2 : ℤ) ^ k) := by
+      push_cast; rfl
+    have hR : ((5 * (2 * 2 ^ k - 1) : ℕ) : ℤ) = 5 * (2 * (2 : ℤ) ^ k - 1) := by
+      rw [Nat.cast_mul, Nat.cast_sub hpos]
+      push_cast; rfl
+    have : (6 : ℤ) * (1 + 2 ^ k) < 5 * (2 * 2 ^ k - 1) := by nlinarith
+    exact Nat.cast_lt.mp (by rw [hL, hR]; exact this)
+  exact this
+
+lemma five_sigma_eq_six_of_squarefree_ordCompl {m p : ℕ} (hm : m ≠ 0)
+    (hp : p.Prime) (h : 5 * σ 1 m = 6 * usigma m)
+    (hs : Squarefree (ordCompl[p] m)) :
+    5 * σ 1 (ordProj[p] m) = 6 * usigma (ordProj[p] m) := by
+  have hdecomp : ordProj[p] m * ordCompl[p] m = m :=
+    Nat.ordProj_mul_ordCompl_eq_self m p
+  have hc : Coprime (ordProj[p] m) (ordCompl[p] m) :=
+    (Nat.coprime_ordCompl hp hm).pow_left (m.factorization p)
+  have hmul : 5 * σ 1 (ordProj[p] m) * σ 1 (ordCompl[p] m) =
+      6 * usigma (ordProj[p] m) * usigma (ordCompl[p] m) := by
+    have := h
+    rw [← hdecomp, sigma_mul_of_coprime hc, usigma_mul hc] at this
+    simpa [mul_assoc, mul_left_comm, mul_comm] using this
+  have hσu := (sigma_eq_usigma_iff_squarefree (Nat.ordCompl_pos p hm)).mpr hs
+  rw [hσu] at hmul
+  have hpos : 0 < usigma (ordCompl[p] m) := by
+    rw [← hσu]
+    exact sigma_pos_iff.mpr (Nat.ordCompl_pos p hm)
+  exact Nat.eq_of_mul_eq_mul_right hpos hmul
+
+/-- Leftover `6/5` cannot be a single prime power times a squarefree factor. -/
+lemma not_five_sigma_of_unique_sq_prime {m p : ℕ} (hm : m ≠ 0)
+    (hp : p.Prime) (h : 5 * σ 1 m = 6 * usigma m)
+    (hk : 2 ≤ padicValNat p m) (hs : Squarefree (ordCompl[p] m)) : False := by
+  have heq := five_sigma_eq_six_of_squarefree_ordCompl hm hp h hs
+  have hproj : ordProj[p] m = p ^ padicValNat p m := by
+    simp [Nat.factorization_def m hp]
+  rw [hproj] at heq
+  have hk0 : 0 < padicValNat p m := by omega
+  rcases le_or_gt 7 p with hp7 | hp6
+  · exact (five_sigma_lt_six_usigma_prime_pow_ge_seven hp hp7 hk0).ne heq
+  · have hp2 : 2 ≤ p := hp.two_le
+    have hle : p ≤ 6 := Nat.lt_succ_iff.mp hp6
+    have hmem : p = 2 ∨ p = 3 ∨ p = 4 ∨ p = 5 ∨ p = 6 := by omega
+    rcases hmem with rfl | rfl | rfl | rfl | rfl
+    · have hover := six_usigma_lt_five_sigma_two_pow hk
+      rw [← heq] at hover
+      exact (lt_irrefl _ hover)
+    · have hover := six_usigma_lt_five_sigma_three_pow hk
+      rw [← heq] at hover
+      exact (lt_irrefl _ hover)
+    · exact (by decide : ¬ Nat.Prime 4) hp
+    · rcases eq_or_lt_of_le hk with h2 | h3
+      · rw [← h2] at heq
+        exact not_five_sigma_eq_six_usigma_five_pow_two heq
+      · have hover := six_usigma_lt_five_sigma_five_pow (Nat.succ_le_of_lt h3)
+        rw [← heq] at hover
+        exact (lt_irrefl _ hover)
+    · exact (by decide : ¬ Nat.Prime 6) hp
+
 end Unitary
 
 section Congruence
