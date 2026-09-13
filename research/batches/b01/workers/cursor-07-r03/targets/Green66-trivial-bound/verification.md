@@ -102,3 +102,5 @@ verification pass:
 ```
 20e98a7695ed2327099ed3f3d46d6394aea552aa02354287eacf65d0bfb13929  research/batches/b01/workers/cursor-07-r03/targets/Green66-trivial-bound/Green66.lean
 ```
+
+Candidate commit: `f4d1e76875486f24946ad6ffda9942de602cfa09`.

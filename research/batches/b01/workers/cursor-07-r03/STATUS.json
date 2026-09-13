@@ -12,7 +12,7 @@
   "mathematical_novelty": "known_mathematics",
   "formalization_novelty": "candidate_new_lean_implementation_pending_coordinator_audit",
   "novelty_status": "known_mathematics_formalization_candidate",
-  "last_updated_utc": "2026-09-13T02:20:20Z",
+  "last_updated_utc": "2026-09-13T02:21:00Z",
   "session_kickoff_utc": "2026-09-13T02:07:46Z",
   "session_limit_hours": 8,
   "session_deadline_utc": "2026-09-13T10:07:46Z",
@@ -21,6 +21,7 @@
   ],
   "proof_file": "research/batches/b01/workers/cursor-07-r03/targets/Green66-trivial-bound/Green66.lean",
   "proof_sha256": "20e98a7695ed2327099ed3f3d46d6394aea552aa02354287eacf65d0bfb13929",
+  "proof_commit": "f4d1e76875486f24946ad6ffda9942de602cfa09",
   "axioms": [
     "propext",
     "Classical.choice",

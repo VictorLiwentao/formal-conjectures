@@ -38,5 +38,6 @@ LEAN_NUM_THREADS=2 lake env lean -DwarningAsError=true research/batches/b01/work
 Expected axioms: `propext`, `Classical.choice`, `Quot.sound`.
 
 Proof SHA-256: `20e98a7695ed2327099ed3f3d46d6394aea552aa02354287eacf65d0bfb13929`.
+Proof commit: `f4d1e76875486f24946ad6ffda9942de602cfa09`.
 
 See `STATUS.json` and `targets/Green66-trivial-bound/{proof,literature,verification}.md`.
