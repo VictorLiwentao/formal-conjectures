@@ -664,8 +664,13 @@ def run_nauty(n: int, want: set[str], self_centered_only_19: bool = False) -> No
                 if vs:
                     hits += 1
                     print("HIT", info["g6"], vs, info, flush=True)
-        if "133" in want and not has_c4_fast(adj):
-            need.add("133")
+        if "133" in want:
+            # A geodesic is an induced path, so path ≥ rad+1. If G has a C4 then
+            # the Lean right-hand side is rad+1, so 133 holds without a search.
+            if not has_c4_fast(adj):
+                fl = math.floor(avg_l(adj))
+                if max(diam + 1, 2 * rad - 1) < rad + fl:
+                    need.add("133")
         if "198a" in want and n <= 12:
             # if even a lower bound on b already exceeds 2+avg_ecc, hypothesis fails
             if blow <= 2 + avg_ecc:

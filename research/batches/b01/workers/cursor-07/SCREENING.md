@@ -94,3 +94,10 @@ Python/networkx plus nauty helpers under `scratch/wow_search.py`.
 Anything with a public exact solution, an unmerged complete proof we would
 only be reproducing, a specification loophole, or no feasible finite attack
 in this session.
+
+## Coordinator update (known informal proofs)
+
+A published informal proof is in scope if no exact public Lean proof exists.
+WOWII 31 was selected on that basis: Erdős–Saks–Sós Theorem 2.2, proof by
+Fan Chung. The frozen Lean type still has `sorry`. Classification:
+`known_mathematics_formalization`. See `targets/WOWII31/`.

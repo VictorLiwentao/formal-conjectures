@@ -1,21 +1,22 @@
 {
   "worker_id": "cursor-07",
-  "target_id": "WOWII19",
+  "target_id": "WOWII31",
   "actual_branch": "cursor/b01-cursor-07-ca94",
   "baseline_commit": "a2f4a1bb12a28e04a969da78feefac7d1ce49565",
   "coordination_commit": "238f78bdd5701ae4c97a0d70d4e22e2d45770d7a",
-  "current_status": "researching",
-  "novelty_status": "provisional_requires_fresh_audit",
-  "last_updated_utc": "2026-09-12T23:35:00Z",
+  "current_status": "candidate_proof",
+  "novelty_status": "known_mathematics_formalization",
+  "last_updated_utc": "2026-09-13T00:59:18Z",
   "session_kickoff_utc": "2026-09-12T23:13:00Z",
   "session_limit_hours": 8,
-  "proof_declarations": [],
+  "proof_declarations": ["WOWII31.conjecture31"],
   "unresolved_gaps": [
-    "No exact novel proof or disproof has passed Lean plus statement audits.",
-    "Named-graph search found no Lean-faithful hits for WOWII 19, 16, 40, 61, 100 (complement length), 133, or 198a.",
-    "Stars and paths refute the overline-stripped reading of WOWII 100; Lean uses length(Gᶜ), matching WOWII 49's path-38 note."
+    "Self-review is not independent verification.",
+    "The result is Chung's 1986 theorem, not new mathematics."
   ],
-  "next_step": "Exhaustive nauty searches on small connected graphs for WOWII 19/40/61/100/133; literature-check any hit before a Lean candidate.",
-  "active_queue": ["WOWII19", "WOWII61", "WOWII133"],
-  "timer_subscription": "sub_a3edb753-1509-42db-8eac-381a75e58d80"
+  "next_step": "Independent review of WOWII31.conjecture31 against the frozen type and Chung's proof.",
+  "active_queue": ["WOWII31"],
+  "timer_subscription": "sub_a3edb753-1509-42db-8eac-381a75e58d80",
+  "classification": "known_mathematics_formalization",
+  "axioms": ["propext", "Classical.choice", "Quot.sound"]
 }
