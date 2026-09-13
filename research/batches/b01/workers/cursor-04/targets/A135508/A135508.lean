@@ -35,7 +35,9 @@ when `lpf(p-2) ≤ 101` or that least factor is a larger twin, Dirichlet
 existence of some (unbounded) prime injector for every prime `q ≥ 5`,
 that `3 ∣ a n` for `n ≥ 3` forces `9 ∣ n+1`, that `3 ∣ a n` for `n ≥ 6`
 forces `81 ∣ n+1`, that `3 ∣ a n` for `n ≥ 7` forces `729 ∣ n+1`, that
-`3 ∣ a n` for `n ≥ 9` forces `2187 ∣ n+1`, Cloitre Corollary 6.6 as an
+`3 ∣ a n` for `n ≥ 9` forces `2187 ∣ n+1`, that `3 ∣ a n` for `n ≥ 10`
+forces `6561 ∣ n+1`, the values `a 9 = 1` and `a 10 = 11`, McEachen when
+`gcd(q+2, p-2) > 1` for a prime `q ≡ 2 (mod 3)`, Cloitre Corollary 6.6 as an
 implication from `C₁`, remaining McEachen if a first aligned injector of
 `lpf(p-2)` or of a complementary cofactor is prime, and that the frozen
 statement follows from first-entry of every prime `q ≥ 5` by the
@@ -460,6 +462,35 @@ theorem conjecture_of_injected {p r q : ℕ} (hp : p.Prime) (hp5 : 5 ≤ p)
   have hx2 : q ∣ x (p - 3) :=
     hx.trans (x_dvd_of_le (by omega : 0 < r) hrle)
   exact conjecture_of_factor_dvd_x hp hp5 hq hqp hx2
+
+/-- McEachen at `p` if some prime `q ≡ 2 (mod 3)` has `gcd(q+2, p-2) > 1`.
+Then a factor of `q+2` already divides `x q` and also divides `p-2`. -/
+theorem conjecture_of_add_two_overlap {p q : ℕ} (hp : p.Prime) (hp5 : 5 ≤ p)
+    (hq : q.Prime) (h7 : 7 ≤ q) (hmod : q % 3 = 2) (hle : q ≤ p - 3)
+    (hgt : 1 < Nat.gcd (q + 2) (p - 2)) : a (p - 1) = p := by
+  have hdq : q + 2 ∣ x q := add_two_dvd_x_of_mod_three hq h7 hmod
+  have hg : Nat.gcd (q + 2) (p - 2) ∣ q + 2 := Nat.gcd_dvd_left _ _
+  have hp2 : Nat.gcd (q + 2) (p - 2) ∣ p - 2 := Nat.gcd_dvd_right _ _
+  have hx : Nat.gcd (q + 2) (p - 2) ∣ x q := hg.trans hdq
+  have hx2 : Nat.gcd (q + 2) (p - 2) ∣ x (p - 3) :=
+    hx.trans (x_dvd_of_le (by omega : 0 < q) hle)
+  exact conjecture_of_factor_dvd_x hp hp5 hgt hp2 hx2
+
+/-- Remaining McEachen if a factor `q ≡ 2 (mod 3)` of `p-2` shares a
+prime factor with `q+2`. -/
+theorem conjecture_of_remaining_add_two_overlap {p q : ℕ} (hp : p.Prime)
+    (hp7 : 7 ≤ p) (_hmod : p % 3 = 1) (hcomp : ¬ (p - 2).Prime)
+    (hq : q.Prime) (hd : q ∣ p - 2) (hmodq : q % 3 = 2) (h7 : 7 ≤ q)
+    (hgt : 1 < Nat.gcd (q + 2) (p - 2)) : a (p - 1) = p := by
+  have hp5 : 5 ≤ p := le_trans (by decide : 5 ≤ 7) hp7
+  have hle : q ≤ p - 3 := by
+    have hqp : q ≤ p - 2 :=
+      Nat.le_of_dvd (Nat.sub_pos_of_lt (lt_of_lt_of_le (by decide : 2 < 7) hp7)) hd
+    have hne : q ≠ p - 2 := by
+      intro heq
+      exact hcomp (heq ▸ hq)
+    omega
+  exact conjecture_of_add_two_overlap hp hp5 hq h7 hmodq hle hgt
 
 lemma not_three_dvd_prime_gt {p : ℕ} (hp : p.Prime) (hp3 : 3 < p) : ¬ 3 ∣ p := by
   intro h
@@ -2726,6 +2757,46 @@ lemma not_three_dvd_a_of_not_two_thousand_one_hundred_eighty_seven
     {n : ℕ} (hn : 9 ≤ n) (h2187 : ¬ 2187 ∣ n + 1) : ¬ 3 ∣ a n :=
   fun h => h2187 (two_thousand_one_hundred_eighty_seven_dvd_succ_of_three_dvd_a hn h)
 
+lemma ten_dvd_x_nine : 10 ∣ x 9 := by
+  have h2 : 2 ∣ x 9 := two_dvd_x (by decide : 2 ≤ 9)
+  have h5 : 5 ∣ x 9 := five_dvd_x (by decide : 3 ≤ 9)
+  have hcop : Nat.Coprime 2 5 := by decide
+  exact hcop.mul_dvd_of_dvd_of_dvd h2 h5
+
+lemma a_9 : a 9 = 1 := by
+  have hn : 0 < (9 : ℕ) := by decide
+  have hg : Nat.gcd (x 9) 10 = 10 := Nat.gcd_eq_right ten_dvd_x_nine
+  rw [a_eq hn, show (9 : ℕ) + 1 = 10 from rfl, hg,
+    Nat.div_self (by decide : 0 < 10)]
+
+lemma two_thousand_one_hundred_eighty_seven_dvd_x_ten : 2187 ∣ x 10 := by
+  have hx : x 10 = x 9 * (a 9 + 2) := x_succ_a (by decide : 0 < (9 : ℕ))
+  rw [hx, a_9, show (1 : ℕ) + 2 = 3 from rfl]
+  exact Nat.mul_dvd_mul_right (seven_hundred_twenty_nine_dvd_x (by decide : 9 ≤ 9)) 3
+
+lemma two_thousand_one_hundred_eighty_seven_dvd_x {n : ℕ} (hn : 10 ≤ n) :
+    2187 ∣ x n :=
+  two_thousand_one_hundred_eighty_seven_dvd_x_ten.trans
+    (x_dvd_of_le (by decide : 0 < 10) hn)
+
+/-- If `n ≥ 10` and `3 ∣ a n`, then `6561 ∣ n+1`. -/
+lemma six_thousand_five_hundred_sixty_one_dvd_succ_of_three_dvd_a
+    {n : ℕ} (hn : 10 ≤ n) (h3 : 3 ∣ a n) : 6561 ∣ n + 1 := by
+  have hn0 : 0 < n := lt_of_lt_of_le (by decide : 0 < 10) hn
+  have hx : 3 ∣ x n := three_dvd_x (le_trans (by decide : 4 ≤ 10) hn)
+  have hv := prime_dvd_a_padic hn0 hx h3
+  have h2187 : 2187 ∣ x n := two_thousand_one_hundred_eighty_seven_dvd_x hn
+  have hpow : (3 : ℕ) ^ 7 = 2187 := by decide
+  have hge : 7 ≤ padicValNat 3 (x n) :=
+    (padicValNat_dvd_iff_le (x_pos hn0).ne').1 (hpow ▸ h2187)
+  have : 8 ≤ padicValNat 3 (n + 1) :=
+    (show 7 + 1 ≤ padicValNat 3 (x n) + 1 from Nat.add_le_add_right hge 1).trans hv
+  exact (padicValNat_dvd_iff_le (Nat.succ_ne_zero n)).2 this
+
+lemma not_three_dvd_a_of_not_six_thousand_five_hundred_sixty_one
+    {n : ℕ} (hn : 10 ≤ n) (h6561 : ¬ 6561 ∣ n + 1) : ¬ 3 ∣ a n :=
+  fun h => h6561 (six_thousand_five_hundred_sixty_one_dvd_succ_of_three_dvd_a hn h)
+
 /-- If `a n` equals a prime `ℓ` that already divides `x n`, then
 `ℓ^{v_ℓ(x n)+1} ∣ n+1`. This is Cloitre Lemma 6.7 at a single index. -/
 lemma a_eq_prime_padic_succ {ℓ n : ℕ} (hℓ : ℓ.Prime) (hn : 0 < n)
@@ -3122,5 +3193,11 @@ lemma v2_x_two_four_pow_pred (k : ℕ) :
 #print axioms conjecture_of_paired_injectors
 #print axioms seven_hundred_twenty_nine_dvd_x
 #print axioms two_thousand_one_hundred_eighty_seven_dvd_succ_of_three_dvd_a
+#print axioms conjecture_of_add_two_overlap
+#print axioms conjecture_of_remaining_add_two_overlap
+#print axioms a_9
+#print axioms a_10
+#print axioms two_thousand_one_hundred_eighty_seven_dvd_x
+#print axioms six_thousand_five_hundred_sixty_one_dvd_succ_of_three_dvd_a
 
 end OeisA135508

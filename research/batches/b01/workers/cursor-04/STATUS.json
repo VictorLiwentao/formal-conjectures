@@ -11,7 +11,7 @@
   "novelty_status": "no_exact_public_solution_found_in_checked_sources",
   "statement_audit": "matches_intended_mceachen_statement",
   "oeis_editability": "unknown",
-  "last_updated_utc": "2026-09-13T04:00:40Z",
+  "last_updated_utc": "2026-09-13T04:19:19Z",
   "session_kickoff_utc": "2026-09-12T23:12:00Z",
   "session_hard_stop_utc": "2026-09-13T07:12:00Z",
   "proof_declarations": [
@@ -117,7 +117,12 @@
     "OeisA135508.mul_mod_three_eq_two",
     "OeisA135508.conjecture_of_paired_injectors",
     "OeisA135508.seven_hundred_twenty_nine_dvd_x",
-    "OeisA135508.two_thousand_one_hundred_eighty_seven_dvd_succ_of_three_dvd_a"
+    "OeisA135508.two_thousand_one_hundred_eighty_seven_dvd_succ_of_three_dvd_a",
+    "OeisA135508.conjecture_of_add_two_overlap",
+    "OeisA135508.conjecture_of_remaining_add_two_overlap",
+    "OeisA135508.a_9",
+    "OeisA135508.two_thousand_one_hundred_eighty_seven_dvd_x",
+    "OeisA135508.six_thousand_five_hundred_sixty_one_dvd_succ_of_three_dvd_a"
   ],
   "unresolved_gaps": [
     "Frozen OeisA135508.conjecture is still sorry.",
@@ -127,13 +132,15 @@
     "conjecture_of_minFac_entered reduces remaining McEachen to q | x(q(q+2)-1) for q = lpf(p-2).",
     "exists_prime_index_injector proves an unbounded prime injector via Dirichlet; it does not prove r ≤ q(q+2)-1.",
     "q_dvd_x_window_of_no_small_factor: k ≡ 5 (mod 6), k ≤ q, and no prime p < q dividing kq-2, implies the window. Existence of such k is not proved. A first-order union bound is negative.",
-    "conjecture_of_paired_injectors is a proper subfamily (5q-2, 7q-2, 5s-2, or 7s-2 prime). Scan of remaining p<200000: 332 of 466 covered; 134 uncovered.",
-    "If n≥9 and 3∣a n then 2187∣n+1. That is not McEachen.",
+    "conjecture_of_paired_injectors is a proper subfamily (5q-2, 7q-2, 5s-2, or 7s-2 prime). Scan of remaining p<200000: 332 of 466 covered; 134 uncovered by that pairing.",
+    "leftover_injectors.py: all 466 leftover p<200000 have some factor injector k ≤ (p-2)/r. Zero McEachen-window gaps in that range. Not a proof.",
+    "conjecture_of_add_two_overlap needs gcd(q+2, p-2)>1. Only 5 of those 466 leftover primes.",
+    "If n≥9 and 3∣a n then 2187∣n+1. If n≥10 and 3∣a n then 6561∣n+1. Those are not McEachen.",
     "Need a prime r = kq-2 with r ≤ q(q+2)-1. For q ≡ 2 (mod 3) the candidates are k ≡ 5 (mod 6).",
     "Dirichlet, Linnik L=5, and the usual GRH bound do not give r ≤ q(q+2)-1. Finite injector checks are not a proof.",
     "Miller-Rabin to q ≤ 1000000 found no window failures (worst k=257 at q=40973). Not a proof.",
     "Cloitre C1 and Cor. 6.6 are not an unconditional solution."
   ],
-  "next_step": "Prove an unconditional first-entry bound q | x(q(q+2)-1) for remaining primes q ≥ 107, or find a Lean-checkable counterexample. Do not claim completion. Continue until an exact candidate, a verified prior solution, a defective-target report, or the original 8-hour kickoff limit.",
-  "handoff_research_commit": "6e2318a3"
+  "next_step": "Prove an unconditional first-entry bound q | x(q(q+2)-1) for remaining primes q ≥ 107, or find a Lean-checkable counterexample. Leftover p<200000 are not counterexamples. Do not claim completion.",
+  "handoff_research_commit": "pending"
 }

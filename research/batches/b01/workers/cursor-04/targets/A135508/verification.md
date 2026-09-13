@@ -29,6 +29,7 @@ python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/injec
 python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/window_miller.py 1000000
 python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/cofactor_seven.py
 python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/paired_injectors.py
+python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/leftover_injectors.py
 ```
 
 No `lake clean`, `lake update`, or full default `lake build`.
@@ -89,6 +90,9 @@ two_hundred_forty_three_dvd_x / a_8 / a_7 / seven_hundred_twenty_nine_dvd_succ_o
 conjecture_of_minFac_seven / q_dvd_x_square_window_of_seven / seven_mul_sub_two_le_square : propext, Classical.choice, Quot.sound (square bound: propext)
 five_mul_sub_two_le_square / eleven_mul_sub_two_le_square / thirteen_mul_sub_two_le_square / cofactor_injector_le / mul_mod_three_eq_two : propext
 q_dvd_x_square_window_of_five / eleven / thirteen / conjecture_of_cofactor_five / conjecture_of_minFac_five / eleven / thirteen / conjecture_of_minFac_prime_index / conjecture_of_paired_injectors / seven_hundred_twenty_nine_dvd_x / two_thousand_one_hundred_eighty_seven_dvd_succ_of_three_dvd_a : propext, Classical.choice, Quot.sound
+conjecture_of_add_two_overlap / conjecture_of_remaining_add_two_overlap : propext, Classical.choice, Quot.sound
+a_9 : propext, Quot.sound
+two_thousand_one_hundred_eighty_seven_dvd_x / six_thousand_five_hundred_sixty_one_dvd_succ_of_three_dvd_a : propext, Classical.choice, Quot.sound
 ```
 
 No `sorryAx`, `native_decide`, or `Lean.trustCompiler` on these declarations. `Classical.choice` enters through `Nat.find` in `exists_least_dvd` and through Mathlib `decide` instances. Full log: `experiments/a135508_axioms.log`.

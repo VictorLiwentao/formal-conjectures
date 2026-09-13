@@ -1,0 +1,10 @@
+leftover remaining p < 200000: 466
+covered by 5/7: 332 / 466
+covered by 5,11 / 7,13: 390 / 466
+covered by 5,11,17,23 / 7,13,19,25: 463 / 466
+missed by 5..23 / 7..25: [(54709, 227, 241, [227, 241]), (136429, 227, 601, [227, 601]), (166393, 227, 733, [227, 733])]
+covered by 5..47 / 7..43: 466 / 466
+no injector in the McEachen window k <= (p-2)/r: 0
+covering k min/max/mean: 5 35 12.021
+square-window failures for primes q < 50000: []
+worst first k in that range: (257, 40973, 10530059)

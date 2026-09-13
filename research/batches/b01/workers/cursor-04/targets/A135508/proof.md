@@ -89,7 +89,9 @@ Cloitre Corollary 6.6 is now `conjecture_of_C1`: the assumption `∀ n>0, a n = 
 
 If `p-2 = q s` with `q ≥ 7` and `s ≡ 1 (mod 3)` and `7s-2` prime, then McEachen holds (`conjecture_of_cofactor_seven`). If `s ≡ 2 (mod 3)` and `5s-2` prime, then McEachen holds (`conjecture_of_cofactor_five`). If `5·lpf(p-2)-2` is prime, remaining McEachen holds (`conjecture_of_minFac_five`); this applies to least factors `≡ 2 (mod 3)`. If `7·lpf(p-2)-2` is prime, remaining McEachen holds (`conjecture_of_minFac_seven`); this applies to least factors `≡ 1 (mod 3)`. The four disjuncts are packaged as `conjecture_of_paired_injectors`. A scan of remaining primes `p < 200000` found 466 such primes, of which 332 are covered by that pairing. The first uncovered example is `(p,q,s)=(17443,107,163)`. These are proper subfamilies, not a `∀p` proof.
 
-If `n ≥ 9` and `3 ∣ a n`, then `2187 ∣ n+1` (`two_thousand_one_hundred_eighty_seven_dvd_succ_of_three_dvd_a`), using `a 8 = 1` so that `729 ∣ x n` for `n ≥ 9`. This is a further C1 fragment for the prime 3, not remaining McEachen.
+If `n ≥ 9` and `3 ∣ a n`, then `2187 ∣ n+1` (`two_thousand_one_hundred_eighty_seven_dvd_succ_of_three_dvd_a`), using `a 8 = 1` so that `729 ∣ x n` for `n ≥ 9`. If `n ≥ 10` and `3 ∣ a n`, then `6561 ∣ n+1`, using `a 9 = 1` so that `2187 ∣ x n` for `n ≥ 10`. These are C1 fragments for the prime 3, not remaining McEachen.
+
+McEachen also holds if some prime `q ≡ 2 (mod 3)` with `q ≤ p-3` satisfies `gcd(q+2, p-2) > 1` (`conjecture_of_add_two_overlap`, `conjecture_of_remaining_add_two_overlap`). Then a factor of `q+2` already divides `x q` and divides `p-2`. Among leftover primes `p < 200000` this overlap is rare (5 of 466). It is a proper subfamily.
 
 If `r` itself is a prime `≡ 2 (mod 3)`, then `r ≡ -2 (mod q)` and `r ≤ p-3` suffices (`q_dvd_x_of_prime_injector`, `conjecture_of_prime_injector`). For `lpf(p-2)=q` one has `p-2 ≥ q(q+2)` (`remaining_minFac_mul_add_two_le`). The square `p = q^2+2` is never an odd prime for `q > 3`. So a prime
 
@@ -101,7 +103,7 @@ would finish McEachen for a factor `q ≡ 2 (mod 3)`. Even `k` makes `kq-2` even
 
 Composite injection is also available: if `gcd(x(kq-3), kq-2)=1`, then `q` enters even when `kq-2` is composite (`q_dvd_x_of_coprime_shift`). When `kq-2` is prime the gcd is 1 by the mod-3 theorem. A scan of first entries for primes `11 ≤ q ≤ 4000` up to `n = 30000` found **no** composite `kq-2` first entries: every recorded first entry was a prime injector. That scan is not a proof, but it indicates that composites in the window do not remove the Linnik barrier.
 
-Deterministic experiments (`injector_bound.py`, `injector_mod.py`, `first_entry_shape.py`, `injector_window.py`, `window_miller.py`, `paired_injectors.py`): for every prime `q ≡ 2 (mod 3)` with `11 ≤ q ≤ 30000`, a `k ≡ 5 (mod 6)` injector exists with `k ≤ q+2` (trial division). Miller–Rabin to `q ≤ 1000000` found **no** window failures; the worst first `k` was `257` at `q = 40973`. No McEachen failure and no composite `a(n)` to `n = 80000`. For `n ≥ 3`, no `a(n)` was divisible by `3`; the only index with `v_3(n+1) > v_3(x n)` was `n = 2`. Finite checks are not a resolution.
+Deterministic experiments (`injector_bound.py`, `injector_mod.py`, `first_entry_shape.py`, `injector_window.py`, `window_miller.py`, `paired_injectors.py`, `leftover_injectors.py`): for every prime `q ≡ 2 (mod 3)` with `11 ≤ q ≤ 30000`, a `k ≡ 5 (mod 6)` injector exists with `k ≤ q+2` (trial division). Miller–Rabin to `q ≤ 1000000` found **no** window failures; the worst first `k` was `257` at `q = 40973`. No McEachen failure and no composite `a(n)` to `n = 80000`. For `n ≥ 3`, no `a(n)` was divisible by `3`; the only index with `v_3(n+1) > v_3(x n)` was `n = 2`. For leftover remaining primes `p < 200000` (466 such primes), **every** prime has some factor `r` of `p-2` with an admissible prime injector `k ≤ (p-2)/r`. There is no McEachen-window gap in that range. The 5/7 pairing covers 332 of them; `k ∈ {5,11,17,23}` and `{7,13,19,25}` covers 463; the three misses are `(54709, 227, 241)`, `(136429, 227, 601)`, `(166393, 227, 733)`, all with first injector `k=29` at `q=227`. Finite checks are not a resolution.
 
 Cloitre’s route (assume `C₁`, then Theorem 6.2) is recorded as the implication `conjecture_of_C1`. `C₁` is stronger than McEachen and remains open.
 
@@ -120,6 +122,8 @@ Proved: `v2(gcd)`, `v2(a n)`, `v2(x(n+1))`, odd-increment stability, dyadic bloc
 - Treating `conjecture_of_square_window` or `conjecture_of_C1` as a proof of the frozen type. They are reductions, not a window bound and not a proof of `C₁`.
 - Using a first-order sieve union bound on `k ≡ 5 (mod 6)`, `k ≤ q`. The count is negative.
 - Treating `conjecture_of_paired_injectors` as a `∀p` proof. It is a proper subfamily.
+- Treating a leftover scan with no McEachen-window gap as a proof. It is a finite check.
+- Treating `conjecture_of_add_two_overlap` as a `∀p` proof. It needs `gcd(q+2, p-2) > 1`.
 
 ## Status
 
