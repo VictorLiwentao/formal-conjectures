@@ -23,7 +23,8 @@ sha256sum FormalConjectures/OEIS/51903.lean
 Public push: only `origin` `cursor/b01-cursor-01-r03-2609` on `https://github.com/VictorLiwentao/formal-conjectures.git`.
 No PRs. No other branches. No subagents. No shared-control edits.
 
-Candidate commit SHA: `c6ba241ffa46fd146e47d7e33d8e38b6428c104b`.
+Candidate Lean commit SHA: `c6ba241ffa46fd146e47d7e33d8e38b6428c104b`.
+Documentation polarity correction SHA: `edae0726ef273df6814cb3305af3b984f7b1c644`.
 
 ## Status
 

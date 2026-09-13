@@ -23,6 +23,7 @@
   "last_updated_utc": "2026-09-13T02:44:01Z",
   "proof_sha256": "88417287b950e6e0fdde7387ffb624dc5185efea62e7075c917137018d10593c",
   "candidate_commit": "c6ba241ffa46fd146e47d7e33d8e38b6428c104b",
+  "documentation_correction_commit": "edae0726ef273df6814cb3305af3b984f7b1c644",
   "answer_polarity": "C2 odd-example NO; equivalent A327295 all-terms-even YES; C3 excluded",
   "proof_declarations": [
     "A051903C2.no_odd_universal",
