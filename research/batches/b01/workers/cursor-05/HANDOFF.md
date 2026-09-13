@@ -11,8 +11,8 @@ Incomplete research session. No exact proof or disproof. Do not treat this as a 
 - source baseline: `a2f4a1bb12a28e04a969da78feefac7d1ce49565`
 - source SHA-256: `b50d00e13735613cbe37bd3a25c19130874e8f036ca2a0e3c1aceb177a33c683`
 - original kickoff (UTC): 2026-09-12T23:12Z
-- this checkpoint (UTC): 2026-09-13T03:53Z
-- final commit SHA: `f092226e7cba475c6d22c002c51b5e9113e10864`
+- this checkpoint (UTC): 2026-09-13T04:04Z
+- final commit SHA: `PLACEHOLDER`
 
 ## Reproduction
 
@@ -40,16 +40,13 @@ Do not run a full `lake build`, `lake clean`, or `lake update`.
 
 ## Proved this checkpoint (infrastructure only)
 
-- Leftover `6/5` `{7,q,r}` with `71 ≤ q < r` is glued.
-- Leftover `6/5` triples `11 ≤ p < q < r` with `q ≥ 23` are glued.
-- Leftover `6/5` triples `13 ≤ p < q < r` with `q ≥ 19` are glued.
-- Leftover `6/5` `{11,19,p}` is glued for `p ≥ 31`.
-- Leftover `6/5` `{11,13,p}` is glued for `47 ≤ p ≤ 59`. The slice `v_{13}=2` is glued for `p ≥ 79`.
-- Previous checkpoint still holds: leftover `10/7` closed at ω=3; leftover `10/7` ω=4 last prime `≥ 41` glued; leftover `6/5` closed at ω≤2; `{11,17,p}` glued for every `p ≥ 19`; `{11,13,p}` glued for `17 ≤ p ≤ 43` and for `p ≥ 149`; `v_{11}=2` glued for `p ≥ 67`; `{5^2,q,r}` glued for `313 ≤ q < r`; CRT reduction; `v₂≥3 ⇒ v₃<2`.
+- Leftover `6/5` `{11,13,p}` is glued for `79 ≤ p ≤ 113`.
+- Leftover `6/5` `{11^3, 13, p}` is glued for `p ≥ 131`.
+- Previous checkpoint still holds: leftover `10/7` closed at ω=3; leftover `10/7` ω=4 last prime `≥ 41` glued; leftover `6/5` closed at ω≤2; `{11,17,p}` glued for every `p ≥ 19`; `{11,19,p}` glued for `p ≥ 31`; `{11,13,p}` glued for `17 ≤ p ≤ 73` and for `p ≥ 149`; `{7,q,r}` glued for `71 ≤ q < r`; triples `q ≥ 23` with smallest prime `≥ 11` glued; triples `q ≥ 19` with smallest prime `≥ 13` glued; `{5^2,q,r}` glued for `313 ≤ q < r`; CRT reduction; `v₂≥3 ⇒ v₃<2`.
 
 ## Next step
 
-Continue leftover `6/5` ω=3 (`{11,13,p}` for `61 ≤ p ≤ 139`, `{7,q,r}` with `q < 71`, `{5,q,r}` with `q < 313`, small triples such as `{11,19,23}`) and leftover `10/7` ω=4 with last prime `≤ 37` or a factor `5`. Then leftover `100/91` and leftover `2`. CRT plus `v₂ = 2` and `v₃ ≥ 3` already implies the congruence. Do not claim Eldar’s decomposition or the `10^18` search as a new resolution. Do not open a PR.
+Continue leftover `6/5` ω=3 (`{11,13,p}` at `p=127` and `131 ≤ p ≤ 139` with `v_{11} ≥ 4`, `{7,q,r}` with `q < 71`, `{5,q,r}` with `q < 313`, small triples such as `{11,19,23}`) and leftover `10/7` ω=4 with last prime `≤ 37` or a factor `5`. Then leftover `100/91` and leftover `2`. CRT plus `v₂ = 2` and `v₃ ≥ 3` already implies the congruence. Do not claim Eldar’s decomposition or the `10^18` search as a new resolution. Do not open a PR.
 
 ## Cross-owner notes
 
