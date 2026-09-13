@@ -303,5 +303,5 @@
     "Cloitre C1 and Cor. 6.6 are not an unconditional solution."
   ],
   "next_step": "Hard stop passed with the frozen type unproved. Compiled first-entry of 263 (k=23) and 269 (k=11) lifts the leftover cutoff to lpf ≥ 277. Remaining work is an unconditional first-entry bound q | x(q(q+2)-1) for leftover q ≥ 277, or a Lean-checkable counterexample. Complementary Type A injectors and Type B k≤q^2 still need a prime in an AP. Extending minFac does not finish ∀p. Do not claim completion.",
-  "handoff_research_commit": "7d4e6154"
+  "handoff_research_commit": "52a231a2"
 }
