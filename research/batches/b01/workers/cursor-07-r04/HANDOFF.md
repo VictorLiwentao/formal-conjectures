@@ -14,6 +14,7 @@ Source SHA256: `969908dc9e73fd3ebea73cdf272df476583efbe9745185fd466726c5d4faa2e7
 Kickoff UTC: `2026-09-13T02:53:13Z`
 Deadline UTC: `2026-09-13T10:53:13Z` (eight hours, never reset)
 Worker stopped: `2026-09-13T03:23:02Z`
+Candidate commit: `a8f7beecbfa4235fe6bfaa4a64c0b5babb2859d1`
 
 Proof file: `research/batches/b01/workers/cursor-07-r04/targets/WOWII20/WOWII20.lean`
 Audit file: `research/batches/b01/workers/cursor-07-r04/targets/WOWII20/WOWII20_audit.lean`
