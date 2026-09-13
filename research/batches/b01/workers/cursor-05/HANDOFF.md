@@ -11,8 +11,8 @@ Incomplete research session. No exact proof or disproof. Do not treat this as a 
 - source baseline: `a2f4a1bb12a28e04a969da78feefac7d1ce49565`
 - source SHA-256: `b50d00e13735613cbe37bd3a25c19130874e8f036ca2a0e3c1aceb177a33c683`
 - original kickoff (UTC): 2026-09-12T23:12Z
-- this checkpoint (UTC): 2026-09-13T04:17Z
-- final commit SHA: `5b01b53c57cecb068933d0ec5d89dfd3822d0ac8`
+- this checkpoint (UTC): 2026-09-13T04:31Z
+- final commit SHA: `d3e6895a3ee9225a14c04bd487a5a3f8ad8cb773`
 
 ## Reproduction
 
@@ -40,13 +40,13 @@ Do not run a full `lake build`, `lake clean`, or `lake update`.
 
 ## Proved this checkpoint (infrastructure only)
 
-- Leftover `6/5` `{11,13,p}` is glued for every prime `p ≥ 17`.
-- Leftover `6/5` `{13,17,p}` is glued for every prime `p ≥ 19`.
-- Previous checkpoint still holds: leftover `10/7` closed at ω=3; leftover `10/7` ω=4 last prime `≥ 41` glued; leftover `6/5` closed at ω≤2; `{11,17,p}` glued for every `p ≥ 19`; `{11,19,p}` glued for `p ≥ 31`; `{7,q,r}` glued for `71 ≤ q < r`; triples `q ≥ 23` with smallest prime `≥ 11` glued; triples `q ≥ 19` with smallest prime `≥ 13` glued; `{5^2,q,r}` glued for `313 ≤ q < r`; CRT reduction; `v₂≥3 ⇒ v₃<2`.
+- Leftover `6/5` `{11,19,p}` is glued for every prime `p ≥ 23`.
+- Leftover `6/5` `{7,q,r}` is glued for `11 ≤ q ≤ 17`.
+- Previous checkpoint still holds: leftover `10/7` closed at ω=3; leftover `10/7` ω=4 last prime `≥ 41` glued; leftover `6/5` closed at ω≤2; `{11,13,p}` glued for every `p ≥ 17`; `{11,17,p}` glued for every `p ≥ 19`; `{13,17,p}` glued for every `p ≥ 19`; `{7,q,r}` glued for `71 ≤ q < r`; triples `q ≥ 23` with smallest prime `≥ 11` glued; triples `q ≥ 19` with smallest prime `≥ 13` glued; `{5^2,q,r}` glued for `313 ≤ q < r`; CRT reduction; `v₂≥3 ⇒ v₃<2`.
 
 ## Next step
 
-Continue leftover `6/5` ω=3 (`{7,q,r}` with `q < 71`, `{5,q,r}` with `q < 313`, small triples such as `{11,19,23}` and `{13,17,19}`) and leftover `10/7` ω=4 with last prime `≤ 37` or a factor `5`. Then leftover `100/91` and leftover `2`. CRT plus `v₂ = 2` and `v₃ ≥ 3` already implies the congruence. Do not claim Eldar’s decomposition or the `10^18` search as a new resolution. Do not open a PR.
+Continue leftover `6/5` ω=3 (`{7,q,r}` with `19 ≤ q < 71`, `{5,q,r}` with `q < 313`) and leftover `10/7` ω=4 with last prime `≤ 37` or a factor `5`. Then leftover `100/91` and leftover `2`. CRT plus `v₂ = 2` and `v₃ ≥ 3` already implies the congruence. Do not claim Eldar’s decomposition or the `10^18` search as a new resolution. Do not open a PR.
 
 ## Cross-owner notes
 
