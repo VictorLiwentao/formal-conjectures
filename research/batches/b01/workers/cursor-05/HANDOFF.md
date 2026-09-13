@@ -11,8 +11,8 @@ Incomplete research session. No exact proof or disproof. Do not treat this as a 
 - source baseline: `a2f4a1bb12a28e04a969da78feefac7d1ce49565`
 - source SHA-256: `b50d00e13735613cbe37bd3a25c19130874e8f036ca2a0e3c1aceb177a33c683`
 - original kickoff (UTC): 2026-09-12T23:12Z
-- this checkpoint (UTC): 2026-09-13T03:37Z
-- final commit SHA: `d7f0d903c791f19cafaccbc538672c399ce1ffd8`
+- this checkpoint (UTC): 2026-09-13T03:42Z
+- final commit SHA: `e1e4b0b06b6c4967fbfbcba51e79c957a0662aa1`
 
 ## Reproduction
 
@@ -40,15 +40,12 @@ Do not run a full `lake build`, `lake clean`, or `lake update`.
 
 ## Proved this checkpoint (infrastructure only)
 
-- Leftover `10/7` is closed at ω=3.
-- Leftover `10/7` ω=4 with four primes `≥ 7` and last prime `≥ 41` is glued.
-- Leftover `6/5` `{11,17,p}` is glued for every prime `p ≥ 19`.
-- Leftover `6/5` `{11,13,p}` is glued for `17 ≤ p ≤ 43` and for `p ≥ 149`. The slice `v_{11}=2` is glued for `p ≥ 67`.
-- Previous checkpoint still holds: leftover `6/5` closed at ω≤2; `{5,7}` extra factors overshoot leftover `6/5`; CRT reduction; `v₂≥3 ⇒ v₃<2`.
+- Leftover `6/5` `{5^2, q, r}` with `313 ≤ q < r` is glued.
+- Previous checkpoint still holds: leftover `10/7` closed at ω=3; leftover `10/7` ω=4 last prime `≥ 41` glued; leftover `6/5` closed at ω≤2; `{11,17,p}` glued for every `p ≥ 19`; `{11,13,p}` glued for `17 ≤ p ≤ 43` and for `p ≥ 149`; `v_{11}=2` glued for `p ≥ 67`; CRT reduction; `v₂≥3 ⇒ v₃<2`.
 
 ## Next step
 
-Continue leftover `6/5` ω=3 (`{11,13,p}` for `47 ≤ p ≤ 139`, `{7,q,r}`, `{5,q,r}`) and leftover `10/7` ω=4 with last prime `≤ 37` or a factor `5`. Then leftover `100/91` and leftover `2`. CRT plus `v₂ = 2` and `v₃ ≥ 3` already implies the congruence. Do not claim Eldar’s decomposition or the `10^18` search as a new resolution. Do not open a PR.
+Continue leftover `6/5` ω=3 (`{11,13,p}` for `47 ≤ p ≤ 139`, `{7,q,r}`, `{5,q,r}` with `q < 313`) and leftover `10/7` ω=4 with last prime `≤ 37` or a factor `5`. Then leftover `100/91` and leftover `2`. CRT plus `v₂ = 2` and `v₃ ≥ 3` already implies the congruence. Do not claim Eldar’s decomposition or the `10^18` search as a new resolution. Do not open a PR.
 
 ## Cross-owner notes
 
