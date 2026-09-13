@@ -234,17 +234,19 @@
       "notes": "Known ASM product formula; prove natural quotient integrality and positivity before rational cancellation. Credit Robbins/Kuperberg/Razumov\u2013Stroganov accurately; not new mathematical enumeration. Old defective formulation and old counterexample irrelevant. See replacement-screening-01.md and prompts/cursor-01-r02.md."
     },
     {
-      "worker_id": "cursor-07-r02",
+      "worker_id": "cursor-07-r03",
       "slot": "cursor-07",
-      "predecessor": "cursor-07",
-      "title": "WOWII101 Hajnal independence-core inequality",
+      "predecessor": "cursor-07-r02",
+      "title": "Green66 known quarter-power sum-of-two-squares bound",
       "platform": "Cursor Cloud",
       "requested_model": "Cursor Grok 4.6 Extra High",
-      "branch": "codex/b01-cursor-07-r02",
-      "status": "researching_goal_active",
+      "branch": "codex/b01-cursor-07-r03",
+      "status": "reserved_for_replacement",
       "novelty_status": "known_mathematics_formalization_candidate",
       "reserved_sequence_groups": [
-        "WOWII101"
+        "Green66-trivial-bound",
+        "A001481",
+        "A256435"
       ],
       "reserved_source_prefixes": [
         "FormalConjectures/WrittenOnTheWallII/",
@@ -254,16 +256,16 @@
       ],
       "targets": [
         {
-          "id": "WOWII101",
-          "source_file": "FormalConjectures/WrittenOnTheWallII/GraphConjecture101.lean",
-          "source_sha256": "870cd77d2cb8bf98fcbe4bdeee7c52620009af97368fc4358dc595af716046c6",
+          "id": "Green66-trivial-bound",
+          "source_file": "FormalConjectures/GreensOpenProblems/66.lean",
+          "source_sha256": "d38ab7e233260302ef58121037a02dc94866ddae820e9fc84308ce7264e07acb",
           "declarations": [
-            "WrittenOnTheWallII.GraphConjecture101.conjecture101"
+            "Green66.green_66.variants.trivial_bound"
           ],
-          "source_url": "https://github.com/google-deepmind/formal-conjectures/blob/a2f4a1bb12a28e04a969da78feefac7d1ce49565/FormalConjectures/WrittenOnTheWallII/GraphConjecture101.lean"
+          "source_url": "https://github.com/google-deepmind/formal-conjectures/blob/a2f4a1bb12a28e04a969da78feefac7d1ce49565/FormalConjectures/GreensOpenProblems/66.lean"
         }
       ],
-      "notes": "Known Hajnal core/corona inequality; exact deletion-core equivalence required. Only WOWII101 is assigned. Non-OEIS prefixes remain reserved to this slot to prevent other workers exploring them; no autonomous target switch. See replacement-screening-02.md and prompts/cursor-07-r02.md."
+      "notes": "ONLY known uniform-C quarter-power variant assigned; NOT open Green66 fixed1/10 conjecture. Equivalent Erdos222 and A001481/A256435 fourth-root gap formulations reserved; unrelated sequence conjectures not assigned. Related LeanGenius axiom and weaker Epoch sqrt lemma do not establish this target. See replacement-screening-03.md and prompts/cursor-07-r03.md."
     }
   ],
   "excluded": {
@@ -295,7 +297,8 @@
     "A211417": "Accepted Epoch result located.",
     "A076141": "Exact public Lean proof independently compiled, allowlisted axioms: KitaKen1/oeis-a076141-binary-word b4e179767fa3041c43e019b559ee77e6737317aa. Retired cursor-03.",
     "A237271": "Corrected Carmichael observation independently verified in this batch; preserve other known results, do not restart same sequence group.",
-    "WOWII31": "Earlier exact public Lean proof by Kenta Kitamura/KitaKen1 a948e9fc07e11b786aee8dadb1376b4d938454d6 independently compiled; batch implementation also valid but not first formalization. Retired cursor-07."
+    "WOWII31": "Earlier exact public Lean proof by Kenta Kitamura/KitaKen1 a948e9fc07e11b786aee8dadb1376b4d938454d6 independently compiled; batch implementation also valid but not first formalization. Retired cursor-07.",
+    "WOWII101": "Known Hajnal/core inequality independently formalized and verified in batch; cursor-07-r02 b42564b6. No earlier exact public Lean proof found in bounded audit. Do not restart same target."
   },
   "accept_known_informal_proofs_for_new_lean_formalization": true,
   "retired_workers": [
@@ -386,6 +389,45 @@
       "audit_file": "research/batches/b01/control/audits/cursor-07.md",
       "mathematical_novelty": "known_mathematics",
       "formalization_novelty": "prior_exact_public_lean_independently_verified"
+    },
+    {
+      "worker_id": "cursor-07-r02",
+      "slot": "cursor-07",
+      "predecessor": "cursor-07",
+      "title": "WOWII101 Hajnal independence-core inequality",
+      "platform": "Cursor Cloud",
+      "requested_model": "Cursor Grok 4.6 Extra High",
+      "branch": "codex/b01-cursor-07-r02",
+      "status": "retired_independently_verified",
+      "novelty_status": "known_mathematics_formalization_candidate",
+      "reserved_sequence_groups": [
+        "WOWII101"
+      ],
+      "reserved_source_prefixes": [
+        "FormalConjectures/WrittenOnTheWallII/",
+        "FormalConjectures/Mathoverflow/",
+        "FormalConjectures/GreensOpenProblems/",
+        "FormalConjectures/ErdosProblems/"
+      ],
+      "targets": [
+        {
+          "id": "WOWII101",
+          "source_file": "FormalConjectures/WrittenOnTheWallII/GraphConjecture101.lean",
+          "source_sha256": "870cd77d2cb8bf98fcbe4bdeee7c52620009af97368fc4358dc595af716046c6",
+          "declarations": [
+            "WrittenOnTheWallII.GraphConjecture101.conjecture101"
+          ],
+          "source_url": "https://github.com/google-deepmind/formal-conjectures/blob/a2f4a1bb12a28e04a969da78feefac7d1ce49565/FormalConjectures/WrittenOnTheWallII/GraphConjecture101.lean"
+        }
+      ],
+      "notes": "Known Hajnal core/corona inequality; exact deletion-core equivalence required. Only WOWII101 is assigned. Non-OEIS prefixes remain reserved to this slot to prevent other workers exploring them; no autonomous target switch. See replacement-screening-02.md and prompts/cursor-07-r02.md.",
+      "actual_branch": "cursor/b01-cursor-07-r02-05fb",
+      "final_commit": "b42564b6f4e04abf0256355f53000056e2c2c924",
+      "retired_at_utc": "2026-09-13T02:05:19.716496+00:00",
+      "successor": "cursor-07-r03",
+      "audit_file": "research/batches/b01/control/audits/cursor-07-r02.md",
+      "mathematical_novelty": "known_mathematics",
+      "formalization_novelty": "no_prior_exact_public_lean_found_in_checked_sources"
     }
   ],
   "exclusion_changes": [

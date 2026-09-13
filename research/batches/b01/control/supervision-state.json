@@ -2,9 +2,9 @@
   "automation_id": "maintain-seven-cursor-math-workers",
   "interval_minutes": 15,
   "target_cursor_slots": 7,
-  "updated_at_utc": "2026-09-13T01:42:33.986276+00:00",
+  "updated_at_utc": "2026-09-13T02:05:19.716496+00:00",
   "accept_known_informal_proofs_for_new_lean_formalization": true,
-  "note": "All seven current Cursor workers have active goals and ongoing work. No exact completion, new prior-proof finding, stopped worker, replacement or intervention this heartbeat.",
+  "note": "Six OEIS workers active; non-OEIS completed WOWII101 audited and retired. Green66 known-bound replacement reserved, launch pending.",
   "slots": [
     {
       "slot": "cursor-01",
@@ -124,10 +124,10 @@
     },
     {
       "slot": "cursor-07",
-      "run_id": "cursor-07-r02",
-      "agent_url": "https://cursor.com/agents/bc-bfb4a7ed-1a88-4b50-8844-80eadcee05fb",
-      "state": "researching",
-      "actual_branch": "cursor/b01-cursor-07-r02-05fb",
+      "run_id": "cursor-07-r03",
+      "agent_url": null,
+      "state": "reserved_for_replacement",
+      "actual_branch": null,
       "replacements": [
         {
           "run_id": "cursor-07-r02",
@@ -135,10 +135,10 @@
           "launched_at_utc": "2026-09-13T01:22:48.830413+00:00"
         }
       ],
-      "last_checked_at_utc": "2026-09-13T01:42:33.986276+00:00",
-      "progress_note": "Goal active with Stop control; WOWII101 Hajnal-family/core equivalence Lean implementation under compile repair. Branch cursor/b01-cursor-07-r02-05fb confirmed from pushed STATUS; no exact candidate yet.",
-      "goal_active_verified": true,
-      "goal_verified_at_utc": "2026-09-13T01:42:33.986276+00:00",
+      "last_checked_at_utc": "2026-09-13T02:01:48.603795+00:00",
+      "progress_note": "WOWII101 independently verified; old worker stopped without goal/timers. Distinct Green66 known uniform-C quarter-power variant reserved and prompt ready; launch pending.",
+      "goal_active_verified": false,
+      "goal_verified_at_utc": null,
       "history": [
         {
           "run_id": "cursor-07",
@@ -147,9 +147,17 @@
           "retired_at_utc": "2026-09-13T01:20:54.130080+00:00",
           "result": "candidate_and_prior_public_lean_independently_verified",
           "audit": "research/batches/b01/control/audits/cursor-07.md"
+        },
+        {
+          "run_id": "cursor-07-r02",
+          "agent_url": "https://cursor.com/agents/bc-bfb4a7ed-1a88-4b50-8844-80eadcee05fb",
+          "actual_branch": "cursor/b01-cursor-07-r02-05fb",
+          "retired_at_utc": "2026-09-13T02:05:19.716496+00:00",
+          "result": "independently_verified_known_mathematics_formalization",
+          "audit": "research/batches/b01/control/audits/cursor-07-r02.md"
         }
       ],
-      "predecessor": "cursor-07",
+      "predecessor": "cursor-07-r02",
       "starting_commit": "dc6f750f34db0ca579f76bc358082157072f2083",
       "launch_verified_at_utc": "2026-09-13T01:22:48.830413+00:00",
       "goal_command_submitted": true,
