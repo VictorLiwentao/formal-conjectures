@@ -32,7 +32,7 @@ The same divisibility is the odd-prime lifting-the-exponent identity `v_p((1+p)^
 
 `p^(e-1) ∣ n` as well, hence `p^(e-1) ∣ e`. But `0 < e < p^(e-1)`, so no such positive divisor exists.
 
-The argument uses that `n` is odd to guarantee an odd prime of maximal exponent. It is not claimed for even `n`. A327295's "are all terms even?" is the same existence question; this file answers it negatively for the universal all-`b` condition (C2), not for the weaker fixed-base-2 condition (C3).
+The argument uses that `n` is odd to guarantee an odd prime of maximal exponent. It is not claimed for even `n`. C2 asks whether an odd example exists and is answered **NO**. The equivalent A327295 question whether all terms are even is answered **YES**. The weaker fixed-base-2 condition (C3) remains excluded.
 
 ## 6. Exact negative answer
 

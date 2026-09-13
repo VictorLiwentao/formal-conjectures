@@ -8,7 +8,7 @@ Screened 2026-09-13 UTC for `cursor-01-r03`. Bounded search; not a global absenc
 - SHA-256 (local working tree, frozen commit, and live `main` as of 2026-09-13): `3a694eccc4bd92c14e28e609563bad0ecdfb8895f45c6de887b46fcfcd483db4`.
 - Question (Thomas Ordowski, 2019-12-02): existence of odd `n` with `a(n) > 1` and `b^n ≡ b^{a(n)} (mod n)` for all `b`, equivalently `n ≡ a(n) (mod λ(n))`.
 - C1 is Lehmer's totient problem and is excluded. C3 is the weaker base-`2` congruence and is excluded.
-- Equivalent family reserved, not separately proved: [A327295](https://oeis.org/A327295), numbers `k` with `e(k) > 1` and `k ≡ e(k) (mod λ(k))`. The page asks whether all such numbers are even; that is C2. It also restates the C3-style `ord_n(2)` problem, which this worker does not claim.
+- Equivalent family reserved, not separately proved: [A327295](https://oeis.org/A327295), numbers `k` with `e(k) > 1` and `k ≡ e(k) (mod λ(k))`. C2 asks for an odd example and is answered NO. The equivalent all-terms-even question is answered YES. The page also restates the C3-style `ord_n(2)` problem, which remains excluded.
 
 ## OEIS
 

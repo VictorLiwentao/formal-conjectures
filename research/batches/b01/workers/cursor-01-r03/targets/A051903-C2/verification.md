@@ -86,5 +86,6 @@ No `sorryAx`, extra axioms, `native_decide`, or `Lean.trustCompiler`. Full comma
 - The prime is odd; the argument is not applied to even `n`.
 - Order of `1+p` is Mathlib `ZMod.orderOf_one_add_prime`, not an extra axiom.
 - C1 and C3 are not claimed.
+- C2 asks for an odd example and is answered NO. The equivalent A327295 all-terms-even question is answered YES. C3 remains excluded.
 
 Self-review records `candidate_proof` only and cannot set `independently_verified`. Coordinator independent audit is pending.

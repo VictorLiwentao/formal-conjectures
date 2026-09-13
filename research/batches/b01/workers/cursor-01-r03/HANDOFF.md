@@ -33,8 +33,9 @@ Novelty: `known_mathematics_formalization`. No earlier exact public Lean proof o
 
 `A051903C2.no_odd_universal` and `A051903C2.conjecture2` compile with axioms `{propext, Classical.choice, Quot.sound}`.
 The wrapper is `False ↔` the frozen RHS existential, via `answer(False)`.
+C2 asks for an odd example and is answered NO. The equivalent A327295 all-terms-even question is answered YES. C3 remains excluded.
 
-Stop after this self-audited candidate. Cancel timers/goal so the slot cannot resume competing work. Do not start C1, C3, A327295 proof work, or any other assignment.
+Stop after this self-audited candidate. Cancel timers/goal so the slot cannot resume competing work. Do not start C1, C3, A327295 proof work, or any other assignment. Independent Lean audit remains pending.
 
 ## Proved in `targets/A051903-C2/A051903.lean`
 
