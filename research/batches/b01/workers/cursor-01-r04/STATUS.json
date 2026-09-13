@@ -21,7 +21,7 @@
   "novelty_status": "known_mathematics_formalization",
   "mathematical_novelty": "known_mathematics_She_Sun_Xia_2022_Thm1_3_ii",
   "formalization_novelty": "no_prior_exact_public_lean_found_in_checked_sources_audit_incomplete_until_stop",
-  "last_updated_utc": "2026-09-13T09:15:00Z",
+  "last_updated_utc": "2026-09-13T09:16:00Z",
   "proof_declarations": [
     "A001818C1.conjecture1_of_one",
     "A001818C1.zpow_sub_ne_one",
@@ -183,12 +183,19 @@
     "A001818C1.evenCycleSumThrough_comp_equivFinZero",
     "A001818C1.cayleySum_eq_zero_fin",
     "A001818C1.identity_three_nine",
-    "A001818C1.cayleySum_eq_zero_of_zero"
+    "A001818C1.cayleySum_eq_zero_of_zero",
+    "A001818C1.identity_three_nine_tail",
+    "A001818C1.sum_cayleyWeight_long_even_cycles_through_eq_card_sub_two",
+    "A001818C1.cayleySumOn_eq_sum_fixed_pair",
+    "A001818C1.sum_cayleySumOn_omit_pair",
+    "A001818C1.cayleySum_sigma1_eq_omit_sub_extra",
+    "A001818C1.cayleySum_sigma3",
+    "A001818C1.cayleySum_eq_recurrence"
   ],
   "unresolved_gaps": [
-    "General n>=1 C1 identity still open. Have per(M-J)=a n, Sigma1/Sigma2, Lemma 2.3, paper (3.5), s_1=-1, Lemma 3.1, complementary fibres, the geometric sign-matrix limit, complementary cancellation by even-card induction, and identity (3.9). Need recurrence (4.8), Theorem 1.1, and SSX 1.3(i)."
+    "General n>=1 C1 identity still open. Have per(M-J)=a n, Sigma1/Sigma2/Sigma3, Lemma 2.3, paper (3.5)/(3.9), Lemma 3.1, complementary cancellation, and recurrence (4.8). Need Theorem 1.1 and SSX 1.3(i)."
   ],
-  "next_step": "Assemble recurrence (4.8) from Sigma1/Sigma2/Sigma3 plus (3.9), then prove Theorem 1.1 by induction.",
+  "next_step": "Prove Theorem 1.1 by induction from (4.8), then identify per M with per(M-J).",
   "self_review": "not a candidate yet; cannot set independently_verified",
   "excluded_from_this_worker": [
     "OeisA1818.conjecture2",

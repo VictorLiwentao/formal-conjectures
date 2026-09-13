@@ -116,7 +116,7 @@ which type-checks. The original `a` is used. The admitted `OeisA1818.conjecture1
 'A001818C1.cayleySum_eq_one_add_even_cycles_of_card_two' depends on axioms: [propext, Classical.choice, Quot.sound]
 ```
 
-The complementary fibres (`cayleySum_fibre_remainder`, `cayleySum_complementary_eq_inner`) are proved. Geometric Cayley matrices tend to the transposed sign matrix, so on even size `cayleySum(cayleyPowZero)` tends to 0 (`tendsto_cayleySum_powZero`). Strong induction on even cardinality gives complementary cancellation and `cayleySum = 0` whenever some coordinate is zero (`cayleySum_eq_zero_fin`). Paper identity (3.9) is `identity_three_nine`. Recurrence (4.8) and Theorem 1.1 remain, so `per M = per(M-J)` remains.
+The complementary fibres (`cayleySum_fibre_remainder`, `cayleySum_complementary_eq_inner`) are proved. Geometric Cayley matrices tend to the transposed sign matrix, so on even size `cayleySum(cayleyPowZero)` tends to 0 (`tendsto_cayleySum_powZero`). Strong induction on even cardinality gives complementary cancellation and `cayleySum = 0` whenever some coordinate is zero (`cayleySum_eq_zero_fin`). Paper identity (3.9) is `identity_three_nine` / `identity_three_nine_tail`. Recurrence (4.8) is `cayleySum_eq_recurrence`. Theorem 1.1 remains, so `per M = per(M-J)` remains.
 
 ## Boundary
 

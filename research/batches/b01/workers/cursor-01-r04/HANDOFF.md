@@ -49,9 +49,11 @@ Complementary terms group by remainder `τ`. If `τ p ≠ p` the fibre is empty.
 
 The geometric assignment `cayleyPowZero` has a zero at index 0 and values `ε^{n-i}` off zero. For real `0<ε<1` it is injective. Its Cayley matrix tends pointwise to the transpose of the sign matrix, so on even size the Cayley sum tends to 0 (`tendsto_cayleySum_powZero`). Hamiltonian even-cycle sums transport along `permCongr` (`evenCycleSumThrough_permCongr`).
 
-Strong induction on even cardinality: complementary fibres vanish on strictly smaller even `Fix(τ)`, so `cayleySum = 1 + evenCycleSumThrough`. That combination is the binomial in `s_k` and equals 0 by the geometric limit (`cayleySum_eq_zero_fin`, `identity_three_nine`). The same vanishing transports to any even-card type with a zero coordinate (`cayleySum_eq_zero_of_zero`).
+Strong induction on even cardinality: complementary fibres vanish on strictly smaller even `Fix(τ)`, so `cayleySum = 1 + evenCycleSumThrough`. That combination is the binomial in `s_k` and equals 0 by the geometric limit (`cayleySum_eq_zero_fin`, `identity_three_nine`). The same vanishing transports to any even-card type with a zero coordinate (`cayleySum_eq_zero_of_zero`). Paper (3.9) for `k ≥ 2` is `identity_three_nine_tail`: that tail equals `n-2`.
 
-Still needed: recurrence (4.8) / Theorem 1.1 matching formula, then She–Sun–Xia 1.3(i).
+Paper (4.8): `S = ∑_{q ≠ p} (1+f((p q))) S(omit p,q)` (`cayleySum_eq_recurrence`). The omit-sum of complementary Cayley sums minus the `#Fix-2` extra recovers Σ1. Long even cycles through `p` plus complementary fibres give Σ3 as the same extra, so the extras cancel.
+
+Still needed: Theorem 1.1 matching formula, then She–Sun–Xia 1.3(i).
 
 ## Attribution
 
