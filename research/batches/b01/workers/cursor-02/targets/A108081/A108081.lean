@@ -561,6 +561,16 @@ lemma not_xWord_cons_zero_r_of_one_le_head {s : Word} (hs : s ≠ [])
     omega
   exact not_xWord_of_getLast_ge_two hne hge hw
 
+lemma not_xWord_append_r_of_one_le_head {u s : Word} (hs : s ≠ [])
+    (hpos : 1 ≤ s.head hs) : ¬ XWord (u ++ r s) := by
+  intro hw
+  have hne : u ++ r s ≠ [] := append_ne_nil_of_right_ne_nil u (r_ne_nil hs)
+  have hlast : (u ++ r s).getLast hne = s.head hs + 1 := by
+    rw [getLast_append_of_right_ne_nil (l₁ := u) (l₂ := r s) (r_ne_nil hs),
+      getLast_r hs]
+  have hge : 2 ≤ (u ++ r s).getLast hne := by omega
+  exact not_xWord_of_getLast_ge_two hne hge hw
+
 lemma PWord.base : PWord [0] := by
   refine ⟨XWord.base, ?_⟩
   decide
@@ -748,6 +758,68 @@ lemma PWord.step_right_of_heads_eq_zero {u v : Word} (hu : PWord u) (hv : PWord 
       simpa [count_zero_r, count_eq_zero] using hneg
     simp [count_append, hu.2, hr0]
   exact ⟨hx, hcount⟩
+
+lemma PWord.getLast_eq_one_of_head_eq_zero {w : Word} (hw : PWord w)
+    (hhead : w.head hw.1.ne_nil = 0) (hlen : 2 ≤ w.length) :
+    w.getLast hw.1.ne_nil = 1 := by
+  have hidx : w.idxOf 0 = 0 := PWord.idxOf_eq_zero_of_head_eq_zero hw hhead
+  have hlt : w.length - 1 < w.length := by omega
+  have hpos : 0 < w[w.length - 1]'(hlt) :=
+    PWord.getElem_pos_of_gt_idxOf hw (by omega) hlt
+  have hgetLast : w.getLast hw.1.ne_nil = w[w.length - 1]'(hlt) :=
+    getLast_eq_getElem hw.1.ne_nil
+  have hlast := hw.1.getLast_eq_zero_or_one
+  omega
+
+lemma PWord.le_length_of_isRightParse_append_r {u v u' v' : Word}
+    (hu : XWord u) (hv : PWord v) (h : IsRightParse (u ++ r v) u' v') :
+    v.length ≤ v'.length := by
+  have := hu
+  have huX := h.1
+  have hv'X := h.2.1
+  have hsum := h.length_add
+  have htot : (u ++ r v).length = u.length + v.length := by
+    simp [length_r]
+  have hlen' : u'.length + v'.length = u.length + v.length := by omega
+  by_contra hlt
+  have hvlt : v'.length < v.length := Nat.lt_of_not_ge hlt
+  let k := u'.length - u.length
+  have hkpos : 0 < k := by omega
+  have hsucc : u'.length = u.length + k := by omega
+  have htake : (u ++ r v).take u'.length = u ++ (r v).take k := by
+    rw [hsucc, take_length_add_append]
+  have hdrop : (u ++ r v).drop u'.length = (r v).drop k := by
+    rw [hsucc, drop_length_add_append]
+  let m := v.length - k
+  have hsne : v.drop m ≠ [] := by
+    simp [m, drop_eq_nil_iff]
+    omega
+  have hv'_eq : v' = v.take m := by
+    have hr := h.drop
+    have : r v' = r (v.take m) := by
+      calc
+        r v' = (u ++ r v).drop u'.length := hr.symm
+        _ = (r v).drop k := hdrop
+        _ = r (v.take (v.length - k)) := drop_r _ _
+        _ = r (v.take m) := rfl
+    exact r_injective this
+  have h0take : (0 : ℤ) ∈ v.take m := by
+    simpa [hv'_eq] using hv'X.zero_mem
+  have hidxlt : v.idxOf 0 < m :=
+    (mem_take_iff_idxOf_lt hv.1.zero_mem).mp h0take
+  have hm_lt : m < v.length := by
+    simp [drop_eq_nil_iff] at hsne
+    omega
+  have hheadpos : 0 < (v.drop m).head hsne := by
+    rw [head_drop hsne]
+    exact PWord.getElem_pos_of_gt_idxOf hv hidxlt hm_lt
+  have h1le : 1 ≤ (v.drop m).head hsne := by omega
+  have hnot : ¬ XWord (u ++ r (v.drop m)) :=
+    not_xWord_append_r_of_one_le_head hsne h1le
+  have hpre := h.take
+  have hu_eq : u' = u ++ (r v).take k := hpre.symm.trans htake
+  have hrk : (r v).take k = r (v.drop m) := take_r v k
+  exact hnot (by simpa [hu_eq, hrk] using huX)
 
 lemma PWord.isRightParse_cons_zero_r {v : Word} (hv : PWord v) :
     IsRightParse ([0] ++ r v) [0] v :=
@@ -1330,6 +1402,8 @@ lemma exists_right_parse_append_YWord_tail {c y : Word} (hc : XWord c)
 #print axioms PWord.getElem_neg_of_lt_idxOf
 #print axioms PWord.eq_of_isRightParse_cons_zero_r
 #print axioms PWord.step_right_of_heads_eq_zero
+#print axioms PWord.le_length_of_isRightParse_append_r
+#print axioms PWord.getLast_eq_one_of_head_eq_zero
 #print axioms PWord.take_idxOf_concat_zero
 #print axioms PWord.cons_zero_drop_succ_idxOf
 #print axioms PWord.take_idxOf_concat_zero_append_drop
