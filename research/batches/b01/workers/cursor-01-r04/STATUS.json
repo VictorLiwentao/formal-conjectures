@@ -1,0 +1,54 @@
+{
+  "worker_id": "cursor-01-r04",
+  "slot": "cursor-01",
+  "predecessor": "cursor-01-r03",
+  "target_id": "A001818-C1",
+  "declaration": "OeisA1818.conjecture1",
+  "actual_branch": "cursor/b01-cursor-01-r04-6ddf",
+  "preferred_branch": "codex/b01-cursor-01-r04",
+  "seed_commit": "7a37b78ee539aab88ebbb77a2579f838e9fcc7a6",
+  "baseline_commit": "7a37b78ee539aab88ebbb77a2579f838e9fcc7a6",
+  "source_commit": "a2f4a1bb12a28e04a969da78feefac7d1ce49565",
+  "lean_toolchain": "leanprover/lean4:v4.33.1",
+  "source_file": "FormalConjectures/OEIS/1818.lean",
+  "source_sha256": "1e41db84e11a5adb981526a75330a597a13ceef8479eb4fb4ef832256496dffe",
+  "source_sha256_verified": true,
+  "prompt_present": true,
+  "session_start_utc": "2026-09-13T02:54:27Z",
+  "deadline_utc": "2026-09-13T10:54:27Z",
+  "clock_reset": false,
+  "current_status": "researching_goal_active",
+  "novelty_status": "known_mathematics_formalization",
+  "mathematical_novelty": "known_mathematics_She_Sun_Xia_2022_Thm1_3_ii",
+  "formalization_novelty": "no_prior_exact_public_lean_found_in_checked_sources_audit_incomplete_until_stop",
+  "last_updated_utc": "2026-09-13T03:13:52Z",
+  "proof_declarations": [
+    "A001818C1.conjecture1_of_one",
+    "A001818C1.zpow_sub_ne_one",
+    "A001818C1.denom_ne_zero",
+    "A001818C1.inv_one_sub_eq_sum",
+    "A001818C1.sum_nat_mul_geom"
+  ],
+  "unresolved_gaps": [
+    "General n>=1 C1 identity not yet kernel-checked. Need Calogero–Perelomov eigenvalues, Guo Lemma 5.2(i), and She–Sun–Xia per C = per(C-J)."
+  ],
+  "next_step": "Fourier-diagonalize the Calogero circulant, prove even-size derangement identity, then Theorem 1.1 / 1.3(i).",
+  "self_review": "not a candidate yet; cannot set independently_verified",
+  "excluded_from_this_worker": [
+    "OeisA1818.conjecture2",
+    "OeisA2454.conjecture",
+    "A356041"
+  ],
+  "reserved_sequence_groups": [
+    "A001818-C1",
+    "A001818",
+    "A002454",
+    "A356041"
+  ],
+  "ai_assistance": "Cursor Grok 4.6 Extra High, 2026-09-13",
+  "credits": {
+    "mathematics": "Yue-Feng She, Zhi-Wei Sun, Wei Xia, arXiv:2208.12167v2, Theorem 1.3(ii); Guo–Li–Tao–Wei arXiv:2206.02592 Lemma/Conj 1.1(1); Calogero–Perelomov 1979",
+    "original_lean": "The Formal Conjectures Authors",
+    "new_lean_development": "Wentao Li"
+  }
+}
