@@ -72,9 +72,11 @@ which type-checks. The original `a` is used. The admitted `OeisA1818.conjecture1
 'A001818C1.cayleySum_fin_two_eq' depends on axioms: [propext, Classical.choice, Quot.sound]
 'A001818C1.cayleyWeight_ofSubtype' depends on axioms: [propext, Classical.choice, Quot.sound]
 'A001818C1.oddLongPoints_mul_swap' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.oddLongPoints_ofSubtype_nonempty_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.cayleySum_ofSubtype' depends on axioms: [propext, Classical.choice, Quot.sound]
 ```
 
-No `sorryAx`, `native_decide`, or `Lean.trustCompiler` in those lemmas. The general `n ≥ 1` identity is not yet proved. `per(M-J) = a n` is proved and `per M` equals the even-cycle Cayley sum; the two-point matching factor is proved; `per M = per(M-J)` remains.
+No `sorryAx`, `native_decide`, or `Lean.trustCompiler` in those lemmas. The general `n ≥ 1` identity is not yet proved. `per(M-J) = a n` is proved and `per M` equals the even-cycle Cayley sum; the two-point matching factor and subtype restriction are proved; `per M = per(M-J)` remains.
 
 No `sorryAx`, `native_decide`, or `Lean.trustCompiler` in those lemmas. The general `n ≥ 1` identity is not yet proved.
 

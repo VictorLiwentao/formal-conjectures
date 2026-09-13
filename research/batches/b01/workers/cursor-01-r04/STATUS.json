@@ -21,7 +21,7 @@
   "novelty_status": "known_mathematics_formalization",
   "mathematical_novelty": "known_mathematics_She_Sun_Xia_2022_Thm1_3_ii",
   "formalization_novelty": "no_prior_exact_public_lean_found_in_checked_sources_audit_incomplete_until_stop",
-  "last_updated_utc": "2026-09-13T05:58:40Z",
+  "last_updated_utc": "2026-09-13T06:05:07Z",
   "proof_declarations": [
     "A001818C1.conjecture1_of_one",
     "A001818C1.zpow_sub_ne_one",
@@ -99,12 +99,14 @@
     "A001818C1.one_add_cayleyWeight_swap",
     "A001818C1.cayleySum_fin_two_eq",
     "A001818C1.cayleyWeight_ofSubtype",
-    "A001818C1.oddLongPoints_mul_swap"
+    "A001818C1.oddLongPoints_mul_swap",
+    "A001818C1.oddLongPoints_ofSubtype_nonempty_iff",
+    "A001818C1.cayleySum_ofSubtype"
   ],
   "unresolved_gaps": [
-    "General n>=1 C1 identity still open. Have per(M-J)=a n, odd-cycle cancellation in per M, the two-point evaluation 1+f((ab))=-4xa xb/(xa-xb)^2, and restriction of Cayley weights to subtypes. Need SSX recurrence (4.8) / matching formula 1.1."
+    "General n>=1 C1 identity still open. Have per(M-J)=a n, odd-cycle cancellation, two-point matching factor, and restriction of even-cycle Cayley sums to subtypes. Need SSX recurrence (4.8) / matching formula 1.1."
   ],
-  "next_step": "Prove She-Sun-Xia (4.8): cayleySum on 2n points equals the sum over transpositions of a distinguished point of (1+f(swap)) times cayleySum on the remaining 2n-2 points.",
+  "next_step": "Assemble She-Sun-Xia (4.8): group remaining even-cycle permutations by the cycle of a distinguished point, using ofSubtype on the complement of a transposition.",
   "self_review": "not a candidate yet; cannot set independently_verified",
   "excluded_from_this_worker": [
     "OeisA1818.conjecture2",

@@ -3067,6 +3067,93 @@ lemma oddLongPoints_mul_swap {α : Type*} [Fintype α] [DecidableEq α]
       exact hx
     rw [cycleOf_mul_swap_of_not_mem hpq hdis hxab]
 
+lemma ofSubtype_zpow {α : Type*} [DecidableEq α] {p : α → Prop} [DecidablePred p]
+    (u : Perm (Subtype p)) (n : ℤ) :
+    Equiv.Perm.ofSubtype u ^ n = Equiv.Perm.ofSubtype (u ^ n) :=
+  (MonoidHom.map_zpow Equiv.Perm.ofSubtype u n).symm
+
+lemma sameCycle_ofSubtype_coe {α : Type*} [DecidableEq α] {s : Finset α}
+    (u : Perm {a // a ∈ s}) {x y : {a // a ∈ s}} :
+    Equiv.Perm.SameCycle (Equiv.Perm.ofSubtype u) x.1 y.1 ↔
+      Equiv.Perm.SameCycle u x y := by
+  constructor
+  · intro ⟨n, h⟩
+    refine ⟨n, ?_⟩
+    apply Subtype.ext
+    rw [← h, ofSubtype_zpow, Equiv.Perm.ofSubtype_apply_coe]
+  · intro ⟨n, h⟩
+    refine ⟨n, ?_⟩
+    rw [ofSubtype_zpow, Equiv.Perm.ofSubtype_apply_coe]
+    exact congrArg Subtype.val h
+
+lemma sameCycle_ofSubtype_mem {α : Type*} [DecidableEq α] {s : Finset α}
+    (u : Perm {a // a ∈ s}) {x y : α} (hx : x ∈ s)
+    (h : Equiv.Perm.SameCycle (Equiv.Perm.ofSubtype u) x y) : y ∈ s := by
+  obtain ⟨n, hxy⟩ := h
+  rw [ofSubtype_zpow, Equiv.Perm.ofSubtype_apply_of_mem _ hx] at hxy
+  exact hxy ▸ ((u ^ n) ⟨x, hx⟩).2
+
+lemma support_cycleOf_ofSubtype {α : Type*} [Fintype α] [DecidableEq α] {s : Finset α}
+    (u : Perm {a // a ∈ s}) {x : α} (hx : x ∈ s) :
+    ((Equiv.Perm.ofSubtype u).cycleOf x).support =
+      (u.cycleOf ⟨x, hx⟩).support.map (Function.Embedding.subtype (fun a => a ∈ s)) := by
+  ext y
+  simp only [Equiv.Perm.mem_support_cycleOf_iff, mem_map, Function.Embedding.coe_subtype]
+  constructor
+  · intro ⟨hsame, hsup⟩
+    have hy : y ∈ s := sameCycle_ofSubtype_mem u hx hsame
+    refine ⟨⟨y, hy⟩, ?_, rfl⟩
+    constructor
+    · exact (sameCycle_ofSubtype_coe u).1 hsame
+    · have hne : Equiv.Perm.ofSubtype u x ≠ x := Equiv.Perm.mem_support.mp hsup
+      exact Equiv.Perm.mem_support.mpr fun h =>
+        hne (by
+          rw [Equiv.Perm.ofSubtype_apply_of_mem u hx]
+          exact congrArg Subtype.val h)
+  · intro ⟨z, hmem, hz⟩
+    subst hz
+    constructor
+    · exact (sameCycle_ofSubtype_coe u).2 hmem.1
+    · have hne : u ⟨x, hx⟩ ≠ ⟨x, hx⟩ := Equiv.Perm.mem_support.mp hmem.2
+      exact Equiv.Perm.mem_support.mpr fun h =>
+        hne (Subtype.ext (by
+          rw [← Equiv.Perm.ofSubtype_apply_of_mem u hx]
+          exact h))
+
+lemma oddLongPoints_ofSubtype_nonempty_iff {α : Type*} [Fintype α] [DecidableEq α]
+    {s : Finset α} (u : Perm {a // a ∈ s}) :
+    (oddLongPoints (Equiv.Perm.ofSubtype u)).Nonempty ↔
+      (oddLongPoints u).Nonempty := by
+  constructor
+  · intro ⟨x, hx⟩
+    rw [mem_oddLongPoints] at hx
+    have hmove : Equiv.Perm.ofSubtype u x ≠ x := odd_card_cycleOf_ne_self hx
+    have hxs : x ∈ s := by
+      by_contra hns
+      exact hmove (Equiv.Perm.ofSubtype_apply_of_not_mem u hns)
+    refine ⟨⟨x, hxs⟩, mem_oddLongPoints.mpr ?_⟩
+    rw [support_cycleOf_ofSubtype u hxs, card_map] at hx
+    exact hx
+  · intro ⟨⟨x, hxs⟩, hx⟩
+    rw [mem_oddLongPoints] at hx
+    refine ⟨x, mem_oddLongPoints.mpr ?_⟩
+    rwa [support_cycleOf_ofSubtype u hxs, card_map]
+
+lemma cayleySum_ofSubtype {α : Type*} [Fintype α] [DecidableEq α] [LinearOrder α]
+    {s : Finset α} (x : α → ℂ) (u : Perm {a // a ∈ s}) :
+    (if (oddLongPoints (Equiv.Perm.ofSubtype u)).Nonempty then (0 : ℂ)
+      else cayleyWeight x (Equiv.Perm.ofSubtype u)) =
+      if (oddLongPoints u).Nonempty then 0
+      else cayleyWeight (fun a : {a // a ∈ s} => x a.1) u := by
+  by_cases h : (oddLongPoints (Equiv.Perm.ofSubtype u)).Nonempty
+  · have h' : (oddLongPoints u).Nonempty :=
+      (oddLongPoints_ofSubtype_nonempty_iff u).1 h
+    simp [h, h']
+  · have h' : ¬ (oddLongPoints u).Nonempty := fun hne =>
+      h ((oddLongPoints_ofSubtype_nonempty_iff u).2 hne)
+    rw [if_neg h, if_neg h']
+    convert cayleyWeight_ofSubtype (p := fun a => a ∈ s) x u
+
 #check (OeisA1818.conjecture1 :
     ∀ (n : ℕ), 1 ≤ n → ∀ (ζ : ℂ), IsPrimitiveRoot ζ (2 * n) →
       (sunMatrix n ζ).permanent = (a n : ℂ))
@@ -3142,5 +3229,7 @@ lemma oddLongPoints_mul_swap {α : Type*} [Fintype α] [DecidableEq α]
 #print axioms cayleySum_fin_two_eq
 #print axioms cayleyWeight_ofSubtype
 #print axioms oddLongPoints_mul_swap
+#print axioms oddLongPoints_ofSubtype_nonempty_iff
+#print axioms cayleySum_ofSubtype
 
 end A001818C1

@@ -33,7 +33,7 @@ Identified `per M` with the Cayley-kernel expansion `∑_σ cayleyWeight (fun i 
 
 Odd cycles of length at least 3 cancel: reversing the distinguished odd cycle (the cycle of the least odd-cycle point) is an involution that negates the Cayley weight. Hence `per M` equals the sum of Cayley weights over permutations with no odd cycle of length at least 3.
 
-Two-point evaluation: `1 + cayleyWeight (swap a b) = -4 xa xb / (xa-xb)^2`. On `Fin 2` this is `cayleySum`. Cayley weights and odd-cycle points restrict through `ofSubtype` and through multiplying by a disjoint transposition.
+Two-point evaluation: `1 + cayleyWeight (swap a b) = -4 xa xb / (xa-xb)^2`. On `Fin 2` this is `cayleySum`. Cayley weights and odd-cycle points restrict through `ofSubtype` (`oddLongPoints_ofSubtype_nonempty_iff`, `cayleySum_ofSubtype`) and through multiplying by a disjoint transposition.
 
 Still needed: She–Sun–Xia recurrence (4.8) / Theorem 1.1 matching formula, then `per M = per(M-J)`.
 
