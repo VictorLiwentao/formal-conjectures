@@ -7470,7 +7470,7 @@ lemma matchingSum_eq_recurrence {α : Type*} [Fintype α] [DecidableEq α]
           by_cases hqp : q = p
           · simp [hqp]
           · have hne : σ.cycleOf p ≠ Equiv.swap p q := fun hsw =>
-              hq (swap_eq_swap_iff_right hpσ (hcy.symm.trans hsw)).symm
+              hq (swap_eq_swap_iff_right hpσ.symm (hcy.symm.trans hsw)).symm
             simp [hqp, hne])
       rw [hsum]
       simp [hpσ.symm, hcy, hσ]
