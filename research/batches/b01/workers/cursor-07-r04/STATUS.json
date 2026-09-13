@@ -1,0 +1,38 @@
+{
+  "worker_id": "cursor-07-r04",
+  "target_id": "WOWII20",
+  "declaration": "WrittenOnTheWallII.GraphConjecture20.conjecture20",
+  "actual_branch": "cursor/b01-cursor-07-r04-9d2b",
+  "preferred_branch": "codex/b01-cursor-07-r04",
+  "baseline_commit": "a2f4a1bb12a28e04a969da78feefac7d1ce49565",
+  "coordination_commit": "7a37b78ee539aab88ebbb77a2579f838e9fcc7a6",
+  "source_file": "FormalConjectures/WrittenOnTheWallII/GraphConjecture20.lean",
+  "source_sha256": "969908dc9e73fd3ebea73cdf272df476583efbe9745185fd466726c5d4faa2e7",
+  "prompt_present": true,
+  "prompt_path": "research/batches/b01/control/prompts/cursor-07-r04.md",
+  "current_status": "researching_goal_active",
+  "mathematical_novelty": "known_mathematics",
+  "formalization_novelty": "in_progress_no_prior_exact_public_lean_found_in_checked_sources",
+  "novelty_status": "known_mathematics_formalization_candidate",
+  "last_updated_utc": "2026-09-13T02:53:13Z",
+  "session_kickoff_utc": "2026-09-13T02:53:13Z",
+  "session_limit_hours": 8,
+  "session_deadline_utc": "2026-09-13T10:53:13Z",
+  "clock_reset_on_followup": false,
+  "proof_declarations": [],
+  "proof_file": "research/batches/b01/workers/cursor-07-r04/targets/WOWII20/WOWII20.lean",
+  "independently_verified": false,
+  "unresolved_gaps": [
+    "Lean candidate is being written; compile and axiom audit not yet complete."
+  ],
+  "next_step": "Formalize AKS weight induction, Cauchy-Schwarz, and the tree corner; compile with warningAsError.",
+  "environment": {
+    "name": "VictorLiwentao/formal-conjectures",
+    "lean": "leanprover/lean4:v4.33.1",
+    "model": "Cursor Grok 4.6 Extra High"
+  },
+  "publication_policy": "Push only this worker branch to VictorLiwentao/formal-conjectures. No PR.",
+  "further_target_work": "WOWII20 only",
+  "classification": "known_mathematics_formalization",
+  "allowed_axioms": ["propext", "Classical.choice", "Quot.sound"]
+}
