@@ -11,6 +11,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 ROOT = Path("/workspace/research/batches/b01/workers/cursor-03-r02/targets/A069004")
+LEAN_DIR = ROOT / "lean"
 LOG = ROOT / "compile.log"
 JOBS = 2
 
@@ -21,11 +22,15 @@ def files() -> list[Path]:
     return xs
 
 
+def olean_path(src: Path) -> Path:
+    return LEAN_DIR / (src.stem + ".olean")
+
+
 def up_to_date(src: Path) -> bool:
-    olean = src.with_suffix(".olean")
+    olean = olean_path(src)
     if not olean.exists():
         return False
-    core = ROOT / "Core.olean"
+    core = LEAN_DIR / "Core.olean"
     if not core.exists():
         return False
     ot = olean.stat().st_mtime
@@ -33,7 +38,8 @@ def up_to_date(src: Path) -> bool:
 
 
 def compile_one(src: Path) -> tuple[str, int, float, str]:
-    olean = src.with_suffix(".olean")
+    LEAN_DIR.mkdir(parents=True, exist_ok=True)
+    olean = olean_path(src)
     env = os.environ.copy()
     env["LEAN_NUM_THREADS"] = "2"
     t0 = time.time()

@@ -21,10 +21,11 @@ From the repository root:
 ```bash
 export LEAN_NUM_THREADS=2
 ROOT=research/batches/b01/workers/cursor-03-r02/targets/A069004
-lake env lean -DwarningAsError=true -R "$ROOT" -o "$ROOT/Core.olean" "$ROOT/Core.lean"
+mkdir -p "$ROOT/lean"
+lake env lean -DwarningAsError=true -R "$ROOT" -o "$ROOT/lean/Core.olean" "$ROOT/Core.lean"
 python3 "$ROOT/scripts/compile_chunks.py"
-lake env lean -DwarningAsError=true -R "$ROOT" -o "$ROOT/GlueCert.olean" "$ROOT/GlueCert.lean"
-lake env lean -DwarningAsError=true -R "$ROOT" -o "$ROOT/GlueCount.olean" "$ROOT/GlueCount.lean"
+lake env lean -DwarningAsError=true -R "$ROOT" -o "$ROOT/lean/GlueCert.olean" "$ROOT/GlueCert.lean"
+lake env lean -DwarningAsError=true -R "$ROOT" -o "$ROOT/lean/GlueCount.olean" "$ROOT/GlueCount.lean"
 lake env lean -DwarningAsError=true -R "$ROOT" "$ROOT/A069004.lean"
 lake env lean -DwarningAsError=true -R "$ROOT" "$ROOT/ExactType.lean"
 lake env lean -DwarningAsError=true -R "$ROOT" "$ROOT/TypeMatch.lean"
