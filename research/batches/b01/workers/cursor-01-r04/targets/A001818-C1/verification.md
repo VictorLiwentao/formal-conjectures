@@ -74,11 +74,21 @@ which type-checks. The original `a` is used. The admitted `OeisA1818.conjecture1
 'A001818C1.oddLongPoints_mul_swap' depends on axioms: [propext, Classical.choice, Quot.sound]
 'A001818C1.oddLongPoints_ofSubtype_nonempty_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
 'A001818C1.cayleySum_ofSubtype' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.cayleySum_term_swap_ofSubtype' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.sum_cayleySum_term_swap_ofSubtype' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.cycleOf_eq_swap_of_card_two' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.exists_eq_swap_mul_ofSubtype' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.sum_fiber_swap_ofSubtype' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.cayleySum_sigma2' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.cayley_triple_identity' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.cayleyWeight_formPerm' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.sum_fiber_fixed' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.cayleySum_sigma1' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.cayleySum_split' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.cayleySum_eq_sigma1_add_sigma2_add' depends on axioms: [propext, Classical.choice, Quot.sound]
 ```
 
-No `sorryAx`, `native_decide`, or `Lean.trustCompiler` in those lemmas. The general `n ≥ 1` identity is not yet proved. `per(M-J) = a n` is proved and `per M` equals the even-cycle Cayley sum; the two-point matching factor and subtype restriction are proved; `per M = per(M-J)` remains.
-
-No `sorryAx`, `native_decide`, or `Lean.trustCompiler` in those lemmas. The general `n ≥ 1` identity is not yet proved.
+No `sorryAx`, `native_decide`, or `Lean.trustCompiler` in those lemmas. The general `n ≥ 1` identity is not yet proved. `per(M-J) = a n` is proved and `per M` equals the even-cycle Cayley sum. Paper Σ1 and Σ2 at a distinguished point are proved. Lemma 2.3 / Σ3 and recurrence (4.8) remain, so `per M = per(M-J)` remains.
 
 ## Boundary
 
