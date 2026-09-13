@@ -3737,8 +3737,305 @@ lemma padicValRat_leading_eq_of_lt {p e : ℕ} [Fact p.Prime]
       rwa [add_comm, ← hU]
     rw [hU, add_comm, padicValRat.add_eq_of_lt hsumne hne0 hdiffne hlt]
 
+lemma oddLeadingSum0_eq_inner {p : ℕ} (hn1 : 1 < p) :
+    oddLeadingSum0 p =
+      ∑ i ∈ range (p - 1),
+        if Odd (i + 1) then ((p - 1).choose i : ℚ) / (i + 1 : ℚ) ^ 2 else 0 :=
+  (oddInnerSum_eq_sum_filter_odd hn1).symm
+
+lemma oddLeadingSum0_pos {p : ℕ} (hp1 : 1 < p) : 0 < oddLeadingSum0 p := by
+  have h1 : 1 ∈ (range p).filter Odd :=
+    mem_filter.mpr ⟨mem_range.mpr hp1, by decide⟩
+  refine sum_pos (fun a ha => ?_) ⟨1, h1⟩
+  have ha' := mem_filter.mp ha
+  have ha0 : 0 < a := Odd.pos ha'.2
+  have hCle : a - 1 ≤ p - 1 := Nat.sub_le_sub_right (mem_range.mp ha'.1).le 1
+  have hC : (0 : ℚ) < (p - 1).choose (a - 1) := Nat.cast_pos.mpr (Nat.choose_pos hCle)
+  have ha : (0 : ℚ) < a := Nat.cast_pos.mpr ha0
+  exact div_pos hC (pow_pos ha 2)
+
+lemma one_le_padicValRat_oddLeadingSum0 {p : ℕ} (hp : p.Prime) (h5 : 5 ≤ p) :
+    1 ≤ padicValRat p (oddLeadingSum0 p) := by
+  have : Fact p.Prime := ⟨hp⟩
+  have hn1 : 1 < p := lt_of_lt_of_le (by decide : 1 < 5) h5
+  have h3 : p > 3 := lt_of_lt_of_le (by decide : 3 < 5) h5
+  have hodd : Odd p := hp.odd_of_ne_two (ne_of_gt (lt_of_lt_of_le (by decide : 2 < 5) h5))
+  have hT := ratExpression_eq_two_mul_n_sum_choose_sq hodd hn1
+  have hS := oddLeadingSum0_eq_inner hn1
+  have hTne : ratExpression p ≠ 0 := ne_of_gt (ratExpression_pos hn1)
+  have hSne : oddLeadingSum0 p ≠ 0 := ne_of_gt (oddLeadingSum0_pos hn1)
+  have h2ne : (2 : ℚ) ≠ 0 := by norm_num
+  have hpne : (p : ℚ) ≠ 0 := Nat.cast_ne_zero.mpr hp.ne_zero
+  have h2val : padicValRat p (2 : ℚ) = 0 := by
+    rw [show (2 : ℚ) = ((2 : ℕ) : ℚ) from rfl, padicValRat.of_nat]
+    exact_mod_cast (padicValNat_primes (ne_of_gt (lt_of_lt_of_le (by decide : 2 < 5) h5)))
+  have hpval : padicValRat p (p : ℚ) = 1 := padicValRat.self hp.one_lt
+  have hTval : 2 ≤ padicValRat p (ratExpression p) :=
+    two_le_padicValRat_ratExpression_prime hp h3
+  have : ratExpression p = (2 : ℚ) * p * oddLeadingSum0 p := by
+    rw [hT, hS]
+  rw [this, padicValRat.mul (mul_ne_zero h2ne hpne) hSne, padicValRat.mul h2ne hpne,
+    h2val, hpval] at hTval
+  linarith
+
+lemma filter_odd_dvd_pow_pred_eq_image {p e : ℕ} (hp : p.Prime) (hp2 : p ≠ 2)
+    (he : 0 < e) :
+    ((range (p ^ e)).filter Odd).filter (fun r => p ^ (e - 1) ∣ r) =
+      ((range p).filter Odd).image (fun a => a * p ^ (e - 1)) := by
+  have hodd : Odd p := hp.odd_of_ne_two hp2
+  have hpos : 0 < p ^ (e - 1) := pow_pos hp.pos _
+  have hpe : p ^ e = p * p ^ (e - 1) := by
+    rw [← pow_succ', Nat.sub_add_cancel he]
+  ext r
+  constructor
+  · intro hr
+    have hr1 := mem_filter.mp hr
+    have hr2 := mem_filter.mp hr1.1
+    have hlt : r < p ^ e := mem_range.mp hr2.1
+    have hodd_r : Odd r := hr2.2
+    have hdvd := hr1.2
+    refine mem_image.mpr ⟨r / p ^ (e - 1), mem_filter.mpr ⟨?_, ?_⟩, Nat.div_mul_cancel hdvd⟩
+    · have ha : r / p ^ (e - 1) < p :=
+        (Nat.div_lt_iff_lt_mul hpos).2 (by simpa [hpe, mul_comm] using hlt)
+      exact mem_range.mpr ha
+    · have hrw : r = r / p ^ (e - 1) * p ^ (e - 1) := (Nat.div_mul_cancel hdvd).symm
+      have hpe_odd : Odd (p ^ (e - 1)) := Odd.pow (n := e - 1) hodd
+      have : Odd (r / p ^ (e - 1) * p ^ (e - 1)) := by rwa [← hrw]
+      exact (Nat.odd_mul.mp this).1
+  · intro hr
+    obtain ⟨a, ha, rfl⟩ := mem_image.mp hr
+    have ha' := mem_filter.mp ha
+    have hlt : a * p ^ (e - 1) < p ^ e := by
+      have : a < p := mem_range.mp ha'.1
+      have : a * p ^ (e - 1) < p * p ^ (e - 1) :=
+        Nat.mul_lt_mul_of_pos_right this hpos
+      rwa [hpe]
+    refine mem_filter.mpr ⟨mem_filter.mpr ⟨mem_range.mpr hlt, ?_⟩, dvd_mul_left _ _⟩
+    exact ha'.2.mul (Odd.pow (n := e - 1) hodd)
+
+lemma odd_leading_layer_eq {p e : ℕ} (hp : p.Prime) (hp2 : p ≠ 2) (he : 0 < e) :
+    ∑ r ∈ ((range (p ^ e)).filter Odd).filter (fun r => p ^ (e - 1) ∣ r),
+        ((p ^ e - 1).choose (r - 1) : ℚ) / (r : ℚ) ^ 2 =
+      oddLeadingSum p e / (p : ℚ) ^ (2 * (e - 1)) := by
+  have hpos : 0 < p ^ (e - 1) := pow_pos hp.pos _
+  rw [filter_odd_dvd_pow_pred_eq_image hp hp2 he, sum_image]
+  · simp only [oddLeadingSum]
+    have hterm : ∀ a ∈ (range p).filter Odd,
+        ((p ^ e - 1).choose (a * p ^ (e - 1) - 1) : ℚ) /
+            ((a * p ^ (e - 1) : ℕ) : ℚ) ^ 2 =
+          (((p ^ e - 1).choose (a * p ^ (e - 1) - 1) : ℚ) / (a : ℚ) ^ 2) /
+            (p : ℚ) ^ (2 * (e - 1)) := by
+      intro a _ha
+      have hr : ((a * p ^ (e - 1) : ℕ) : ℚ) = (a : ℚ) * (p ^ (e - 1) : ℕ) :=
+        Nat.cast_mul _ _
+      rw [hr, mul_pow, Nat.cast_pow, div_mul_eq_div_div, ← pow_mul, mul_comm (e - 1)]
+    rw [sum_congr rfl hterm, sum_div]
+  · intro a _ha b _hb h
+    exact Nat.eq_of_mul_eq_mul_right hpos h
+
+lemma four_sub_two_mul_le_padicValRat_rest_layer {p e r : ℕ} [Fact p.Prime]
+    (he : 2 ≤ e) (hr0 : 0 < r) (hr : r < p ^ e) (hnd : ¬ p ^ (e - 1) ∣ r) :
+    (4 : ℤ) - 2 * e ≤ padicValRat p
+      (((p ^ e - 1).choose (r - 1) : ℚ) / (r : ℚ) ^ 2) := by
+  have he0 : 0 < e := lt_of_lt_of_le (by decide : 0 < 2) he
+  have hCle : r - 1 ≤ p ^ e - 1 := Nat.sub_le_sub_right hr.le 1
+  have hC0 : padicValNat p ((p ^ e - 1).choose (r - 1)) = 0 :=
+    padicValNat_choose_pow_pred he0 hCle
+  have hrne : r ≠ 0 := Nat.pos_iff_ne_zero.mp hr0
+  have hvr : padicValNat p r ≤ e - 2 := by
+    have hnot : ¬ e - 1 ≤ padicValNat p r := fun hle =>
+      hnd ((padicValNat_dvd_iff_le hrne).2 hle)
+    exact Nat.le_sub_one_of_lt (Nat.not_le.mp hnot)
+  have hval := padicValRat_choose_div_sq (n := p ^ e) (p := p) hr0 hr.le
+  rw [hval, hC0]
+  have hvrZ : (padicValNat p r : ℤ) ≤ ((e - 2 : ℕ) : ℤ) := Int.ofNat_le.mpr hvr
+  have hcast : ((e - 2 : ℕ) : ℤ) = (e : ℤ) - 2 :=
+    Nat.cast_sub (by omega : 2 ≤ e)
+  linarith
+
+lemma oddLeadingSum_pos {p e : ℕ} (hp1 : 1 < p) (he : 0 < e) : 0 < oddLeadingSum p e := by
+  have h1 : 1 ∈ (range p).filter Odd :=
+    mem_filter.mpr ⟨mem_range.mpr hp1, by decide⟩
+  refine sum_pos (fun a ha => ?_) ⟨1, h1⟩
+  have ha' := mem_filter.mp ha
+  have ha0 : 0 < a := Odd.pos ha'.2
+  have hpos : 0 < p ^ (e - 1) := pow_pos (Nat.zero_lt_of_lt hp1) _
+  have hpe : p ^ e = p * p ^ (e - 1) := by
+    rw [← pow_succ', Nat.sub_add_cancel he]
+  have hCle : a * p ^ (e - 1) - 1 ≤ p ^ e - 1 := by
+    have : a * p ^ (e - 1) ≤ p ^ e := by
+      rw [hpe]
+      exact Nat.mul_le_mul_right _ (mem_range.mp ha'.1).le
+    exact Nat.sub_le_sub_right this 1
+  have hC : (0 : ℚ) < (p ^ e - 1).choose (a * p ^ (e - 1) - 1) :=
+    Nat.cast_pos.mpr (Nat.choose_pos hCle)
+  have ha : (0 : ℚ) < a := Nat.cast_pos.mpr ha0
+  exact div_pos hC (pow_pos ha 2)
+
+lemma four_sub_two_mul_le_padicValRat_rest_sum {p e : ℕ} [Fact p.Prime]
+    (he : 2 ≤ e) :
+    (4 : ℤ) - 2 * e ≤ padicValRat p
+      (∑ r ∈ ((range (p ^ e)).filter Odd).filter (fun r => ¬ p ^ (e - 1) ∣ r),
+        ((p ^ e - 1).choose (r - 1) : ℚ) / (r : ℚ) ^ 2) := by
+  have hp := ‹Fact p.Prime›.out
+  have hn1 : 1 < p ^ e :=
+    Nat.one_lt_pow (Nat.pos_iff_ne_zero.mp (lt_of_lt_of_le (by decide : 0 < 2) he))
+      hp.one_lt
+  have h1 : 1 ∈ ((range (p ^ e)).filter Odd).filter (fun r => ¬ p ^ (e - 1) ∣ r) := by
+    refine mem_filter.mpr ⟨mem_filter.mpr ⟨mem_range.mpr hn1, by decide⟩, ?_⟩
+    intro hd
+    have : 1 ≤ p ^ (e - 1) := Nat.succ_le_of_lt (pow_pos hp.pos _)
+    have : p ^ (e - 1) ≤ 1 := Nat.le_of_dvd (by decide) hd
+    have : 2 ≤ p ^ (e - 1) :=
+      hp.two_le.trans (Nat.le_self_pow (by omega : e - 1 ≠ 0) p)
+    omega
+  have hne :
+      ∑ r ∈ ((range (p ^ e)).filter Odd).filter (fun r => ¬ p ^ (e - 1) ∣ r),
+          ((p ^ e - 1).choose (r - 1) : ℚ) / (r : ℚ) ^ 2 ≠ 0 := by
+    apply ne_of_gt
+    refine sum_pos (fun r hr => ?_) ⟨1, h1⟩
+    have hr' := mem_filter.mp hr
+    have hr'' := mem_filter.mp hr'.1
+    exact oddChooseTerm_pos (Odd.pos hr''.2) (mem_range.mp hr''.1).le
+  refine le_padicValRat_sum_of_ne_zero _ ?_ hne
+  intro r hr
+  have hr' := mem_filter.mp hr
+  have hr'' := mem_filter.mp hr'.1
+  exact four_sub_two_mul_le_padicValRat_rest_layer he (Odd.pos hr''.2)
+    (mem_range.mp hr''.1) hr'.2
+
+lemma padicValRat_leading_layer_eq {p e : ℕ} [Fact p.Prime]
+    (hp2 : p ≠ 2) (he : 0 < e) (hUne : oddLeadingSum p e ≠ 0) :
+    padicValRat p
+        (∑ r ∈ ((range (p ^ e)).filter Odd).filter (fun r => p ^ (e - 1) ∣ r),
+          ((p ^ e - 1).choose (r - 1) : ℚ) / (r : ℚ) ^ 2) =
+      padicValRat p (oddLeadingSum p e) - 2 * (e - 1 : ℤ) := by
+  have hp := ‹Fact p.Prime›.out
+  rw [odd_leading_layer_eq hp hp2 he]
+  have hpe0 : ((p : ℚ) ^ (2 * (e - 1))) ≠ 0 :=
+    pow_ne_zero _ (Nat.cast_ne_zero.mpr hp.ne_zero)
+  have hpow : padicValRat p ((p : ℚ) ^ (2 * (e - 1))) = 2 * (e - 1 : ℤ) := by
+    rw [padicValRat.pow, padicValRat.self hp.one_lt, Nat.cast_mul, Nat.cast_two,
+      Nat.cast_sub (Nat.succ_le_of_lt he)]
+    ring
+  rw [padicValRat.div hUne hpe0, hpow]
+
+lemma padicValRat_inner_prime_pow_of_leading {p e : ℕ} [Fact p.Prime]
+    (hp2 : p ≠ 2) (he : 2 ≤ e)
+    (hU : padicValRat p (oddLeadingSum p e) = 1) :
+    padicValRat p
+        (∑ i ∈ range (p ^ e - 1),
+          if Odd (i + 1) then ((p ^ e - 1).choose i : ℚ) / (i + 1 : ℚ) ^ 2 else 0) =
+      (3 : ℤ) - 2 * e := by
+  have hp := ‹Fact p.Prime›.out
+  have he0 : 0 < e := lt_of_lt_of_le (by decide : 0 < 2) he
+  have hn1 : 1 < p ^ e :=
+    Nat.one_lt_pow (Nat.pos_iff_ne_zero.mp he0) hp.one_lt
+  have hUne : oddLeadingSum p e ≠ 0 :=
+    ne_of_gt (oddLeadingSum_pos hp.one_lt he0)
+  rw [oddInnerSum_eq_sum_filter_odd hn1]
+  have hsplit :=
+    sum_filter_add_sum_filter_not ((range (p ^ e)).filter Odd)
+      (fun r => p ^ (e - 1) ∣ r)
+      (fun r => ((p ^ e - 1).choose (r - 1) : ℚ) / (r : ℚ) ^ 2)
+  rw [← hsplit]
+  have hlead := padicValRat_leading_layer_eq (p := p) (e := e) hp2 he0 hUne
+  have hleadval : padicValRat p
+      (∑ r ∈ ((range (p ^ e)).filter Odd).filter (fun r => p ^ (e - 1) ∣ r),
+        ((p ^ e - 1).choose (r - 1) : ℚ) / (r : ℚ) ^ 2) =
+      (3 : ℤ) - 2 * e := by
+    rw [hlead, hU]
+    have : (1 : ℤ) - 2 * (e - 1 : ℤ) = 3 - 2 * e := by ring
+    exact this
+  have hrest := four_sub_two_mul_le_padicValRat_rest_sum (p := p) (e := e) he
+  have hleadne :
+      ∑ r ∈ ((range (p ^ e)).filter Odd).filter (fun r => p ^ (e - 1) ∣ r),
+          ((p ^ e - 1).choose (r - 1) : ℚ) / (r : ℚ) ^ 2 ≠ 0 := by
+    rw [odd_leading_layer_eq hp hp2 he0]
+    exact div_ne_zero hUne (pow_ne_zero _ (Nat.cast_ne_zero.mpr hp.ne_zero))
+  by_cases hrest0 :
+      ∑ r ∈ ((range (p ^ e)).filter Odd).filter (fun r => ¬ p ^ (e - 1) ∣ r),
+        ((p ^ e - 1).choose (r - 1) : ℚ) / (r : ℚ) ^ 2 = 0
+  · simp [hrest0]
+    exact hleadval
+  · have hlt : padicValRat p
+        (∑ r ∈ ((range (p ^ e)).filter Odd).filter (fun r => p ^ (e - 1) ∣ r),
+          ((p ^ e - 1).choose (r - 1) : ℚ) / (r : ℚ) ^ 2) <
+        padicValRat p
+          (∑ r ∈ ((range (p ^ e)).filter Odd).filter (fun r => ¬ p ^ (e - 1) ∣ r),
+            ((p ^ e - 1).choose (r - 1) : ℚ) / (r : ℚ) ^ 2) := by
+      rw [hleadval]
+      have : (3 : ℤ) - 2 * e < 4 - 2 * e := by omega
+      exact lt_of_lt_of_le this hrest
+    have hsumne :
+        ∑ r ∈ ((range (p ^ e)).filter Odd).filter (fun r => p ^ (e - 1) ∣ r),
+            ((p ^ e - 1).choose (r - 1) : ℚ) / (r : ℚ) ^ 2 +
+          ∑ r ∈ ((range (p ^ e)).filter Odd).filter (fun r => ¬ p ^ (e - 1) ∣ r),
+            ((p ^ e - 1).choose (r - 1) : ℚ) / (r : ℚ) ^ 2 ≠ 0 :=
+      ne_of_gt (add_pos_of_pos_of_nonneg
+        (by
+          rw [odd_leading_layer_eq hp hp2 he0]
+          exact div_pos (oddLeadingSum_pos hp.one_lt he0)
+            (pow_pos (Nat.cast_pos.mpr hp.pos) _))
+        (sum_nonneg fun r hr => le_of_lt (by
+          have hr' := mem_filter.mp hr
+          have hr'' := mem_filter.mp hr'.1
+          exact oddChooseTerm_pos (Odd.pos hr''.2) (mem_range.mp hr''.1).le)))
+    rw [padicValRat.add_eq_of_lt hsumne hleadne hrest0 hlt, hleadval]
+
+lemma not_n_sq_dvd_num_of_prime_pow_of_leading {p e : ℕ}
+    (hp : p.Prime) (h5 : 5 ≤ p) (he : 2 ≤ e)
+    (hU0 : padicValRat p (oddLeadingSum0 p) = 1) :
+    ¬ (ratExpression (p ^ e)).num ≡ 0 [ZMOD ((p ^ e) ^ 2 : ℤ)] := by
+  have : Fact p.Prime := ⟨hp⟩
+  have hp2 : p ≠ 2 := ne_of_gt (lt_of_lt_of_le (by decide : 2 < 5) h5)
+  have he0 : 0 < e := lt_of_lt_of_le (by decide : 0 < 2) he
+  have hn1 : 1 < p ^ e := Nat.one_lt_pow (Nat.pos_iff_ne_zero.mp he0) hp.one_lt
+  have hodd : Odd (p ^ e) := Odd.pow (n := e) (hp.odd_of_ne_two hp2)
+  have hUne0 : oddLeadingSum0 p ≠ 0 :=
+    ne_of_gt (oddLeadingSum0_pos hp.one_lt)
+  have hU : padicValRat p (oddLeadingSum p e) = 1 := by
+    have := padicValRat_leading_eq_of_lt hp2 he hUne0 (by rw [hU0]; decide)
+    rwa [hU0] at this
+  have hS := padicValRat_inner_prime_pow_of_leading hp2 he hU
+  have hT := ratExpression_eq_two_mul_n_sum_choose_sq hodd hn1
+  have hTne : ratExpression (p ^ e) ≠ 0 := ne_of_gt (ratExpression_pos hn1)
+  have hSne :
+      (∑ i ∈ range (p ^ e - 1),
+          if Odd (i + 1) then ((p ^ e - 1).choose i : ℚ) / (i + 1 : ℚ) ^ 2 else 0) ≠ 0 := by
+    intro h0
+    have : padicValRat p (0 : ℚ) = (3 : ℤ) - 2 * e := by simpa [h0] using hS
+    have : (3 : ℤ) - 2 * e < 0 := by
+      have : (2 : ℤ) ≤ e := by exact_mod_cast he
+      omega
+    have hz : padicValRat p (0 : ℚ) = 0 := by simp
+    linarith
+  have h2ne : (2 : ℚ) ≠ 0 := by norm_num
+  have hnne : ((p ^ e : ℕ) : ℚ) ≠ 0 := Nat.cast_ne_zero.mpr (pow_ne_zero _ hp.ne_zero)
+  have h2val : padicValRat p (2 : ℚ) = 0 := by
+    rw [show (2 : ℚ) = ((2 : ℕ) : ℚ) from rfl, padicValRat.of_nat]
+    exact_mod_cast (padicValNat_primes hp2)
+  have hnval : padicValRat p ((p ^ e : ℕ) : ℚ) = e := by
+    rw [padicValRat.of_nat]
+    exact_mod_cast (padicValNat.prime_pow e)
+  have hval : padicValRat p (ratExpression (p ^ e)) = (3 : ℤ) - e := by
+    rw [hT, padicValRat.mul (mul_ne_zero h2ne hnne) hSne, padicValRat.mul h2ne hnne,
+      h2val, hnval, hS]
+    ring
+  have hvn : padicValNat p (p ^ e) = e := padicValNat.prime_pow e
+  have hn0 : 0 < p ^ e := pow_pos hp.pos e
+  have hlt : padicValRat p (ratExpression (p ^ e)) < 2 * padicValNat p (p ^ e) := by
+    rw [hval, hvn]
+    have : (3 : ℤ) - e < 2 * (e : ℤ) := by
+      have : (2 : ℤ) ≤ e := by exact_mod_cast he
+      omega
+    exact this
+  exact not_n_sq_dvd_num_of_padicVal_lt hp (dvd_pow_self p (by omega)) hn0 hTne hlt
+
+#print axioms OeisA108866.one_le_padicValRat_oddLeadingSum0
+#print axioms OeisA108866.padicValRat_inner_prime_pow_of_leading
+#print axioms OeisA108866.not_n_sq_dvd_num_of_prime_pow_of_leading
 #print axioms OeisA108866.eq_or_two_le_padicValRat_choose_sub
-#print axioms OeisA108866.eq_or_two_le_padicValRat_leading_sub
 #print axioms OeisA108866.padicValRat_leading_eq_of_lt
 #print axioms OeisA108866.p_mul_ratExpression_sq_sub_pos
 #print axioms OeisA108866.padicValRat_ratExpression_sq_eq_min_sub_one
