@@ -4,3 +4,4 @@
 *.olean.hash
 *.olean.private
 compile.log
+glue.log
