@@ -71,5 +71,5 @@ See `proof.md`. Remaining McEachen primes have `lpf(p-2) ≥ 409` not a larger t
 
 ## Commit SHA
 
-Research commit: `69c6e08554248f43c600105eada1cc27c8b92c83`
+Research commit: `e0fd80d80b1f4744ef5238cd10c3f149f27d1484`
 Branch: `cursor/a135508-lcm-primes-770d`

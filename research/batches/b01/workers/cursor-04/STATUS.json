@@ -363,5 +363,5 @@
     "exists_first_entry_index, the g-1 criterion, k=1 blockage for q ≡ 2 (mod 3), and the 30/210 stock package entered small primes. Leftover least factors remain coprime to 210. a_eq_self_iff_gcd_gt_one does not inject leftover q ≥ 409."
   ],
   "next_step": "Frozen type still unproved. Square-obstruction lemmas compiled: coprime odd composites with entered least factor are prime squares; 5q-2 and 7q-2 are never squares; kq-2 is never a square for q ≡ 5,7 (mod 8); admissible k ≡ 5 (mod 6) in the square window has k ≤ q. Leftover cutoff remains lpf ≥ 409. Remaining work is an unconditional first-entry bound q | x(q(q+2)-1) for leftover q ≥ 409, or a Lean-checkable counterexample. Extending minFac does not finish ∀p. Do not claim completion.",
-  "handoff_research_commit": "69c6e08554248f43c600105eada1cc27c8b92c83"
+  "handoff_research_commit": "e0fd80d80b1f4744ef5238cd10c3f149f27d1484"
 }
