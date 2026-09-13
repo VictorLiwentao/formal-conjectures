@@ -22,7 +22,7 @@ python3 research/batches/b01/control/check_assignments.py --repo . --worker curs
 Public push: only `origin` `cursor/b01-cursor-01-r02-0918` on `https://github.com/VictorLiwentao/formal-conjectures.git`.
 No PRs. No other branches. No subagents.
 
-Final commit SHA: update immediately after the candidate commit on this branch.
+Final commit SHA: `52a9147f45c75e889450d31e3be44497c1b43b48`.
 
 ## Status
 
