@@ -32,7 +32,7 @@ lake env lean -DwarningAsError=true -R "$ROOT" "$ROOT/TypeMatch.lean"
 
 ## Final commit SHA
 
-Record after committing.
+`1e5b8ff846abc69a758eb2ec9a2bf9d0db7cf14f` (certificate sources; kernel glue not yet compiled).
 
 ## Notes
 
