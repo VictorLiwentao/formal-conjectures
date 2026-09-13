@@ -45,7 +45,7 @@ Unconditional in that paper: inhibition (Lemma 6.1); 2-adic staircase (Prop 6.5)
 Conditional on hypothesis `C₁` (`c_n ∈ {1} ∪ primes` for all `n`):
 - Theorem 6.2: `c_q = 1` for prime `q ≥ 5` implies `q-2` prime.
 - Corollary 6.6: McEachen for `p ≥ 5`. Proof: `c_p ∈ {1,p}`; `c_p=1` plus 6.2 would force `p-2` prime.
-- Hypothesis 6.11 is the prime-index form of McEachen plus twin detection. Cloitre uses it as an assumption for the `K=2` density-1 theorem. Worker cursor-04 proved the twin-detection half unconditionally for larger twins `≥ 13` (`larger_twin_eq_one`) and McEachen for several infinite families, including remaining primes with `lpf(p-2) ≤ 101` or a larger-twin least factor, but not the remaining prime-index cases with `lpf(p-2) ≥ 103` not a twin. Reproducing Corollary 6.6 under `C₁` is not a batch resolution.
+- Hypothesis 6.11 is the prime-index form of McEachen plus twin detection. Cloitre uses it as an assumption for the `K=2` density-1 theorem. Worker cursor-04 proved the twin-detection half unconditionally for larger twins `≥ 13` (`larger_twin_eq_one`) and McEachen for several infinite families, including remaining primes with `lpf(p-2) ≤ 101` or a larger-twin least factor, but not the remaining prime-index cases with `lpf(p-2) ≥ 107` not a twin. Reproducing Corollary 6.6 under `C₁` is not a batch resolution. Worker cursor-04 formalized that implication as `conjecture_of_C1` (no `sorryAx`); it does not assume `C₁` and does not prove McEachen.
 
 OEIS `/internal` (retrieved 2026-09-13 via HTML snapshot): `%I #47 Oct 01 2025`; McEachen comment still present; C1 still appears as a comment (“1's or primes only”), not as a proof. Editability: **unknown**. No OEIS edit was submitted.
 
@@ -82,4 +82,4 @@ No MathOverflow thread stating or proving this exact assertion. Nearby LCM-ratio
 
 ## Conclusion
 
-No exact prior solution of the frozen proposition was found. Cloitre’s McEachen corollary is conditional on `C₁`. Reproducing that conditional corollary is not a batch resolution. Formalizing Dirichlet existence of unbounded injectors is not a resolution either. `conjecture_of_square_window` is a proved reduction of the frozen type to first-entry by `q(q+2)-1`; it is not a proof of that first-entry bound.
+No exact prior solution of the frozen proposition was found. Cloitre’s McEachen corollary is conditional on `C₁`. Reproducing that conditional corollary is not a batch resolution. Formalizing Dirichlet existence of unbounded injectors is not a resolution either. `conjecture_of_square_window` is a proved reduction of the frozen type to first-entry by `q(q+2)-1`; it is not a proof of that first-entry bound. `conjecture_of_C1` is Cloitre’s Corollary 6.6 as an implication, not a proof of `C₁`.

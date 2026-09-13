@@ -73,15 +73,21 @@ This is not McEachen (McEachen excludes `p-2` prime). It is the twin-detection h
 
 ## Remaining gap (not proved)
 
-The leftover primes are `p ≡ 1 (mod 3)` with `p-2` composite, `lpf(p-2) ≥ 103`, and that least factor not a larger twin. Then `p-2 ≡ 2 (mod 3)`, so some prime factor `q` of `p-2` is `≡ 2 (mod 3)` (`exists_remaining_factor`). If `q = 5` we are done. If `q ≥ 11`, the mod-3 theorem gives `a(q-1)=q`, so `q` does **not** divide `x(q-1)`. One needs a later injection: some index `r ≤ p-3` with `q ∣ a(r-1)+2`.
+The leftover primes are `p ≡ 1 (mod 3)` with `p-2` composite, `lpf(p-2) ≥ 107`, and that least factor not a larger twin. Then `p-2 ≡ 2 (mod 3)`, so some prime factor `q` of `p-2` is `≡ 2 (mod 3)` (`exists_remaining_factor`). If `q = 5` we are done. If `q ≥ 11`, the mod-3 theorem gives `a(q-1)=q`, so `q` does **not** divide `x(q-1)`. One needs a later injection: some index `r ≤ p-3` with `q ∣ a(r-1)+2`.
 
 `conjecture_of_minFac_entered` records the tight remaining reduction: McEachen holds once `lpf(p-2)` divides `x` by index `q(q+2)-1`. `gcd_gt_one_of_composite_shift` shows that an odd composite `kq-2 ≡ 2 (mod 3)` is not a coprime injector once that least factor has already entered by its own square-window. Together these isolate the remaining gap as existence of a prime injector `kq-2 ≤ q(q+2)-1`, not a defect in the first-entry algebra.
 
-`q_dvd_x_of_prime_index` injects any factor of `p-2` at a prime `kq-2 ≡ 2 (mod 3)`, including factors `≡ 1 (mod 3)` that are not twins. Cloitre Lemma 6.7 is now `cloitre_valuation_barrier`. If `3 ∣ n+1` and `n ≥ 4` then `gcd(x n, n+1) > 1`. If `n ≥ 3` and `3 ∣ a n`, then `9 ∣ n+1` (`nine_dvd_succ_of_three_dvd_a`). If `n ≥ 6` and `3 ∣ a n`, then `81 ∣ n+1` (`eighty_one_dvd_succ_of_three_dvd_a`), using `a 5 = 1` and `27 ∣ x 6`. This is a C1 fragment for the prime 3, not remaining McEachen.
+`q_dvd_x_of_prime_index` injects any factor of `p-2` at a prime `kq-2 ≡ 2 (mod 3)`, including factors `≡ 1 (mod 3)` that are not twins. Cloitre Lemma 6.7 is now `cloitre_valuation_barrier`. If `3 ∣ n+1` and `n ≥ 4` then `gcd(x n, n+1) > 1`. If `n ≥ 3` and `3 ∣ a n`, then `9 ∣ n+1` (`nine_dvd_succ_of_three_dvd_a`). If `n ≥ 6` and `3 ∣ a n`, then `81 ∣ n+1` (`eighty_one_dvd_succ_of_three_dvd_a`), using `a 5 = 1` and `27 ∣ x 6`. If `n ≥ 7` and `3 ∣ a n`, then `729 ∣ n+1` (`seven_hundred_twenty_nine_dvd_succ_of_three_dvd_a`), using `a 6 = 7` so that `243 ∣ x n` for `n ≥ 7`, and `a 8 = 1`. These are C1 fragments for the prime 3, not remaining McEachen.
 
 Dirichlet is now in the research file, still without a window bound. `exists_prime_index_injector` produces a prime `r = kq-2` with `k ≡ 5 (mod 6)` and `r ≡ 2 (mod 3)` for every prime `q ≡ 2 (mod 3)`, `q ≥ 5`. `exists_prime_index_injector_mod_one` does the same for `q ≡ 1 (mod 3)`, `q ≥ 7`, with `k ≡ 1 (mod 6)`. Hence every such `q` eventually divides `x` (`q_dvd_x_eventually`, `q_dvd_x_eventually_mod_one`). That is not McEachen: the frozen type needs the injector at or before index `p-3`, and the tight remaining case needs `r ≤ q(q+2)-1`.
 
-`conjecture_of_square_window` packages the remaining exact reduction: if every prime `q ≥ 5` divides `x(q(q+2)-1)`, the frozen statement follows from `conjecture_of_minFac_entered` plus the mod-3 family and `p=2,3`. The hypothesis is not proved. A prime injector in the window is sufficient (`q_dvd_x_square_window_of_prime_index`).
+`conjecture_of_square_window` packages the remaining exact reduction: if every prime `q ≥ 5` divides `x(q(q+2)-1)`, the frozen statement follows from `conjecture_of_minFac_entered` plus the mod-3 family and `p=2,3`. The hypothesis is not proved. A prime injector in the window is sufficient (`q_dvd_x_square_window_of_prime_index`, `q_dvd_x_square_window_of_exists`). Larger twins already meet the window (`larger_twin_dvd_square_window`). So do `q=5` and `q=7` (`five_dvd_x_square_window`, `seven_dvd_x_square_window`).
+
+For `q ≡ 2 (mod 3)` and `k ≤ q` with `k ≡ 5 (mod 6)`, primality of `kq-2` is equivalent to having no prime factor `< q` (`prime_of_no_prime_dvd_lt`, since `kq-2 < q²`). That is `q_dvd_x_window_of_no_small_factor`. A first-order union bound on those residue classes is negative (`|A| ≈ q/6` candidates versus `∑_{p<q} |A|/p ≈ (q/6) log log q` hits), so this does not give an elementary existence proof. Mathlib’s Selberg sieve is an upper bound only.
+
+Cloitre Corollary 6.6 is now `conjecture_of_C1`: the assumption `∀ n>0, a n = 1 ∨ (a n).Prime` implies the frozen type. That implication is not an assumption of `C₁`, and it is not a resolution.
+
+If `p-2 = q s` with `q ≥ 7` and `s ≡ 1 (mod 3)` and `7s-2` prime, then McEachen holds (`conjecture_of_cofactor_seven`). This is another proper subfamily.
 
 If `r` itself is a prime `≡ 2 (mod 3)`, then `r ≡ -2 (mod q)` and `r ≤ p-3` suffices (`q_dvd_x_of_prime_injector`, `conjecture_of_prime_injector`). For `lpf(p-2)=q` one has `p-2 ≥ q(q+2)` (`remaining_minFac_mul_add_two_le`). The square `p = q^2+2` is never an odd prime for `q > 3`. So a prime
 
@@ -95,7 +101,7 @@ Composite injection is also available: if `gcd(x(kq-3), kq-2)=1`, then `q` enter
 
 Deterministic experiments (`injector_bound.py`, `injector_mod.py`, `first_entry_shape.py`, `injector_window.py`, `window_miller.py`): for every prime `q ≡ 2 (mod 3)` with `11 ≤ q ≤ 30000`, a `k ≡ 5 (mod 6)` injector exists with `k ≤ q+2` (trial division). Miller–Rabin to `q ≤ 1000000` found **no** window failures; the worst first `k` was `257` at `q = 40973`. No McEachen failure and no composite `a(n)` to `n = 80000`. For `n ≥ 3`, no `a(n)` was divisible by `3`; the only index with `v_3(n+1) > v_3(x n)` was `n = 2`. Finite checks are not a resolution.
 
-Cloitre’s route (assume `C₁`, then Theorem 6.2) was not used. `C₁` is stronger than McEachen and remains open.
+Cloitre’s route (assume `C₁`, then Theorem 6.2) is recorded as the implication `conjecture_of_C1`. `C₁` is stronger than McEachen and remains open.
 
 ## 2-adic staircase (Cloitre 6.5, proved)
 
@@ -109,7 +115,8 @@ Proved: `v2(gcd)`, `v2(a n)`, `v2(x(n+1))`, odd-increment stability, dyadic bloc
 - Using `native_decide` or the frozen `sorry`.
 - Using Mathlib Dirichlet without a Linnik bound. The file now proves unbounded injectors; that still does not give `r ≤ q(q+2)-1`.
 - Using GRH or current Linnik `L=5` as if they implied `r ≤ q(q+2)-1`. They do not.
-- Treating `conjecture_of_square_window` as a proof of the frozen type. It is a reduction, not a window bound.
+- Treating `conjecture_of_square_window` or `conjecture_of_C1` as a proof of the frozen type. They are reductions, not a window bound and not a proof of `C₁`.
+- Using a first-order sieve union bound on `k ≡ 5 (mod 6)`, `k ≤ q`. The count is negative.
 
 ## Status
 

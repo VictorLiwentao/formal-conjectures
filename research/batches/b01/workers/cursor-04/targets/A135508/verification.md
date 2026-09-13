@@ -79,6 +79,11 @@ a_5 / twenty_seven_dvd_x : propext, Quot.sound
 a_6 : propext, Classical.choice, Quot.sound
 prime_dvd_a_padic / eighty_one_dvd_succ_of_three_dvd_a / not_three_dvd_a_of_not_eighty_one : propext, Classical.choice, Quot.sound
 q_dvd_x_square_window_of_prime_index / conjecture_of_square_window : propext, Classical.choice, Quot.sound
+conjecture_of_C1 / larger_twin_dvd_square_window / prime_of_no_prime_dvd_lt / q_dvd_x_square_window_of_exists / q_dvd_x_window_of_no_small_factor : propext, Classical.choice, Quot.sound
+conjecture_of_cofactor_seven / seven_dvd_x_square_window : propext, Classical.choice, Quot.sound
+five_dvd_x_square_window : propext, Quot.sound
+k_mod_three_of_six_five / k_ge_five_of_mod_six_five : propext
+two_hundred_forty_three_dvd_x / a_8 / a_7 / seven_hundred_twenty_nine_dvd_succ_of_three_dvd_a / not_three_dvd_a_of_not_seven_hundred_twenty_nine : propext, Classical.choice, Quot.sound
 ```
 
 No `sorryAx`, `native_decide`, or `Lean.trustCompiler` on these declarations. `Classical.choice` enters through `Nat.find` in `exists_least_dvd` and through Mathlib `decide` instances. Full log: `experiments/a135508_axioms.log`.
