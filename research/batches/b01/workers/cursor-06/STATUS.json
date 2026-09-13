@@ -7,7 +7,7 @@
   "source_sha256": "afa95297bd177a882fb72b03f32f1da68ecae58d9126981567562462b73266f8",
   "current_status": "partial",
   "novelty_status": "no_public_exact_solution_in_checked_sources",
-  "last_updated_utc": "2026-09-13T02:47:39Z",
+  "last_updated_utc": "2026-09-13T03:17:00Z",
   "proof_declarations": [
     "OeisA108866.not_n_sq_dvd_num_of_even",
     "OeisA108866.n_sq_dvd_num_of_prime",
@@ -26,12 +26,13 @@
     "OeisA108866.not_n_sq_dvd_num_twenty_five",
     "OeisA108866.not_n_sq_dvd_num_twenty_seven",
     "OeisA108866.not_n_sq_dvd_num_forty_nine",
+    "OeisA108866.not_n_sq_dvd_num_of_three_pow",
     "OeisA108866.conjecture_of_odd_composite_converse"
   ],
   "unresolved_gaps": [
-    "Odd composite converse is not finished. Kernel-checked so far: even converse, prime direction, n=mq when v_q(T(m))<1 or L(m/p^e) is nonzero, and exact n=9,25,27,49.",
-    "Remaining: larger prime powers, and n where L(m/p^e)=0 for every eligible prime (example 13*79). The p^2 min-lemma still needs v_p(T(p)) != v_p(p T(p^2)-T(p)) and an upper bound.",
+    "Odd composite converse is not finished. Kernel-checked so far: even converse, prime direction, n=mq when v_q(T(m))<1 or L(m/p^e) is nonzero, exact n=9,25,27,49, and all n=3^e for e>=2.",
+    "Remaining: prime powers p^e for p>=5, and n where L(m/p^e)=0 for every eligible prime (example 13*79). Empirically v_p(U)=1 for p>=5 except p=7 where v_7(U)=2.",
     "Independently_verified is not claimed. This is not the frozen iff."
   ],
-  "next_step": "Prove v_p(T(p^e))<2e for e>=2 beyond 49. Treat L=0 products such as 13*79 via val_pred when v_p(T(m))=0. Do not claim the frozen iff until every odd composite n>3 is kernel-checked."
+  "next_step": "Extend unique-min to n=3p^e. For p>=5 prove v_p(U)<2 so v_p(T(p^e))=3-e (or 4-e at p=7). Treat L=0 products via val_pred when v_p(T(m))=0. Do not claim the frozen iff until every odd composite n>3 is kernel-checked."
 }
