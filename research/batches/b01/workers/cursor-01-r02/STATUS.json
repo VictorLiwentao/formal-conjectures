@@ -1,0 +1,26 @@
+{
+  "worker_id": "cursor-01-r02",
+  "target_id": "A109074",
+  "declaration": "OeisA109074.conjecture",
+  "actual_branch": "cursor/b01-cursor-01-r02-0918",
+  "preferred_branch": "codex/b01-cursor-01-r02",
+  "baseline_commit": "1107856a264a066e316c3cba7b5339be475f6304",
+  "source_commit": "a2f4a1bb12a28e04a969da78feefac7d1ce49565",
+  "lean_toolchain": "leanprover/lean4:v4.33.1",
+  "source_file": "FormalConjectures/OEIS/109074.lean",
+  "source_sha256": "cd5a2af1993d52ae29df9480d9304cbecae195e24d2ab51a45919806899cfd1e",
+  "source_sha256_verified": true,
+  "session_start_utc": "2026-09-13T00:14:43Z",
+  "deadline_utc": "2026-09-13T08:14:43Z",
+  "current_status": "partial",
+  "novelty_status": "known_mathematics_formalization_candidate",
+  "last_updated_utc": "2026-09-13T01:02:59Z",
+  "proof_declarations": [
+    "OeisA109074.conjecture"
+  ],
+  "unresolved_gaps": [
+    "Odd-prime digit-sum inequality for den_dvd_num; 2-adic case is proved",
+    "No exact public completed Lean proof located in the bounded audit"
+  ],
+  "next_step": "Prove odd-prime digitSum_ineq via floor increments d(r,Q) on odd moduli Q=p^q, then close den_dvd_num and print axioms."
+}
