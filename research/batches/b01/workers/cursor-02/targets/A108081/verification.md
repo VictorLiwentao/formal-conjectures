@@ -48,13 +48,14 @@ python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/left_
 python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/gword_dropLast.py
 python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/gword_penultimate.py
 python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/cons_zero_converse.py
+python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/pword_concat_one_xia_prefixes.py
 ```
 
 Guard: PASS (worker path only). Source SHA-256 matches.
 
 ## Lean axioms
 
-`lake --wfail env lean` on `A108081.lean` succeeded on 2026-09-13 04:45Z.
+`lake --wfail env lean` on `A108081.lean` succeeded on 2026-09-13 05:40Z.
 
 ```
 #print axioms ncard_xN_one
@@ -154,6 +155,14 @@ Guard: PASS (worker path only). Source SHA-256 matches.
 #print axioms LeftWord.concat_one_append_rIrreducible
 -- [propext, Classical.choice, Quot.sound]
 #print axioms ncard_iN_ge_sum_catalan_iN_add_concat_one
+-- [propext, Classical.choice, Quot.sound]
+#print axioms PWord.concat_one_l_append_zero_rIrreducible
+-- [propext, Classical.choice, Quot.sound]
+#print axioms PWord.concat_one_append_rIrreducible
+-- [propext, Classical.choice, Quot.sound]
+#print axioms PWord.eq_concat_one_of_getLast_eq_one_of_penultimate_le_one
+-- [propext, Classical.choice, Quot.sound]
+#print axioms ncard_iN_ge_sum_catalan_iN_add_pConcatOne
 -- [propext, Classical.choice, Quot.sound]
 #print axioms xN_finite
 -- [propext, Classical.choice, Quot.sound]

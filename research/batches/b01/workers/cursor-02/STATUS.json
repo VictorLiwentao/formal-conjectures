@@ -6,7 +6,7 @@
   "coordination_commit": "238f78bdd5701ae4c97a0d70d4e22e2d45770d7a",
   "current_status": "partial",
   "novelty_status": "provisional_no_public_solution_found",
-  "last_updated_utc": "2026-09-13T04:51:00Z",
+  "last_updated_utc": "2026-09-13T05:40:00Z",
   "kickoff_utc": "2026-09-12T23:10:00Z",
   "session_limit_utc": "2026-09-13T07:10:00Z",
   "proof_declarations": [
@@ -44,14 +44,18 @@
     "OeisA108081.XWord.of_cons_zero_head_neg_one",
     "OeisA108081.LeftWord.concat_one_append_rIrreducible",
     "OeisA108081.not_xWord_cons_zero_zero",
-    "OeisA108081.ncard_iN_ge_sum_catalan_iN_add_concat_one"
+    "OeisA108081.ncard_iN_ge_sum_catalan_iN_add_concat_one",
+    "OeisA108081.PWord.concat_one_l_append_zero_rIrreducible",
+    "OeisA108081.PWord.concat_one_append_rIrreducible",
+    "OeisA108081.ncard_iN_ge_sum_catalan_iN_add_pConcatOne",
+    "OeisA108081.PWord.eq_concat_one_of_getLast_eq_one_of_penultimate_le_one"
   ],
   "unresolved_gaps": [
     "The quantified identity |X_n| = a(n-1) is not proved.",
-    "|X_n| = ∑_k |I_k| H_{n-k} is proved. Left-gluing and 01-gluing give extra I-words, and C_{n-1} ≤ |I_n| ≤ H_{n-1}, but |I_n| = A081696(n-1) is not proved.",
-    "The 01 extra P-factors Left++[1] give I when glued to every I-remainder, and contribute the extra lower bound ∑ C_{k-2} |I_{n-k}|. The 11 slice (every PWord s++[1]), stability of G_k in the remainder, and |G_k|=2 C_{k-1} are not proved.",
+    "|X_n| = ∑_k |I_k| H_{n-k} is proved. C_{n-1} ≤ |I_n| ≤ H_{n-1}. Glue of Left and of every PWord s++[1] to every I-remainder is proved, giving |I_n| ≥ ∑ q(k)|I_{n-k}| with q(1)=1 and q(k)=2 C_{k-1} for k≥2. Equality |I_n| = A081696(n-1) is not proved.",
+    "The converse is open: every shortest left P-factor of an I-word has last 0 or penultimate ≤ 1. Bad example (0,2,1) makes L(p)++[0] Xia with a right parse.",
     "Paul Barry's gf is H(x)F(x); that algebraic identity is unproved from Lean's Fibonacci-binomial a.",
     "Partial lemmas and n<=8 (or public n<=14) counts are not a resolution."
   ],
-  "next_step": "Prove that L(s ++ [1]) ++ v is I for every PWord s and every I-word v, so G_k has size 2 C_{k-1} and |I_n| satisfies the A081696 recurrence."
+  "next_step": "Prove that every shortest left P-factor of an I-word has last 0 or penultimate ≤ 1, so |I_n| equals the q-recurrence, then match A081696 and convolve with H."
 }

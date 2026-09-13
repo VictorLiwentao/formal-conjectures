@@ -56,6 +56,11 @@ Proved:
 - Cons-zero converse (`XWord.of_cons_zero_head_le_zero`): if `0 :: w` is Xia and `w` is nonempty with first letter `≤ 0`, then `w` is Xia. The proof is by strong induction on length. A left construction with head `0` forces the left factor to end in `01` or `11`, so `dropLast` applies; a right construction of left-factor length 1 forces the remainder to end at a letter `≤ -1`.
 - Therefore `L(Left ++ [1]) ++ v` is I for every I-word `v` (`LeftWord.concat_one_append_rIrreducible`). Length-1 right parses of `0 :: L(p) ++ v` force remainder last `-2`. Prefixes of `0 :: L(p)` of length at least 2 end in a negative letter. Longer left factors are `0 :: (L(p) ++ v.take k)` with second letter `-1`, so the cons-zero converse and prefix cancellation produce a right parse of `v`. Combined with unique `P × I` enumeration, `|I_n| ≥ ∑_{k=1}^{n-1} C_{k-1}|I_{n-k}| + ∑_{k=2}^{n-1} C_{k-2}|I_{n-k}|` for `n ≥ 2`.
 - No Xia word of length 3 starts with `00` (`not_xWord_cons_zero_zero`).
+- A Xia word that starts with `00` has a negative letter and a left parse (`XWord.exists_neg_of_start_zero_zero`, `XWord.exists_left_parse_of_start_zero_zero`). Consequently no nonnegative Xia word starts with `00`.
+- If `s` is a `PWord` ending in `1`, then any prefix of `0 :: L(s)` of length `m` with `2 ≤ m ≤ |s|+1` is a nonnegative `00`-word, hence not Xia (`not_xWord_take_cons_l_of_getLast_eq_one`). Therefore `L(s ++ [1]) ++ [0]` is I for every `PWord s` (`PWord.concat_one_l_append_zero_rIrreducible`).
+- Prefix cancellation (`PWord.xword_of_l_concat_one_append_prefix`): if `s` is a last-`1` `PWord`, `b` is a prefix of a Xia word, and `L(s ++ [1]) ++ b` is Xia, then `b` is Xia. Any left parse of `L(s ++ [1]) ++ b` is at least as long as `|s|+1` (shorter factors are `00`-prefixes or force a remainder letter `≤ -2`). A longer shortest left factor would be `r(t) ++ (s ++ [1])` with `t` a nonempty prefix of a Xia word forced to start at `≤ -2`.
+- Therefore `L(s ++ [1]) ++ v` is I for every `PWord s` and every I-word `v` (`PWord.concat_one_append_rIrreducible`). Combined with unique `P × I` enumeration, `|I_n| ≥ ∑_{k=1}^{n-1} C_{k-1}|I_{n-k}| + ∑_{k=2}^{n-1} C_{k-1}|I_{n-k}|` for `n ≥ 2` (`ncard_iN_ge_sum_catalan_iN_add_pConcatOne`). This is the Callan/A081696 first-return lower bound: `q(1)=1` and `q(k)=2 C_{k-1}` for `k≥2`.
+- If `s` is a `PWord` ending in `1` with penultimate at most `1`, then `dropLast s` is a `PWord` and `s = dropLast s ++ [1]` (`PWord.eq_concat_one_of_getLast_eq_one_of_penultimate_le_one`). So the extra first-return factors used above are exactly the last-`1` one-zero words with penultimate `≤ 1`.
 
 ## Experimental decomposition (not a proof)
 
@@ -77,7 +82,7 @@ Facts checked in that range, and **not** claimed for all `n`:
 7. Free-magma constructors are not injective from `n = 4`.
 8. `L(Left) ++ b` Xia with `b` a prefix of some Xia word implies `b` Xia, through `n = 8` (`experiments/left_prefix_any_xia.py`). This is now a theorem.
 9. The set of `p ∈ P_k` with `L(p) ++ v` I is independent of the I-remainder `v` and has size `q(k)` (`q(1)=1`, `q(k)=2 C_{k-1}` for `k≥2`) through `n = 8`. Not a theorem.
-10. Through `k = 6` (`experiments/gword_dropLast.py`, `gword_penultimate.py`), `G_k = Left_k ∪ { s ++ [1] | s ∈ P_{k-1} } = { p ∈ P_k | last = 0 ∨ penultimate ≤ 1 }`. The `01` slice is a theorem for every I-remainder. The `11` slice (every `PWord s`, not just LeftWords) and `|G_k|=2 C_{k-1}` are not theorems.
+10. Through `k = 6` (`experiments/gword_dropLast.py`, `gword_penultimate.py`), `G_k = Left_k ∪ { s ++ [1] | s ∈ P_{k-1} } = { p ∈ P_k | last = 0 ∨ penultimate ≤ 1 }`. Glue of this `G_k` to every I-remainder is now a theorem, as is `|image(++[1] : P_{k-1} → P_k)| = C_{k-1}`. Equality `|I_n| = ∑ q(k)|I_{n-k}|` still needs the converse: every shortest left `PWord` factor of an I-word lies in this `G_k`. Bad last-`1` words with penultimate `≥ 2` (example `(0,2,1)`) make `L(p) ++ [0]` Xia with a right parse; that obstruction is not a theorem.
 11. Through length 8, `0 :: w` Xia and `w` starting at `-1` or `0` implies `w` Xia (`experiments/cons_zero_converse.py`). This is now a theorem for every first letter `≤ 0`. The forward map `w ↦ 0 :: w` still requires first letter `-1`.
 
 Public c5-k4 already checked `|X_n| = a(n-1)` through `n = 14`. Those counts are not novelty and are not a proof.
@@ -89,7 +94,7 @@ An exact proof can be assembled from three Xia-specific statements plus one gene
 1. `|I_n| = A081696(n-1)` (Wilf irreducible composition pairs of `n-1`, or the D-finite recurrence for that sequence).
 2. Algebraic identity `I(x) H(x) = x G(x)` with `G` the OEIS gf of `a`. This does not mention Xia words and can be proved independently.
 
-The unique I×Y rebuild and `|Y_n| = H_{n-1}` are proved. I-words contain the Catalan-many LeftWords, are closed under `L(Left) ++ ·` and under `L(Left ++ [1]) ++ ·`, and have a unique shortest left `PWord` factor with I remainder. The Callan/A081696 recurrence still needs the `11` factors (`s ++ [1]` for every `PWord s`), stability of `G_k` in the I-remainder, and `|G_k|=2 C_{k-1}`. Identifying `|I_n|` with A081696(`n-1`) and the convolution with `a` remain open. The length-3 count and the finite convolution check do not close the conjecture.
+The unique I×Y rebuild and `|Y_n| = H_{n-1}` are proved. I-words contain the Catalan-many LeftWords, are closed under `L(Left) ++ ·` and under `L(s ++ [1]) ++ ·` for every `PWord s`, and have a unique shortest left `PWord` factor with I remainder. The Callan/A081696 lower bound `|I_n| ≥ ∑ q(k)|I_{n-k}|` is proved. Equality still needs that every good first-return factor lies in `G_k`, then matching A081696 initials, then the convolution with `H`. The length-3 count and the finite convolution check do not close the conjecture.
 
 ## Approaches that failed or stalled
 
