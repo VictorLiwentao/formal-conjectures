@@ -32,7 +32,8 @@ python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/paire
 python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/leftover_injectors.py
 python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/leftover_injectors.py 400000
 python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/window_miller.py 2000000
-python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/chebyshev_gap.py
+python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/mod_one_factor.py 400000
+python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/type_b.py 2000000
 ```
 
 No `lake clean`, `lake update`, or full default `lake build`.
@@ -109,9 +110,14 @@ k_mul_sub_two_le_add_eight : propext
 one_hundred_sixty_three_dvd_x_4073 / conjecture_of_one_hundred_sixty_three_dvd / one_hundred_sixty_seven_dvd_x_2837 / conjecture_of_one_hundred_sixty_seven_dvd / one_hundred_seventy_nine_dvd_x_3041 / conjecture_of_one_hundred_seventy_nine_dvd / two_hundred_twenty_seven_dvd_x_6581 / conjecture_of_two_hundred_twenty_seven_dvd : propext, Classical.choice, Quot.sound
 k_mul_sub_two_le_of_cofactor : propext
 conjecture_of_factor_k_le_cofactor / conjecture_of_exists_factor_injector / q_dvd_x_add_eight_window_of_sq_sub_two / q_dvd_x_add_eight_window_of_add_six / remaining_p_ge_one_hundred_sixty_three / conjecture_of_minFac_one_hundred_sixty_three / remaining_p_ge_one_hundred_sixty_seven / conjecture_of_minFac_one_hundred_sixty_seven / remaining_p_ge_one_hundred_seventy_nine / conjecture_of_minFac_one_hundred_seventy_nine / remaining_p_ge_two_hundred_twenty_seven / conjecture_of_minFac_two_hundred_twenty_seven / two_hundred_fifty_one_dvd_x_8783 / conjecture_of_two_hundred_fifty_one_dvd / remaining_p_ge_two_hundred_fifty_one / conjecture_of_minFac_two_hundred_fifty_one / three_hundred_eighty_nine_dvd_x_11279 / conjecture_of_three_hundred_eighty_nine_dvd / remaining_p_ge_three_hundred_eighty_nine / conjecture_of_minFac_three_hundred_eighty_nine : propext, Classical.choice, Quot.sound
+one_hundred_thirteen_dvd_x_563 / conjecture_of_one_hundred_thirteen_dvd / remaining_p_ge_one_hundred_thirteen / conjecture_of_minFac_one_hundred_thirteen / one_hundred_twenty_seven_dvd_x_887 / conjecture_of_one_hundred_twenty_seven_dvd / remaining_p_ge_one_hundred_twenty_seven / conjecture_of_minFac_one_hundred_twenty_seven / one_hundred_thirty_one_dvd_x_653 / conjecture_of_one_hundred_thirty_one_dvd / remaining_p_ge_one_hundred_thirty_one / conjecture_of_minFac_one_hundred_thirty_one / one_hundred_thirty_seven_dvd_x_683 / conjecture_of_one_hundred_thirty_seven_dvd / remaining_p_ge_one_hundred_thirty_seven / conjecture_of_minFac_one_hundred_thirty_seven / one_hundred_forty_nine_dvd_x_743 / conjecture_of_one_hundred_forty_nine_dvd / remaining_p_ge_one_hundred_forty_nine / conjecture_of_minFac_one_hundred_forty_nine / remaining_prime_le_one_hundred_forty_nine / conjecture_of_minFac_le_one_hundred_forty_nine_or_twin : propext, Classical.choice, Quot.sound
+remaining_p_sub_two_odd / remaining_div_ge_minFac / remaining_minFac_ge_seven_of_not_five / seven_le_div_of_minFac_seven / exists_prime_factor_mod_one_of_lt_cube / remaining_exists_mod_one_of_lt_cube / cube_le_of_all_prime_factors_mod_two / conjecture_of_remaining_mod_one_seven / conjecture_of_exists_mod_one_seven / conjecture_of_remaining_lt_cube_mod_one_seven / remaining_type_B_div_ge_sq / conjecture_of_remaining_type_B_k_le / remaining_type_B_p_ge / conjecture_of_remaining_mod_one_k / conjecture_of_exists_mod_one_k : propext, Classical.choice, Quot.sound
+remaining_mod_one_factor_ge_seven / k_mul_sub_two_mod_of_six_one : propext, Quot.sound
+k_mod_three_of_six_one / k_ge_seven_of_mod_six_one : propext
+remaining_p_sub_two_gt_one / seven_mul_sub_two_ge_seven / two_le_seven_mul_of_ge_seven / five_le_of_seven_le / one_ne_two / zero_ne_two / one_lt_three / one_lt_five / one_lt_seven / four_le_seven / two_mod_three / five_mod_three : no extra axioms (or a subset of propext)
 ```
 
-No `sorryAx`, `native_decide`, or `Lean.trustCompiler` on these declarations. `Classical.choice` enters through `Nat.find` in `exists_least_dvd` and through Mathlib `decide` instances. Full log: `experiments/a135508_axioms.log`. Recompiled 2026-09-13T05:20Z.
+No `sorryAx`, `native_decide`, or `Lean.trustCompiler` on these declarations. `Classical.choice` enters through `Nat.find` in `exists_least_dvd` and through Mathlib `decide` instances. Full log: `experiments/a135508_axioms.log`. Recompiled 2026-09-13T06:13Z.
 
 ## Formalization audit (summary)
 

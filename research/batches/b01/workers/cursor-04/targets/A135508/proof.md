@@ -56,6 +56,11 @@ Hence McEachen at `p` is equivalent to `gcd(x (p-3), p-2) > 1`, i.e. some prime 
    - `97 ∣ x n` for `n ≥ 677`.
    - `101 ∣ x n` for `n ≥ 503`.
    - `107 ∣ x n` for `n ≥ 2459` (`23·107-2 = 2459` prime).
+   - `113 ∣ x n` for `n ≥ 563` (`5·113-2 = 563` prime).
+   - `127 ∣ x n` for `n ≥ 887` (`7·127-2 = 887` prime).
+   - `131 ∣ x n` for `n ≥ 653`.
+   - `137 ∣ x n` for `n ≥ 683`.
+   - `149 ∣ x n` for `n ≥ 743`.
    - `163 ∣ x n` for `n ≥ 4073` (`25·163-2 = 4073` prime).
    - `167 ∣ x n` for `n ≥ 2837` (`17·167-2 = 2837` prime).
    - `179 ∣ x n` for `n ≥ 3041` (`17·179-2 = 3041` prime).
@@ -63,7 +68,7 @@ Hence McEachen at `p` is equivalent to `gcd(x (p-3), p-2) > 1`, i.e. some prime 
    - `251 ∣ x n` for `n ≥ 8783` (`35·251-2 = 8783` prime).
    - `389 ∣ x n` for `n ≥ 11279` (`29·389-2 = 11279` prime).
    The general form is `conjecture_of_injected` / `conjecture_of_prime_injector` / `conjecture_of_prime_index` / `conjecture_of_five_prime_injector`.
-5. Remaining primes with `lpf(p-2) ≤ 29` (`conjecture_of_minFac_le_twenty_nine`), `lpf(p-2) ≤ 59` or a larger-twin least factor (`conjecture_of_minFac_le_fifty_nine_or_twin`), `lpf(p-2) ≤ 101` or a larger-twin least factor (`conjecture_of_minFac_le_one_hundred_one_or_twin`), and `lpf(p-2) ≤ 107` or a larger-twin least factor (`conjecture_of_minFac_le_one_hundred_seven_or_twin`). The factor `107` enters at index `23·107-2 = 2459`.
+5. Remaining primes with `lpf(p-2) ≤ 29` (`conjecture_of_minFac_le_twenty_nine`), `lpf(p-2) ≤ 59` or a larger-twin least factor (`conjecture_of_minFac_le_fifty_nine_or_twin`), `lpf(p-2) ≤ 101` or a larger-twin least factor (`conjecture_of_minFac_le_one_hundred_one_or_twin`), `lpf(p-2) ≤ 107` or a larger-twin least factor (`conjecture_of_minFac_le_one_hundred_seven_or_twin`), and `lpf(p-2) ≤ 149` or a larger-twin least factor (`conjecture_of_minFac_le_one_hundred_forty_nine_or_twin`). The factor `107` enters at index `23·107-2 = 2459`. The leftover threshold `113` enters at `k=5`.
 
 ## Twin primes without `C₁` (proved)
 
@@ -80,7 +85,7 @@ This is not McEachen (McEachen excludes `p-2` prime). It is the twin-detection h
 
 ## Remaining gap (not proved)
 
-The leftover primes are `p ≡ 1 (mod 3)` with `p-2` composite, `lpf(p-2) ≥ 113`, and that least factor not a larger twin. Then `p-2 ≡ 2 (mod 3)`, so some prime factor `q` of `p-2` is `≡ 2 (mod 3)` (`exists_remaining_factor`). If `q = 5` we are done. If `q ≥ 11`, the mod-3 theorem gives `a(q-1)=q`, so `q` does **not** divide `x(q-1)`. One needs a later injection: some index `r ≤ p-3` with `q ∣ a(r-1)+2`.
+The leftover primes are `p ≡ 1 (mod 3)` with `p-2` composite, `lpf(p-2) ≥ 151`, and that least factor not a larger twin. (`151` is a larger twin of `149`, so the next non-twin leftover least factor is `157`.) Then `p-2 ≡ 2 (mod 3)`, so some prime factor `q` of `p-2` is `≡ 2 (mod 3)` (`exists_remaining_factor`). If `q = 5` we are done. If `q ≥ 11`, the mod-3 theorem gives `a(q-1)=q`, so `q` does **not** divide `x(q-1)`. One needs a later injection: some index `r ≤ p-3` with `q ∣ a(r-1)+2`.
 
 `conjecture_of_minFac_entered` records the tight remaining reduction: McEachen holds once `lpf(p-2)` divides `x` by index `q(q+2)-1`. `gcd_gt_one_of_composite_shift` shows that an odd composite `kq-2 ≡ 2 (mod 3)` is not a coprime injector once that least factor has already entered by its own square-window. Together these isolate the remaining gap as existence of a prime injector `kq-2 ≤ q(q+2)-1`, not a defect in the first-entry algebra.
 
@@ -104,9 +109,13 @@ Any injector with `k ≤ q+2` lies in the square window (`k_mul_sub_two_le_squar
 
 The actual McEachen window for a factor `q` of `p-2` is `k ≤ (p-2)/q` (`k_mul_sub_two_le_of_cofactor`, `conjecture_of_factor_k_le_cofactor`, `conjecture_of_exists_factor_injector`). That is the remaining sufficient arithmetic condition. Existence is not proved.
 
+An odd composite `n ≡ 2 (mod 3)` with `n < lpf(n)^3` has a prime factor `≡ 1 (mod 3)` (`exists_prime_factor_mod_one_of_lt_cube`). Remaining `p-2` below that cube therefore cannot be supported only by primes `≡ 2 (mod 3)` (`remaining_exists_mod_one_of_lt_cube`, `cube_le_of_all_prime_factors_mod_two`). The complementary injector of any such factor `r` with `k ≡ 1 (mod 6)` and `k ≥ 7` fits once `k ≤ (p-2)/r` (`conjecture_of_remaining_mod_one_k`). In particular `k=7` fits once `5 ∤ p-2` (`remaining_div_ge_minFac`, `conjecture_of_remaining_mod_one_seven`). Primality of `kr-2` is not proved.
+
+Type B remaining numbers (every prime factor `≡ 2 (mod 3)`) satisfy `lpf^2 ≤ (p-2)/lpf` and `lpf^3 + 2 ≤ p` (`remaining_type_B_div_ge_sq`, `remaining_type_B_p_ge`). After the `lpf ≤ 149` family, a Type B leftover needs `lpf ≥ 157`, hence `p ≥ 157^3 + 2`. Remaining McEachen in Type B follows if some injector of the least factor has `k ≤ lpf^2` (`conjecture_of_remaining_type_B_k_le`). Existence of that prime is not proved.
+
 After overlap `q+2 ∣ p-2` is excluded, a remaining least factor `q ≡ 2 (mod 3)` satisfies `p-2 ≥ q(q+8)` (`remaining_minFac_mul_add_eight_le`). First-entry by index `q(q+8)-1` is then enough (`conjecture_of_minFac_entered_add_eight`). An injector with `k ≤ q+8` fills that window (`conjecture_of_minFac_k_le_add_eight`, `conjecture_of_minFac_mod_two_overlap_or_k_le_add_eight`). The extra candidate `k = q+6` is packaged as `q_dvd_x_add_eight_window_of_add_six`; `k = q` is `q_dvd_x_add_eight_window_of_sq_sub_two`. Primality of those values is not proved.
 
-First-entry of leftover least factors `163` (`k=25`, index `4073`), `167` (`k=17`, index `2837`), `179` (`k=17`, index `3041`) and `227` (`k=29`, index `6581`) is proved, and remaining McEachen follows for those least factors (`conjecture_of_minFac_one_hundred_sixty_three` and companions). That is not `∀p`.
+First-entry of leftover least factors `113` (`k=5`, index `563`), `127` (`k=7`, index `887`), `131` (`k=5`, index `653`), `137` (`k=5`, index `683`), `149` (`k=5`, index `743`), `163` (`k=25`, index `4073`), `167` (`k=17`, index `2837`), `179` (`k=17`, index `3041`) and `227` (`k=29`, index `6581`) is proved, and remaining McEachen follows for those least factors and for every remaining prime with `lpf(p-2) ≤ 149` or a larger-twin least factor. That is not `∀p`.
 
 McEachen also holds if some prime `q ≡ 2 (mod 3)` with `q ≤ p-3` satisfies `gcd(q+2, p-2) > 1` (`conjecture_of_add_two_overlap`, `conjecture_of_remaining_add_two_overlap`). Then a factor of `q+2` already divides `x q` and divides `p-2`. Among leftover primes `p < 200000` this overlap is rare (5 of 466). It is a proper subfamily.
 
@@ -120,7 +129,7 @@ would finish McEachen for a factor `q ≡ 2 (mod 3)`. Even `k` makes `kq-2` even
 
 Composite injection is also available: if `gcd(x(kq-3), kq-2)=1`, then `q` enters even when `kq-2` is composite (`q_dvd_x_of_coprime_shift`). When `kq-2` is prime the gcd is 1 by the mod-3 theorem. A scan of first entries for primes `11 ≤ q ≤ 4000` up to `n = 30000` found **no** composite `kq-2` first entries: every recorded first entry was a prime injector. That scan is not a proof, but it indicates that composites in the window do not remove the Linnik barrier.
 
-Deterministic experiments (`injector_bound.py`, `injector_mod.py`, `first_entry_shape.py`, `injector_window.py`, `window_miller.py`, `paired_injectors.py`, `leftover_injectors.py`, `chebyshev_gap.py`): for every prime `q ≡ 2 (mod 3)` with `11 ≤ q ≤ 30000`, a `k ≡ 5 (mod 6)` injector exists with `k ≤ q+2` (trial division). Miller–Rabin to `q ≤ 2000000` found **no** square-window or add-eight-window failures; the worst first `k` in that range was `311` at `q = 1944791`. An exact factorization scan to `n = 40000` found no McEachen failure (`3612` checked). For leftover remaining primes `p < 400000` (1077 such primes), **every** prime has some factor `r` of `p-2` with an admissible prime injector `k ≤ (p-2)/r`. There is no McEachen-window gap in that range. New leftover least factors above `227` include `251` (`k=35`) and `389` (`k=29`). Finite checks are not a resolution.
+Deterministic experiments (`injector_bound.py`, `injector_mod.py`, `first_entry_shape.py`, `injector_window.py`, `window_miller.py`, `paired_injectors.py`, `leftover_injectors.py`, `chebyshev_gap.py`, `mod_one_factor.py`, `type_b.py`): for every prime `q ≡ 2 (mod 3)` with `11 ≤ q ≤ 30000`, a `k ≡ 5 (mod 6)` injector exists with `k ≤ q+2` (trial division). Miller–Rabin to `q ≤ 2000000` found **no** square-window or add-eight-window failures; the worst first `k` in that range was `311` at `q = 1944791`. An exact factorization scan to `n = 40000` found no McEachen failure (`3612` checked). For leftover remaining primes `p < 400000` with `lpf(p-2) ≥ 113` (1011 such primes), **every** prime has a factor `≡ 1 (mod 3)` (zero Type B; the cube obstruction starts at `113^3 = 1442897`). Of those, `366` have some complementary factor with prime `7r-2`. A Type B scan to `p < 2000000` found exactly one example, `p = 113^3 + 2 = 1442899`, now covered by the proved injector `113 ∣ x 563`. There is no McEachen-window gap in the leftover injector scan. New leftover least factors above `227` include `251` (`k=35`) and `389` (`k=29`). Finite checks are not a resolution.
 
 Cloitre’s route (assume `C₁`, then Theorem 6.2) is recorded as the implication `conjecture_of_C1`. `C₁` is stronger than McEachen and remains open.
 
@@ -146,7 +155,8 @@ Proved: `v2(gcd)`, `v2(a n)`, `v2(x(n+1))`, odd-increment stability, dyadic bloc
 - Treating `a 12 = 1`, `a 13 = 7`, `a 14 = 1`, or the 3-adic lifts `59049` and `531441` as remaining McEachen.
 - Using Mathlib Chebyshev `θ(x) ≤ (log 4) x` on the product of leftover candidates `kq-2`. The resulting smoothness contradiction does not close at leftover `q ≥ 113` (`chebyshev_gap.py`).
 - Treating first-entry of `163`, `167`, `179`, `227` as a `∀p` proof. Those are explicit leftover minFac families.
-- Treating `conjecture_of_factor_k_le_cofactor` / `conjecture_of_exists_factor_injector` as a `∀p` proof. They need an in-window injector for some factor of `p-2`.
+- Treating `conjecture_of_remaining_mod_one_seven` / `exists_prime_factor_mod_one_of_lt_cube` / `conjecture_of_remaining_mod_one_k` / `conjecture_of_remaining_type_B_k_le` as a `∀p` proof. The cube forces a complementary residue class below `lpf^3` and a square cofactor in Type B; it does not prove the injector is prime.
+- Treating `conjecture_of_minFac_le_one_hundred_forty_nine_or_twin` as a `∀p` proof. It lifts the leftover cutoff from `107` to `149`.
 
 ## Status
 

@@ -213,3 +213,55 @@
 'OeisA135508.conjecture_of_three_hundred_eighty_nine_dvd' depends on axioms: [propext, Classical.choice, Quot.sound]
 'OeisA135508.remaining_p_ge_three_hundred_eighty_nine' depends on axioms: [propext, Classical.choice, Quot.sound]
 'OeisA135508.conjecture_of_minFac_three_hundred_eighty_nine' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.one_hundred_thirteen_dvd_x_563' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.conjecture_of_one_hundred_thirteen_dvd' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.remaining_p_ge_one_hundred_thirteen' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.conjecture_of_minFac_one_hundred_thirteen' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.one_hundred_twenty_seven_dvd_x_887' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.conjecture_of_one_hundred_twenty_seven_dvd' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.remaining_p_ge_one_hundred_twenty_seven' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.conjecture_of_minFac_one_hundred_twenty_seven' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.one_hundred_thirty_one_dvd_x_653' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.conjecture_of_one_hundred_thirty_one_dvd' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.remaining_p_ge_one_hundred_thirty_one' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.conjecture_of_minFac_one_hundred_thirty_one' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.one_hundred_thirty_seven_dvd_x_683' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.conjecture_of_one_hundred_thirty_seven_dvd' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.remaining_p_ge_one_hundred_thirty_seven' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.conjecture_of_minFac_one_hundred_thirty_seven' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.one_hundred_forty_nine_dvd_x_743' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.conjecture_of_one_hundred_forty_nine_dvd' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.remaining_p_ge_one_hundred_forty_nine' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.conjecture_of_minFac_one_hundred_forty_nine' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.remaining_prime_le_one_hundred_forty_nine' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.conjecture_of_minFac_le_one_hundred_forty_nine_or_twin' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'OeisA135508.k_mod_three_of_six_one' depends on axioms: [propext]
+'OeisA135508.k_ge_seven_of_mod_six_one' depends on axioms: [propext]
+'OeisA135508.k_mul_sub_two_mod_of_six_one' depends on axioms: [propext, Quot.sound]
+'OeisA135508.conjecture_of_remaining_mod_one_k' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.conjecture_of_exists_mod_one_k' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.remaining_type_B_div_ge_sq' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.conjecture_of_remaining_type_B_k_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.remaining_type_B_p_ge' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.remaining_p_sub_two_odd' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.remaining_p_sub_two_gt_one' does not depend on any axioms
+'OeisA135508.remaining_div_ge_minFac' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.remaining_mod_one_factor_ge_seven' depends on axioms: [propext, Quot.sound]
+'OeisA135508.remaining_minFac_ge_seven_of_not_five' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.seven_le_div_of_minFac_seven' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.seven_mul_sub_two_ge_seven' does not depend on any axioms
+'OeisA135508.two_le_seven_mul_of_ge_seven' does not depend on any axioms
+'OeisA135508.five_le_of_seven_le' does not depend on any axioms
+'OeisA135508.one_ne_two' does not depend on any axioms
+'OeisA135508.zero_ne_two' depends on axioms: [propext]
+'OeisA135508.one_lt_three' does not depend on any axioms
+'OeisA135508.one_lt_five' does not depend on any axioms
+'OeisA135508.one_lt_seven' does not depend on any axioms
+'OeisA135508.exists_prime_factor_mod_one_of_lt_cube' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.remaining_exists_mod_one_of_lt_cube' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.cube_le_of_all_prime_factors_mod_two' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.conjecture_of_remaining_mod_one_seven' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.conjecture_of_exists_mod_one_seven' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.conjecture_of_remaining_lt_cube_mod_one_seven' depends on axioms: [propext, Classical.choice, Quot.sound]

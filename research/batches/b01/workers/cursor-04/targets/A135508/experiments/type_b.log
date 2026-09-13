@@ -1,0 +1,5 @@
+leftover remaining p < 2000000, lpf>=113 not twin: 6344
+Type B among them: 1
+first Type B: [(1442899, 113, [113], True)]
+all cube bounds hold: True
+Type B minFacs: [113]
