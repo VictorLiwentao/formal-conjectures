@@ -174,6 +174,10 @@ lemma XWord.head_mem {w : Word} (hw : XWord w) :
     w.head hw.ne_nil ∈ ({-1, 0} : Set ℤ) :=
   (XWord.head_last_mem hw).1
 
+lemma XWord.head_eq_neg_one_or_zero {w : Word} (hw : XWord w) :
+    w.head hw.ne_nil = -1 ∨ w.head hw.ne_nil = 0 :=
+  mem_endpointSet.mp hw.head_mem
+
 lemma XWord.getLast_mem {w : Word} (hw : XWord w) :
     w.getLast hw.ne_nil ∈ ({0, 1} : Set ℤ) :=
   (XWord.head_last_mem hw).2
@@ -371,6 +375,9 @@ def rho (w : Word) : Word :=
   w.reverse.map (fun x => -x)
 
 lemma rho_rho (w : Word) : rho (rho w) = w := by
+  simp [rho]
+
+lemma length_rho (w : Word) : (rho w).length = w.length := by
   simp [rho]
 
 lemma rho_ne_nil {w : Word} (h : w ≠ []) : rho w ≠ [] := by
@@ -1070,6 +1077,178 @@ lemma PWord.exists_shortest_right_parse_of_head_eq_zero {w : Word} (hw : PWord w
   exists_shortest_right_parse
     (PWord.exists_right_parse_of_head_eq_zero hw hhead hlen)
 
+lemma exists_concat_split_of_append {a b : Word} (ha : XWord a) (hb : XWord b) :
+    ∃ k, 0 < k ∧ k < (a ++ b).length ∧ XWord ((a ++ b).take k) ∧
+      XWord ((a ++ b).drop k) := by
+  refine ⟨a.length, ha.length_pos, ?_, ?_, ?_⟩
+  · have := hb.length_pos
+    simp
+    omega
+  · simpa using ha
+  · simpa using hb
+
+lemma IsRightParse.of_concat_remainder {w u v v1 v2 : Word}
+    (h : IsRightParse w u v) (hv1 : XWord v1) (hv2 : XWord v2)
+    (heq : v = v1 ++ v2) :
+    IsRightParse w (u ++ r v2) v1 := by
+  rcases h with ⟨hu, hv, hw⟩
+  subst heq
+  refine ⟨XWord.step_right hu hv2, hv1, ?_⟩
+  simp [hw, r_append]
+
+-- A Xia word with at least two zeros is the concatenation of two Xia words.
+lemma XWord.exists_concat_split_of_length :
+    ∀ (n : ℕ) (w : Word), w.length = n → XWord w → 2 ≤ w.count 0 →
+      ∃ k, 0 < k ∧ k < w.length ∧ XWord (w.take k) ∧ XWord (w.drop k) := by
+  intro n
+  induction n using Nat.strong_induction_on with
+  | h n ih =>
+    intro w hlen hw hc
+    have recRight : ∀ {w : Word}, XWord w → w.length = n → 2 ≤ w.count 0 →
+        (∃ u v, IsRightParse w u v) →
+        ∃ k, 0 < k ∧ k < w.length ∧ XWord (w.take k) ∧ XWord (w.drop k) := by
+      intro w hw hwlen hc hp
+      obtain ⟨u, v, hp, hmin⟩ := exists_shortest_right_parse hp
+      have hsum : w.count 0 = u.count 0 + v.count (-1) := by
+        simp [hp.2.2, count_append, count_zero_r]
+      have hu0 := hp.1.count_zero_pos
+      by_cases h2 : 2 ≤ u.count 0
+      · have hult : u.length < n := by
+          have := hp.left_lt_length
+          omega
+        obtain ⟨k, hk0, hkl, htk, hdk⟩ := ih u.length hult u rfl hp.1 h2
+        have hk_le : k ≤ u.length := hkl.le
+        have htake : w.take k = u.take k := by
+          rw [hp.2.2, take_append_of_le_length hk_le]
+        have hdrop : w.drop k = u.drop k ++ r v := by
+          rw [hp.2.2, drop_append_of_le_length hk_le]
+        refine ⟨k, hk0, ?_, htake ▸ htk, ?_⟩
+        · have := hp.left_lt_length
+          omega
+        · rw [hdrop]
+          exact XWord.step_right hdk hp.2.1
+      · have huP : u.count 0 = 1 := by omega
+        have hvneg : 1 ≤ v.count (-1) := by omega
+        have hmem : (-1 : ℤ) ∈ v := count_pos_iff.mp (by omega)
+        have hvhead := hp.2.1.head_eq_neg_one_or_zero
+        rcases hvhead with hneg1 | h0
+        · obtain ⟨a, b, ha, hb, hveq⟩ :=
+            exists_left_parse_of_head_eq_neg_one hp.2.1 hneg1
+          have hw_eq : w = (u ++ r b) ++ a := by
+            rw [hp.2.2, hveq, r_append, r_l, append_assoc]
+          rw [hw_eq]
+          exact exists_concat_split_of_append (XWord.step_right hp.1 hb) ha
+        · have hne1 : v.count 0 ≠ 1 := by
+            intro hcnt
+            exact PWord.not_mem_neg_one_of_head_eq_zero ⟨hp.2.1, hcnt⟩ h0 hmem
+          have hv2 : 2 ≤ v.count 0 := by
+            have := hp.2.1.count_zero_pos
+            omega
+          have hvlt : v.length < n := by
+            have := hp.pos_left
+            have := hp.length_add
+            omega
+          obtain ⟨k, hk0, hkl, htk, hdk⟩ := ih v.length hvlt v rfl hp.2.1 hv2
+          have hparse' : IsRightParse w (u ++ r (v.drop k)) (v.take k) :=
+            IsRightParse.of_concat_remainder hp htk hdk (take_append_drop k v).symm
+          have hle := hmin (u ++ r (v.drop k)) (v.take k) hparse'
+          have htklen : (v.take k).length = k := by
+            simp [length_take]
+            omega
+          omega
+    by_cases hp : ∃ u v, IsRightParse w u v
+    · exact recRight hw hlen hc hp
+    · have hρ := hw.rho_mem
+      have hρc : 2 ≤ (rho w).count 0 := by simpa [count_zero_rho] using hc
+      have hρlen : (rho w).length = n := by simpa [length_rho] using hlen
+      have hρp : ∃ u v, IsRightParse (rho w) u v := by
+        cases hw with
+        | base =>
+          have : ([0] : Word).count 0 = 1 := by decide
+          omega
+        | step_right hu hv =>
+          exact (hp ⟨_, _, hu, hv, rfl⟩).elim
+        | step_left hu hv =>
+          refine ⟨rho _, rho _, XWord.rho_mem hv, XWord.rho_mem hu, ?_⟩
+          simp [rho_append, rho_l]
+      obtain ⟨k, hk0, hkl, htk, hdk⟩ := recRight hρ hρlen hρc hρp
+      have hw_eq : w = rho ((rho w).drop k) ++ rho ((rho w).take k) := by
+        calc
+          w = rho (rho w) := (rho_rho w).symm
+          _ = rho ((rho w).take k ++ (rho w).drop k) := by rw [take_append_drop]
+          _ = rho ((rho w).drop k) ++ rho ((rho w).take k) := rho_append _ _
+      have hsplit := exists_concat_split_of_append (XWord.rho_mem hdk) (XWord.rho_mem htk)
+      rw [← hw_eq] at hsplit
+      exact hsplit
+
+lemma XWord.exists_concat_split {w : Word} (hw : XWord w) (hc : 2 ≤ w.count 0) :
+    ∃ k, 0 < k ∧ k < w.length ∧ XWord (w.take k) ∧ XWord (w.drop k) :=
+  XWord.exists_concat_split_of_length w.length w rfl hw hc
+
+lemma XWord.of_isRightParse_shortest {w u v : Word}
+    (h : IsRightParse w u v)
+    (hmin : ∀ u2 v2, IsRightParse w u2 v2 → v.length ≤ v2.length) :
+    PWord v := by
+  refine ⟨h.2.1, ?_⟩
+  by_contra hne
+  have hc : 2 ≤ v.count 0 := by
+    have := h.2.1.count_zero_pos
+    omega
+  obtain ⟨k, hk0, hkl, htk, hdk⟩ := XWord.exists_concat_split h.2.1 hc
+  have hparse' : IsRightParse w (u ++ r (v.drop k)) (v.take k) :=
+    IsRightParse.of_concat_remainder h htk hdk (take_append_drop k v).symm
+  have hle := hmin (u ++ r (v.drop k)) (v.take k) hparse'
+  have htklen : (v.take k).length = k := by
+    simp [length_take]
+    omega
+  omega
+
+lemma PWord.of_isRightParse_shortest {w u v : Word} (_hw : PWord w)
+    (h : IsRightParse w u v)
+    (hmin : ∀ u2 v2, IsRightParse w u2 v2 → v.length ≤ v2.length) :
+    PWord v :=
+  XWord.of_isRightParse_shortest h hmin
+
+lemma PWord.shortest_right_parse_factors {w : Word} (hw : PWord w)
+    (hhead : w.head hw.1.ne_nil = 0) (hlen : 2 ≤ w.length) :
+    ∃ u v, IsRightParse w u v ∧ PWord u ∧ PWord v ∧
+      ∀ u2 v2, IsRightParse w u2 v2 → v.length ≤ v2.length := by
+  obtain ⟨u, v, hp, hmin⟩ :=
+    PWord.exists_shortest_right_parse_of_head_eq_zero hw hhead hlen
+  refine ⟨u, v, hp, ?_, PWord.of_isRightParse_shortest hw hp hmin, hmin⟩
+  exact (PWord.of_step_right hp.1 hp.2.1 (hp.2.2 ▸ hw)).1
+
+lemma PWord.remainder_head_eq_zero {w u v : Word} (hw : PWord w)
+    (hhead : w.head hw.1.ne_nil = 0) (hlen : 2 ≤ w.length)
+    (hp : IsRightParse w u v) :
+    v.head hp.2.1.ne_nil = 0 := by
+  have hlast := PWord.getLast_eq_one_of_head_eq_zero hw hhead hlen
+  have hne_r := r_ne_nil hp.2.1.ne_nil
+  have hgl : (u ++ r v).getLast (XWord.ne_nil (XWord.step_right hp.1 hp.2.1)) =
+      (r v).getLast hne_r :=
+    getLast_append_of_right_ne_nil _ _ hne_r
+  have hgl' : w.getLast hw.1.ne_nil =
+      (u ++ r v).getLast (XWord.ne_nil (XWord.step_right hp.1 hp.2.1)) := by
+    simp [hp.2.2]
+  have : (r v).getLast hne_r = v.head hp.2.1.ne_nil + 1 := getLast_r hp.2.1.ne_nil
+  omega
+
+lemma PWord.eq_of_step_right {u v u' v' : Word}
+    (hu : PWord u) (hv : PWord v) (hu' : PWord u') (hv' : PWord v')
+    (h : u ++ r v = u' ++ r v') : u = u' ∧ v = v' := by
+  have hp : IsRightParse (u ++ r v) u v := ⟨hu.1, hv.1, rfl⟩
+  have hp' : IsRightParse (u ++ r v) u' v' := ⟨hu'.1, hv'.1, h⟩
+  have hle := PWord.le_length_of_isRightParse_append_r hu.1 hv hp'
+  have hp2 : IsRightParse (u' ++ r v') u v := ⟨hu.1, hv.1, h.symm⟩
+  have hle' := PWord.le_length_of_isRightParse_append_r hu'.1 hv' hp2
+  have hvlen : v.length = v'.length := Nat.le_antisymm hle hle'
+  have hsum := hp.length_add
+  have htot : (u ++ r v).length = u'.length + v'.length := by
+    rw [h]
+    simp [length_r]
+  have hulen : u.length = u'.length := by omega
+  exact eq_of_right_parse_eq h hulen
+
 lemma XWord.append_zero_of_getLast_eq_one {w : Word} (hw : XWord w)
     (h : w.getLast hw.ne_nil = 1) : XWord (w ++ [0]) := by
   obtain ⟨u, v, hu, hv, hw'⟩ := exists_right_parse_of_getLast_eq_one hw h
@@ -1396,6 +1575,14 @@ lemma YWord.exists_right_parse_of_length_ge_two {w : Word} (hw : YWord w)
   | _, @YWord.step u v hu hv =>
     ⟨u, v, hu.xWord, hv, rfl⟩
 
+lemma YWord.shortest_remainder_is_pword {w : Word} (hw : YWord w)
+    (hlen : 2 ≤ w.length) :
+    ∃ u v, IsRightParse w u v ∧ PWord v ∧
+      ∀ u2 v2, IsRightParse w u2 v2 → v.length ≤ v2.length := by
+  obtain ⟨u, v, hp, hmin⟩ :=
+    exists_shortest_right_parse (YWord.exists_right_parse_of_length_ge_two hw hlen)
+  exact ⟨u, v, hp, XWord.of_isRightParse_shortest hp hmin, hmin⟩
+
 lemma exists_right_parse_append_YWord_tail {c y : Word} (hc : XWord c)
     (hy : YWord y) (hlen : 2 ≤ y.length) :
     ∃ u v, IsRightParse (c ++ y.tail) u v :=
@@ -1425,6 +1612,13 @@ lemma exists_right_parse_append_YWord_tail {c y : Word} (hc : XWord c)
 #print axioms PWord.le_length_of_isRightParse_append_r
 #print axioms PWord.getLast_eq_one_of_head_eq_zero
 #print axioms PWord.exists_right_parse_of_head_eq_zero
+#print axioms XWord.exists_concat_split
+#print axioms XWord.of_isRightParse_shortest
+#print axioms PWord.of_isRightParse_shortest
+#print axioms PWord.shortest_right_parse_factors
+#print axioms PWord.remainder_head_eq_zero
+#print axioms PWord.eq_of_step_right
+#print axioms YWord.shortest_remainder_is_pword
 #print axioms PWord.take_idxOf_concat_zero
 #print axioms PWord.cons_zero_drop_succ_idxOf
 #print axioms PWord.take_idxOf_concat_zero_append_drop

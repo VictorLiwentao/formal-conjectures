@@ -20,6 +20,8 @@ python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/bijec
 python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/catalan_peels.py
 python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/pword_signs.py
 python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/pword_catalan_split.py
+python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/right_pword_factor.py
+python3 research/batches/b01/workers/cursor-02/targets/A108081/experiments/xia_concat_split.py
 LEAN_NUM_THREADS=2 lake --wfail env lean research/batches/b01/workers/cursor-02/targets/A108081/A108081.lean
 ```
 
@@ -27,6 +29,4 @@ LEAN_NUM_THREADS=2 lake --wfail env lean research/batches/b01/workers/cursor-02/
 
 `partial`. No public exact proof/disproof found. Finite counts through `n=14` are already public (c5-k4) and are not a resolution. Statement uses `a(n-1)`, matching Xia’s listed cardinalities `1,2,7`, not the OEIS prose `a(n+1)`.
 
-Lean now proves the P-word sign pattern, uniqueness of the `[0] ++ r v` right parse for `PWord` remainders, the unique-zero Catalan split, that start-with-`0` P-words are `YWord`s, and that `u ++ r v` stays a start-with-`0` P-word. The quantified identity is open.
-
-The experimental Catalan path is that start-with-`0` P-words satisfy `S = x + S^2`, hence `|Right_n| = C_{n-1}`, and the unique-zero index histogram is `C_k C_{n-1-k}`.
+Lean now proves that a Xia word with at least two zeros splits as a concatenation of two Xia words, that the shortest right-parse remainder is always a `PWord`, and that start-with-`0` P-words of length at least 2 factor uniquely as `u ++ r v` with both factors start-with-`0` P-words. The Catalan count `|Right_n| = C_{n-1}` and the quantified Xia identity remain open.

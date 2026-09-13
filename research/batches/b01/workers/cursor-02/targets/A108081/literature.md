@@ -61,6 +61,7 @@ Checked on 2026-09-12. Live OEIS HTML history/edit pages were Cloudflare-blocked
 - Li-yao Xia’s 2014 repo https://github.com/Lysxia/cfpt enumerates a dual constructor pair `a ++ L(b)` and `R(a) ++ b` (Haskell `exhaust.hs` / `dypro.hs`). Last push 2014-05-07. No proof. The README conjecture `X(n) = ∑ C(2n-i, n+i)` has the same off-by-one as the OEIS prose; Xia’s listed length-1/2/3 cardinalities still match `a(n-1)`.
 - OEIS A081696 (retrieved 2026-09-13, revision 115) is `1,1,3,9,29,97,333,1165,…` with gf `1/(x+sqrt(1-4x))`, matching experimental `|I_n|` as `A081696(n-1)`. The Wilf comment (irreducible composition pairs) is on this sequence. No published bijection with Xia right-irreducible words was found.
 - Fried arXiv:2607.24832 still treats A108080, not A108081.
+- Fried–Shattuck, Enumerative Combinatorics and Applications (2026-01-23), “Counting s-Catalan words according to total variation”, is about classical Catalan words / Motzkin polyominoes, not Xia’s reverse-and-shift constructors.
 - MathOverflow / arXiv searches for the Xia constructors and “functional pregroup types” counting did not return a proof of `|X_n| = a(n-1)`.
 
 ## Novelty conclusion
