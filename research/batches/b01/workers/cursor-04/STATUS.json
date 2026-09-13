@@ -201,5 +201,5 @@
     "Cloitre C1 and Cor. 6.6 are not an unconditional solution."
   ],
   "next_step": "Prove an unconditional first-entry bound q | x(q(q+2)-1) for remaining primes q \u2265 113 not in the explicit families, or find a Lean-checkable counterexample. Leftover p<400000 are not counterexamples. Extending minFac does not finish \u2200p. Do not claim completion.",
-  "handoff_research_commit": "41aca114"
+  "handoff_research_commit": "a3035adf"
 }
