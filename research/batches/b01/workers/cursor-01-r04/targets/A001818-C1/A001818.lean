@@ -7175,7 +7175,7 @@ lemma matchingSum_fin_two (x : Fin 2 → ℂ) :
     have : (0 : Fin 2) ∈ (∅ : Finset (Fin 2)) := by
       rw [h]
       exact mem_univ _
-    exact not_mem_empty _ this
+    exact notMem_empty _ this
   have hsw : (Equiv.swap (0 : Fin 2) 1).support = univ := by
     rw [Equiv.Perm.support_swap Fin.zero_ne_one]
     ext i
@@ -7291,7 +7291,7 @@ lemma zpow_odd_of_mul_self {α : Type*} {σ : Perm α} (hσ : σ * σ = 1)
   obtain ⟨m, hm⟩ := odd_iff_exists_bit1.mp hk
   rw [hm, add_comm, _root_.zpow_add, zpow_one, _root_.zpow_mul, zpow_two, hσ]
   change σ * ((1 : Perm α) ^ m) = σ
-  rw [_root_.one_zpow, one_mul]
+  rw [_root_.one_zpow, mul_one]
 
 lemma sameCycle_of_mul_self {α : Type*} {σ : Perm α} (hσ : σ * σ = 1)
     {p x : α} : σ.SameCycle p x ↔ x = p ∨ x = σ p := by
@@ -7341,16 +7341,21 @@ lemma swap_mul_ofSubtype_mul_self {α : Type*} [Fintype α] [DecidableEq α]
         (Equiv.swap p q * Equiv.Perm.ofSubtype u) =
       Equiv.Perm.ofSubtype (u * u) := by
   have hdisj := disjoint_swap_ofSubtype_pair hpq u
+  have hss : Equiv.swap p q * Equiv.swap p q = 1 := by
+    ext x
+    simp
   calc (Equiv.swap p q * Equiv.Perm.ofSubtype u) *
           (Equiv.swap p q * Equiv.Perm.ofSubtype u)
       = Equiv.swap p q * (Equiv.Perm.ofSubtype u * Equiv.swap p q) *
-          Equiv.Perm.ofSubtype u := by simp [mul_assoc]
+          Equiv.Perm.ofSubtype u := by
+        ac_rfl
     _ = Equiv.swap p q * (Equiv.swap p q * Equiv.Perm.ofSubtype u) *
-          Equiv.Perm.ofSubtype u := by rw [hdisj.mul_comm]
+          Equiv.Perm.ofSubtype u := by rw [← hdisj.commute]
     _ = (Equiv.swap p q * Equiv.swap p q) *
-          (Equiv.Perm.ofSubtype u * Equiv.Perm.ofSubtype u) := by simp [mul_assoc]
+          (Equiv.Perm.ofSubtype u * Equiv.Perm.ofSubtype u) := by
+        ac_rfl
     _ = Equiv.Perm.ofSubtype (u * u) := by
-        rw [Equiv.Perm.swap_mul_self, ofSubtype_mul_self, one_mul]
+        rw [hss, ofSubtype_mul_self, one_mul]
 
 lemma swap_mul_ofSubtype_mul_self_eq_one_iff {α : Type*} [Fintype α]
     [DecidableEq α] {p q : α} (hpq : p ≠ q)
@@ -7451,7 +7456,7 @@ lemma matchingSum_eq_recurrence {α : Type*} [Fintype α] [DecidableEq α]
           rw [if_neg hne]
     · rw [if_neg hσ, Fintype.sum_eq_zero]
       intro q
-      simp [hσ]
+      simp
   unfold matchingSum
   rw [Fintype.sum_congr _ _ hsplit, sum_comm]
   refine Fintype.sum_congr _ _ fun q => ?_
@@ -7461,18 +7466,18 @@ lemma matchingSum_eq_recurrence {α : Type*} [Fintype α] [DecidableEq α]
     rw [sum_fiber_swap_ofSubtype (Ne.symm hq)
       (fun σ => if σ.support = univ ∧ σ * σ = 1 then matchingWeight x σ else 0)]
     unfold matchingSumOn matchingSum
-    rw [← mul_sum]
-    refine Fintype.sum_congr _ _ fun u => ?_
-    have hiff := matching_swap_mul_ofSubtype_iff (Ne.symm hq) u
-    by_cases hu : u.support = univ ∧ u * u = 1
-    · have hσ : (Equiv.swap p q * Equiv.Perm.ofSubtype u).support = univ ∧
-          (Equiv.swap p q * Equiv.Perm.ofSubtype u) *
-            (Equiv.swap p q * Equiv.Perm.ofSubtype u) = 1 := hiff.2 hu
-      rw [if_pos hσ, if_pos hu, matchingWeight_swap_mul_ofSubtype (Ne.symm hq) x u]
-    · have hσ : ¬ ((Equiv.swap p q * Equiv.Perm.ofSubtype u).support = univ ∧
-          (Equiv.swap p q * Equiv.Perm.ofSubtype u) *
-            (Equiv.swap p q * Equiv.Perm.ofSubtype u) = 1) := fun h => hu (hiff.1 h)
-      rw [if_neg hσ, if_neg hu, mul_zero]
+    refine Eq.trans (Fintype.sum_congr _ _ fun u => ?_) ?_
+    · have hiff := matching_swap_mul_ofSubtype_iff (Ne.symm hq) u
+      by_cases hu : u.support = univ ∧ u * u = 1
+      · have hσ : (Equiv.swap p q * Equiv.Perm.ofSubtype u).support = univ ∧
+            (Equiv.swap p q * Equiv.Perm.ofSubtype u) *
+              (Equiv.swap p q * Equiv.Perm.ofSubtype u) = 1 := hiff.2 hu
+        rw [if_pos hσ, if_pos hu, matchingWeight_swap_mul_ofSubtype (Ne.symm hq) x u]
+      · have hσ : ¬ ((Equiv.swap p q * Equiv.Perm.ofSubtype u).support = univ ∧
+            (Equiv.swap p q * Equiv.Perm.ofSubtype u) *
+              (Equiv.swap p q * Equiv.Perm.ofSubtype u) = 1) := fun h => hu (hiff.1 h)
+        rw [if_neg hσ, if_neg hu, mul_zero]
+    · rw [← mul_sum]
 
 lemma cycleType_replicate_two_of_mul_self {n : ℕ} {σ : Perm (Fin (2 * n))}
     (hsup : σ.support = univ) (hsq : σ * σ = 1) :
@@ -7504,7 +7509,6 @@ lemma matchingWeight_eq_prod {α : Type*} [Fintype α] [DecidableEq α]
     (x : α → ℂ) {σ : Perm α} (h : σ.support = univ) :
     matchingWeight x σ = ∏ a, (x a - x (σ a))⁻¹ := by
   rw [matchingWeight_eq_prod_support, h]
-  rfl
 
 lemma matchingWeight_zeta_mul {N : ℕ} [NeZero N] {ζ : ℂ}
     (hζ : IsPrimitiveRoot ζ N) {σ : Perm (Fin N)} (hsup : σ.support = univ) :
@@ -7561,7 +7565,7 @@ lemma matchingSum_zeta {n : ℕ} (hn : 1 ≤ n) {ζ : ℂ}
     (derangement_inv_one_sub_eq_involution hn hζ).symm.trans
       (unsigned_derangement_inv_sum hn hζ)
   have h4 : (2 : ℂ) ^ (2 * n) = (4 : ℂ) ^ n := by
-    rw [pow_mul, ← pow_two]
+    rw [pow_mul]
     norm_num
   rw [hinv, h4, mul_div_cancel₀ _ (pow_ne_zero _ (by norm_num : (4 : ℂ) ≠ 0))]
 
