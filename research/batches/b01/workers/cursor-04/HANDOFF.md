@@ -15,7 +15,7 @@ Cloitre Prop. 6.5 is proved in the research file as `a_two_four_pow`. That is no
 
 Dirichlet existence of some prime injector is now proved (`exists_prime_index_injector`, `q_dvd_x_eventually`). That does not bound the injector by `q(q+2)-1` and is not a resolution.
 
-`conjecture_of_square_window` proves the frozen type *assuming* every prime `q ≥ 5` divides `x(q(q+2)-1)`. The window hypothesis is not proved. Miller–Rabin found no window failures for primes `q ≡ 2 (mod 3)` up to `200000`.
+`conjecture_of_square_window` proves the frozen type *assuming* every prime `q ≥ 5` divides `x(q(q+2)-1)`. The window hypothesis is not proved. Miller–Rabin found no window failures for primes `q ≡ 2 (mod 3)` up to `1000000`.
 
 If `n ≥ 6` and `3 ∣ a n` then `81 ∣ n+1`. That is not McEachen.
 

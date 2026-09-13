@@ -26,7 +26,7 @@ python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/injec
 python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/injector_mod.py
 python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/first_entry_shape.py
 python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/injector_window.py
-python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/window_miller.py 200000
+python3 research/batches/b01/workers/cursor-04/targets/A135508/experiments/window_miller.py 1000000
 ```
 
 No `lake clean`, `lake update`, or full default `lake build`.

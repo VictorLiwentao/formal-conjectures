@@ -98,7 +98,7 @@
     "gcd_gt_one_of_composite_shift: a composite odd kq-2 ≡ 2 (mod 3) is not a coprime injector once lpf(kq-2) has entered by s(s+2)-1.",
     "Need a prime r = kq-2 with r ≤ q(q+2)-1. For q ≡ 2 (mod 3) the candidates are k ≡ 5 (mod 6).",
     "Dirichlet, Linnik L=5, and the usual GRH bound do not give r ≤ q(q+2)-1. Finite injector checks are not a proof.",
-    "Miller-Rabin to q ≤ 200000 found no window failures (worst k=257 at q=40973). Not a proof.",
+    "Miller-Rabin to q ≤ 1000000 found no window failures (worst k=257 at q=40973). Not a proof.",
     "Cloitre C1 and Cor. 6.6 are not used and are not an unconditional solution."
   ],
   "next_step": "Prove an unconditional first-entry bound q | x(q(q+2)-1) for remaining primes q ≥ 103, or find a different invariant. Do not claim completion. Continue until an exact candidate, a verified prior solution, a defective-target report, or the original 8-hour kickoff limit.",
