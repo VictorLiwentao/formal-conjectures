@@ -75,6 +75,14 @@ at `n = mp`. The `Nat.log` form takes `e = ⌊log_p m⌋`.
 `twoHarmonicTrunc_two_ne_zero`: `L(2) = 4 ≠ 0` in `𝔽_p` for odd primes `p`, so the criterion
 applies whenever `2p ≤ m < 3p` and `p ∤ m`.
 
+`not_n_sq_dvd_num_of_prime_factor`: packages the `m < p` Fermat case with the `L ≠ 0` case.
+
+`p_mul_ratExpression_sq_sub_pos`: `p T(p^2) - T(p) > 0` for prime `p`, so the min-lemma
+applies whenever `v_p(T(p)) ≠ v_p(p T(p^2)-T(p))`.
+
+Exact evaluations (kernel `norm_num`, not `native_decide`): the converse holds at
+`n = 9, 25, 27, 49`.
+
 ## Odd composite converse
 
 Not finished. c5-k4 found no counterexample for `n ≤ 4000`. The binomial identity reduces the problem to showing that for some prime `p | n` one has `v_p(T(n)) < 2 v_p(n)`.
@@ -88,8 +96,9 @@ Kernel-checked fragments of the converse:
 - `n=mp` with odd prime `p` and `v_p(T(m))<1`, including:
   - `p≤m<2p` and `p∤m` (unique multiple)
   - `p^e ≤ m < p^{e+1}`, `p∤m`, and `L(m/p^e)≠0` in `𝔽_p`
+- exact `n=9, 25, 27, 49`
 
-Remaining odd composites include prime powers `p^e` (`e≥2`, so `p | m`) and products where `L(m/p^e)=0` in `𝔽_p` for every odd prime `p` with `p ∤ (n/p)`. Experiments (`experiments/padic_converse.py`) give:
+Remaining odd composites include larger prime powers and products where `L(m/p^e)=0` for every eligible prime (for example `n=1027=13·79`). Experiments (`experiments/padic_converse.py`, `experiments/remaining_odd.py`) give:
 
 - `v_p(T(p^2))∈{0,1,2}` for primes `p≤61`, always `<4`. For `11≤p≤61` this valuation is `1`.
 - Empirically `v_p(p T(p^2)-T(p))>v_p(T(p))`, which would give `v_p(T(p^2))=v_p(T(p))-1` from the min lemma. Not kernel-checked.

@@ -71,6 +71,18 @@ Kernel-checked truncated harmonic criterion, same axioms, `#print axioms` on 202
 
 If `p^e ≤ m < p^{e+1}`, `p ∤ m`, and `L(m/p^e) ≠ 0` in `𝔽_p`, then `v_p(T(m)) = -e`, so the converse holds at `n=mp`. This is not the frozen iff.
 
+Kernel-checked exact prime powers `n=9,25,27,49` and the packaging lemma `not_n_sq_dvd_num_of_prime_factor`, same axioms.
+
+```
+'OeisA108866.not_n_sq_dvd_num_of_prime_factor'
+'OeisA108866.p_mul_ratExpression_sq_sub_pos'
+'OeisA108866.padicValRat_ratExpression_sq_eq_min_sub_one'
+'OeisA108866.not_n_sq_dvd_num_nine'
+'OeisA108866.not_n_sq_dvd_num_twenty_five'
+'OeisA108866.not_n_sq_dvd_num_twenty_seven'
+'OeisA108866.not_n_sq_dvd_num_forty_nine'
+```
+
 Exact type of the prime-direction theorem, from `#print OeisA108866.n_sq_dvd_num_of_prime`:
 
 ```

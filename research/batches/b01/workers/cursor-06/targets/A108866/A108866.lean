@@ -2309,12 +2309,121 @@ lemma not_n_sq_dvd_num_of_two_mul {m p : ℕ}
     linarith
   exact not_n_sq_dvd_num_of_val_pred hm1 hp hp2 hn hB
 
+lemma not_n_sq_dvd_num_of_prime_factor {m p : ℕ}
+    (hp : p.Prime) (hp2 : p ≠ 2) (hm1 : 1 < m) (hn : 3 < m * p)
+    (h : (m < p ∧ ¬ p ∣ (ratExpression m).num.natAbs) ∨
+      (p ≤ m ∧ ¬ p ∣ m ∧
+        twoHarmonicTrunc (m / p ^ Nat.log p m) p ≠ 0)) :
+    ¬ (ratExpression (m * p)).num ≡ 0 [ZMOD ((m * p) ^ 2 : ℤ)] := by
+  rcases h with ⟨hmq, hnum⟩ | ⟨hpm, hnd, hL⟩
+  · exact not_n_sq_dvd_num_of_mul_odd_primes hm1 hp hmq hnum
+  · exact not_n_sq_dvd_num_of_log hp hp2 hpm hnd hn hL
+
 #print axioms OeisA108866.padicValRat_ratExpression_eq_neg_pow_of_trunc
 #print axioms OeisA108866.not_n_sq_dvd_num_of_trunc
 #print axioms OeisA108866.padicValRat_ratExpression_eq_neg_log_of_trunc
 #print axioms OeisA108866.not_n_sq_dvd_num_of_log
 #print axioms OeisA108866.padicValRat_ratExpression_eq_neg_one_of_two_mul
 #print axioms OeisA108866.not_n_sq_dvd_num_of_two_mul
+#print axioms OeisA108866.not_n_sq_dvd_num_of_prime_factor
+
+lemma p_mul_ratExpression_sq_sub_pos {p : ℕ} (hp : p.Prime) :
+    0 < (p : ℚ) * ratExpression (p * p) - ratExpression p := by
+  have hm0 : 0 < p := hp.pos
+  have hdiff := q_mul_ratExpression_sub_eq_fermat_add hm0 hm0
+  have hF : 0 < ∑ j ∈ range p,
+      ((2 : ℚ) ^ ((j + 1) * p) - (2 : ℚ) ^ (j + 1)) / (j + 1) :=
+    fermat_sum_pos hp.one_lt hm0
+  have hO : 0 < ∑ i ∈ (range (p * p)).filter (fun i => ¬ p ∣ i + 1),
+      (p : ℚ) * ((2 : ℚ) ^ (i + 1) / (i + 1)) :=
+    rest_sum_pos hm0 hp
+  linarith [hdiff, hF, hO]
+
+/-- If `v_p(T(p)) ≠ v_p(p T(p^2)-T(p))`, then
+`v_p(T(p^2)) = min(v_p(T(p)), v_p(p T(p^2)-T(p))) - 1`. -/
+lemma padicValRat_ratExpression_sq_eq_min_sub_one {p : ℕ} (hp : p.Prime)
+    (hne : padicValRat p (ratExpression p) ≠
+        padicValRat p ((p : ℚ) * ratExpression (p * p) - ratExpression p)) :
+    padicValRat p (ratExpression (p * p)) =
+      min (padicValRat p (ratExpression p))
+          (padicValRat p ((p : ℚ) * ratExpression (p * p) - ratExpression p)) - 1 :=
+  padicValRat_ratExpression_mul_eq_min_sub_one hp.one_lt hp
+    (ne_of_gt (p_mul_ratExpression_sq_sub_pos hp)) hne
+
+lemma ratExpression_nine : ratExpression 9 = (4714 : ℚ) / 35 := by
+  rw [ratExpression_of_pos (by decide : 0 < 9)]
+  norm_num
+
+lemma ratExpression_nine_num : (ratExpression 9).num = 4714 := by
+  rw [ratExpression_nine]
+  have hcop : Nat.Coprime (4714 : ℤ).natAbs (35 : ℤ).natAbs := by decide
+  have hb0 : (0 : ℤ) < 35 := by decide
+  simpa using (Rat.num_div_eq_of_coprime hb0 hcop)
+
+lemma not_n_sq_dvd_num_nine :
+    ¬ (ratExpression 9).num ≡ 0 [ZMOD ((9 : ℕ) ^ 2 : ℤ)] := by
+  rw [ratExpression_nine_num]
+  decide
+
+lemma ratExpression_twenty_five : ratExpression 25 = (187907123732870 : ℚ) / 66927861 := by
+  rw [ratExpression_of_pos (by decide : 0 < 25)]
+  norm_num
+
+lemma ratExpression_twenty_five_num : (ratExpression 25).num = 187907123732870 := by
+  rw [ratExpression_twenty_five]
+  have hcop : Nat.Coprime (187907123732870 : ℤ).natAbs (66927861 : ℤ).natAbs := by decide
+  have hb0 : (0 : ℤ) < 66927861 := by decide
+  simpa using (Rat.num_div_eq_of_coprime hb0 hcop)
+
+lemma not_n_sq_dvd_num_twenty_five :
+    ¬ (ratExpression 25).num ≡ 0 [ZMOD ((25 : ℕ) ^ 2 : ℤ)] := by
+  rw [ratExpression_twenty_five_num]
+  decide
+
+lemma ratExpression_twenty_seven : ratExpression 27 = (5777962561135174 : ℚ) / 557732175 := by
+  rw [ratExpression_of_pos (by decide : 0 < 27)]
+  norm_num
+
+lemma ratExpression_twenty_seven_num : (ratExpression 27).num = 5777962561135174 := by
+  rw [ratExpression_twenty_seven]
+  have hcop : Nat.Coprime (5777962561135174 : ℤ).natAbs (557732175 : ℤ).natAbs := by decide
+  have hb0 : (0 : ℤ) < 557732175 := by decide
+  simpa using (Rat.num_div_eq_of_coprime hb0 hcop)
+
+lemma not_n_sq_dvd_num_twenty_seven :
+    ¬ (ratExpression 27).num ≡ 0 [ZMOD ((27 : ℕ) ^ 2 : ℤ)] := by
+  rw [ratExpression_twenty_seven_num]
+  decide
+
+lemma ratExpression_forty_nine :
+    ratExpression 49 = (46402816520579634557697354319514 : ℚ) / 1976431444034436675 := by
+  rw [ratExpression_of_pos (by decide : 0 < 49)]
+  norm_num
+
+lemma ratExpression_forty_nine_num :
+    (ratExpression 49).num = 46402816520579634557697354319514 := by
+  rw [ratExpression_forty_nine]
+  have hcop : Nat.Coprime (46402816520579634557697354319514 : ℤ).natAbs
+      (1976431444034436675 : ℤ).natAbs := by decide
+  have hb0 : (0 : ℤ) < 1976431444034436675 := by decide
+  simpa using (Rat.num_div_eq_of_coprime hb0 hcop)
+
+lemma not_n_sq_dvd_num_forty_nine :
+    ¬ (ratExpression 49).num ≡ 0 [ZMOD ((49 : ℕ) ^ 2 : ℤ)] := by
+  rw [ratExpression_forty_nine_num]
+  decide
+
+#print axioms OeisA108866.p_mul_ratExpression_sq_sub_pos
+#print axioms OeisA108866.padicValRat_ratExpression_sq_eq_min_sub_one
+#print axioms OeisA108866.ratExpression_nine
+#print axioms OeisA108866.not_n_sq_dvd_num_nine
+#print axioms OeisA108866.ratExpression_twenty_five
+#print axioms OeisA108866.not_n_sq_dvd_num_twenty_five
+#print axioms OeisA108866.ratExpression_twenty_seven
+#print axioms OeisA108866.not_n_sq_dvd_num_twenty_seven
+#print axioms OeisA108866.ratExpression_forty_nine
+#print axioms OeisA108866.not_n_sq_dvd_num_forty_nine
 
 end OeisA108866
+
 
