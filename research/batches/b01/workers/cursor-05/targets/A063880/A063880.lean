@@ -5088,6 +5088,123 @@ lemma not_five_sigma_eq_six_usigma_eleven_thirteen_small {p a b k : ℕ}
         6 * usigma (11 ^ a) * usigma (13 ^ b) * usigma (p ^ k) :=
   (eleven_thirteen_sq_p_pow_ge_two_overshoot_six_five hp hp17 h43 ha hb hk).ne'
 
+/-- If the rest after three distinct prime powers is squarefree, leftover
+`10/7` is concentrated on those three prime powers. -/
+lemma seven_sigma_eq_ten_of_three_squareful {m p q r : ℕ} (hm : m ≠ 0)
+    (hp : p.Prime) (hq : q.Prime) (hr : r.Prime)
+    (_hpq : p ≠ q) (_hpr : p ≠ r) (_hqr : q ≠ r)
+    (h : 7 * σ 1 m = 10 * usigma m)
+    (hs : Squarefree (ordCompl[r] (ordCompl[q] (ordCompl[p] m)))) :
+    7 * σ 1 (ordProj[p] m) * σ 1 (ordProj[q] (ordCompl[p] m)) *
+        σ 1 (ordProj[r] (ordCompl[q] (ordCompl[p] m))) =
+      10 * usigma (ordProj[p] m) * usigma (ordProj[q] (ordCompl[p] m)) *
+        usigma (ordProj[r] (ordCompl[q] (ordCompl[p] m))) := by
+  set t := ordCompl[r] (ordCompl[q] (ordCompl[p] m))
+  have hm' : ordCompl[p] m ≠ 0 := (Nat.ordCompl_pos p hm).ne'
+  have hm'' : ordCompl[q] (ordCompl[p] m) ≠ 0 :=
+    (Nat.ordCompl_pos q hm').ne'
+  have hdecomp_p : ordProj[p] m * ordCompl[p] m = m :=
+    Nat.ordProj_mul_ordCompl_eq_self m p
+  have hdecomp_q : ordProj[q] (ordCompl[p] m) * ordCompl[q] (ordCompl[p] m) =
+      ordCompl[p] m :=
+    Nat.ordProj_mul_ordCompl_eq_self (ordCompl[p] m) q
+  have hdecomp_r : ordProj[r] (ordCompl[q] (ordCompl[p] m)) * t =
+      ordCompl[q] (ordCompl[p] m) :=
+    Nat.ordProj_mul_ordCompl_eq_self (ordCompl[q] (ordCompl[p] m)) r
+  have hc_p : Coprime (ordProj[p] m) (ordCompl[p] m) :=
+    (Nat.coprime_ordCompl hp hm).pow_left (m.factorization p)
+  have hc_q : Coprime (ordProj[q] (ordCompl[p] m))
+      (ordCompl[q] (ordCompl[p] m)) :=
+    (Nat.coprime_ordCompl hq hm').pow_left ((ordCompl[p] m).factorization q)
+  have hc_r : Coprime (ordProj[r] (ordCompl[q] (ordCompl[p] m))) t :=
+    (Nat.coprime_ordCompl hr hm'').pow_left
+      ((ordCompl[q] (ordCompl[p] m)).factorization r)
+  have hmul : 7 * σ 1 (ordProj[p] m) * σ 1 (ordProj[q] (ordCompl[p] m)) *
+        σ 1 (ordProj[r] (ordCompl[q] (ordCompl[p] m))) * σ 1 t =
+      10 * usigma (ordProj[p] m) * usigma (ordProj[q] (ordCompl[p] m)) *
+        usigma (ordProj[r] (ordCompl[q] (ordCompl[p] m))) * usigma t := by
+    have := h
+    rw [← hdecomp_p, sigma_mul_of_coprime hc_p, usigma_mul hc_p] at this
+    rw [← hdecomp_q, sigma_mul_of_coprime hc_q, usigma_mul hc_q] at this
+    rw [← hdecomp_r, sigma_mul_of_coprime hc_r, usigma_mul hc_r] at this
+    simpa [mul_assoc, mul_left_comm, mul_comm] using this
+  have hσu := (sigma_eq_usigma_iff_squarefree (Nat.ordCompl_pos r hm'')).mpr hs
+  rw [hσu] at hmul
+  have hpos : 0 < usigma t := by
+    rw [← hσu]
+    exact sigma_pos_iff.mpr (Nat.ordCompl_pos r hm'')
+  exact Nat.eq_of_mul_eq_mul_right hpos hmul
+
+/-- Leftover `10/7` cannot be three squareful primes `7 ≤ p < q < r` times a
+squarefree coprime factor. -/
+lemma not_seven_sigma_of_three_sq_primes_ge_seven {m p q r : ℕ} (hm : m ≠ 0)
+    (hp : p.Prime) (hq : q.Prime) (hr : r.Prime)
+    (hpq : p < q) (hqr : q < r) (hp7 : 7 ≤ p)
+    (h : 7 * σ 1 m = 10 * usigma m)
+    (hkp : 2 ≤ padicValNat p m) (hkq : 2 ≤ padicValNat q m)
+    (hkr : 2 ≤ padicValNat r m)
+    (hs : Squarefree (ordCompl[r] (ordCompl[q] (ordCompl[p] m)))) : False := by
+  have hpq_ne : p ≠ q := Nat.ne_of_lt hpq
+  have hpr_ne : p ≠ r := Nat.ne_of_lt (lt_trans hpq hqr)
+  have hqr_ne : q ≠ r := Nat.ne_of_lt hqr
+  have heq := seven_sigma_eq_ten_of_three_squareful hm hp hq hr hpq_ne hpr_ne
+    hqr_ne h hs
+  have hproj_p : ordProj[p] m = p ^ padicValNat p m := by
+    simp [Nat.factorization_def m hp]
+  have hproj_q : ordProj[q] (ordCompl[p] m) =
+      q ^ padicValNat q (ordCompl[p] m) := by
+    simp [Nat.factorization_def (ordCompl[p] m) hq]
+  have hproj_r : ordProj[r] (ordCompl[q] (ordCompl[p] m)) =
+      r ^ padicValNat r (ordCompl[q] (ordCompl[p] m)) := by
+    simp [Nat.factorization_def (ordCompl[q] (ordCompl[p] m)) hr]
+  rw [hproj_r, padicValNat_ordCompl_of_ne hr hqr_ne,
+    padicValNat_ordCompl_of_ne hr hpr_ne, hproj_q,
+    padicValNat_ordCompl_of_ne hq hpq_ne, hproj_p] at heq
+  have hq11 : 11 ≤ q := by
+    have : 8 ≤ q := by omega
+    have hmem : q = 8 ∨ q = 9 ∨ q = 10 ∨ 11 ≤ q := by omega
+    rcases hmem with rfl | rfl | rfl | h11
+    · cases (by decide : ¬ Nat.Prime 8) hq
+    · cases (by decide : ¬ Nat.Prime 9) hq
+    · cases (by decide : ¬ Nat.Prime 10) hq
+    · exact h11
+  have hr13 : 13 ≤ r := by
+    have : 12 ≤ r := by omega
+    have hmem : r = 12 ∨ 13 ≤ r := by omega
+    rcases hmem with rfl | h13
+    · cases (by decide : ¬ Nat.Prime 12) hr
+    · exact h13
+  exact (seven_sigma_lt_ten_usigma_three_large hp hq hr hp7 hq11 hr13
+    (by omega) (by omega) (by omega)).ne heq
+
+/-- Leftover `10/7` cannot be three squareful primes `5 < 7 < r` with `r ≥ 11`
+times a squarefree coprime factor. -/
+lemma not_seven_sigma_of_three_sq_primes_five_seven {m r : ℕ} (hm : m ≠ 0)
+    (hr : r.Prime) (hr11 : 11 ≤ r)
+    (h : 7 * σ 1 m = 10 * usigma m)
+    (hk5 : 2 ≤ padicValNat 5 m) (hk7 : 2 ≤ padicValNat 7 m)
+    (hkr : 2 ≤ padicValNat r m)
+    (hs : Squarefree (ordCompl[r] (ordCompl[7] (ordCompl[5] m)))) : False := by
+  have hp5 : Nat.Prime 5 := Nat.prime_five
+  have hp7 : Nat.Prime 7 := by decide
+  have hpq_ne : (5 : ℕ) ≠ 7 := by decide
+  have hpr_ne : (5 : ℕ) ≠ r := Nat.ne_of_lt (lt_of_lt_of_le (by decide : 5 < 11) hr11)
+  have hqr_ne : (7 : ℕ) ≠ r := Nat.ne_of_lt (lt_of_lt_of_le (by decide : 7 < 11) hr11)
+  have heq := seven_sigma_eq_ten_of_three_squareful hm hp5 hp7 hr hpq_ne hpr_ne
+    hqr_ne h hs
+  have hproj_p : ordProj[5] m = 5 ^ padicValNat 5 m := by
+    simp [Nat.factorization_def m hp5]
+  have hproj_q : ordProj[7] (ordCompl[5] m) =
+      7 ^ padicValNat 7 (ordCompl[5] m) := by
+    simp [Nat.factorization_def (ordCompl[5] m) hp7]
+  have hproj_r : ordProj[r] (ordCompl[7] (ordCompl[5] m)) =
+      r ^ padicValNat r (ordCompl[7] (ordCompl[5] m)) := by
+    simp [Nat.factorization_def (ordCompl[7] (ordCompl[5] m)) hr]
+  rw [hproj_r, padicValNat_ordCompl_of_ne hr hqr_ne,
+    padicValNat_ordCompl_of_ne hr hpr_ne, hproj_q,
+    padicValNat_ordCompl_of_ne hp7 hpq_ne, hproj_p] at heq
+  exact not_seven_sigma_eq_ten_usigma_five_seven_prime hr hr11 hk5 hk7 hkr heq
+
 end Unitary
 
 section Congruence

@@ -32,7 +32,7 @@ Result on 2026-09-13T02:53Z: exit code 0, no warnings, no `sorry` declaration in
 
 This is **not** a compile of the frozen theorems. The frozen `sorry` theorems in `FormalConjectures/OEIS/63880.lean` were not used as proof steps.
 
-New lemmas compiled in this checkpoint include `not_five_sigma_of_two_sq_primes`, `not_five_sigma_eq_six_usigma_five_prime`, `not_five_sigma_eq_six_usigma_seven_prime`, `not_A_of_eight_mul_two_sq_primes`, `not_five_sigma_eq_six_of_squarefree`, `not_five_sigma_eq_six_usigma_five_seven_mul`, and `not_five_sigma_eq_six_usigma_eleven_thirteen_sq`. Previous leftover `10/7` family lemmas remain.
+New lemmas compiled in this checkpoint include `not_five_sigma_of_two_sq_primes`, `not_five_sigma_eq_six_usigma_five_prime`, `not_five_sigma_eq_six_usigma_seven_prime`, `not_A_of_eight_mul_two_sq_primes`, `not_five_sigma_eq_six_of_squarefree`, `not_five_sigma_eq_six_usigma_five_seven_mul`, `not_five_sigma_eq_six_usigma_eleven_thirteen_sq`, `not_seven_sigma_of_three_sq_primes_ge_seven`, and `not_seven_sigma_of_three_sq_primes_five_seven`. Previous leftover `10/7` family lemmas remain.
 
 No `#print axioms` audit of a completed target theorem exists, because those theorems are not proved.
 
