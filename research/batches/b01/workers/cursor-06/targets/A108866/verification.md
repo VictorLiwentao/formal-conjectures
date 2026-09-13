@@ -44,7 +44,17 @@ Kernel-checked square-free fragment, axioms `{propext, Classical.choice, Quot.so
 'OeisA108866.not_n_sq_dvd_num_of_mul_odd_primes'
 ```
 
-These cover `n = mq` for a prime `q` with `1 < m < q` and `q ∤ T(m).num` only. The file still does not prove the frozen iff.
+Kernel-checked LTE recurrence and unique-multiple fragment, same axioms, `#print axioms` on 2026-09-13:
+
+```
+'OeisA108866.padicValRat_ratExpression_mul_of_val_lt_one'
+'OeisA108866.not_n_sq_dvd_num_of_val_pred'
+'OeisA108866.padicValRat_ratExpression_eq_neg_one_of_unique'
+'OeisA108866.not_n_sq_dvd_num_of_unique_prime_mul'
+'OeisA108866.padicValRat_ratExpression_mul_eq_min_sub_one'
+```
+
+These cover additional `n=mq` with `v_q(T(m))<1`, and `n=mp` when `p≤m<2p` and `p∤m`. The file still does not prove the frozen iff.
 
 Exact type of the prime-direction theorem, from `#print OeisA108866.n_sq_dvd_num_of_prime`:
 

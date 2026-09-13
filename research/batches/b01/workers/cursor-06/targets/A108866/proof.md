@@ -53,17 +53,34 @@ Argument: Mathlib `ZMod.cast_descFactorial` gives `C(p-1,i) ≡ (-1)^i (mod p)` 
 
 `not_n_sq_dvd_num_of_mul_odd_primes`: the same hypotheses give the converse at `n = mq`. Kernel-checked; axioms `propext`, `Classical.choice`, `Quot.sound`. This is not the frozen iff.
 
+`padicValNat.pow_sub_pow` (lifting the exponent) gives `v_q(2^{jq}-2^j)=v_q(2^q-2)+v_q(j)` for odd primes `q`. Hence every Fermat term `(2^{jq}-2^j)/j` has valuation at least `1` with no restriction `j<q`. Combined with the rest sum, `v_q(q T(mq)-T(m))≥1` whenever the difference is nonzero.
+
+`padicValRat_ratExpression_mul_of_val_lt_one`: if `v_q(T(m))<1`, then `v_q(T(mq))=v_q(T(m))-1`.
+
+`padicValRat_ratExpression_mul_eq_min_sub_one`: if those two valuations are unequal, `v_q(T(mq))` is the minimum minus `1`.
+
+`padicValRat_ratExpression_eq_neg_one_of_unique`: if `p≤m<2p` and `p∤m`, then `k=p` is the unique multiple of `p` in `1..m`, so `v_p(T(m))=-1`.
+
+`not_n_sq_dvd_num_of_unique_prime_mul`: the same hypotheses give the converse at `n=mp`.
+
 ## Odd composite converse
 
 Not finished. c5-k4 found no counterexample for `n ≤ 4000`. The binomial identity reduces the problem to showing that for some prime `p | n` one has `v_p(T(n)) < 2 v_p(n)`.
 
 A sufficient criterion is `v_p(oddInnerNum n) ≤ v_p(oddDenom n)` for some odd prime `p | n`.
 
-For `n = mq` with prime `q`, `1 < m < q`, and `q ∤ T(m).num`, the identity `q T(mq) - T(m)` has `q`-adic valuation at least `1`, `v_q(T(m)) = 0`, and ultrametric comparison gives `v_q(T(mq)) = -1 < 2 = 2 v_q(mq)`. Deterministic `p`-adic experiments (`experiments/padic_converse.py`) give:
+Kernel-checked fragments of the converse:
 
-- `v_p(T(p^2)) ∈ {0,1,2}` for primes `p ≤ 61`, always `< 4`. For `11 ≤ p ≤ 61` this valuation is `1`.
-- For square-free `n = pq ≤ 200`, `v_q(T(n)) = -1` except when `T(p) ≡ 0 (mod q)`, where it is `0`; both are `< 2`.
-- Fermat base-2 pseudoprimes up to `7957` all have some local valuation strictly below `2 e`.
+- even `n`
+- `n=mq` with prime `q`, `1<m<q`, and `q∤T(m).num`
+- `n=mp` with odd prime `p`, `p≤m<2p`, and `p∤m`
+
+Remaining odd composites include prime powers `p^e` (`e≥2`) and products where every prime factor `q` has `v_q(T(n/q))≥1`. Experiments (`experiments/padic_converse.py`) give:
+
+- `v_p(T(p^2))∈{0,1,2}` for primes `p≤61`, always `<4`. For `11≤p≤61` this valuation is `1`.
+- Empirically `v_p(p T(p^2)-T(p))>v_p(T(p))`, which would give `v_p(T(p^2))=v_p(T(p))-1` from the min lemma. Not kernel-checked.
+- For square-free `n=pq≤200`, `v_q(T(n))=-1` except when `T(p)≡0 (mod q)`, where it is `0`; both are `<2`.
+- Fermat base-2 pseudoprimes up to `7957` all have some local valuation strictly below `2e`.
 
 These scans are experimental and do not replace a kernel proof.
 
