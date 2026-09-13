@@ -5,7 +5,7 @@
   "model": "Cursor Grok 4.6 Extra High",
   "starting_branch": "codex/b01-coordination",
   "starting_commit": "238f78bdd5701ae4c97a0d70d4e22e2d45770d7a",
-  "note": "All seven launch pages verified. Startup or research state is a snapshot, not a completed result. Worker output branch names will be recorded from later reports. No recurring monitor was created.",
+  "note": "Historical initial launches; an active 15-minute monitor is now configured. Current slot mappings and replacements are authoritative in supervision-state.json.",
   "agents": [
     {
       "worker_id": "cursor-01",
@@ -57,5 +57,25 @@
     ],
     "awaiting_confirmation": [],
     "deadline_policy": "Eight total research hours from original kickoff, requested in goal text; not a new hard platform spending cap."
-  }
+  },
+  "replacement_launches": [
+    {
+      "worker_id": "cursor-01-r02",
+      "slot": "cursor-01",
+      "agent_url": "https://cursor.com/agents/bc-25b34f4b-3076-4e2d-93c5-d2bd6b630918",
+      "starting_commit": "1107856a264a066e316c3cba7b5339be475f6304",
+      "launch_verified": true,
+      "goal_active_verified": true,
+      "checked_at_utc": "2026-09-13T00:15:43.701432+00:00"
+    },
+    {
+      "worker_id": "cursor-03-r02",
+      "slot": "cursor-03",
+      "agent_url": "https://cursor.com/agents/bc-a23b458f-124c-4db7-adc3-8fc7a6d14f64",
+      "starting_commit": "1107856a264a066e316c3cba7b5339be475f6304",
+      "launch_verified": true,
+      "goal_active_verified": true,
+      "checked_at_utc": "2026-09-13T00:15:43.701432+00:00"
+    }
+  ]
 }

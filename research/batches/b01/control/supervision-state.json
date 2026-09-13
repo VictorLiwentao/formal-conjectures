@@ -2,19 +2,25 @@
   "automation_id": "maintain-seven-cursor-math-workers",
   "interval_minutes": 15,
   "target_cursor_slots": 7,
-  "updated_at_utc": "2026-09-13T00:11:52.305832+00:00",
+  "updated_at_utc": "2026-09-13T00:15:43.701432+00:00",
   "accept_known_informal_proofs_for_new_lean_formalization": true,
-  "note": "Five original workers healthy. Two predecessors stopped and independently audited; fresh distinct replacement reservations prepared, launch pending.",
+  "note": "All seven campaign slots occupied after two audited retirements and two distinct replacements. Both replacement goals visibly active in the prepared environment; five original workers were healthy at their recorded checks. No upstream PR/OEIS edit.",
   "slots": [
     {
       "slot": "cursor-01",
       "run_id": "cursor-01-r02",
-      "agent_url": null,
-      "state": "reserved_not_started",
+      "agent_url": "https://cursor.com/agents/bc-25b34f4b-3076-4e2d-93c5-d2bd6b630918",
+      "state": "researching",
       "actual_branch": null,
-      "replacements": [],
+      "replacements": [
+        {
+          "run_id": "cursor-01-r02",
+          "agent_url": "https://cursor.com/agents/bc-25b34f4b-3076-4e2d-93c5-d2bd6b630918",
+          "launched_at_utc": "2026-09-13T00:14:28.257975+00:00"
+        }
+      ],
       "last_checked_at_utc": "2026-09-13T00:05:43.648025+00:00",
-      "progress_note": "Replacement prepared; not launched yet.",
+      "progress_note": "Goal active visibly verified; prepared environment ready; reading pinned target, literature and own prompt.",
       "history": [
         {
           "run_id": "cursor-01",
@@ -25,7 +31,14 @@
           "audit": "research/batches/b01/control/audits/cursor-01.md"
         }
       ],
-      "predecessor": "cursor-01"
+      "predecessor": "cursor-01",
+      "starting_commit": "1107856a264a066e316c3cba7b5339be475f6304",
+      "launch_verified_at_utc": "2026-09-13T00:14:28.257975+00:00",
+      "goal_command_submitted": true,
+      "goal_active_verified": true,
+      "goal_verified_at_utc": "2026-09-13T00:15:43.701432+00:00",
+      "environment_build": "bld-20260912-716b23c3-d124-4da8-ab69-743e1fb16843",
+      "model": "Cursor Grok 4.6 Extra High"
     },
     {
       "slot": "cursor-02",
@@ -40,12 +53,18 @@
     {
       "slot": "cursor-03",
       "run_id": "cursor-03-r02",
-      "agent_url": null,
-      "state": "reserved_not_started",
+      "agent_url": "https://cursor.com/agents/bc-a23b458f-124c-4db7-adc3-8fc7a6d14f64",
+      "state": "researching",
       "actual_branch": null,
-      "replacements": [],
+      "replacements": [
+        {
+          "run_id": "cursor-03-r02",
+          "agent_url": "https://cursor.com/agents/bc-a23b458f-124c-4db7-adc3-8fc7a6d14f64",
+          "launched_at_utc": "2026-09-13T00:12:48.331188+00:00"
+        }
+      ],
       "last_checked_at_utc": "2026-09-13T00:05:43.648025+00:00",
-      "progress_note": "Replacement prepared; not launched yet.",
+      "progress_note": "Goal active visibly verified; prepared environment ready; reading pinned target, literature and own prompt.",
       "history": [
         {
           "run_id": "cursor-03",
@@ -56,7 +75,14 @@
           "audit": "research/batches/b01/control/audits/cursor-03.md"
         }
       ],
-      "predecessor": "cursor-03"
+      "predecessor": "cursor-03",
+      "starting_commit": "1107856a264a066e316c3cba7b5339be475f6304",
+      "launch_verified_at_utc": "2026-09-13T00:12:48.331188+00:00",
+      "goal_command_submitted": true,
+      "goal_active_verified": true,
+      "goal_verified_at_utc": "2026-09-13T00:15:43.701432+00:00",
+      "environment_build": "bld-20260912-716b23c3-d124-4da8-ab69-743e1fb16843",
+      "model": "Cursor Grok 4.6 Extra High"
     },
     {
       "slot": "cursor-04",
