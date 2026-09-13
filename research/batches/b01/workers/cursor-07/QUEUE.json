@@ -2,7 +2,7 @@
   "schema": 1,
   "worker_id": "cursor-07",
   "baseline_commit": "a2f4a1bb12a28e04a969da78feefac7d1ce49565",
-  "updated_utc": "2026-09-13T01:15:00Z",
+  "updated_utc": "2026-09-13T01:17:45Z",
   "active": [
     {
       "id": "WOWII31",
@@ -10,10 +10,10 @@
       "source_path": "FormalConjectures/WrittenOnTheWallII/GraphConjecture31.lean",
       "source_sha256": "0c49c9a24c81a764e8bed251442f4e5cbda0ec7b22da2a1fcb04cb3ad02d8092",
       "original_source_url": "http://cms.uhd.edu/faculty/delavinae/research/wowII/all.html#conj31",
-      "status_check": "Known ESS/Chung theorem. Frozen Lean still sorry. DeepMind PR 4567 is docs only. No exact public Lean proof found on 2026-09-13.",
+      "status_check": "Known ESS/Chung theorem. Frozen Lean still sorry. DeepMind PR 4567 is docs only. Earlier exact Lean proof by Kenta Kitamura (KitaKen1), DeepMind PR 4658 (2026-07-28), pinned a948e9fc. This worker file is a later implementation. Coordinator candidate compile passed; Kitamura compile pending.",
       "equivalence_group": "WOWII-chung-induced-path",
       "why_tractable": "Published finite combinatorial proof by Fan Chung; Mathlib has walks, geodesics, and non-cutvertices.",
-      "main_risk": "An exact public Lean proof appearing later would retire the target. The frozen docstring misstates path as average distance.",
+      "main_risk": "Prior exact Lean already exists. This implementation is not a first formalization. Frozen docstring misstates path as average distance.",
       "classification": "known_mathematics_formalization",
       "worker_proof": "WOWII31.conjecture31"
     }

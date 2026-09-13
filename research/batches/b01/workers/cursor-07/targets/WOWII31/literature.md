@@ -1,6 +1,7 @@
 # WOWII31 literature
 
 Classification: `known_mathematics_formalization`. Not new mathematics.
+Not a first Lean formalization.
 
 ## Frozen statement
 
@@ -30,23 +31,57 @@ The same bound is called the Induced Path Theorem in DeLaVina–Waller,
 WOWII lists Conjecture 31 as Chung's theorem:
 http://cms.uhd.edu/faculty/delavinae/research/wowII/all.html#conj31
 
-## Exact Lean proof search (2026-09-13)
+## Prior exact Lean proof (July 2026)
 
-Checked:
+An earlier exact Lean formalization of the same inequality was written by
+Kenta Kitamura (KitaKen1) and linked from open DeepMind PR
+[#4658](https://github.com/google-deepmind/formal-conjectures/pull/4658)
+(opened 2026-07-28). The PR adds a `formal_proof using lean4` pointer; it is
+not merged at the frozen baseline.
 
-- Frozen and live DeepMind `GraphConjecture31.lean` (still `sorry`)
+Pinned Lean file:
+
+https://github.com/KitaKen1/wowii-graph-conjecture-31-lean/blob/a948e9fc07e11b786aee8dadb1376b4d938454d6/lean/GraphConjecture31.lean
+
+Repo: https://github.com/KitaKen1/wowii-graph-conjecture-31-lean
+
+The pinned file proves
+`WrittenOnTheWallII.GraphConjecture31.conjecture31` with the same type as
+the frozen sorry theorem:
+
+```
+{α : Type u} [Fintype α] [DecidableEq α] [Nontrivial α]
+(G : SimpleGraph α) [DecidableRel G.Adj] (h : G.Connected) :
+2 * (G.radius.toNat : ℤ) - 1 ≤ (path G : ℤ)
+```
+
+It inlines local `isInducedPath` / `path` copies matching the Formal
+Conjectures definitions and proves a natural-number form
+`chung_bound_nat` first. The worker’s 2026-09-13 literature pass missed
+this PR. That miss is corrected here. This worker file is a later
+independent implementation, not the first exact Lean proof.
+
+William J. Blair commented on PR #4658 on 2026-08-08 that the linked
+file compiled on Formal Conjectures’ toolchain with no `sorry`. The
+coordinator auditor is compiling that prior artifact again. This
+worker does not treat that compile as confirmed.
+
+## Other Lean search notes (2026-09-13)
+
+Checked and still accurate after the correction:
+
+- Frozen and live DeepMind `GraphConjecture31.lean` (still `sorry` at freeze)
 - DeepMind PR #4567 (docs only)
 - Mathlib `SimpleGraph` radius/path APIs (`ediam_le_two_mul_radius` is the
   diameter bound, not an induced-path bound)
-- GitHub search for a Lean proof of this exact inequality
-- No AlphaProof Nexus or Epoch submission with this exact type found
 
-No exact public Lean proof of the frozen type was found. An already existing
-exact Lean proof would retire this target.
+No AlphaProof Nexus or Epoch submission with this exact type was found.
+Those negative checks do not make the worker file first.
 
 ## Formalization notes
 
 - `path G` is induced-path order, not average distance.
 - The frozen type requires `[Nontrivial α]`, `G.Connected`, and compares
   `2 * G.radius.toNat - 1` with `path G` in `ℤ`.
-- The worker proof does not import the sorry declaration.
+- The worker proof does not import the sorry declaration and does not
+  import Kitamura’s file.

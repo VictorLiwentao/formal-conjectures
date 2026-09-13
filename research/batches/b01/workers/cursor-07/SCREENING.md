@@ -97,10 +97,16 @@ in this session.
 
 ## Coordinator update (known informal proofs)
 
-A published informal proof is in scope if no exact public Lean proof exists.
-WOWII 31 was selected on that basis: Erdős–Saks–Sós Theorem 2.2, proof by
-Fan Chung. The frozen Lean type still has `sorry`. Classification:
-`known_mathematics_formalization`. See `targets/WOWII31/`.
+A published informal proof was treated as in scope if no exact public Lean
+proof exists. WOWII 31 was selected on that basis: Erdős–Saks–Sós Theorem
+2.2, proof by Fan Chung. The frozen Lean type still has `sorry`.
+Classification: `known_mathematics_formalization`. See `targets/WOWII31/`.
+
+The 2026-09-13 literature pass missed an earlier exact Lean proof by Kenta
+Kitamura (KitaKen1), DeepMind PR
+[#4658](https://github.com/google-deepmind/formal-conjectures/pull/4658)
+(2026-07-28). Novelty status is `prior_solution_found`. The worker file
+remains a later independent implementation, not a first formalization.
 
 ## Pause (2026-09-13T01:15Z)
 
@@ -108,6 +114,12 @@ Coordinator: WOWII31 is under independent compile/type/axiom audit of
 commit `54991f4b`. Status is `audit_pending`, not `independently_verified`.
 Further target work is paused. Continuation timer cancelled. Original
 deadline preserved. WOWII133 is **not** selected.
+
+## Attribution correction (2026-09-13T01:17Z)
+
+Coordinator candidate compilation of this branch passed. Coordinator
+compilation of Kitamura’s pinned artifact is pending. No new target.
+WOWII133 screening below is unchanged.
 
 ## WOWII133 screening notes (incomplete, paused)
 

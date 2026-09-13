@@ -1,12 +1,16 @@
 # WOWII31 proof
 
 Mathematics: Fan Chung's proof of Erdős–Saks–Sós, Theorem 2.2 (1986).
-Lean statement: The Formal Conjectures Authors.
-New proof development and write-up: Wentao Li.
+Original statement formalization: The Formal Conjectures Authors.
+Prior exact Lean proof: Kenta Kitamura (KitaKen1), July 2026,
+linked from DeepMind PR
+[#4658](https://github.com/google-deepmind/formal-conjectures/pull/4658).
+This independent implementation and write-up: Wentao Li.
 AI assistance: Cursor Grok 4.6, used for Lean API search, lemma
 engineering, and compile-error repair. The argument follows Chung.
 
 Classification: `known_mathematics_formalization`. Not new mathematics.
+Not a first Lean formalization.
 
 ## Statement
 
@@ -43,3 +47,7 @@ Deleting `v0` then yields an induced path on `2r−1` vertices.
 The proof is `WOWII31.conjecture31` in `WOWII31.lean`. It does not use the
 sorry theorem `WrittenOnTheWallII.GraphConjecture31.conjecture31`.
 The `#print axioms` output is `propext`, `Classical.choice`, `Quot.sound`.
+
+Kitamura’s pinned file proves the same type under
+`WrittenOnTheWallII.GraphConjecture31.conjecture31` in
+https://github.com/KitaKen1/wowii-graph-conjecture-31-lean/blob/a948e9fc07e11b786aee8dadb1376b4d938454d6/lean/GraphConjecture31.lean

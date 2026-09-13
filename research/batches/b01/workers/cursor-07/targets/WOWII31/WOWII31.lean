@@ -14,22 +14,30 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-Original Lean formalization: The Formal Conjectures Authors.
-New proof development and write-up: Wentao Li.
+Original statement formalization: The Formal Conjectures Authors.
+Prior exact Lean proof: Kenta Kitamura (KitaKen1), July 2026.
+This independent implementation and write-up: Wentao Li.
 -/
 import FormalConjecturesUtil
 
 /-!
-A Lean proof of Chung's induced-path bound, matching WOWII Graph Conjecture 31.
+A later independent Lean implementation of Chung's induced-path bound,
+matching WOWII Graph Conjecture 31. This is not the first exact Lean proof.
 
 Mathematics: P. Erdős, M. Saks, V. T. Sós, Maximum induced trees in graphs,
 J. Combin. Theory Ser. B 41 (1986) 61-79, Theorem 2.2. The published proof
 was supplied by Fan Chung.
 
+Prior exact Lean proof, Kenta Kitamura (KitaKen1), 2026-07-28, linked from
+DeepMind PR 4658:
+https://github.com/KitaKen1/wowii-graph-conjecture-31-lean/blob/a948e9fc07e11b786aee8dadb1376b4d938454d6/lean/GraphConjecture31.lean
+
 This file does not import WrittenOnTheWallII.GraphConjecture31 and does not
-use that sorry theorem. It proves the same type independently.
+use that sorry theorem. It is a later implementation of the same type, written
+without using Kitamura's source as a proof.
 
 Classification: known_mathematics_formalization, not new mathematics.
+Not a first formalization.
 -/
 
 set_option linter.unusedSectionVars false

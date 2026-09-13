@@ -11,19 +11,28 @@ Do not launch or select another target. Original 8-hour deadline from
 
 ## Status: `audit_pending`
 
-Coordinator fetched candidate commit `54991f4b` and assigned the
-independent compile/type/axiom audit. This worker does **not** claim
-`independently_verified`.
+Coordinator candidate compilation of this branch passed. This worker
+does **not** claim `independently_verified`.
 
-Wentao’s updated authorization: a known-mathematics formalization is an
-acceptable session result if that independent audit passes. Worker
-self-review is not that audit.
+Novelty: `prior_solution_found`. Kenta Kitamura (KitaKen1) published an
+earlier exact Lean proof of the same frozen type in July 2026. The
+coordinator is compiling that prior artifact. That compile is not
+confirmed here.
+
+## Credits
+
+- Mathematics: Fan Chung, in Erdős–Saks–Sós Theorem 2.2 (1986).
+- Original statement formalization: The Formal Conjectures Authors.
+- Prior exact Lean proof: Kenta Kitamura (KitaKen1),
+  https://github.com/KitaKen1/wowii-graph-conjecture-31-lean/blob/a948e9fc07e11b786aee8dadb1376b4d938454d6/lean/GraphConjecture31.lean
+  linked from https://github.com/google-deepmind/formal-conjectures/pull/4658
+- This later independent implementation and write-up: Wentao Li.
 
 ## Candidate
 
-`WOWII31.conjecture31` is a Lean formalization of Chung's proof of
+`WOWII31.conjecture31` is a later Lean implementation of Chung's proof of
 Erdős–Saks–Sós Theorem 2.2. Classification:
-`known_mathematics_formalization`.
+`known_mathematics_formalization`. It is not a first formalization.
 
 Proof commit: `a4a7b8cb4557aa7ed7d76947382e48bd18ef40e5`.
 Handoff commit previously fetched by the coordinator: `54991f4b`.
@@ -44,5 +53,4 @@ See `STATUS.json` and `targets/WOWII31/{proof,literature,verification}.md`.
 ## WOWII133 screening (paused, not selected)
 
 Incomplete screening notes are in `SCREENING.md`. No successor target is
-active. Preserve those notes; do not start a WOWII133 proof while the
-coordinator audits WOWII31.
+active. Preserve those notes; do not start a WOWII133 proof.

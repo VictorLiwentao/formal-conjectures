@@ -51,8 +51,12 @@ WrittenOnTheWallII.GraphConjecture31.conjecture31.{u_1} {α : Type u_1}
 - `radius.toNat` is the finite radius of a connected finite graph.
 - Boundary: `r ≤ 1` is covered; `r ≥ 2` uses a non-cutvertex.
 - The result is Chung's 1986 theorem, not a new theorem.
+- Kenta Kitamura (KitaKen1) published an earlier exact Lean proof of this
+  type in July 2026 (DeepMind PR #4658). This file is a later
+  implementation, not a first formalization.
 
 ## Independent review
 
-This worker compiled and self-checked the proof. That is not independent
-verification.
+The coordinator reports that this worker candidate compiled. That is not
+`independently_verified`. The coordinator is compiling Kitamura’s prior
+artifact; that compile is not confirmed here.
