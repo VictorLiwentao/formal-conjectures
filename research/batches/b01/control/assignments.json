@@ -184,7 +184,7 @@
       "platform": "Cursor Cloud",
       "requested_model": "Cursor Grok 4.6 Extra High",
       "branch": "codex/b01-cursor-03-r02",
-      "status": "researching_goal_active",
+      "status": "audit_pending",
       "novelty_status": "known_mathematics_public_resource_limited_lean_attempts",
       "reserved_sequence_groups": [
         "A069004"
@@ -205,67 +205,66 @@
       "notes": "Known counterexample n=512720. Complete efficient kernel certification; inspect and credit existing Epoch scripts that timed out/OOM. No new mathematical-discovery claim. See replacement-screening-01.md and prompts/cursor-03-r02.md."
     },
     {
-      "worker_id": "cursor-07-r03",
-      "slot": "cursor-07",
-      "predecessor": "cursor-07-r02",
-      "title": "Green66 known quarter-power sum-of-two-squares bound",
+      "worker_id": "cursor-01-r04",
+      "slot": "cursor-01",
+      "predecessor": "cursor-01-r03",
+      "title": "A001818 permanent root-of-unity identity",
       "platform": "Cursor Cloud",
       "requested_model": "Cursor Grok 4.6 Extra High",
-      "branch": "codex/b01-cursor-07-r03",
-      "status": "audit_pending",
+      "branch": "codex/b01-cursor-01-r04",
+      "status": "reserved_for_replacement",
       "novelty_status": "known_mathematics_formalization_candidate",
       "reserved_sequence_groups": [
-        "Green66-trivial-bound",
-        "A001481",
-        "A256435"
+        "A001818-C1",
+        "A001818",
+        "A002454",
+        "A356041"
       ],
+      "targets": [
+        {
+          "id": "A001818-C1",
+          "source_file": "FormalConjectures/OEIS/1818.lean",
+          "source_sha256": "1e41db84e11a5adb981526a75330a597a13ceef8479eb4fb4ef832256496dffe",
+          "declarations": [
+            "OeisA1818.conjecture1"
+          ],
+          "source_url": "https://github.com/google-deepmind/formal-conjectures/blob/a2f4a1bb12a28e04a969da78feefac7d1ce49565/FormalConjectures/OEIS/1818.lean",
+          "oeis_url": "https://oeis.org/A001818"
+        }
+      ],
+      "notes": "Only A001818-C1 assigned. Known mathematics, substantive formalization effort. See prompts/cursor-01-r04.md and corresponding replacement screen; no new mathematical priority claim."
+    },
+    {
+      "worker_id": "cursor-07-r04",
+      "slot": "cursor-07",
+      "predecessor": "cursor-07-r03",
+      "title": "WOWII20 induced bipartite average-degree bound",
+      "platform": "Cursor Cloud",
+      "requested_model": "Cursor Grok 4.6 Extra High",
+      "branch": "codex/b01-cursor-07-r04",
+      "status": "reserved_for_replacement",
+      "novelty_status": "known_mathematics_formalization_candidate",
+      "reserved_sequence_groups": [
+        "WOWII20"
+      ],
+      "targets": [
+        {
+          "id": "WOWII20",
+          "source_file": "FormalConjectures/WrittenOnTheWallII/GraphConjecture20.lean",
+          "source_sha256": "969908dc9e73fd3ebea73cdf272df476583efbe9745185fd466726c5d4faa2e7",
+          "declarations": [
+            "WrittenOnTheWallII.GraphConjecture20.conjecture20"
+          ],
+          "source_url": "https://github.com/google-deepmind/formal-conjectures/blob/a2f4a1bb12a28e04a969da78feefac7d1ce49565/FormalConjectures/WrittenOnTheWallII/GraphConjecture20.lean"
+        }
+      ],
+      "notes": "Only WOWII20 assigned. Known mathematics, substantive formalization effort. See prompts/cursor-07-r04.md and corresponding replacement screen; no new mathematical priority claim.",
       "reserved_source_prefixes": [
         "FormalConjectures/WrittenOnTheWallII/",
         "FormalConjectures/Mathoverflow/",
         "FormalConjectures/GreensOpenProblems/",
         "FormalConjectures/ErdosProblems/"
-      ],
-      "targets": [
-        {
-          "id": "Green66-trivial-bound",
-          "source_file": "FormalConjectures/GreensOpenProblems/66.lean",
-          "source_sha256": "d38ab7e233260302ef58121037a02dc94866ddae820e9fc84308ce7264e07acb",
-          "declarations": [
-            "Green66.green_66.variants.trivial_bound"
-          ],
-          "source_url": "https://github.com/google-deepmind/formal-conjectures/blob/a2f4a1bb12a28e04a969da78feefac7d1ce49565/FormalConjectures/GreensOpenProblems/66.lean"
-        }
-      ],
-      "notes": "ONLY known uniform-C quarter-power variant assigned; NOT open Green66 fixed1/10 conjecture. Equivalent Erdos222 and A001481/A256435 fourth-root gap formulations reserved; unrelated sequence conjectures not assigned. Related LeanGenius axiom and weaker Epoch sqrt lemma do not establish this target. See replacement-screening-03.md and prompts/cursor-07-r03.md."
-    },
-    {
-      "worker_id": "cursor-01-r03",
-      "slot": "cursor-01",
-      "predecessor": "cursor-01-r02",
-      "title": "A051903 second question: universal-power odd exclusion",
-      "platform": "Cursor Cloud",
-      "requested_model": "Cursor Grok 4.6 Extra High",
-      "branch": "codex/b01-cursor-01-r03",
-      "status": "researching_goal_active",
-      "novelty_status": "elementary_corollary_formalization_candidate_requires_audit",
-      "reserved_sequence_groups": [
-        "A051903-C2",
-        "A051903",
-        "A327295"
-      ],
-      "targets": [
-        {
-          "id": "A051903-C2",
-          "source_file": "FormalConjectures/OEIS/51903.lean",
-          "source_sha256": "3a694eccc4bd92c14e28e609563bad0ecdfb8895f45c6de887b46fcfcd483db4",
-          "declarations": [
-            "OeisA51903.conjecture2"
-          ],
-          "source_url": "https://github.com/google-deepmind/formal-conjectures/blob/a2f4a1bb12a28e04a969da78feefac7d1ce49565/FormalConjectures/OEIS/51903.lean",
-          "oeis_url": "https://oeis.org/A051903"
-        }
-      ],
-      "notes": "Only C2 assigned: prove full negative answer with exact maximum-prime-exponent definition and all-b quantifier. C1 Lehmer and C3 fixed-base2 excluded. Entire A051903/A327295 family reserved against duplicate work. Known mathematics acceptable with credits; see replacement-screening-04.md and prompts/cursor-01-r03.md."
+      ]
     }
   ],
   "excluded": {
@@ -301,7 +300,13 @@
     "WOWII101": "Known Hajnal/core inequality independently formalized and verified in batch; cursor-07-r02 b42564b6. No earlier exact public Lean proof found in bounded audit. Do not restart same target.",
     "A109074": "A109074 corrected factorial-product ratio independently verified in batch; equivalent ASM sequence family retired with cursor-01-r02. Do not restart.",
     "A005156": "A109074 corrected factorial-product ratio independently verified in batch; equivalent ASM sequence family retired with cursor-01-r02. Do not restart.",
-    "A134357": "A109074 corrected factorial-product ratio independently verified in batch; equivalent ASM sequence family retired with cursor-01-r02. Do not restart."
+    "A134357": "A109074 corrected factorial-product ratio independently verified in batch; equivalent ASM sequence family retired with cursor-01-r02. Do not restart.",
+    "A051903-C2": "Exact result independently verified in cursor-01-r03; preserve equivalent group and do not restart. See research/batches/b01/control/audits/cursor-01-r03.md.",
+    "A051903": "Exact result independently verified in cursor-01-r03; preserve equivalent group and do not restart. See research/batches/b01/control/audits/cursor-01-r03.md.",
+    "A327295": "Exact result independently verified in cursor-01-r03; preserve equivalent group and do not restart. See research/batches/b01/control/audits/cursor-01-r03.md.",
+    "Green66-trivial-bound": "Exact result independently verified in cursor-07-r03; preserve equivalent group and do not restart. See research/batches/b01/control/audits/cursor-07-r03.md.",
+    "A001481": "Exact result independently verified in cursor-07-r03; preserve equivalent group and do not restart. See research/batches/b01/control/audits/cursor-07-r03.md.",
+    "A256435": "Exact result independently verified in cursor-07-r03; preserve equivalent group and do not restart. See research/batches/b01/control/audits/cursor-07-r03.md."
   },
   "accept_known_informal_proofs_for_new_lean_formalization": true,
   "retired_workers": [
@@ -468,6 +473,83 @@
       "audit_file": "research/batches/b01/control/audits/cursor-01-r02.md",
       "mathematical_novelty": "known_mathematics",
       "formalization_novelty": "no_prior_corrected_exact_public_lean_found_in_checked_sources"
+    },
+    {
+      "worker_id": "cursor-01-r03",
+      "slot": "cursor-01",
+      "predecessor": "cursor-01-r02",
+      "title": "A051903 second question: universal-power odd exclusion",
+      "platform": "Cursor Cloud",
+      "requested_model": "Cursor Grok 4.6 Extra High",
+      "branch": "codex/b01-cursor-01-r03",
+      "status": "retired_independently_verified",
+      "novelty_status": "elementary_corollary_formalization_candidate_requires_audit",
+      "reserved_sequence_groups": [
+        "A051903-C2",
+        "A051903",
+        "A327295"
+      ],
+      "targets": [
+        {
+          "id": "A051903-C2",
+          "source_file": "FormalConjectures/OEIS/51903.lean",
+          "source_sha256": "3a694eccc4bd92c14e28e609563bad0ecdfb8895f45c6de887b46fcfcd483db4",
+          "declarations": [
+            "OeisA51903.conjecture2"
+          ],
+          "source_url": "https://github.com/google-deepmind/formal-conjectures/blob/a2f4a1bb12a28e04a969da78feefac7d1ce49565/FormalConjectures/OEIS/51903.lean",
+          "oeis_url": "https://oeis.org/A051903"
+        }
+      ],
+      "notes": "Only C2 assigned: prove full negative answer with exact maximum-prime-exponent definition and all-b quantifier. C1 Lehmer and C3 fixed-base2 excluded. Entire A051903/A327295 family reserved against duplicate work. Known mathematics acceptable with credits; see replacement-screening-04.md and prompts/cursor-01-r03.md.",
+      "actual_branch": "cursor/b01-cursor-01-r03-2609",
+      "final_commit": "e4254e79d1fa492dfae5816e20abd46c469b3f4c",
+      "retired_at_utc": "2026-09-13T02:51:08.955945+00:00",
+      "successor": "cursor-01-r04",
+      "audit_file": "research/batches/b01/control/audits/cursor-01-r03.md",
+      "mathematical_novelty": "known_mathematics",
+      "formalization_novelty": "no_prior_exact_public_lean_found_in_checked_sources"
+    },
+    {
+      "worker_id": "cursor-07-r03",
+      "slot": "cursor-07",
+      "predecessor": "cursor-07-r02",
+      "title": "Green66 known quarter-power sum-of-two-squares bound",
+      "platform": "Cursor Cloud",
+      "requested_model": "Cursor Grok 4.6 Extra High",
+      "branch": "codex/b01-cursor-07-r03",
+      "status": "retired_independently_verified",
+      "novelty_status": "known_mathematics_formalization_candidate",
+      "reserved_sequence_groups": [
+        "Green66-trivial-bound",
+        "A001481",
+        "A256435"
+      ],
+      "reserved_source_prefixes": [
+        "FormalConjectures/WrittenOnTheWallII/",
+        "FormalConjectures/Mathoverflow/",
+        "FormalConjectures/GreensOpenProblems/",
+        "FormalConjectures/ErdosProblems/"
+      ],
+      "targets": [
+        {
+          "id": "Green66-trivial-bound",
+          "source_file": "FormalConjectures/GreensOpenProblems/66.lean",
+          "source_sha256": "d38ab7e233260302ef58121037a02dc94866ddae820e9fc84308ce7264e07acb",
+          "declarations": [
+            "Green66.green_66.variants.trivial_bound"
+          ],
+          "source_url": "https://github.com/google-deepmind/formal-conjectures/blob/a2f4a1bb12a28e04a969da78feefac7d1ce49565/FormalConjectures/GreensOpenProblems/66.lean"
+        }
+      ],
+      "notes": "ONLY known uniform-C quarter-power variant assigned; NOT open Green66 fixed1/10 conjecture. Equivalent Erdos222 and A001481/A256435 fourth-root gap formulations reserved; unrelated sequence conjectures not assigned. Related LeanGenius axiom and weaker Epoch sqrt lemma do not establish this target. See replacement-screening-03.md and prompts/cursor-07-r03.md.",
+      "actual_branch": "cursor/b01-cursor-07-r03-ceef",
+      "final_commit": "85c399a1f05a3627ec5eea6884c9958e6f84d413",
+      "retired_at_utc": "2026-09-13T02:51:08.955945+00:00",
+      "successor": "cursor-07-r04",
+      "audit_file": "research/batches/b01/control/audits/cursor-07-r03.md",
+      "mathematical_novelty": "known_mathematics",
+      "formalization_novelty": "no_prior_exact_public_lean_found_in_checked_sources"
     }
   ],
   "exclusion_changes": [
