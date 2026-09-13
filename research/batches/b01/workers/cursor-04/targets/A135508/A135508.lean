@@ -725,7 +725,7 @@ lemma a_eq_self_iff_gcd_gt_one {p : ℕ} (hp : p.Prime) (hp5 : 5 ≤ p) :
       omega
     have hp1 : 1 < p := lt_of_lt_of_le (by decide : 1 < 5) hp5
     have hneq : a (p - 1) ≠ 1 := fun h1 =>
-      Nat.ne_of_gt hp1 (h1.symm.trans ha)
+      Nat.ne_of_gt hp1 (ha.symm.trans h1)
     have hnot : ¬ p ∣ x (p - 1) := fun hd =>
       hneq ((a_eq_one_iff_dvd hp).2 hd)
     have hnea : a (p - 3) ≠ p - 2 := fun h =>
