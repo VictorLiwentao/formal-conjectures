@@ -32,4 +32,4 @@ The remaining 172 primes among the reported 42666 are unused.
 
 ## Status
 
-`candidate_proof` until an independent reviewer compiles the glued theorems and inspects `#print axioms`.
+`candidate_proof`. Glue, `A069004.lean`, `ExactType.lean` and `TypeMatch.lean` compiled on this VM with `#print axioms` equal to `propext`, `Classical.choice`, `Quot.sound`. A coordinator must reproduce the compile before `independently_verified`.

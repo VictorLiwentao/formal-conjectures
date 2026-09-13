@@ -7,10 +7,10 @@
 - `sha256sum FormalConjectures/OEIS/69004.lean` = `c29abb2a5c1e48761cc6d7ebb4332bd728071b6ea6059263ffcf153800282ca2`
 - `lean-toolchain`: `leanprover/lean4:v4.33.1`
 - `LEAN_NUM_THREADS=2`
+- Session: start `2026-09-13T00:13:02Z`, deadline `2026-09-13T08:13:02Z`
+- Glue compile finished `2026-09-13T02:29:36Z`
 
 ## Commands
-
-Compile the checker, then independent chunks, then glue:
 
 ```bash
 export LEAN_NUM_THREADS=2
@@ -18,28 +18,43 @@ ROOT=research/batches/b01/workers/cursor-03-r02/targets/A069004
 mkdir -p "$ROOT/lean"
 lake env lean -DwarningAsError=true -R "$ROOT" -o "$ROOT/lean/Core.olean" "$ROOT/Core.lean"
 python3 "$ROOT/scripts/compile_chunks.py"
-lake env lean -DwarningAsError=true -R "$ROOT" -o "$ROOT/lean/GlueCert.olean" "$ROOT/GlueCert.lean"
-lake env lean -DwarningAsError=true -R "$ROOT" -o "$ROOT/lean/GlueCount.olean" "$ROOT/GlueCount.lean"
-lake env lean -DwarningAsError=true -R "$ROOT" "$ROOT/A069004.lean"
+python3 "$ROOT/scripts/compile_glue.py"
 lake env lean -DwarningAsError=true -R "$ROOT" "$ROOT/ExactType.lean"
-lake env lean -DwarningAsError=true -R "$ROOT" "$ROOT/TypeMatch.lean"
 ```
 
-`lean -R "$ROOT"` looks up imports in `$ROOT/lean`, so every `.olean` is written there.
+`lean -R "$ROOT"` looks up imports in `$ROOT/lean`. Count* blocks were compiled serially (`JOBS=1`) after two concurrent Count jobs each used several GiB.
 
-Pilot (already succeeded): `Pilot.lean` one Pratt tree, 4s; `C0.lean` 150 certificates, 22s; `CountPilot.lean` `countRange 0 1000 = 168`, 11s.
+## Chunk compile
 
-Separately compiled type audit: `ExactType.lean` (frozen sorry types) then `TypeMatch.lean` (worker theorems inhabit those types).
+- 284/284 Pratt chunks `C0`–`C283`: `decide +kernel` OK
+- 26/26 count blocks `Count000`–`Count500`: `decide +kernel` OK
+- `compile.log` ends with `fails 0`
 
-## Axioms (to be filled after glued compile)
+## Glue compile (`2026-09-13T02:29:36Z`)
 
 ```
-#print axioms Cursor03R02.A069004.upper_bound_false
-#print axioms Cursor03R02.A069004.conjecture2
+GlueCert.lean exit=0
+GlueCount.lean exit=0
+A069004.lean exit=0
+TypeMatch.lean exit=0
 ```
 
-Required: subset of `propext`, `Classical.choice`, `Quot.sound`. No `sorryAx`, `Lean.ofReduceBool`, `Lean.trustCompiler`.
+## Axioms
+
+```
+'Cursor03R02.A069004.upper_bound_false' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Cursor03R02.A069004.conjecture2' depends on axioms: [propext, Classical.choice, Quot.sound]
+```
+
+Subset of `propext`, `Classical.choice`, `Quot.sound`. No `sorryAx`, `Lean.ofReduceBool`, `Lean.trustCompiler`. Worker Lean files contain no `sorry`, `native_decide`, or `trustCompiler`.
 
 ## Formalization audit
 
-See `literature.md`. Types copied from `FormalConjectures/OEIS/69004.lean` after import, not from memory.
+`ExactType.lean` (frozen sorry theorems) and `TypeMatch.lean` (worker theorems) both compiled. Types copied from `FormalConjectures/OEIS/69004.lean` after import:
+
+- `¬ ∀ n, 1 < n → Nat.primeCounting n ≥ OeisA69004.a n`
+- negation of the full `conjecture2` conjunction
+
+`Nat.primeCounting 512720 = 42493` via `Nat.count` of primes in `[0, 512721)`. Witness list length 42494, strictly increasing `s ∈ [1, 512720)`, each `512720²+s²` prime by Pratt/Lucas. That is enough for `42494 ≤ a 512720` and `π(n) < a n`. The remaining 172 reported primes in `a(n)=42666` are unused. Minimality is not claimed.
+
+Not independently verified: a coordinator/reviewer must still reproduce this compile. Status is `candidate_proof`.

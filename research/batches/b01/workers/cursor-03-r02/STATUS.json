@@ -6,28 +6,32 @@
   "frozen_source_commit": "a2f4a1bb12a28e04a969da78feefac7d1ce49565",
   "source_file": "FormalConjectures/OEIS/69004.lean",
   "source_sha256": "c29abb2a5c1e48761cc6d7ebb4332bd728071b6ea6059263ffcf153800282ca2",
-  "current_status": "partial",
+  "current_status": "candidate_proof",
   "novelty_status": "known_mathematics_public_resource_limited_lean_attempts",
   "session_start_utc": "2026-09-13T00:13:02Z",
   "session_deadline_utc": "2026-09-13T08:13:02Z",
+  "stopped_utc": "2026-09-13T02:30:30Z",
+  "stop_reason": "exact_audited_candidate",
   "requested_model": "Cursor Grok 4.6 Extra High",
   "proof_declarations": [
     "Cursor03R02.A069004.upper_bound_false",
     "Cursor03R02.A069004.conjecture2"
   ],
   "unresolved_gaps": [
-    "12 remaining Count* blocks compiling serially to avoid OOM",
-    "Glued theorems, TypeMatch.lean, and #print axioms pending"
+    "Coordinator independent reproduction still required; self-review cannot set independently_verified"
   ],
-  "next_step": "Finish Count280–Count500 with JOBS=1, then compile_glue.py and axiom audit",
-  "last_commit": "e0cb2167",
-  "last_updated_utc": "2026-09-13T01:48:00Z",
-  "compile_progress": "284/284 C oleans OK; Count000–Count260 OK; Count280–Count500 remaining at JOBS=1",
+  "next_step": "Coordinator compile and axiom audit of the worker branch; no further worker research",
+  "last_updated_utc": "2026-09-13T02:30:30Z",
+  "axioms": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "continuation_timer_cancelled": "sub_84acaa59-b875-485b-91f7-9526de466583",
   "pilot": {
-    "Pilot.lean": "one Pratt certificate, decide +kernel, 4s, success",
-    "C0.lean": "150 certificates, kernel, success",
-    "C1.lean": "150 certificates, kernel, success",
-    "CountPilot.lean": "countRange 0 1000 = 168, 11s, success",
-    "ExactType.lean": "frozen types compiled 2026-09-13T00:35Z"
+    "Pilot.lean": "one Pratt certificate, decide +kernel, success",
+    "C0-C283": "42494 Pratt certificates, kernel, success",
+    "Count000-Count500": "prime count to 512721, kernel, success",
+    "GlueCert/GlueCount/A069004/ExactType/TypeMatch": "success 2026-09-13T02:29:36Z"
   }
 }
