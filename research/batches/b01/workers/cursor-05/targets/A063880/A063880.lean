@@ -4372,6 +4372,39 @@ lemma six_five_of_three_caps {A B X Y C D P Q E F R S : ℕ}
     exact hchain
   exact Nat.lt_of_mul_lt_mul_left hcancel
 
+/-- Two Euler-product caps times a constant ratio, strictly below leftover `6/5`. -/
+lemma six_five_of_two_caps_times_const {A B X Y C D P Q S T : ℕ}
+    (hA : A * X < B * Y) (hC : C * P < D * Q)
+    (hcap : 5 * B * D * T ≤ 6 * A * C * S)
+    (hB : 0 < B) (hY : 0 < Y) (hT : 0 < T) :
+    5 * X * P * T < 6 * Y * Q * S := by
+  have hprod : (A * X) * (C * P) < (B * Y) * (D * Q) :=
+    Nat.mul_lt_mul_of_le_of_lt (Nat.le_of_lt hA) hC (Nat.mul_pos hB hY)
+  have h5' : 5 * ((A * X) * (C * P)) < 5 * ((B * Y) * (D * Q)) :=
+    Nat.mul_lt_mul_of_pos_left hprod (by decide)
+  have h5 : 5 * ((A * X) * (C * P)) * T < 5 * ((B * Y) * (D * Q)) * T :=
+    Nat.mul_lt_mul_of_pos_right h5' hT
+  have h6 : 5 * B * D * T * (Y * Q) ≤ 6 * A * C * S * (Y * Q) :=
+    Nat.mul_le_mul_right (Y * Q) hcap
+  have hchain : 5 * A * C * X * P * T < 6 * A * C * Y * Q * S := by
+    have hL : 5 * A * C * X * P * T = 5 * ((A * X) * (C * P)) * T := by ring
+    have hmid : 5 * ((B * Y) * (D * Q)) * T = 5 * B * D * T * (Y * Q) := by ring
+    have hR : 5 * B * D * T * (Y * Q) ≤ 6 * A * C * S * (Y * Q) := by
+      simpa [mul_assoc, mul_left_comm, mul_comm] using h6
+    have hR' : 6 * A * C * S * (Y * Q) = 6 * A * C * Y * Q * S := by ring
+    calc
+      5 * A * C * X * P * T = 5 * ((A * X) * (C * P)) * T := hL
+      _ < 5 * ((B * Y) * (D * Q)) * T := h5
+      _ = 5 * B * D * T * (Y * Q) := hmid
+      _ ≤ 6 * A * C * S * (Y * Q) := hR
+      _ = 6 * A * C * Y * Q * S := hR'
+  have hcancel : A * C * (5 * X * P * T) < A * C * (6 * Y * Q * S) := by
+    have h1 : A * C * (5 * X * P * T) = 5 * A * C * X * P * T := by ring
+    have h2 : A * C * (6 * Y * Q * S) = 6 * A * C * Y * Q * S := by ring
+    rw [h1, h2]
+    exact hchain
+  exact Nat.lt_of_mul_lt_mul_left hcancel
+
 lemma five_p_q_cap_ge_eleven {p q : ℕ} (hp : 11 ≤ p) (hq : 13 ≤ q)
     (hp1 : 1 ≤ p) (hq1 : 1 ≤ q) :
     5 * p * q ≤ 6 * (p - 1) * (q - 1) := by
@@ -5697,6 +5730,126 @@ lemma not_five_sigma_of_three_sq_primes_eleven_seventeen_large {m p : ℕ}
     padicValNat_ordCompl_of_ne hp17 hpq_ne, hproj_p] at heq
   exact (five_sigma_lt_six_usigma_eleven_seventeen_large hp hp41
     (by omega) (by omega) (by omega)).ne heq
+
+lemma five_mul_eleven_sq_seventeen_cap {p : ℕ} (hp : 29 ≤ p) (hp1 : 1 ≤ p) :
+    5 * 17 * p * 133 ≤ 6 * 16 * (p - 1) * 122 := by
+  have hp' : (29 : ℤ) ≤ p := Int.ofNat_le.mpr hp
+  have hL : ((5 * 17 * p * 133 : ℕ) : ℤ) =
+      (5 : ℤ) * 17 * p * 133 := by
+    rw [Nat.cast_mul, Nat.cast_mul, Nat.cast_mul]; rfl
+  have hR : ((6 * 16 * (p - 1) * 122 : ℕ) : ℤ) =
+      (6 : ℤ) * 16 * ((p : ℤ) - 1) * 122 := by
+    rw [Nat.cast_mul, Nat.cast_mul, Nat.cast_mul, Nat.cast_sub hp1]
+    rfl
+  have : (5 : ℤ) * 17 * p * 133 ≤ 6 * 16 * (p - 1) * 122 := by nlinarith
+  exact Nat.cast_le.mp (by rw [hL, hR]; exact this)
+
+/-- `{11^2, 17^b, p^k}` undershoots leftover `6/5` for `p ≥ 29`. -/
+lemma five_sigma_lt_six_usigma_eleven_sq_seventeen_large {p b k : ℕ}
+    (hp : p.Prime) (hp29 : 29 ≤ p) (hb : 0 < b) (hk : 0 < k) :
+    5 * σ 1 (11 ^ 2) * σ 1 (17 ^ b) * σ 1 (p ^ k) <
+      6 * usigma (11 ^ 2) * usigma (17 ^ b) * usigma (p ^ k) := by
+  rw [sigma_eleven_pow_two, usigma_eleven_pow_two]
+  have h17 := sigma_lt_cap_usigma (by decide : Nat.Prime 17) hb
+  have hpcap := sigma_lt_cap_usigma hp hk
+  have hu17 : 0 < usigma (17 ^ b) := by
+    rw [usigma_prime_pow (by decide : Nat.Prime 17) hb]
+    exact Nat.add_pos_left (by decide : 0 < 1) _
+  have hcap := five_mul_eleven_sq_seventeen_cap hp29 hp.one_le
+  have hthis := six_five_of_two_caps_times_const (A := 16) (B := 17)
+    (X := σ 1 (17 ^ b)) (Y := usigma (17 ^ b)) (C := p - 1) (D := p)
+    (P := σ 1 (p ^ k)) (Q := usigma (p ^ k)) (S := 122) (T := 133)
+    h17 hpcap hcap (by decide : 0 < 17) hu17 (by decide : 0 < 133)
+  have hL : 5 * σ 1 (17 ^ b) * σ 1 (p ^ k) * 133 =
+      5 * 133 * σ 1 (17 ^ b) * σ 1 (p ^ k) := by ring
+  have hR : 6 * usigma (17 ^ b) * usigma (p ^ k) * 122 =
+      6 * 122 * usigma (17 ^ b) * usigma (p ^ k) := by ring
+  rw [← hL, ← hR]
+  exact hthis
+
+/-- `ρ(1331) ρ(289) ρ(p^2) > 6/5` for `29 ≤ p ≤ 31`. -/
+lemma eleven_cube_seventeen_sq_p_sq_overshoot_six_five {p : ℕ} (hp : p.Prime)
+    (h29 : 29 ≤ p) (h31 : p ≤ 31) :
+    6 * usigma (11 ^ 3) * usigma (17 ^ 2) * usigma (p ^ 2) <
+      5 * σ 1 (11 ^ 3) * σ 1 (17 ^ 2) * σ 1 (p ^ 2) := by
+  have hp11 : Nat.Prime 11 := by decide
+  have hu11 : usigma (11 ^ 3) = 1332 := by
+    rw [usigma_prime_pow hp11 (by decide : 0 < 3)]
+    decide
+  have hσ11 : σ 1 (11 ^ 3) = 1464 := by
+    rw [sigma_prime_pow_div hp11]
+    norm_num
+  rw [hu11, hσ11, usigma_seventeen_pow_two, sigma_seventeen_pow_two,
+    usigma_prime_pow hp (by decide : 0 < 2), sigma_prime_pow_two hp]
+  have hsq : p ^ 2 ≤ 31 * p := by
+    rw [pow_two]
+    exact Nat.mul_le_mul_right p h31
+  have hL : ((6 * 1332 * 290 * (1 + p ^ 2) : ℕ) : ℤ) =
+      (6 : ℤ) * 1332 * 290 * (1 + (p : ℤ) ^ 2) := by push_cast; rfl
+  have hR : ((5 * 1464 * 307 * (1 + p + p ^ 2) : ℕ) : ℤ) =
+      (5 : ℤ) * 1464 * 307 * (1 + (p : ℤ) + (p : ℤ) ^ 2) := by push_cast; rfl
+  have hint : (6 : ℤ) * 1332 * 290 * (1 + p ^ 2) <
+      5 * 1464 * 307 * (1 + p + p ^ 2) := by
+    have hp29 : (29 : ℤ) ≤ p := by exact_mod_cast h29
+    have hp31 : (p : ℤ) ≤ 31 := by exact_mod_cast h31
+    have hsq' : (p : ℤ) ^ 2 ≤ 31 * p := by exact_mod_cast hsq
+    nlinarith
+  exact Nat.cast_lt.mp (by rw [hL, hR]; exact hint)
+
+lemma eleven_cube_seventeen_sq_p_pow_ge_two_overshoot_six_five {p a b k : ℕ}
+    (hp : p.Prime) (h29 : 29 ≤ p) (h31 : p ≤ 31)
+    (ha : 3 ≤ a) (hb : 2 ≤ b) (hk : 2 ≤ k) :
+    6 * usigma (11 ^ a) * usigma (17 ^ b) * usigma (p ^ k) <
+      5 * σ 1 (11 ^ a) * σ 1 (17 ^ b) * σ 1 (p ^ k) :=
+  six_five_overshoot_mono_three (by decide : Nat.Prime 11)
+    (by decide : Nat.Prime 17) hp
+    (by decide : 0 < 3) (by decide : 0 < 2) (by decide : 0 < 2)
+    ha hb hk
+    (eleven_cube_seventeen_sq_p_sq_overshoot_six_five hp h29 h31)
+
+lemma not_five_sigma_eq_six_usigma_eleven_seventeen_mid {p a b k : ℕ}
+    (hp : p.Prime) (hp29 : 29 ≤ p) (h31 : p ≤ 31)
+    (ha : 2 ≤ a) (hb : 2 ≤ b) (hk : 2 ≤ k) :
+    ¬ 5 * σ 1 (11 ^ a) * σ 1 (17 ^ b) * σ 1 (p ^ k) =
+        6 * usigma (11 ^ a) * usigma (17 ^ b) * usigma (p ^ k) := by
+  intro heq
+  rcases eq_or_lt_of_le ha with ha2 | ha3
+  · rw [← ha2] at heq
+    exact (five_sigma_lt_six_usigma_eleven_sq_seventeen_large hp hp29
+      (by omega) (by omega)).ne heq
+  · exact (eleven_cube_seventeen_sq_p_pow_ge_two_overshoot_six_five hp hp29 h31
+      (Nat.succ_le_of_lt ha3) hb hk).ne' heq
+
+/-- Leftover `6/5` cannot be three squareful primes `11,17,p` with
+`29 ≤ p ≤ 31` times a squarefree coprime factor. -/
+lemma not_five_sigma_of_three_sq_primes_eleven_seventeen_mid {m p : ℕ}
+    (hm : m ≠ 0) (hp : p.Prime) (hp29 : 29 ≤ p) (h31 : p ≤ 31)
+    (h : 5 * σ 1 m = 6 * usigma m)
+    (hk11 : 2 ≤ padicValNat 11 m) (hk17 : 2 ≤ padicValNat 17 m)
+    (hkp : 2 ≤ padicValNat p m)
+    (hs : Squarefree (ordCompl[p] (ordCompl[17] (ordCompl[11] m)))) : False := by
+  have hp11 : Nat.Prime 11 := by decide
+  have hp17 : Nat.Prime 17 := by decide
+  have hpq_ne : (11 : ℕ) ≠ 17 := by decide
+  have hpr_ne : (11 : ℕ) ≠ p :=
+    Nat.ne_of_lt (lt_of_lt_of_le (by decide : 11 < 29) hp29)
+  have hqr_ne : (17 : ℕ) ≠ p :=
+    Nat.ne_of_lt (lt_of_lt_of_le (by decide : 17 < 29) hp29)
+  have heq := five_sigma_eq_six_of_three_squareful hm hp11 hp17 hp hpq_ne hpr_ne
+    hqr_ne h hs
+  have hproj_p : ordProj[11] m = 11 ^ padicValNat 11 m := by
+    simp [Nat.factorization_def m hp11]
+  have hproj_q : ordProj[17] (ordCompl[11] m) =
+      17 ^ padicValNat 17 (ordCompl[11] m) := by
+    simp [Nat.factorization_def (ordCompl[11] m) hp17]
+  have hproj_r : ordProj[p] (ordCompl[17] (ordCompl[11] m)) =
+      p ^ padicValNat p (ordCompl[17] (ordCompl[11] m)) := by
+    simp [Nat.factorization_def (ordCompl[17] (ordCompl[11] m)) hp]
+  rw [hproj_r, padicValNat_ordCompl_of_ne hp hqr_ne,
+    padicValNat_ordCompl_of_ne hp hpr_ne, hproj_q,
+    padicValNat_ordCompl_of_ne hp17 hpq_ne, hproj_p] at heq
+  exact not_five_sigma_eq_six_usigma_eleven_seventeen_mid hp hp29 h31 hk11 hk17
+    hkp heq
 
 end Unitary
 
