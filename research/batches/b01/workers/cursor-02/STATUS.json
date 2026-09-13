@@ -6,7 +6,7 @@
   "coordination_commit": "238f78bdd5701ae4c97a0d70d4e22e2d45770d7a",
   "current_status": "partial",
   "novelty_status": "provisional_no_public_solution_found",
-  "last_updated_utc": "2026-09-13T06:36:00Z",
+  "last_updated_utc": "2026-09-13T06:56:00Z",
   "kickoff_utc": "2026-09-12T23:10:00Z",
   "session_limit_utc": "2026-09-13T07:10:00Z",
   "proof_declarations": [
@@ -61,13 +61,15 @@
     "OeisA108081.PWord.l_append_not_rIrreducible_of_penultimate_ge_two",
     "OeisA108081.goodPairs_eq_left_union_pConcatOne",
     "OeisA108081.ncard_iN_eq_sum_catalan_iN_add_pConcatOne",
+    "OeisA108081.ncard_iN_succ_add_eq_two_mul_sum_catalan",
+    "OeisA108081.sum_H_mul_catalan_eq_two_mul",
     "OeisA108081.isRightParse_l_append_r_append_zero_of_penultimate_le_one",
     "OeisA108081.isRightParse_l_cons_zero_r_append_zero_of_penultimate_le_one"
   ],
   "unresolved_gaps": [
     "The quantified identity |X_n| = a(n-1) is not proved.",
-    "|X_n| = ∑_k |I_k| H_{n-k} is proved. |I_n| equals the Callan recurrence q(1)=1, q(k)=2 C_{k-1} (k≥2) with |I_1|=1. The remaining gap is ∑_k |I_k| H(n-k) = a(n-1) against Lean's Fibonacci-binomial a.",
+    "|X_n| = ∑_k |I_k| H_{n-k} is proved. |I_n| equals the Callan recurrence, rewritten as |I_{n+1}|+|I_n|=2∑_{k=0}^{n-1} C_k |I_{n-k}|, and (H*C)_n=2 H_n for n≥1. The remaining gap is ∑_k |I_k| H(n-k) = a(n-1) against Lean's Fibonacci-binomial a.",
     "Partial lemmas and n<=8 (or public n<=14) counts are not a resolution."
   ],
-  "next_step": "Prove the generating-function / Fibonacci-binomial identity ∑_{k=1}^n |I_k| H(n-k) = a(n-1)."
+  "next_step": "Lift the proved coefficient relations to generating functions over ℤ or ℚ and prove ∑_{k=1}^n |I_k| H(n-k) = a(n-1). Session budget ended 2026-09-13T07:10Z with this identity unproved."
 }

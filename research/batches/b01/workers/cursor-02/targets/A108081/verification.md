@@ -57,7 +57,7 @@ Guard: PASS (worker path only). Source SHA-256 matches.
 
 ## Lean axioms
 
-`lake --wfail env lean` on `A108081.lean` succeeded on 2026-09-13 06:36Z.
+`lake --wfail env lean` on `A108081.lean` succeeded on 2026-09-13 06:56Z with no warnings.
 
 ```
 #print axioms ncard_xN_one
@@ -205,6 +205,12 @@ Guard: PASS (worker path only). Source SHA-256 matches.
 #print axioms goodPairs_eq_left_union_pConcatOne
 -- [propext, Classical.choice, Quot.sound]
 #print axioms ncard_iN_eq_sum_catalan_iN_add_pConcatOne
+-- [propext, Classical.choice, Quot.sound]
+#print axioms ncard_iN_succ_add_eq_two_mul_sum_catalan
+-- [propext, Classical.choice, Quot.sound]
+#print axioms sum_H_mul_catalan
+-- [propext, Classical.choice, Quot.sound]
+#print axioms sum_H_mul_catalan_eq_two_mul
 -- [propext, Classical.choice, Quot.sound]
 #print axioms xN_finite
 -- [propext, Classical.choice, Quot.sound]

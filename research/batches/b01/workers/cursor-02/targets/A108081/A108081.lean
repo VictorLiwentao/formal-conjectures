@@ -2275,6 +2275,13 @@ lemma sum_H_mul_catalan {n : ℕ} (hn : 1 ≤ n) :
   rw [Nat.sub_add_cancel hn] at h
   exact h
 
+lemma sum_H_mul_catalan_eq_two_mul {n : ℕ} (hn : 1 ≤ n) :
+    ∑ j ∈ Finset.range (n + 1), H j * catalan (n - j) = 2 * H n := by
+  rw [Finset.range_add_one, Finset.sum_insert Finset.notMem_range_self]
+  simp [catalan_zero]
+  have hsum := sum_H_mul_catalan hn
+  omega
+
 lemma RIrreducible.xWord {w : Word} (h : RIrreducible w) : XWord w := h.1
 
 lemma RIrreducible.getLast_ne_one {w : Word} (h : RIrreducible w) :
@@ -5420,6 +5427,82 @@ lemma ncard_iN_eq_sum_catalan_iN_add_pConcatOne (n : ℕ) (hn : 2 ≤ n) :
     rw [card_pConcatOneNFinset k hk2, ncard_iN_eq_card]
   rw [hrewL, hrewC]
 
+lemma ncard_iN_succ_add_eq_two_mul_sum_catalan (n : ℕ) (hn : 1 ≤ n) :
+    (iN (n + 1)).ncard + (iN n).ncard =
+      2 * ∑ k ∈ Finset.range n, catalan k * (iN (n - k)).ncard := by
+  have hrec := ncard_iN_eq_sum_catalan_iN_add_pConcatOne (n + 1) (by omega)
+  have hn1 : n + 1 - 1 = n := by omega
+  simp [hn1] at hrec
+  have hIcc1 : Finset.Icc 1 n = (Finset.range n).map ⟨Nat.succ, Nat.succ_injective⟩ :=
+    Icc_one_eq_map_succ n
+  have hfun1 : ∀ k ∈ Finset.range n,
+      catalan (k + 1 - 1) * (iN (n + 1 - (k + 1))).ncard =
+        catalan k * (iN (n - k)).ncard := by
+    intro k hk
+    have : k < n := Finset.mem_range.mp hk
+    have h1 : k + 1 - 1 = k := by omega
+    have h2 : n + 1 - (k + 1) = n - k := by omega
+    simp [h1, h2]
+  have hsum1 :
+      ∑ k ∈ Finset.Icc 1 n, catalan (k - 1) * (iN (n + 1 - k)).ncard =
+        ∑ k ∈ Finset.range n, catalan k * (iN (n - k)).ncard := by
+    rw [hIcc1, Finset.sum_map]
+    simp only [Function.Embedding.coeFn_mk, Nat.succ_eq_add_one]
+    exact Finset.sum_congr rfl hfun1
+  have hIcc2 : Finset.Icc 2 n = (Finset.range (n - 1)).map
+      ⟨fun j => j + 2, add_left_injective 2⟩ := by
+    ext k
+    constructor
+    · intro hk
+      rcases Finset.mem_Icc.mp hk with ⟨h2, hn'⟩
+      refine Finset.mem_map.mpr ⟨k - 2, Finset.mem_range.mpr (by omega), ?_⟩
+      simp
+      omega
+    · intro hk
+      rcases Finset.mem_map.mp hk with ⟨j, hj, hk'⟩
+      have hkj : k = j + 2 := by
+        simpa using hk'.symm
+      have hj' : j < n - 1 := Finset.mem_range.mp hj
+      rw [hkj]
+      simp [Finset.mem_Icc]
+      omega
+  have hfun2 : ∀ j ∈ Finset.range (n - 1),
+      catalan (j + 2 - 1) * (iN (n + 1 - (j + 2))).ncard =
+        catalan (j + 1) * (iN (n - 1 - j)).ncard := by
+    intro j hj
+    have : j < n - 1 := Finset.mem_range.mp hj
+    have h1 : j + 2 - 1 = j + 1 := by omega
+    have h2 : n + 1 - (j + 2) = n - 1 - j := by omega
+    simp [h1, h2]
+  have hsum2 :
+      ∑ k ∈ Finset.Icc 2 n, catalan (k - 1) * (iN (n + 1 - k)).ncard =
+        ∑ j ∈ Finset.range (n - 1), catalan (j + 1) * (iN (n - 1 - j)).ncard := by
+    rw [hIcc2, Finset.sum_map]
+    simpa [Function.Embedding.coeFn_mk] using Finset.sum_congr rfl hfun2
+  have hsplit :
+      ∑ k ∈ Finset.range n, catalan k * (iN (n - k)).ncard =
+        (iN n).ncard +
+          ∑ j ∈ Finset.range (n - 1), catalan (j + 1) * (iN (n - 1 - j)).ncard := by
+    have hrange : Finset.range n = insert 0 (Finset.Icc 1 (n - 1)) := by
+      ext k
+      simp [Finset.mem_range, Finset.mem_Icc]
+      omega
+    have hIcc : Finset.Icc 1 (n - 1) =
+        (Finset.range (n - 1)).map ⟨Nat.succ, Nat.succ_injective⟩ :=
+      Icc_one_eq_map_succ (n - 1)
+    have hnot : 0 ∉ Finset.Icc 1 (n - 1) := by simp [Finset.mem_Icc]
+    rw [hrange, Finset.sum_insert hnot]
+    simp [catalan_zero]
+    rw [hIcc, Finset.sum_map]
+    refine Finset.sum_congr rfl ?_
+    intro j hj
+    have h2 : n - (j + 1) = n - 1 - j := by
+      have : j < n - 1 := Finset.mem_range.mp hj
+      omega
+    simp [Function.Embedding.coeFn_mk, Nat.succ_eq_add_one, h2]
+  rw [hrec, hsum1, hsum2, hsplit]
+  ring
+
 #print axioms ncard_xN_one
 #print axioms ncard_xN_two
 #print axioms ncard_xN_three
@@ -5454,6 +5537,8 @@ lemma ncard_iN_eq_sum_catalan_iN_add_pConcatOne (n : ℕ) (hn : 2 ≤ n) :
 #print axioms ncard_yN_one
 #print axioms ncard_yN_eq_H
 #print axioms sum_H_mul_catalan_succ
+#print axioms sum_H_mul_catalan
+#print axioms sum_H_mul_catalan_eq_two_mul
 #print axioms xword_exists_rIrreducible_yword
 #print axioms eq_of_rIrreducible_yword
 #print axioms ncard_xN_eq_sum_iN_H
@@ -5509,6 +5594,7 @@ lemma ncard_iN_eq_sum_catalan_iN_add_pConcatOne (n : ℕ) (hn : 2 ≤ n) :
 #print axioms ncard_iN_ge_sum_catalan_iN_add_pConcatOne
 #print axioms goodPairs_eq_left_union_pConcatOne
 #print axioms ncard_iN_eq_sum_catalan_iN_add_pConcatOne
+#print axioms ncard_iN_succ_add_eq_two_mul_sum_catalan
 #print axioms PWord.l_append_not_rIrreducible_of_penultimate_ge_two
 #print axioms l_append_zero_eq_cons_zero_r_of_getLast_eq_one
 #print axioms isRightParse_l_append_zero_cons_zero

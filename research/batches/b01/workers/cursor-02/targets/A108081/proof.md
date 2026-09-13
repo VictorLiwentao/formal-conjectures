@@ -69,6 +69,8 @@ Proved:
 - Converse for last-`1` unique-zero words with penultimate at least `2` (`PWord.l_append_not_rIrreducible_of_penultimate_ge_two`): such a `p` has shortest right remainder of length at least `2` starting at `0`, hence a further right parse, so `L(p) ++ rem` is never I for any Xia remainder.
 - Therefore the good first-return factors of I-words are exactly LeftWords (last `0`) and last-`1` penultimate-`≤ 1` unique-zero words, i.e. `s ++ [1]` for `PWord s`. Combined with unique `P × I` enumeration, `goodPairs n = leftIPairs n ∪ pConcatOneIPairs n`, so
   `|I_n| = ∑_{k=1}^{n-1} C_{k-1}|I_{n-k}| + ∑_{k=2}^{n-1} C_{k-1}|I_{n-k}|` for `n ≥ 2` (`ncard_iN_eq_sum_catalan_iN_add_pConcatOne`). This is the Callan/A081696 first-return recurrence.
+- Rewrite of that recurrence (`ncard_iN_succ_add_eq_two_mul_sum_catalan`): for `n ≥ 1`, `|I_{n+1}| + |I_n| = 2 ∑_{k=0}^{n-1} C_k |I_{n-k}|`. Combined with `|I_1| = 1`, this is the Cauchy form of `Q/x + Q = 2 C Q + 1` for `Q(x) = ∑_{n≥1} |I_n| x^n`.
+- Full Catalan convolution of `H` (`sum_H_mul_catalan_eq_two_mul`): `∑_{j=0}^n H_j C_{n-j} = 2 H_n` for `n ≥ 1`. Together with the truncated identity `∑_{j=0}^{n-1} H_j C_{n-j} = H_n`, this is the coefficient form of `H C = 2H - 1`.
 
 ## Experimental decomposition (not a proof)
 
@@ -99,7 +101,9 @@ Public c5-k4 already checked `|X_n| = a(n-1)` through `n = 14`. Those counts are
 
 ## Remaining gaps for an exact proof
 
-The unique I×Y rebuild, `|Y_n| = H_{n-1}`, and the Callan recurrence for `|I_n|` are proved. Identifying the I-recurrence with A081696 initials is then a purely numerical match of `I_1 = 1` (already proved) with A081696(`0`) = 1; the sequences then coincide. The remaining gap is the generating-function identity `∑_{k=1}^n |I_k| H(n-k) = a(n-1)`, equivalently Barry’s product `H(x) F(x)` versus Lean’s Fibonacci-binomial `a`. That identity does not mention Xia words. The length-3 count and the finite convolution check do not close the conjecture.
+The unique I×Y rebuild, `|Y_n| = H_{n-1}`, and the Callan recurrence for `|I_n|` are proved. The two-sum recurrence rewrites as `|I_{n+1}| + |I_n| = 2 (C * I)_n` with `I` indexed from 1, and `H` satisfies `(H * C)_n = 2 H_n` for `n ≥ 1`. Identifying `|I_n|` with A081696(`n-1`) is then the unique solution of that recurrence with `|I_1| = 1`. The remaining gap is the generating-function identity `∑_{k=1}^n |I_k| H(n-k) = a(n-1)`, equivalently Barry’s product `H(x) F(x)` versus Lean’s Fibonacci-binomial `a`. That identity does not mention Xia words. The length-3 count and the finite convolution check do not close the conjecture.
+
+Algebraic plan for the remaining identity: from the proved coefficient relations one wants `Q(x) = x / (1 + x - 2x C(x))` and `H(x) = 1/(2 - C(x))`, hence `Q H = x / ((1+x-2xC)(2-C))`. Barry’s closed form for `∑ a_n x^n` is `(1+sqrt(1-4x))/(2 sqrt(1-4x) (x+sqrt(1-4x)))`. Using `C = 1 + x C^2` this equals `1/((1+x-2xC)(2-C))`. Mathlib has `PowerSeries.catalanSeries` over `ℕ`, which is enough for `C = 1 + X C^2` but not for the inverses `1-Q`. The remaining work is to lift those series to `ℤ` or `ℚ` and match coefficients with Lean’s `a n = ∑_k (n+k-1).choose k * fib (n-k+1)`. This was not finished before the session deadline.
 
 ## Approaches that failed or stalled
 

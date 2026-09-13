@@ -86,6 +86,12 @@ Checked on 2026-09-12. Live OEIS HTML history/edit pages were Cloudflare-blocked
 
 - Repeat search, 2026-09-13 06:36Z: OEIS A108081 JSON still revision 39 (`2025-01-19T09:28:27-05:00`). Xia comment and “is this always true?” unchanged. Fried arXiv:2607.24832 still treats A108080, not Xia words. No public exact proof of `|X_n|=a(n-1)` found.
 
+## Repeat search, 2026-09-13 06:56Z
+
+- OEIS A108081 JSON still revision 39 (`2025-01-19T09:28:27-05:00`). Xia comment, formulas, and “is this always true?” unchanged. Direct JSON fetch succeeded.
+- Web search for a Xia-word proof of `|X_n|=a(n-1)` found only the OEIS entry. Fried arXiv:2607.24832 still treats A108080. arXiv:2606.13152 (staircase polyominoes, Fibonacci and Catalan) does not treat Xia words or A108081.
+- No new DeepMind/Epoch match for `count_words_in_x_is_a_shifted`.
+
 ## Novelty conclusion
 
 No accepted Lean proof, Epoch submission, AlphaProof output, or paper proving or disproving `|X_n| = a(n-1)` was found. Finite enumeration through `n = 14` is known and is not a solution. An upstream `sorry` is not evidence of openness; this is only “no public solution found in the checked sources.”
