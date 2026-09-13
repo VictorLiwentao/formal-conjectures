@@ -335,5 +335,5 @@
     "exists_first_entry_index and the 30/210 stock package entered small primes. Leftover least factors remain coprime to 210."
   ],
   "next_step": "Frozen type still unproved. Compiled first-entry of 293 (k=11) lifts the leftover cutoff to lpf ≥ 307. The g(kq-2) index identity and 210-stock coprimality do not inject leftover factors. Remaining work is an unconditional first-entry bound q | x(q(q+2)-1) for leftover q ≥ 307, or a Lean-checkable counterexample. Complementary Type A injectors and Type B k≤q^2 still need a prime in an AP. Extending minFac does not finish ∀p. Do not claim completion.",
-  "handoff_research_commit": "cea4a371"
+  "handoff_research_commit": "aa1531bd"
 }
