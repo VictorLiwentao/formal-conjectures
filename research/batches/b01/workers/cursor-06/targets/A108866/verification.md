@@ -129,6 +129,22 @@ Compile log: `/opt/cursor/artifacts/a108866_lean_wfail_primepow_inner.log`, exit
 `oddInnerNum 5 = 960` by `norm_num` after unfolding, not `native_decide`.
 `decide` on the `ZMod (p^2)` unit sum for `p=11,13` stuck on `ZMod.inv`; do not use `native_decide`.
 
+Kernel-checked `p^e` converse for `p ∈ {11,13,17,19,23,29,31}` by unfolding `oddInnerNum`, same axioms, `#print axioms` on 2026-09-13:
+
+```
+'OeisA108866.inv_pair_zmod'
+'OeisA108866.not_n_sq_dvd_num_of_eleven_pow'
+'OeisA108866.not_n_sq_dvd_num_of_thirteen_pow'
+'OeisA108866.not_n_sq_dvd_num_of_seventeen_pow'
+'OeisA108866.not_n_sq_dvd_num_of_nineteen_pow'
+'OeisA108866.not_n_sq_dvd_num_of_twenty_three_pow'
+'OeisA108866.not_n_sq_dvd_num_of_twenty_nine_pow'
+'OeisA108866.not_n_sq_dvd_num_of_thirty_one_pow'
+```
+
+Compile log: `/opt/cursor/artifacts/a108866_lean_wfail_small_prime_pow.log`, exit 0, no `sorryAx`.
+This is not the frozen iff.
+
 Kernel-checked exact evaluations `n=9,25,27,49` and packaging lemmas remain in the same file, same axioms.
 
 Exact type of the prime-direction theorem, from `#print OeisA108866.n_sq_dvd_num_of_prime`:

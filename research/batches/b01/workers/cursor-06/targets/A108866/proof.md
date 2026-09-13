@@ -129,6 +129,14 @@ previous lemma this gives `not_n_sq_dvd_num_of_prime_pow`.
 `not_n_sq_dvd_num_of_five_pow`: `oddInnerNum 5 = 960` and `25 ∤ 960`,
 so the converse holds for every `n=5^e` with `e≥2`.
 
+The same unfolding of `oddInnerNum p` by `sum_range_succ` and
+`norm_num` (not `native_decide`) gives `p^2 ∤ oddInnerNum p` for
+`p = 11,13,17,19,23,29,31`. Hence the converse holds for every
+`n=p^e` with those primes and `e≥2`.
+
+`inv_pair_zmod`: in `ZMod (p^2)`,
+`k^{-1} + (p-k)^{-1} = -p k^{-2}` for `0 < k < p`.
+
 `choose_pred_eq_one_sub_harmonic_zmod`: for odd `a ≤ p`,
 `C(p-1,a-1) ≡ 1 - p H_{a-1}` exactly in `ZMod (p^2)`, because the
 product `∏(1-p/b)` truncates after the linear term. Therefore
@@ -164,7 +172,8 @@ Kernel-checked fragments of the converse:
 - all `n=3 p^e` for primes `p≥5` and `e≥1` (`v_p(T(3 p^e))=-e`)
 - `p^e` leading binomials: `C ≡ C0` with valuation gap at least 2,
   so `v_p(U)=v_p(U0)` whenever `v_p(U0)<2`
-- converse at `n=p^e` whenever `v_p(U0)=1`, including all `n=5^e`
+- converse at `n=p^e` whenever `v_p(U0)=1`, including all
+  `n=p^e` for `p ∈ {5,11,13,17,19,23,29,31}` and `e≥2`
 
 Remaining odd composites include prime powers `p^e` for `p≥5` and products
 where `L(m/p^e)=0` for every eligible prime (for example `n=1027=13·79`),

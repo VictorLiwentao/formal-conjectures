@@ -55,8 +55,11 @@ For `p^e` with `p≥5` and `e≥2`, the rest product is `1+O(p^2)`, so
 `C(p^e-1, a p^{e-1}-1) ≡ C(p-1, a-1)` with valuation gap at least 2,
 and the leading odd sum `U` satisfies `v_p(U)=v_p(U0)` whenever
 `v_p(U0)<2`. In `ZMod (p^2)`, `C(p-1,a-1) ≡ 1 - p H_{a-1}` for odd
-`a`, so `p^2 ∤ T(p).num` inner numerator is equivalent to a unit sum.
-The remaining odd-composite cases are not proved here.
+`a`, so `p^2 ∤ oddInnerNum p` iff a unit sum is nonzero. Unfolding
+that numerator gives the converse for every `n=p^e` with
+`p ∈ {5,11,13,17,19,23,29,31}` and `e≥2`. Pairing in `ZMod (p^2)`
+gives `(p-k)^{-1} + k^{-1} = -p k^{-2}`. The remaining odd-composite
+cases are not proved here.
 -/
 
 open Finset
@@ -4488,6 +4491,192 @@ lemma not_pow_dvd_oddInnerNum_iff {p : ℕ} (hp : p.Prime) (h5 : 5 ≤ p) :
     (ZMod.natCast_eq_zero_iff (oddInnerNum p) (p ^ 2)).symm.trans
       (oddInnerNum_eq_zero_zmod_sq_iff hp h5)
 
+lemma mul_self_of_mul_p {p : ℕ} {x : ZMod (p ^ 2)}
+    (hx : ∃ c, x = (p : ZMod (p ^ 2)) * c) :
+    x * x = 0 := by
+  obtain ⟨c, rfl⟩ := hx
+  have hnn : (p : ZMod (p ^ 2)) * p = 0 := n_mul_self_eq_zero p
+  have : (p : ZMod (p ^ 2)) * c * ((p : ZMod (p ^ 2)) * c) =
+      ((p : ZMod (p ^ 2)) * p) * (c * c) := by ring
+  rw [this, hnn, zero_mul]
+
+lemma one_sub_mul_one_add_of_mul_p {p : ℕ} {x : ZMod (p ^ 2)}
+    (hx : ∃ c, x = (p : ZMod (p ^ 2)) * c) :
+    (1 - x) * (1 + x) = 1 := by
+  have : (1 - x) * (1 + x) = 1 - x * x := by ring
+  rw [this, mul_self_of_mul_p hx, sub_zero]
+
+lemma inv_pair_zmod {p k : ℕ} (hp : p.Prime) (hk : 0 < k) (hkp : k < p) :
+    (k : ZMod (p ^ 2))⁻¹ + (((p - k : ℕ) : ZMod (p ^ 2))⁻¹) =
+      -((p : ZMod (p ^ 2)) * ((k : ZMod (p ^ 2))⁻¹) ^ 2) := by
+  have hcopk := coprime_sq_of_lt_prime hp hk hkp
+  have hkk : (k : ZMod (p ^ 2)) * (k : ZMod (p ^ 2))⁻¹ = 1 :=
+    ZMod.coe_mul_inv_eq_one k hcopk
+  have hfactor :
+      ((p - k : ℕ) : ZMod (p ^ 2)) =
+        - (k : ZMod (p ^ 2)) *
+          (1 - (p : ZMod (p ^ 2)) * (k : ZMod (p ^ 2))⁻¹) := by
+    have hsub : ((p - k : ℕ) : ZMod (p ^ 2)) = (p : ZMod (p ^ 2)) - k :=
+      Nat.cast_sub hkp.le
+    rw [hsub]
+    calc
+      (p : ZMod (p ^ 2)) - k =
+          -(k : ZMod (p ^ 2)) + (p : ZMod (p ^ 2)) := by ring
+      _ = -(k : ZMod (p ^ 2)) + (p : ZMod (p ^ 2)) * 1 := by rw [mul_one]
+      _ = -(k : ZMod (p ^ 2)) +
+            (p : ZMod (p ^ 2)) *
+              ((k : ZMod (p ^ 2)) * (k : ZMod (p ^ 2))⁻¹) := by
+        rw [hkk]
+      _ = -(k : ZMod (p ^ 2)) *
+            (1 - (p : ZMod (p ^ 2)) * (k : ZMod (p ^ 2))⁻¹) := by ring
+  have hx : ∃ c, (p : ZMod (p ^ 2)) * (k : ZMod (p ^ 2))⁻¹ =
+      (p : ZMod (p ^ 2)) * c :=
+    ⟨(k : ZMod (p ^ 2))⁻¹, rfl⟩
+  have hmul1 :
+      ((p - k : ℕ) : ZMod (p ^ 2)) *
+          (-(k : ZMod (p ^ 2))⁻¹ *
+            (1 + (p : ZMod (p ^ 2)) * (k : ZMod (p ^ 2))⁻¹)) = 1 := by
+    have hx2 := one_sub_mul_one_add_of_mul_p hx
+    rw [hfactor]
+    have :
+        (-(k : ZMod (p ^ 2)) *
+            (1 - (p : ZMod (p ^ 2)) * (k : ZMod (p ^ 2))⁻¹)) *
+          (-(k : ZMod (p ^ 2))⁻¹ *
+            (1 + (p : ZMod (p ^ 2)) * (k : ZMod (p ^ 2))⁻¹)) =
+          ((k : ZMod (p ^ 2)) * (k : ZMod (p ^ 2))⁻¹) *
+            ((1 - (p : ZMod (p ^ 2)) * (k : ZMod (p ^ 2))⁻¹) *
+              (1 + (p : ZMod (p ^ 2)) * (k : ZMod (p ^ 2))⁻¹)) := by
+      ring
+    rw [this, hkk, hx2, one_mul]
+  have hinv :
+      (((p - k : ℕ) : ZMod (p ^ 2))⁻¹) =
+        -(k : ZMod (p ^ 2))⁻¹ *
+          (1 + (p : ZMod (p ^ 2)) * (k : ZMod (p ^ 2))⁻¹) :=
+    ZMod.inv_eq_of_mul_eq_one (p ^ 2) _ _ hmul1
+  rw [hinv]
+  ring
+
+lemma oddInnerNum_eleven : oddInnerNum 11 = 253372686336000 := by
+  unfold oddInnerNum oddDenom
+  rw [show Nat.factorial 10 = 3628800 by decide]
+  iterate 10 rw [sum_range_succ]
+  rw [sum_range_zero]
+  simp [Nat.choose]
+  norm_num
+
+lemma not_pow_dvd_oddInnerNum_eleven : ¬ 11 ^ 2 ∣ oddInnerNum 11 := by
+  rw [oddInnerNum_eleven]
+  decide
+
+lemma not_n_sq_dvd_num_of_eleven_pow {e : ℕ} (he : 2 ≤ e) :
+    ¬ (ratExpression (11 ^ e)).num ≡ 0 [ZMOD ((11 ^ e) ^ 2 : ℤ)] :=
+  not_n_sq_dvd_num_of_prime_pow (by decide : Nat.Prime 11) (by decide) he
+    not_pow_dvd_oddInnerNum_eleven
+
+lemma oddInnerNum_thirteen : oddInnerNum 13 = 12308913158750208000 := by
+  unfold oddInnerNum oddDenom
+  rw [show Nat.factorial 12 = 479001600 by decide]
+  iterate 12 rw [sum_range_succ]
+  rw [sum_range_zero]
+  simp [Nat.choose]
+  norm_num
+
+lemma not_pow_dvd_oddInnerNum_thirteen : ¬ 13 ^ 2 ∣ oddInnerNum 13 := by
+  rw [oddInnerNum_thirteen]
+  decide
+
+lemma not_n_sq_dvd_num_of_thirteen_pow {e : ℕ} (he : 2 ≤ e) :
+    ¬ (ratExpression (13 ^ e)).num ≡ 0 [ZMOD ((13 ^ e) ^ 2 : ℤ)] :=
+  not_n_sq_dvd_num_of_prime_pow (by decide : Nat.Prime 13) (by decide) he
+    not_pow_dvd_oddInnerNum_thirteen
+
+lemma oddInnerNum_seventeen : oddInnerNum 17 = 213162269985680532701184000000 := by
+  unfold oddInnerNum oddDenom
+  rw [show Nat.factorial 16 = 20922789888000 by decide]
+  iterate 16 rw [sum_range_succ]
+  rw [sum_range_zero]
+  simp [Nat.choose]
+  norm_num
+
+lemma not_pow_dvd_oddInnerNum_seventeen : ¬ 17 ^ 2 ∣ oddInnerNum 17 := by
+  rw [oddInnerNum_seventeen]
+  decide
+
+lemma not_n_sq_dvd_num_of_seventeen_pow {e : ℕ} (he : 2 ≤ e) :
+    ¬ (ratExpression (17 ^ e)).num ≡ 0 [ZMOD ((17 ^ e) ^ 2 : ℤ)] :=
+  not_n_sq_dvd_num_of_prime_pow (by decide : Nat.Prime 17) (by decide) he
+    not_pow_dvd_oddInnerNum_seventeen
+
+lemma oddInnerNum_nineteen : oddInnerNum 19 = 63333893299713345330742296576000000 := by
+  unfold oddInnerNum oddDenom
+  rw [show Nat.factorial 18 = 6402373705728000 by decide]
+  iterate 18 rw [sum_range_succ]
+  rw [sum_range_zero]
+  simp [Nat.choose]
+  norm_num
+
+lemma not_pow_dvd_oddInnerNum_nineteen : ¬ 19 ^ 2 ∣ oddInnerNum 19 := by
+  rw [oddInnerNum_nineteen]
+  decide
+
+lemma not_n_sq_dvd_num_of_nineteen_pow {e : ℕ} (he : 2 ≤ e) :
+    ¬ (ratExpression (19 ^ e)).num ≡ 0 [ZMOD ((19 ^ e) ^ 2 : ℤ)] :=
+  not_n_sq_dvd_num_of_prime_pow (by decide : Nat.Prime 19) (by decide) he
+    not_pow_dvd_oddInnerNum_nineteen
+
+lemma oddInnerNum_twenty_three : oddInnerNum 23 = 21048391522108890237419401672783948677120000000 := by
+  unfold oddInnerNum oddDenom
+  rw [show Nat.factorial 22 = 1124000727777607680000 by decide]
+  iterate 22 rw [sum_range_succ]
+  rw [sum_range_zero]
+  simp [Nat.choose]
+  norm_num
+
+lemma not_pow_dvd_oddInnerNum_twenty_three : ¬ 23 ^ 2 ∣ oddInnerNum 23 := by
+  rw [oddInnerNum_twenty_three]
+  decide
+
+lemma not_n_sq_dvd_num_of_twenty_three_pow {e : ℕ} (he : 2 ≤ e) :
+    ¬ (ratExpression (23 ^ e)).num ≡ 0 [ZMOD ((23 ^ e) ^ 2 : ℤ)] :=
+  not_n_sq_dvd_num_of_prime_pow (by decide : Nat.Prime 23) (by decide) he
+    not_pow_dvd_oddInnerNum_twenty_three
+
+lemma oddInnerNum_twenty_nine : oddInnerNum 29 =
+    61639264849772044126348624057154387752962955780722524160000000000 := by
+  unfold oddInnerNum oddDenom
+  rw [show Nat.factorial 28 = 304888344611713860501504000000 by decide]
+  iterate 28 rw [sum_range_succ]
+  rw [sum_range_zero]
+  simp [Nat.choose]
+  norm_num
+
+lemma not_pow_dvd_oddInnerNum_twenty_nine : ¬ 29 ^ 2 ∣ oddInnerNum 29 := by
+  rw [oddInnerNum_twenty_nine]
+  decide
+
+lemma not_n_sq_dvd_num_of_twenty_nine_pow {e : ℕ} (he : 2 ≤ e) :
+    ¬ (ratExpression (29 ^ e)).num ≡ 0 [ZMOD ((29 ^ e) ^ 2 : ℤ)] :=
+  not_n_sq_dvd_num_of_prime_pow (by decide : Nat.Prime 29) (by decide) he
+    not_pow_dvd_oddInnerNum_twenty_nine
+
+lemma oddInnerNum_thirty_one : oddInnerNum 31 =
+    162875112786453630231898361333293575950868830029792722026496000000000000 := by
+  unfold oddInnerNum oddDenom
+  rw [show Nat.factorial 30 = 265252859812191058636308480000000 by decide]
+  iterate 30 rw [sum_range_succ]
+  rw [sum_range_zero]
+  simp [Nat.choose]
+  norm_num
+
+lemma not_pow_dvd_oddInnerNum_thirty_one : ¬ 31 ^ 2 ∣ oddInnerNum 31 := by
+  rw [oddInnerNum_thirty_one]
+  decide
+
+lemma not_n_sq_dvd_num_of_thirty_one_pow {e : ℕ} (he : 2 ≤ e) :
+    ¬ (ratExpression (31 ^ e)).num ≡ 0 [ZMOD ((31 ^ e) ^ 2 : ℤ)] :=
+  not_n_sq_dvd_num_of_prime_pow (by decide : Nat.Prime 31) (by decide) he
+    not_pow_dvd_oddInnerNum_thirty_one
+
 #print axioms OeisA108866.one_le_padicValRat_oddLeadingSum0
 #print axioms OeisA108866.padicValRat_inner_prime_pow_of_leading
 #print axioms OeisA108866.not_n_sq_dvd_num_of_prime_pow_of_leading
@@ -4510,6 +4699,14 @@ lemma not_pow_dvd_oddInnerNum_iff {p : ℕ} (hp : p.Prime) (h5 : 5 ≤ p) :
 #print axioms OeisA108866.not_n_sq_dvd_num_forty_nine
 #print axioms OeisA108866.not_n_sq_dvd_num_of_three_pow
 #print axioms OeisA108866.not_n_sq_dvd_num_of_three_mul_pow
+#print axioms OeisA108866.inv_pair_zmod
+#print axioms OeisA108866.not_n_sq_dvd_num_of_eleven_pow
+#print axioms OeisA108866.not_n_sq_dvd_num_of_thirteen_pow
+#print axioms OeisA108866.not_n_sq_dvd_num_of_seventeen_pow
+#print axioms OeisA108866.not_n_sq_dvd_num_of_nineteen_pow
+#print axioms OeisA108866.not_n_sq_dvd_num_of_twenty_three_pow
+#print axioms OeisA108866.not_n_sq_dvd_num_of_twenty_nine_pow
+#print axioms OeisA108866.not_n_sq_dvd_num_of_thirty_one_pow
 
 end OeisA108866
 
