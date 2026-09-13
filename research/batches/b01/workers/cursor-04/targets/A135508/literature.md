@@ -5,7 +5,7 @@ Frozen source SHA-256: `3814549cee8601c96c59b923d7ece1c4b26a59b0fd134f49a93cbbc3
 (matches `assignments.json` and the working tree).
 Baseline commit: `a2f4a1bb12a28e04a969da78feefac7d1ce49565`.
 Coordination seed: `238f78bdd5701ae4c97a0d70d4e22e2d45770d7a`.
-Audit date: 2026-09-12/13 UTC.
+Audit date: 2026-09-12/13 UTC. Re-checked Cloitre arXiv:2510.18891v3 and the public OEIS page on 2026-09-13: McEachen remains a comment; Cloitre’s Corollary 6.6 remains conditional on `C₁`.
 
 This is a search log. “No match found” means no public exact solution was found in the sources below. It does not prove the problem is open.
 
@@ -45,7 +45,7 @@ Unconditional in that paper: inhibition (Lemma 6.1); 2-adic staircase (Prop 6.5)
 Conditional on hypothesis `C₁` (`c_n ∈ {1} ∪ primes` for all `n`):
 - Theorem 6.2: `c_q = 1` for prime `q ≥ 5` implies `q-2` prime.
 - Corollary 6.6: McEachen for `p ≥ 5`. Proof: `c_p ∈ {1,p}`; `c_p=1` plus 6.2 would force `p-2` prime.
-- Hypothesis 6.11 is the prime-index form of McEachen plus twin detection. Cloitre uses it as an assumption for the `K=2` density-1 theorem. Worker cursor-04 proved the twin-detection half unconditionally for larger twins `≥ 13` (`larger_twin_eq_one`) and McEachen for several infinite families, but not the remaining prime-index cases with `lpf(p-2) ≥ 37` not a twin. Reproducing Corollary 6.6 under `C₁` is not a batch resolution.
+- Hypothesis 6.11 is the prime-index form of McEachen plus twin detection. Cloitre uses it as an assumption for the `K=2` density-1 theorem. Worker cursor-04 proved the twin-detection half unconditionally for larger twins `≥ 13` (`larger_twin_eq_one`) and McEachen for several infinite families, including remaining primes with `lpf(p-2) ≤ 101` or a larger-twin least factor, but not the remaining prime-index cases with `lpf(p-2) ≥ 103` not a twin. Reproducing Corollary 6.6 under `C₁` is not a batch resolution.
 
 OEIS `/internal` (retrieved 2026-09-13 via HTML snapshot): `%I #47 Oct 01 2025`; McEachen comment still present; C1 still appears as a comment (“1's or primes only”), not as a proof. Editability: **unknown**. No OEIS edit was submitted.
 

@@ -31,7 +31,7 @@ They also prove Cloitre's 2-adic staircase `a(2 · 4^k - 1) = 2`, the
 remaining-class factor `q ≡ 2 (mod 3)` of `p-2`, injection of a factor of
 `p-2` when some `kq-2` is a prime `≡ 2 (mod 3)`, McEachen when a factor of
 `p-2` is a larger twin, Cloitre's valuation barrier, and remaining McEachen
-when `lpf(p-2) ≤ 29` or that least factor is a larger twin.
+when `lpf(p-2) ≤ 101` or that least factor is a larger twin.
 -/
 
 namespace OeisA135508
@@ -109,6 +109,14 @@ lemma three_dvd_x_four : 3 ∣ x 4 := by
 
 lemma three_dvd_x {n : ℕ} (hn : 4 ≤ n) : 3 ∣ x n :=
   three_dvd_x_four.trans (x_dvd_of_le (by decide : 0 < 4) hn)
+
+lemma two_dvd_x_two : 2 ∣ x 2 := by
+  have : x 2 = 4 := by decide
+  rw [this]
+  decide
+
+lemma two_dvd_x {n : ℕ} (hn : 2 ≤ n) : 2 ∣ x n :=
+  two_dvd_x_two.trans (x_dvd_of_le (by decide : 0 < 2) hn)
 
 /-- If `3 ∣ n+1` and `n ≥ 4`, then `x n` and `n+1` are not coprime. -/
 lemma gcd_gt_one_of_three_dvd_succ {n : ℕ} (hn : 4 ≤ n) (h3 : 3 ∣ n + 1) :
@@ -704,6 +712,40 @@ lemma minFac_mul_add_two_le {n : ℕ} (hn : 1 < n) (hnp : ¬ n.Prime)
   have : q * (q + 2) ≤ q * m := Nat.mul_le_mul_left q hm2
   rwa [hmul] at this
 
+/-- If `kq-2` is an odd composite `≡ 2 (mod 3)` and its least prime factor
+already divides `x` by the square-window index `s(s+2)-1`, then
+`gcd(x(kq-3), kq-2) > 1`. That composite is not a coprime injector. -/
+lemma gcd_gt_one_of_composite_shift {k q : ℕ}
+    (_hpos : 0 < k * q - 3)
+    (hgt : 1 < k * q - 2)
+    (hcomp : ¬ (k * q - 2).Prime)
+    (hmod : (k * q - 2) % 3 = 2)
+    (hodd : (k * q - 2) % 2 = 1)
+    (hind : Nat.minFac (k * q - 2) ∣
+      x (Nat.minFac (k * q - 2) * (Nat.minFac (k * q - 2) + 2) - 1)) :
+    1 < Nat.gcd (x (k * q - 3)) (k * q - 2) := by
+  have hle := minFac_mul_add_two_le hgt hcomp hmod hodd
+  have hminp : (Nat.minFac (k * q - 2)).Prime := Nat.minFac_prime (ne_of_gt hgt)
+  have hs2 : 2 ≤ Nat.minFac (k * q - 2) := hminp.two_le
+  have hmul : 2 * 4 ≤ Nat.minFac (k * q - 2) * (Nat.minFac (k * q - 2) + 2) :=
+    Nat.mul_le_mul hs2 (Nat.add_le_add_right hs2 2)
+  have hspos : 0 < Nat.minFac (k * q - 2) * (Nat.minFac (k * q - 2) + 2) - 1 :=
+    Nat.sub_pos_of_lt (lt_of_lt_of_le (by decide : 1 < 8) hmul)
+  have hidx : Nat.minFac (k * q - 2) * (Nat.minFac (k * q - 2) + 2) - 1 ≤
+      k * q - 3 := by
+    have hsub : Nat.minFac (k * q - 2) * (Nat.minFac (k * q - 2) + 2) - 1 ≤
+        k * q - 2 - 1 := Nat.sub_le_sub_right hle 1
+    have hidx' : k * q - 2 - 1 = k * q - 3 := Nat.sub_sub (k * q) 2 1
+    exact hidx' ▸ hsub
+  have hx : Nat.minFac (k * q - 2) ∣ x (k * q - 3) :=
+    hind.trans (x_dvd_of_le hspos hidx)
+  have hd : Nat.minFac (k * q - 2) ∣ k * q - 2 := Nat.minFac_dvd _
+  have hg : Nat.minFac (k * q - 2) ∣ Nat.gcd (x (k * q - 3)) (k * q - 2) :=
+    Nat.dvd_gcd hx hd
+  have hge : Nat.minFac (k * q - 2) ≤ Nat.gcd (x (k * q - 3)) (k * q - 2) :=
+    Nat.le_of_dvd (Nat.gcd_pos_of_pos_right _ (Nat.zero_lt_of_lt hgt)) hg
+  exact Nat.lt_of_lt_of_le (by decide : 1 < 2) (le_trans hs2 hge)
+
 lemma remaining_minFac_mul_add_two_le {p : ℕ} (hp : p.Prime) (hp7 : 7 ≤ p)
     (hmod : p % 3 = 1) (hcomp : ¬ (p - 2).Prime) :
     Nat.minFac (p - 2) * (Nat.minFac (p - 2) + 2) ≤ p - 2 := by
@@ -721,6 +763,37 @@ lemma remaining_minFac_mul_add_two_le {p : ℕ} (hp : p.Prime) (hp7 : 7 ≤ p)
   have hpm : (p - 2) % 3 = 2 :=
     p_sub_two_mod (le_trans (by decide : 4 ≤ 7) hp7) hmod
   exact minFac_mul_add_two_le hn hcomp hpm hodd
+
+/-- Remaining McEachen reduces to first-entry of `lpf(p-2)` by index `q(q+2)-1`. -/
+theorem conjecture_of_minFac_entered {p : ℕ} (hp : p.Prime) (hp7 : 7 ≤ p)
+    (hmod : p % 3 = 1) (hcomp : ¬ (p - 2).Prime)
+    (hin : Nat.minFac (p - 2) ∣
+      x (Nat.minFac (p - 2) * (Nat.minFac (p - 2) + 2) - 1)) :
+    a (p - 1) = p := by
+  have hbound := remaining_minFac_mul_add_two_le hp hp7 hmod hcomp
+  have hpr : (Nat.minFac (p - 2)).Prime := by
+    refine Nat.minFac_prime ?_
+    intro h
+    have h2 : 2 ≤ p := le_trans (by decide : 2 ≤ 7) hp7
+    have hp3 : p = 3 := by
+      have hcancel := Nat.sub_add_cancel h2
+      rw [h] at hcancel
+      exact hcancel.symm
+    exact Nat.ne_of_lt (lt_of_lt_of_le (by decide : 3 < 7) hp7) hp3.symm
+  have hq2 : 2 ≤ Nat.minFac (p - 2) := hpr.two_le
+  have hp5 : 5 ≤ p := le_trans (by decide : 5 ≤ 7) hp7
+  have hmul : 2 * 4 ≤ Nat.minFac (p - 2) * (Nat.minFac (p - 2) + 2) :=
+    Nat.mul_le_mul hq2 (Nat.add_le_add_right hq2 2)
+  have hpos : 0 < Nat.minFac (p - 2) * (Nat.minFac (p - 2) + 2) - 1 :=
+    Nat.sub_pos_of_lt (lt_of_lt_of_le (by decide : 1 < 8) hmul)
+  have hle : Nat.minFac (p - 2) * (Nat.minFac (p - 2) + 2) - 1 ≤ p - 3 := by
+    have hsub : Nat.minFac (p - 2) * (Nat.minFac (p - 2) + 2) - 1 ≤ p - 2 - 1 :=
+      Nat.sub_le_sub_right hbound 1
+    have : p - 2 - 1 = p - 3 := Nat.sub_sub p 2 1
+    exact this ▸ hsub
+  exact conjecture_of_factor_dvd_x hp hp5
+    (lt_of_lt_of_le (by decide : 1 < 2) hq2) (Nat.minFac_dvd _)
+    (hin.trans (x_dvd_of_le hpos hle))
 
 lemma mul_sub_two_mod_three {k q : ℕ} (hk : k % 3 = 2) (hq : q % 3 = 2)
     (h4 : 4 ≤ k * q) : (k * q - 2) % 3 = 2 := by
@@ -1063,6 +1136,90 @@ theorem conjecture_of_fifty_nine_dvd {p : ℕ} (hp : p.Prime) (hp296 : 296 ≤ p
   conjecture_of_factor_dvd_x hp (by omega) (by decide : 1 < 59) h59
     (fifty_nine_dvd_x (by omega : 293 ≤ p - 3))
 
+lemma sixty_seven_dvd_x_467 : 67 ∣ x 467 :=
+  q_dvd_x_of_prime_index (k := 7) (q := 67)
+    (by norm_num) (by decide) (by decide)
+
+lemma sixty_seven_dvd_x {n : ℕ} (hn : 467 ≤ n) : 67 ∣ x n :=
+  sixty_seven_dvd_x_467.trans (x_dvd_of_le (by decide : 0 < 467) hn)
+
+theorem conjecture_of_sixty_seven_dvd {p : ℕ} (hp : p.Prime) (hp470 : 470 ≤ p)
+    (h67 : 67 ∣ p - 2) : a (p - 1) = p :=
+  conjecture_of_factor_dvd_x hp (by omega) (by decide : 1 < 67) h67
+    (sixty_seven_dvd_x (by omega : 467 ≤ p - 3))
+
+lemma seventy_one_dvd_x_353 : 71 ∣ x 353 :=
+  q_dvd_x_of_prime_index (k := 5) (q := 71)
+    (by norm_num) (by decide) (by decide)
+
+lemma seventy_one_dvd_x {n : ℕ} (hn : 353 ≤ n) : 71 ∣ x n :=
+  seventy_one_dvd_x_353.trans (x_dvd_of_le (by decide : 0 < 353) hn)
+
+theorem conjecture_of_seventy_one_dvd {p : ℕ} (hp : p.Prime) (hp356 : 356 ≤ p)
+    (h71 : 71 ∣ p - 2) : a (p - 1) = p :=
+  conjecture_of_factor_dvd_x hp (by omega) (by decide : 1 < 71) h71
+    (seventy_one_dvd_x (by omega : 353 ≤ p - 3))
+
+lemma seventy_nine_dvd_x_1499 : 79 ∣ x 1499 :=
+  q_dvd_x_of_prime_index (k := 19) (q := 79)
+    (by norm_num) (by decide) (by decide)
+
+lemma seventy_nine_dvd_x {n : ℕ} (hn : 1499 ≤ n) : 79 ∣ x n :=
+  seventy_nine_dvd_x_1499.trans (x_dvd_of_le (by decide : 0 < 1499) hn)
+
+theorem conjecture_of_seventy_nine_dvd {p : ℕ} (hp : p.Prime) (hp1502 : 1502 ≤ p)
+    (h79 : 79 ∣ p - 2) : a (p - 1) = p :=
+  conjecture_of_factor_dvd_x hp (by omega) (by decide : 1 < 79) h79
+    (seventy_nine_dvd_x (by omega : 1499 ≤ p - 3))
+
+lemma eighty_three_dvd_x_911 : 83 ∣ x 911 :=
+  q_dvd_x_of_prime_index (k := 11) (q := 83)
+    (by norm_num) (by decide) (by decide)
+
+lemma eighty_three_dvd_x {n : ℕ} (hn : 911 ≤ n) : 83 ∣ x n :=
+  eighty_three_dvd_x_911.trans (x_dvd_of_le (by decide : 0 < 911) hn)
+
+theorem conjecture_of_eighty_three_dvd {p : ℕ} (hp : p.Prime) (hp914 : 914 ≤ p)
+    (h83 : 83 ∣ p - 2) : a (p - 1) = p :=
+  conjecture_of_factor_dvd_x hp (by omega) (by decide : 1 < 83) h83
+    (eighty_three_dvd_x (by omega : 911 ≤ p - 3))
+
+lemma eighty_nine_dvd_x_443 : 89 ∣ x 443 :=
+  q_dvd_x_of_prime_index (k := 5) (q := 89)
+    (by norm_num) (by decide) (by decide)
+
+lemma eighty_nine_dvd_x {n : ℕ} (hn : 443 ≤ n) : 89 ∣ x n :=
+  eighty_nine_dvd_x_443.trans (x_dvd_of_le (by decide : 0 < 443) hn)
+
+theorem conjecture_of_eighty_nine_dvd {p : ℕ} (hp : p.Prime) (hp446 : 446 ≤ p)
+    (h89 : 89 ∣ p - 2) : a (p - 1) = p :=
+  conjecture_of_factor_dvd_x hp (by omega) (by decide : 1 < 89) h89
+    (eighty_nine_dvd_x (by omega : 443 ≤ p - 3))
+
+lemma ninety_seven_dvd_x_677 : 97 ∣ x 677 :=
+  q_dvd_x_of_prime_index (k := 7) (q := 97)
+    (by norm_num) (by decide) (by decide)
+
+lemma ninety_seven_dvd_x {n : ℕ} (hn : 677 ≤ n) : 97 ∣ x n :=
+  ninety_seven_dvd_x_677.trans (x_dvd_of_le (by decide : 0 < 677) hn)
+
+theorem conjecture_of_ninety_seven_dvd {p : ℕ} (hp : p.Prime) (hp680 : 680 ≤ p)
+    (h97 : 97 ∣ p - 2) : a (p - 1) = p :=
+  conjecture_of_factor_dvd_x hp (by omega) (by decide : 1 < 97) h97
+    (ninety_seven_dvd_x (by omega : 677 ≤ p - 3))
+
+lemma one_hundred_one_dvd_x_503 : 101 ∣ x 503 :=
+  q_dvd_x_of_prime_index (k := 5) (q := 101)
+    (by norm_num) (by decide) (by decide)
+
+lemma one_hundred_one_dvd_x {n : ℕ} (hn : 503 ≤ n) : 101 ∣ x n :=
+  one_hundred_one_dvd_x_503.trans (x_dvd_of_le (by decide : 0 < 503) hn)
+
+theorem conjecture_of_one_hundred_one_dvd {p : ℕ} (hp : p.Prime) (hp506 : 506 ≤ p)
+    (h101 : 101 ∣ p - 2) : a (p - 1) = p :=
+  conjecture_of_factor_dvd_x hp (by omega) (by decide : 1 < 101) h101
+    (one_hundred_one_dvd_x (by omega : 503 ≤ p - 3))
+
 lemma remaining_minFac_ge_five {p : ℕ} (hp : p.Prime) (hp7 : 7 ≤ p)
     (hmod : p % 3 = 1) : 5 ≤ Nat.minFac (p - 2) := by
   have hn : 1 < p - 2 := by omega
@@ -1287,6 +1444,114 @@ theorem conjecture_of_minFac_le_fifty_nine_or_twin {p : ℕ} (hp : p.Prime)
             rw [h] at hbound
             omega
           exact conjecture_of_fifty_nine_dvd hp hp296 hd59
+  · by_cases h13 : 13 ≤ Nat.minFac (p - 2)
+    · exact conjecture_of_larger_twin_dvd hp (by omega) hcomp hpr h13 htwin hd
+    · have : Nat.minFac (p - 2) ≤ 29 := by omega
+      exact conjecture_of_minFac_le_twenty_nine hp hp7 hmod hcomp this
+
+lemma remaining_prime_le_one_hundred_one {q : ℕ} (hq : q.Prime)
+    (h60 : 60 ≤ q) (h101 : q ≤ 101) (hnotwin : ¬ (q - 2).Prime) :
+    q = 67 ∨ q = 71 ∨ q = 79 ∨ q = 83 ∨ q = 89 ∨ q = 97 ∨ q = 101 := by
+  interval_cases q
+  · exact ((by decide : ¬ Nat.Prime 60) hq).elim
+  · exact (hnotwin (by decide : Nat.Prime 59)).elim
+  · exact ((by decide : ¬ Nat.Prime 62) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 63) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 64) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 65) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 66) hq).elim
+  · exact Or.inl rfl
+  · exact ((by decide : ¬ Nat.Prime 68) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 69) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 70) hq).elim
+  · exact Or.inr (Or.inl rfl)
+  · exact ((by decide : ¬ Nat.Prime 72) hq).elim
+  · exact (hnotwin (by decide : Nat.Prime 71)).elim
+  · exact ((by decide : ¬ Nat.Prime 74) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 75) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 76) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 77) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 78) hq).elim
+  · exact Or.inr (Or.inr (Or.inl rfl))
+  · exact ((by decide : ¬ Nat.Prime 80) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 81) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 82) hq).elim
+  · exact Or.inr (Or.inr (Or.inr (Or.inl rfl)))
+  · exact ((by decide : ¬ Nat.Prime 84) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 85) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 86) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 87) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 88) hq).elim
+  · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inl rfl))))
+  · exact ((by decide : ¬ Nat.Prime 90) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 91) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 92) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 93) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 94) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 95) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 96) hq).elim
+  · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl rfl)))))
+  · exact ((by decide : ¬ Nat.Prime 98) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 99) hq).elim
+  · exact ((by decide : ¬ Nat.Prime 100) hq).elim
+  · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr rfl)))))
+
+/-- Remaining McEachen if `lpf(p-2) ≤ 101` or that least factor is a larger twin. -/
+theorem conjecture_of_minFac_le_one_hundred_one_or_twin {p : ℕ} (hp : p.Prime)
+    (hp7 : 7 ≤ p) (hmod : p % 3 = 1) (hcomp : ¬ (p - 2).Prime)
+    (h : Nat.minFac (p - 2) ≤ 101 ∨ (Nat.minFac (p - 2) - 2).Prime) :
+    a (p - 1) = p := by
+  have hpr : (Nat.minFac (p - 2)).Prime :=
+    Nat.minFac_prime (by omega : p - 2 ≠ 1)
+  have hd : Nat.minFac (p - 2) ∣ p - 2 := Nat.minFac_dvd _
+  have hbound := remaining_minFac_mul_add_two_le hp hp7 hmod hcomp
+  rcases h with h101 | htwin
+  · by_cases ht : (Nat.minFac (p - 2) - 2).Prime
+    · by_cases h13 : 13 ≤ Nat.minFac (p - 2)
+      · exact conjecture_of_larger_twin_dvd hp (by omega) hcomp hpr h13 ht hd
+      · have : Nat.minFac (p - 2) ≤ 29 := by omega
+        exact conjecture_of_minFac_le_twenty_nine hp hp7 hmod hcomp this
+    · by_cases h59 : Nat.minFac (p - 2) ≤ 59
+      · exact conjecture_of_minFac_le_fifty_nine_or_twin hp hp7 hmod hcomp
+          (Or.inl h59)
+      · have h60 : 60 ≤ Nat.minFac (p - 2) := by omega
+        have hcases := remaining_prime_le_one_hundred_one hpr h60 h101 ht
+        rcases hcases with h | h | h | h | h | h | h
+        · have hd67 : 67 ∣ p - 2 := by rwa [h] at hd
+          have hp470 : 470 ≤ p := by
+            rw [h] at hbound
+            omega
+          exact conjecture_of_sixty_seven_dvd hp hp470 hd67
+        · have hd71 : 71 ∣ p - 2 := by rwa [h] at hd
+          have hp356 : 356 ≤ p := by
+            rw [h] at hbound
+            omega
+          exact conjecture_of_seventy_one_dvd hp hp356 hd71
+        · have hd79 : 79 ∣ p - 2 := by rwa [h] at hd
+          have hp1502 : 1502 ≤ p := by
+            rw [h] at hbound
+            omega
+          exact conjecture_of_seventy_nine_dvd hp hp1502 hd79
+        · have hd83 : 83 ∣ p - 2 := by rwa [h] at hd
+          have hp914 : 914 ≤ p := by
+            rw [h] at hbound
+            omega
+          exact conjecture_of_eighty_three_dvd hp hp914 hd83
+        · have hd89 : 89 ∣ p - 2 := by rwa [h] at hd
+          have hp446 : 446 ≤ p := by
+            rw [h] at hbound
+            omega
+          exact conjecture_of_eighty_nine_dvd hp hp446 hd89
+        · have hd97 : 97 ∣ p - 2 := by rwa [h] at hd
+          have hp680 : 680 ≤ p := by
+            rw [h] at hbound
+            omega
+          exact conjecture_of_ninety_seven_dvd hp hp680 hd97
+        · have hd101 : 101 ∣ p - 2 := by rwa [h] at hd
+          have hp506 : 506 ≤ p := by
+            rw [h] at hbound
+            omega
+          exact conjecture_of_one_hundred_one_dvd hp hp506 hd101
   · by_cases h13 : 13 ≤ Nat.minFac (p - 2)
     · exact conjecture_of_larger_twin_dvd hp (by omega) hcomp hpr h13 htwin hd
     · have : Nat.minFac (p - 2) ≤ 29 := by omega
@@ -1667,5 +1932,24 @@ lemma v2_x_two_four_pow_pred (k : ℕ) :
 #print axioms conjecture_of_minFac_le_fifty_nine_or_twin
 #print axioms a_eq_prime_padic_succ
 #print axioms cloitre_valuation_barrier
+#print axioms two_dvd_x
+#print axioms gcd_gt_one_of_composite_shift
+#print axioms conjecture_of_minFac_entered
+#print axioms sixty_seven_dvd_x_467
+#print axioms conjecture_of_sixty_seven_dvd
+#print axioms seventy_one_dvd_x_353
+#print axioms conjecture_of_seventy_one_dvd
+#print axioms seventy_nine_dvd_x_1499
+#print axioms conjecture_of_seventy_nine_dvd
+#print axioms eighty_three_dvd_x_911
+#print axioms conjecture_of_eighty_three_dvd
+#print axioms eighty_nine_dvd_x_443
+#print axioms conjecture_of_eighty_nine_dvd
+#print axioms ninety_seven_dvd_x_677
+#print axioms conjecture_of_ninety_seven_dvd
+#print axioms one_hundred_one_dvd_x_503
+#print axioms conjecture_of_one_hundred_one_dvd
+#print axioms remaining_prime_le_one_hundred_one
+#print axioms conjecture_of_minFac_le_one_hundred_one_or_twin
 
 end OeisA135508

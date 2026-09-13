@@ -48,8 +48,15 @@ Hence McEachen at `p` is equivalent to `gcd(x (p-3), p-2) > 1`, i.e. some prime 
    - `47 ∣ x n` for `n ≥ 233` (`5·47-2 = 233` prime).
    - `53 ∣ x n` for `n ≥ 263`.
    - `59 ∣ x n` for `n ≥ 293`.
+   - `67 ∣ x n` for `n ≥ 467` (`7·67-2 = 467` prime).
+   - `71 ∣ x n` for `n ≥ 353` (`5·71-2 = 353` prime).
+   - `79 ∣ x n` for `n ≥ 1499` (`19·79-2 = 1499` prime).
+   - `83 ∣ x n` for `n ≥ 911`.
+   - `89 ∣ x n` for `n ≥ 443`.
+   - `97 ∣ x n` for `n ≥ 677`.
+   - `101 ∣ x n` for `n ≥ 503`.
    The general form is `conjecture_of_injected` / `conjecture_of_prime_injector` / `conjecture_of_prime_index` / `conjecture_of_five_prime_injector`.
-5. Remaining primes with `lpf(p-2) ≤ 29` (`conjecture_of_minFac_le_twenty_nine`), and `lpf(p-2) ≤ 59` or a larger-twin least factor (`conjecture_of_minFac_le_fifty_nine_or_twin`).
+5. Remaining primes with `lpf(p-2) ≤ 29` (`conjecture_of_minFac_le_twenty_nine`), `lpf(p-2) ≤ 59` or a larger-twin least factor (`conjecture_of_minFac_le_fifty_nine_or_twin`), and `lpf(p-2) ≤ 101` or a larger-twin least factor (`conjecture_of_minFac_le_one_hundred_one_or_twin`).
 
 ## Twin primes without `C₁` (proved)
 
@@ -66,7 +73,9 @@ This is not McEachen (McEachen excludes `p-2` prime). It is the twin-detection h
 
 ## Remaining gap (not proved)
 
-The leftover primes are `p ≡ 1 (mod 3)` with `p-2` composite, `lpf(p-2) ≥ 61`, and that least factor not a larger twin (so `lpf ≥ 67`). Then `p-2 ≡ 2 (mod 3)`, so some prime factor `q` of `p-2` is `≡ 2 (mod 3)` (`exists_remaining_factor`). If `q = 5` we are done. If `q ≥ 11`, the mod-3 theorem gives `a(q-1)=q`, so `q` does **not** divide `x(q-1)`. One needs a later injection: some index `r ≤ p-3` with `q ∣ a(r-1)+2`.
+The leftover primes are `p ≡ 1 (mod 3)` with `p-2` composite, `lpf(p-2) ≥ 103`, and that least factor not a larger twin. Then `p-2 ≡ 2 (mod 3)`, so some prime factor `q` of `p-2` is `≡ 2 (mod 3)` (`exists_remaining_factor`). If `q = 5` we are done. If `q ≥ 11`, the mod-3 theorem gives `a(q-1)=q`, so `q` does **not** divide `x(q-1)`. One needs a later injection: some index `r ≤ p-3` with `q ∣ a(r-1)+2`.
+
+`conjecture_of_minFac_entered` records the tight remaining reduction: McEachen holds once `lpf(p-2)` divides `x` by index `q(q+2)-1`. `gcd_gt_one_of_composite_shift` shows that an odd composite `kq-2 ≡ 2 (mod 3)` is not a coprime injector once that least factor has already entered by its own square-window. Together these isolate the remaining gap as existence of a prime injector `kq-2 ≤ q(q+2)-1`, not a defect in the first-entry algebra.
 
 `q_dvd_x_of_prime_index` injects any factor of `p-2` at a prime `kq-2 ≡ 2 (mod 3)`, including factors `≡ 1 (mod 3)` that are not twins. Cloitre Lemma 6.7 is now `cloitre_valuation_barrier`. If `3 ∣ n+1` and `n ≥ 4` then `gcd(x n, n+1) > 1`.
 
