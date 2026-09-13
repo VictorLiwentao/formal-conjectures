@@ -54,6 +54,25 @@ def main() -> None:
     for k in range(2, 5):
         prod = rho(5, 3) * rho(7, 2) * rho(83, k)
         print(" ", k, rel(prod), float(prod - T))
+    print("{5,13,19} mixed remaining a>=4, b>=3:")
+    for a, b, c in [(4, 3, 2), (5, 4, 3), (6, 3, 4), (5, 3, 4)]:
+        prod = rho(5, a) * rho(13, b) * rho(19, c)
+        print(" ", (a, b, c), rel(prod), float(prod - T))
+    print("{5^4,7^2,p^2} last over / first under:")
+    last_over = None
+    first_under = None
+    for p in primes_from(23, 250):
+        prod = rho(5, 4) * rho(7, 2) * rho(p, 2)
+        if prod > T:
+            last_over = p
+        elif first_under is None:
+            first_under = p
+            break
+    print(" last_over", last_over, "first_under", first_under)
+    print("{5^2,7^4,p} squares/cap at 31,37,41:")
+    for p in [23, 29, 31, 37, 41]:
+        print(" ", p, "sq", rel(rho(5, 2) * rho(7, 4) * rho(p, 2)),
+              "cap", rel(rho(5, 2) * rho(7, 4) * cap(p)))
 
 
 if __name__ == "__main__":

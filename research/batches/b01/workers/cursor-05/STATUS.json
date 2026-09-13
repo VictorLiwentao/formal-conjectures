@@ -8,14 +8,14 @@
   "source_sha256": "b50d00e13735613cbe37bd3a25c19130874e8f036ca2a0e3c1aceb177a33c683",
   "current_status": "partial",
   "novelty_status": "no_public_solution_found_in_checked_sources",
-  "last_updated_utc": "2026-09-13T02:05:00Z",
+  "last_updated_utc": "2026-09-13T02:24:24Z",
   "proof_declarations": [],
   "unresolved_gaps": [
     "OeisA63880.mod_216_of_a not proved",
     "OeisA63880.unique_primitive_108 not proved",
     "Need independent proofs of sorry helpers if used: powerful_of_isPrimitiveTerm, exists_primitive_of_a",
-    "v2=2 leftover 10/7: v3>=4 ruled out; v3=3 implies 3-free part squarefree; v3=2 implies leftover 100/91 with v5<2, v7<2, v11<3 and after 11^2 every 13<=p<=113 has vp<2; leftover 10/7 as a single p^k with p>=5 is ruled out; leftover 10/7 with exactly two squareful primes p<q both >=5 is ruled out; leftover 10/7 with three squareful primes all >=7 is ruled out; leftover 10/7 omega=3 with 5: {5,11,13}, {5,11,17}, {5,11,19}, {5,11,23}, {5,13,17} closed; {5,7,11/13/17/19} all exponents >=2 overshoot; {5^3,7^2,p>=23} and {5^2,7^3,p>=23} closed; remaining include {5,13,19}, mixed {5^a,7^b,p} with a>=4 or b>=4, and omega>=4 not containing {5,7,11}",
+    "v2=2 leftover 10/7: v3>=4 ruled out; v3=3 implies 3-free part squarefree; v3=2 implies leftover 100/91 with v5<2, v7<2, v11<3 and after 11^2 every 13<=p<=113 has vp<2; leftover 10/7 as a single p^k with p>=5 is ruled out; leftover 10/7 with exactly two squareful primes p<q both >=5 is ruled out; leftover 10/7 with three squareful primes all >=7 is ruled out; leftover 10/7 omega=3 with 5: {5,11,13/17/19/23}, {5,13,17}, {5,13,19} closed; {5,7,11/13/17/19} all exponents >=2 overshoot; {5^a,7^b} with a,b>=3 overshoots with any extra factor; {5^3,7^2,p>=23}, {5^2,7^3,p>=23}, {5^2,7^b,p>=23} for b>=4, and {5^4,7^2,p>=23} closed; remaining mixed {5^a,7^2,p} with a>=5 on p<=397, and omega>=4 not containing {5,7} with both exponents >=3 or {5,7,11}",
     "v2>=3 implies v3<2, so 9 does not divide such n; leftover 6/5 cannot be a single prime power times squarefree (v5<3; 5^2 undershoots); leftover 34/31 and higher 2-powers, leftover 6/5 with omega>=2, and odd leftover 2 remain"
   ],
-  "next_step": "Finish leftover 10/7 omega=3 with 5: remaining {5,13,19} and mixed {5^a,7^b,p} with a raised 5 or 7 exponent beyond the a=3,b=2 and a=2,b=3 rays. Then omega>=4 without {5,7,11}, leftover 100/91, leftover 2, leftover 6/5 omega>=2. CRT plus v2=2 and v3>=3 would give mod_216_of_a."
+  "next_step": "Finish leftover 10/7 mixed {5^a,7^2,p} for a>=5 on primes p<=397. Then omega>=4 without {5^3,7^3} or {5,7,11}, leftover 100/91, leftover 2, leftover 6/5 omega>=2. CRT plus v2=2 and v3>=3 would give mod_216_of_a."
 }
