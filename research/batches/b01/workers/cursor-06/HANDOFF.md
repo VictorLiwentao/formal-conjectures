@@ -39,6 +39,8 @@ Partial. Kernel-checked so far:
 - converse at `n=p^e` if `v_p(U0)=1`: `not_n_sq_dvd_num_of_prime_pow_of_leading`
 - `v_p(U0)=1` if `p^2` does not divide `oddInnerNum p`
 - all `n=5^e` for `e≥2`: `not_n_sq_dvd_num_of_five_pow`
+- all `n=p^e` for `p ∈ {11,13,17,19,23,29,31}` and `e≥2`
+- pairing `inv_pair_zmod` in `ZMod (p^2)`
 - `C(p-1,a-1) ≡ 1 - p H_{a-1}` in `ZMod (p^2)` for odd `a`
 - `¬ p^2 ∣ oddInnerNum p` iff the odd unit sum is nonzero in `ZMod (p^2)`
 - reduction `conjecture_of_odd_composite_converse`
