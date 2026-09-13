@@ -23,7 +23,7 @@ Complementary factors `r ≡ 1 (mod 3)` inject at `k ≡ 1 (mod 6)`, `k ≥ 7` (
 
 An elementary Chebyshev product bound on leftover candidates, using Mathlib `θ(x) ≤ (log 4) x`, does not close at leftover `q ≥ 409` (`experiments/chebyshev_gap.py`). First-order Bonferroni/Mertens is not a `∀q` proof (`experiments/bonferroni.py`).
 
-Remaining McEachen is proved when `lpf(p-2) ≤ 401` or that least factor is a larger twin (`conjecture_of_minFac_le_four_hundred_one_or_twin`). First-entry of `397` (`k=7`, index `2777`) and `401` (`k=5`, index `2003`) is proved, together with the `389` cutoff and the earlier families. The Euclid first-entry criterion, the index identity `n+1 = g(kq-2)`, and the `30`/`210` stock bounds are proved; leftover least factors remain coprime to `210` (`gcd_two_hundred_ten_eq_one_of_minFac`). That is not `∀p`.
+Remaining McEachen is proved when `lpf(p-2) ≤ 401` or that least factor is a larger twin (`conjecture_of_minFac_le_four_hundred_one_or_twin`). First-entry of `397` (`k=7`, index `2777`) and `401` (`k=5`, index `2003`) is proved, together with the `389` cutoff and the earlier families. The Euclid first-entry criterion, the index identity `n+1 = g(kq-2)`, and the `30`/`210` stock bounds are proved; leftover least factors remain coprime to `210` (`gcd_two_hundred_ten_eq_one_of_minFac`). Square-obstruction lemmas are proved: `5q-2` and `7q-2` are never squares; an odd composite other than a prime square meets its least-factor window; a coprime odd composite whose least factor has entered must be that square; a composite in the square window has least factor `< q`; `kq-2` is never a square when `q ≡ 5,7 (mod 8)`; admissible `k ≡ 5 (mod 6)` in the window satisfies `k ≤ q`. That is not `∀p`.
 
 A leftover scan to `p < 5000000` with `lpf ≥ 157` found 14783 primes, zero Type A cofactor failures, and zero McEachen-window gaps (`experiments/type_a_gaps.py`). The unique Lean Type B leftover in that range is `p = 167^2 · 179 + 2 = 4992133`, already covered by `167` and `179`. Finite scans are not a proof.
 
@@ -47,6 +47,9 @@ Confirm in the research compile: no `error:`, no `sorryAx`, and
 #print axioms conjecture_of_minFac_le_four_hundred_one_or_twin
 #print axioms a_eq_self_iff_gcd_gt_one
 #print axioms not_first_entry_k_one_of_mod_two
+#print axioms eq_sq_of_coprime_odd_composite
+#print axioms not_eq_sq_kq_sub_two_of_mod_eight
+#print axioms minFac_lt_q_of_composite_window
 ```
 
 ## What is proved (research file only)
@@ -58,12 +61,13 @@ See `proof.md` for the full list. New in this continuation:
 - Fully smooth composite shifts do not inject `q ≠ 3`.
 - A composite below `q²` has least factor `< q`.
 - First-entry of `397` (`k=7`) and `401` (`k=5`), remaining McEachen when `lpf(p-2) ≤ 401` or a larger-twin least factor.
+- `5q-2` and `7q-2` are never squares. An odd composite other than a prime square meets its least-factor window. A coprime odd composite whose least factor has entered is that square. Composites in the square window have least factor `< q`. If `q ≡ 5,7 (mod 8)` then no `kq-2` is a square. Admissible `k ≡ 5 (mod 6)` in the square window satisfies `k ≤ q`.
 
 Previously: g-1 first-entry criterion, first-entry of `307` through `389`, Euclid index identity, `210`-stock coprimality, Type A dual `5r-2`, square-window and add-eight packaging, Dirichlet unbounded injectors, Cloitre 6.5 / 6.7, twin inhibition, 3-adic barriers through `a 14`.
 
 ## Gap
 
-See `proof.md`. Remaining McEachen primes have `lpf(p-2) ≥ 409` not a larger twin, and need a first-entry bound. The next leftover non-twin least factor is `409`. Dirichlet, Linnik `L=5`, GRH, Chebyshev, first-order Bonferroni, Euclid packaging, the `g(kq-2)` index identity, k=1 blockage, fully smooth blocking, and the `210` stock do not give `r ≤ q(q+2)-1`. Finite scans are not a proof.
+See `proof.md`. Remaining McEachen primes have `lpf(p-2) ≥ 409` not a larger twin, and need a first-entry bound. The next leftover non-twin least factor is `409`. Dirichlet, Linnik `L=5`, GRH, Chebyshev, first-order Bonferroni, Euclid packaging, the `g(kq-2)` index identity, k=1 blockage, fully smooth blocking, the `210` stock, and the compiled square-obstruction lemmas do not give `r ≤ q(q+2)-1`. Finite scans are not a proof.
 
 ## Commit SHA
 

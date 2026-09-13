@@ -75,7 +75,13 @@ that the coprime `k = 1` index is `q-2`, that primes `≡ 2 (mod 3)`
 never first-enter at that primitive index, that McEachen at `p ≥ 5`
 is equivalent to `gcd(x(p-3), p-2) > 1`, that a composite below `q²`
 has least factor `< q`, that a fully smooth composite shift does not
-inject `q ≠ 3`, the `30` and `210` stock lower
+inject `q ≠ 3`, that `5q-2` and `7q-2` are never squares, that an odd
+composite other than a prime square meets its least factor's square
+window, that a coprime odd composite whose least factor has entered is
+necessarily that square, that composites in the square window have
+least factor `< q`, that `kq-2` is never a square when `q ≡ 5,7 (mod 8)`,
+that admissible `k ≡ 5 (mod 6)` in the square window satisfies `k ≤ q`,
+the `30` and `210` stock lower
 bounds, and that the frozen statement follows from first-entry of every
 prime `q ≥ 5` by the square-window index `q(q+2)-1`. Existence of a
 window injector for every leftover least factor is not proved.
@@ -5026,6 +5032,361 @@ lemma gcd_gt_one_of_minFac_dvd_shift {k q : ℕ}
     rwa [hsub]
   simpa [hsub] using gcd_gt_one_of_minFac_dvd_x hgt hx'
 
+/-- Consecutive integers: `s(s+1)` is even. -/
+lemma two_dvd_mul_succ (s : ℕ) : 2 ∣ s * (s + 1) := by
+  have h : s % 2 = 0 ∨ s % 2 = 1 := Nat.mod_two_eq_zero_or_one s
+  rcases h with h0 | h1
+  · exact dvd_mul_of_dvd_left (Nat.dvd_iff_mod_eq_zero.2 h0) _
+  · have : (s + 1) % 2 = 0 := by omega
+    exact dvd_mul_of_dvd_right (Nat.dvd_iff_mod_eq_zero.2 this) _
+
+/-- Squares modulo `5` are `0,1,4`, never `3`. -/
+lemma not_eq_sq_of_mod_five_three {n s : ℕ} (h : n % 5 = 3) : n ≠ s ^ 2 := by
+  intro hs
+  have hpow : s ^ 2 % 5 = (s % 5) ^ 2 % 5 := Nat.pow_mod s 2 5
+  have hn : n % 5 = s ^ 2 % 5 := by rw [← hs]
+  rw [h, hpow] at hn
+  have hlt : s % 5 < 5 := Nat.mod_lt s (by decide : 0 < 5)
+  interval_cases s % 5
+  · exact (by decide : ¬ (0 : ℕ) = 3) hn.symm
+  · exact (by decide : ¬ (1 : ℕ) = 3) hn.symm
+  · exact (by decide : ¬ (4 : ℕ) = 3) hn.symm
+  · exact (by decide : ¬ (4 : ℕ) = 3) hn.symm
+  · exact (by decide : ¬ (1 : ℕ) = 3) hn.symm
+
+/-- `5q-2 ≡ 3 (mod 5)` for `q ≥ 1`. -/
+lemma five_mul_sub_two_mod_five {q : ℕ} (hq : 1 ≤ q) :
+    (5 * q - 2) % 5 = 3 := by
+  have hrep : 5 * q - 2 = 5 * (q - 1) + 3 := by omega
+  rw [hrep, Nat.add_mod, Nat.mul_mod_right]
+
+/-- `5q-2` is never a square. The coprime-composite first-entry shape
+at `k = 5` is therefore impossible. -/
+lemma not_eq_sq_five_mul_sub_two {q s : ℕ} (hq : 1 ≤ q) :
+    5 * q - 2 ≠ s ^ 2 :=
+  not_eq_sq_of_mod_five_three (five_mul_sub_two_mod_five hq)
+
+/-- Squares modulo `7` are never `5`. -/
+lemma not_eq_sq_of_mod_seven_five {n s : ℕ} (h : n % 7 = 5) : n ≠ s ^ 2 := by
+  intro hs
+  have hpow : s ^ 2 % 7 = (s % 7) ^ 2 % 7 := Nat.pow_mod s 2 7
+  have hn : n % 7 = s ^ 2 % 7 := by rw [← hs]
+  rw [h, hpow] at hn
+  have hlt : s % 7 < 7 := Nat.mod_lt s (by decide : 0 < 7)
+  interval_cases s % 7
+  · exact (by decide : ¬ (0 : ℕ) = 5) hn.symm
+  · exact (by decide : ¬ (1 : ℕ) = 5) hn.symm
+  · exact (by decide : ¬ (4 : ℕ) = 5) hn.symm
+  · exact (by decide : ¬ (2 : ℕ) = 5) hn.symm
+  · exact (by decide : ¬ (2 : ℕ) = 5) hn.symm
+  · exact (by decide : ¬ (4 : ℕ) = 5) hn.symm
+  · exact (by decide : ¬ (1 : ℕ) = 5) hn.symm
+
+/-- `7q-2 ≡ 5 (mod 7)` for `q ≥ 1`. -/
+lemma seven_mul_sub_two_mod_seven {q : ℕ} (hq : 1 ≤ q) :
+    (7 * q - 2) % 7 = 5 := by
+  have hrep : 7 * q - 2 = 7 * (q - 1) + 5 := by omega
+  rw [hrep, Nat.add_mod, Nat.mul_mod_right]
+
+/-- `7q-2` is never a square. -/
+lemma not_eq_sq_seven_mul_sub_two {q s : ℕ} (hq : 1 ≤ q) :
+    7 * q - 2 ≠ s ^ 2 :=
+  not_eq_sq_of_mod_seven_five (seven_mul_sub_two_mod_seven hq)
+
+/-- An odd composite strictly below `minFac(n)·(minFac+2)` is the
+square of its least prime factor. The consecutive product `s(s+1)`
+is even, so it cannot occur. -/
+lemma eq_minFac_sq_of_odd_composite_lt {n : ℕ}
+    (hodd : n % 2 = 1) (h1 : 1 < n) (hcomp : ¬ n.Prime)
+    (hlt : n < n.minFac * (n.minFac + 2)) :
+    n = n.minFac ^ 2 := by
+  set s := n.minFac
+  have hspos : 0 < s := Nat.minFac_pos n
+  have hnpos : 0 < n := Nat.zero_lt_of_lt h1
+  have hdiv : s ∣ n := Nat.minFac_dvd n
+  have ht : n = s * (n / s) := (Nat.mul_div_cancel' hdiv).symm
+  have hsq : s ^ 2 ≤ n := Nat.minFac_sq_le_self hnpos hcomp
+  have hge : s ≤ n / s :=
+    (Nat.le_div_iff_mul_le hspos).2 (by rwa [pow_two] at hsq)
+  have hlt' : n / s < s + 2 :=
+    (Nat.mul_lt_mul_left hspos).mp (by
+      have : s * (n / s) < s * (s + 2) := by
+        rwa [← ht]
+      exact this)
+  have hcases : n / s = s ∨ n / s = s + 1 := by omega
+  rcases hcases with h | h
+  · rw [ht, h, pow_two]
+  · have heven : 2 ∣ n := by
+      have : n = s * (s + 1) := by rw [ht, h]
+      rw [this]
+      exact two_dvd_mul_succ s
+    have : n % 2 = 0 := Nat.mod_eq_zero_of_dvd heven
+    exact False.elim ((by decide : ¬ (0 : ℕ) = 1) (this.symm.trans hodd))
+
+/-- An odd composite that is not a prime square meets its least
+factor's square window: `minFac(n)·(minFac+2) ≤ n`. -/
+lemma minFac_mul_add_two_le_of_odd_composite_ne_sq {n : ℕ}
+    (hodd : n % 2 = 1) (h1 : 1 < n) (hcomp : ¬ n.Prime)
+    (hne : n ≠ n.minFac ^ 2) :
+    n.minFac * (n.minFac + 2) ≤ n := by
+  by_contra h
+  have hlt : n < n.minFac * (n.minFac + 2) := Nat.lt_of_not_ge h
+  exact hne (eq_minFac_sq_of_odd_composite_lt hodd h1 hcomp hlt)
+
+/-- `5q-2` is odd for odd `q`. -/
+lemma five_mul_sub_two_odd {q : ℕ} (hodd : q % 2 = 1) (hq : 1 ≤ q) :
+    (5 * q - 2) % 2 = 1 := by
+  have hle : 2 ≤ 5 * q :=
+    le_trans (by decide : 2 ≤ 5) (Nat.le_mul_of_pos_right 5 hq)
+  omega
+
+/-- A composite `5q-2` meets the square window of its least factor.
+The index cannot be a square, and it is odd for odd `q`. -/
+lemma five_mul_sub_two_minFac_window_le {q : ℕ} (hodd : q % 2 = 1)
+    (hq : 1 ≤ q) (hgt : 1 < 5 * q - 2) (hcomp : ¬ (5 * q - 2).Prime) :
+    Nat.minFac (5 * q - 2) * (Nat.minFac (5 * q - 2) + 2) - 1 ≤
+      5 * q - 3 := by
+  have hodd' : (5 * q - 2) % 2 = 1 := five_mul_sub_two_odd hodd hq
+  have hne : 5 * q - 2 ≠ (5 * q - 2).minFac ^ 2 :=
+    not_eq_sq_five_mul_sub_two (s := (5 * q - 2).minFac) hq
+  have hle :=
+    minFac_mul_add_two_le_of_odd_composite_ne_sq hodd' hgt hcomp hne
+  have hsub : Nat.minFac (5 * q - 2) * (Nat.minFac (5 * q - 2) + 2) - 1 ≤
+      5 * q - 2 - 1 := Nat.sub_le_sub_right hle 1
+  have hidx : 5 * q - 2 - 1 = 5 * q - 3 := Nat.sub_sub (5 * q) 2 1
+  exact hidx ▸ hsub
+
+/-- If the least factor of a composite `5q-2` has already entered by
+its own square window, then `k = 5` is not a coprime injector. -/
+lemma gcd_gt_one_of_five_mul_sub_two_composite {q : ℕ}
+    (hodd : q % 2 = 1) (hq : 1 ≤ q) (hgt : 1 < 5 * q - 2)
+    (hcomp : ¬ (5 * q - 2).Prime)
+    (hx : Nat.minFac (5 * q - 2) ∣
+      x (Nat.minFac (5 * q - 2) * (Nat.minFac (5 * q - 2) + 2) - 1)) :
+    1 < Nat.gcd (x (5 * q - 3)) (5 * q - 2) := by
+  have hwin := five_mul_sub_two_minFac_window_le hodd hq hgt hcomp
+  have h2 : 2 ≤ Nat.minFac (5 * q - 2) :=
+    (Nat.minFac_prime (ne_of_gt hgt)).two_le
+  have hmul : 2 * 4 ≤
+      Nat.minFac (5 * q - 2) * (Nat.minFac (5 * q - 2) + 2) :=
+    Nat.mul_le_mul h2 (Nat.add_le_add_right h2 2)
+  have hspos : 0 <
+      Nat.minFac (5 * q - 2) * (Nat.minFac (5 * q - 2) + 2) - 1 :=
+    Nat.sub_pos_of_lt (lt_of_lt_of_le (by decide : 1 < 8) hmul)
+  have hx' : Nat.minFac (5 * q - 2) ∣ x (5 * q - 3) :=
+    hx.trans (x_dvd_of_le hspos hwin)
+  exact gcd_gt_one_of_minFac_dvd_shift (k := 5) hgt hx'
+
+/-- Squares modulo `8` are `0,1,4`. -/
+lemma sq_mod_eight (s : ℕ) :
+    s ^ 2 % 8 = 0 ∨ s ^ 2 % 8 = 1 ∨ s ^ 2 % 8 = 4 := by
+  have hpow : s ^ 2 % 8 = (s % 8) ^ 2 % 8 := Nat.pow_mod s 2 8
+  have hlt : s % 8 < 8 := Nat.mod_lt s (by decide : 0 < 8)
+  interval_cases s % 8
+  · exact Or.inl (hpow.trans (by decide : (0 : ℕ) ^ 2 % 8 = 0))
+  · exact Or.inr (Or.inl (hpow.trans (by decide : (1 : ℕ) ^ 2 % 8 = 1)))
+  · exact Or.inr (Or.inr (hpow.trans (by decide : (2 : ℕ) ^ 2 % 8 = 4)))
+  · exact Or.inr (Or.inl (hpow.trans (by decide : (3 : ℕ) ^ 2 % 8 = 1)))
+  · exact Or.inl (hpow.trans (by decide : (4 : ℕ) ^ 2 % 8 = 0))
+  · exact Or.inr (Or.inl (hpow.trans (by decide : (5 : ℕ) ^ 2 % 8 = 1)))
+  · exact Or.inr (Or.inr (hpow.trans (by decide : (6 : ℕ) ^ 2 % 8 = 4)))
+  · exact Or.inr (Or.inl (hpow.trans (by decide : (7 : ℕ) ^ 2 % 8 = 1)))
+
+/-- An integer congruent to `3,5,6,7` modulo `8` is not a square. -/
+lemma not_eq_sq_of_mod_eight {n s : ℕ}
+    (h : n % 8 = 3 ∨ n % 8 = 5 ∨ n % 8 = 6 ∨ n % 8 = 7) :
+    n ≠ s ^ 2 := by
+  intro hs
+  have hn : n % 8 = s ^ 2 % 8 := by rw [← hs]
+  rcases sq_mod_eight s with h0 | h1 | h4
+  · rcases h with h3 | h5 | h6 | h7
+    · exact (by decide : ¬ (3 : ℕ) = 0) (h3.symm.trans (hn.trans h0))
+    · exact (by decide : ¬ (5 : ℕ) = 0) (h5.symm.trans (hn.trans h0))
+    · exact (by decide : ¬ (6 : ℕ) = 0) (h6.symm.trans (hn.trans h0))
+    · exact (by decide : ¬ (7 : ℕ) = 0) (h7.symm.trans (hn.trans h0))
+  · rcases h with h3 | h5 | h6 | h7
+    · exact (by decide : ¬ (3 : ℕ) = 1) (h3.symm.trans (hn.trans h1))
+    · exact (by decide : ¬ (5 : ℕ) = 1) (h5.symm.trans (hn.trans h1))
+    · exact (by decide : ¬ (6 : ℕ) = 1) (h6.symm.trans (hn.trans h1))
+    · exact (by decide : ¬ (7 : ℕ) = 1) (h7.symm.trans (hn.trans h1))
+  · rcases h with h3 | h5 | h6 | h7
+    · exact (by decide : ¬ (3 : ℕ) = 4) (h3.symm.trans (hn.trans h4))
+    · exact (by decide : ¬ (5 : ℕ) = 4) (h5.symm.trans (hn.trans h4))
+    · exact (by decide : ¬ (6 : ℕ) = 4) (h6.symm.trans (hn.trans h4))
+    · exact (by decide : ¬ (7 : ℕ) = 4) (h7.symm.trans (hn.trans h4))
+
+/-- For `q ≡ 5 (mod 6)`, the residues `q+1` and `q+2` are not
+`≡ 5 (mod 6)`, so an admissible injector index in the square window
+satisfies `k ≤ q`. -/
+lemma k_le_q_of_mod_six_five {k q : ℕ}
+    (hq : q % 6 = 5) (hk : k % 6 = 5) (hle : k ≤ q + 2) : k ≤ q := by
+  omega
+
+/-- The last admissible `k ≡ 5 (mod 6)` index in the square window is
+`q²-2`, which is strictly before the square `q²`. -/
+lemma k_mul_sub_two_le_sq_sub_two {k q : ℕ}
+    (hq : q % 6 = 5) (hk : k % 6 = 5) (hle : k ≤ q + 2) :
+    k * q - 2 ≤ q ^ 2 - 2 := by
+  have hkq : k ≤ q := k_le_q_of_mod_six_five hq hk hle
+  have hmul : k * q ≤ q * q := Nat.mul_le_mul_right q hkq
+  have hsub : k * q - 2 ≤ q * q - 2 := Nat.sub_le_sub_right hmul 2
+  rwa [pow_two]
+
+/-- If the least factor of an odd composite non-square has entered by
+its own square window, then that composite is not coprime to `x` at
+the predecessor. This drops the `n ≡ 2 (mod 3)` hypothesis used by
+`gcd_gt_one_of_composite_shift`. -/
+lemma gcd_gt_one_of_odd_composite_ne_sq {n : ℕ}
+    (hodd : n % 2 = 1) (h1 : 1 < n) (hcomp : ¬ n.Prime)
+    (hne : n ≠ n.minFac ^ 2)
+    (hx : Nat.minFac n ∣ x (n.minFac * (n.minFac + 2) - 1)) :
+    1 < Nat.gcd (x (n - 1)) n := by
+  have hwin := minFac_mul_add_two_le_of_odd_composite_ne_sq hodd h1 hcomp hne
+  have h2 : 2 ≤ n.minFac := (Nat.minFac_prime (ne_of_gt h1)).two_le
+  have hmul : 2 * 4 ≤ n.minFac * (n.minFac + 2) :=
+    Nat.mul_le_mul h2 (Nat.add_le_add_right h2 2)
+  have hspos : 0 < n.minFac * (n.minFac + 2) - 1 :=
+    Nat.sub_pos_of_lt (lt_of_lt_of_le (by decide : 1 < 8) hmul)
+  have hidx : n.minFac * (n.minFac + 2) - 1 ≤ n - 1 :=
+    Nat.sub_le_sub_right hwin 1
+  have hx' : n.minFac ∣ x (n - 1) := hx.trans (x_dvd_of_le hspos hidx)
+  exact gcd_gt_one_of_minFac_dvd_x h1 hx'
+
+/-- Under the same entry hypothesis, a coprime odd composite must be the
+square of its least prime factor. -/
+lemma eq_sq_of_coprime_odd_composite {n : ℕ}
+    (hodd : n % 2 = 1) (h1 : 1 < n) (hcomp : ¬ n.Prime)
+    (hx : Nat.minFac n ∣ x (n.minFac * (n.minFac + 2) - 1))
+    (hg : Nat.gcd (x (n - 1)) n = 1) :
+    n = n.minFac ^ 2 := by
+  by_contra hne
+  exact Nat.ne_of_gt (gcd_gt_one_of_odd_composite_ne_sq hodd h1 hcomp hne hx) hg
+
+/-- `7q-2` is odd for odd `q`. -/
+lemma seven_mul_sub_two_odd {q : ℕ} (hodd : q % 2 = 1) (hq : 1 ≤ q) :
+    (7 * q - 2) % 2 = 1 := by
+  have hle : 2 ≤ 7 * q :=
+    le_trans (by decide : 2 ≤ 7) (Nat.le_mul_of_pos_right 7 hq)
+  omega
+
+/-- A composite `7q-2` meets the square window of its least factor. -/
+lemma seven_mul_sub_two_minFac_window_le {q : ℕ} (hodd : q % 2 = 1)
+    (hq : 1 ≤ q) (hgt : 1 < 7 * q - 2) (hcomp : ¬ (7 * q - 2).Prime) :
+    Nat.minFac (7 * q - 2) * (Nat.minFac (7 * q - 2) + 2) - 1 ≤
+      7 * q - 3 := by
+  have hodd' : (7 * q - 2) % 2 = 1 := seven_mul_sub_two_odd hodd hq
+  have hne : 7 * q - 2 ≠ (7 * q - 2).minFac ^ 2 :=
+    not_eq_sq_seven_mul_sub_two (s := (7 * q - 2).minFac) hq
+  have hle :=
+    minFac_mul_add_two_le_of_odd_composite_ne_sq hodd' hgt hcomp hne
+  have hsub : Nat.minFac (7 * q - 2) * (Nat.minFac (7 * q - 2) + 2) - 1 ≤
+      7 * q - 2 - 1 := Nat.sub_le_sub_right hle 1
+  have hidx : 7 * q - 2 - 1 = 7 * q - 3 := Nat.sub_sub (7 * q) 2 1
+  exact hidx ▸ hsub
+
+/-- If the least factor of a composite `7q-2` has already entered by
+its own square window, then `k = 7` is not a coprime injector. -/
+lemma gcd_gt_one_of_seven_mul_sub_two_composite {q : ℕ}
+    (hodd : q % 2 = 1) (hq : 1 ≤ q) (hgt : 1 < 7 * q - 2)
+    (hcomp : ¬ (7 * q - 2).Prime)
+    (hx : Nat.minFac (7 * q - 2) ∣
+      x (Nat.minFac (7 * q - 2) * (Nat.minFac (7 * q - 2) + 2) - 1)) :
+    1 < Nat.gcd (x (7 * q - 3)) (7 * q - 2) := by
+  have hodd' : (7 * q - 2) % 2 = 1 := seven_mul_sub_two_odd hodd hq
+  have hne : 7 * q - 2 ≠ (7 * q - 2).minFac ^ 2 :=
+    not_eq_sq_seven_mul_sub_two (s := (7 * q - 2).minFac) hq
+  have hsub : 7 * q - 2 - 1 = 7 * q - 3 := (Nat.sub_sub (7 * q) 2 1).symm
+  simpa [hsub] using
+    gcd_gt_one_of_odd_composite_ne_sq hodd' hgt hcomp hne hx
+
+/-- If `kq-2` is a square, then `q` divides `s²+2`. -/
+lemma dvd_sq_add_two_of_eq_sq {k q s : ℕ} (h2 : 2 ≤ k * q)
+    (h : k * q - 2 = s ^ 2) : q ∣ s ^ 2 + 2 := by
+  have heq : s ^ 2 + 2 = k * q := by
+    have hcancel := Nat.sub_add_cancel h2
+    rwa [h] at hcancel
+  rw [heq]
+  exact Nat.dvd_mul_left q k
+
+/-- A composite in the square window has least prime factor strictly
+less than `q`. The window is `< (q+1)²`, and `q` itself cannot divide
+`kq-2`. -/
+lemma minFac_lt_q_of_composite_window {k q : ℕ}
+    (hq : q.Prime) (h5 : 5 ≤ q) (hgt : 1 < k * q - 2)
+    (hcomp : ¬ (k * q - 2).Prime)
+    (hle : k * q - 2 ≤ q * (q + 2) - 1) :
+    (k * q - 2).minFac < q := by
+  set n := k * q - 2
+  have hpos : 0 < n := Nat.zero_lt_of_lt hgt
+  have hsq : n.minFac ^ 2 ≤ n := Nat.minFac_sq_le_self hpos hcomp
+  have hrep : (q + 1) ^ 2 = q * (q + 2) + 1 := by
+    rw [pow_two]
+    ring
+  have hqpos : 0 < q := lt_of_lt_of_le (by decide : 0 < 5) h5
+  have hpos' : 1 ≤ q * (q + 2) :=
+    Nat.succ_le_of_lt (Nat.mul_pos hqpos (Nat.add_pos_right q (by decide : 0 < 2)))
+  have hlt : q * (q + 2) - 1 < q * (q + 2) + 1 :=
+    lt_trans
+      (Nat.sub_lt (Nat.zero_lt_of_lt (Nat.succ_le_iff.mp hpos')) (by decide : 0 < 1))
+      (Nat.lt_add_one (q * (q + 2)))
+  have hwin : n < (q + 1) ^ 2 :=
+    lt_of_le_of_lt hle (hrep ▸ hlt)
+  have hmul : n.minFac * n.minFac < (q + 1) * (q + 1) := by
+    have : n.minFac ^ 2 < (q + 1) ^ 2 := lt_of_le_of_lt hsq hwin
+    rwa [pow_two, pow_two] at this
+  have hmin : n.minFac < q + 1 := Nat.mul_self_lt_mul_self_iff.mp hmul
+  have hle' : n.minFac ≤ q := Nat.lt_succ_iff.mp hmin
+  have h2le : 2 ≤ k * q := by
+    cases Nat.lt_or_ge (k * q) 2 with
+    | inl hlt2 =>
+      have : k * q - 2 = 0 := Nat.sub_eq_zero_of_le (Nat.le_of_lt hlt2)
+      exact False.elim ((by decide : ¬ (1 : ℕ) < 0) (this ▸ hgt))
+    | inr hge => exact hge
+  have hne : n.minFac ≠ q := by
+    intro hf
+    have hd : q ∣ n := by
+      rw [← hf]
+      exact Nat.minFac_dvd n
+    have hqk : q ∣ k * q := Nat.dvd_mul_left q k
+    have hnadd : n + 2 = k * q := Nat.sub_add_cancel h2le
+    have h2d : q ∣ 2 :=
+      dvd_right_of_dvd_add hd (hnadd.symm ▸ hqk)
+    have heq : q = 2 := (Nat.prime_dvd_prime_iff_eq hq Nat.prime_two).1 h2d
+    exact (Nat.ne_of_gt (lt_of_lt_of_le (by decide : 2 < 5) h5)) heq
+  exact lt_of_le_of_ne hle' hne
+
+/-- `-2` is not a square modulo a prime `q ≡ 5,7 (mod 8)`. Hence no
+index `kq-2` can be a square. -/
+lemma not_eq_sq_kq_sub_two_of_mod_eight {k q s : ℕ} (hq : q.Prime)
+    (h8 : q % 8 = 5 ∨ q % 8 = 7) (h2 : 2 ≤ k * q) :
+    k * q - 2 ≠ s ^ 2 := by
+  intro hs
+  have hq2 : q ≠ 2 := by
+    intro h2q
+    subst h2q
+    rcases h8 with h5 | h7
+    · exact (by decide : ¬ (2 : ℕ) % 8 = 5) h5
+    · exact (by decide : ¬ (2 : ℕ) % 8 = 7) h7
+  have : Fact q.Prime := ⟨hq⟩
+  have hd := dvd_sq_add_two_of_eq_sq h2 hs
+  have h0 : ((s ^ 2 + 2 : ℕ) : ZMod q) = 0 :=
+    (ZMod.natCast_eq_zero_iff (s ^ 2 + 2) q).2 hd
+  have hsq : IsSquare (-2 : ZMod q) := by
+    refine ⟨(s : ZMod q), ?_⟩
+    have hsum : (s : ZMod q) ^ 2 + 2 = 0 := by
+      simpa [Nat.cast_add, Nat.cast_pow] using h0
+    have hneg : (s : ZMod q) ^ 2 = -2 :=
+      (eq_neg_iff_add_eq_zero (a := (s : ZMod q) ^ 2) (b := (2 : ZMod q))).mpr hsum
+    simpa [pow_two] using hneg.symm
+  have hres := (ZMod.exists_sq_eq_neg_two_iff hq2).1 hsq
+  rcases h8 with h5 | h7
+  · rcases hres with h1 | h3
+    · exact (by decide : ¬ (5 : ℕ) = 1) (h5.symm.trans h1)
+    · exact (by decide : ¬ (5 : ℕ) = 3) (h5.symm.trans h3)
+  · rcases hres with h1 | h3
+    · exact (by decide : ¬ (7 : ℕ) = 1) (h7.symm.trans h1)
+    · exact (by decide : ¬ (7 : ℕ) = 3) (h7.symm.trans h3)
+
 /-- A prime injector in the square window, packaged as an existential. -/
 lemma q_dvd_x_square_window_of_exists {q : ℕ}
     (hex : ∃ k, (k * q - 2).Prime ∧ 7 ≤ k * q - 2 ∧
@@ -7160,6 +7521,18 @@ lemma v2_x_two_four_pow_pred (k : ℕ) :
 #print axioms minFac_lt_of_composite_lt_sq
 #print axioms gcd_gt_one_of_minFac_dvd_x
 #print axioms gcd_gt_one_of_minFac_dvd_shift
+#print axioms two_dvd_mul_succ
+#print axioms not_eq_sq_of_mod_five_three
+#print axioms five_mul_sub_two_mod_five
+#print axioms not_eq_sq_five_mul_sub_two
+#print axioms not_eq_sq_of_mod_seven_five
+#print axioms seven_mul_sub_two_mod_seven
+#print axioms not_eq_sq_seven_mul_sub_two
+#print axioms eq_minFac_sq_of_odd_composite_lt
+#print axioms minFac_mul_add_two_le_of_odd_composite_ne_sq
+#print axioms five_mul_sub_two_odd
+#print axioms five_mul_sub_two_minFac_window_le
+#print axioms gcd_gt_one_of_five_mul_sub_two_composite
 #print axioms q_dvd_x_square_window_of_exists
 #print axioms q_dvd_x_window_of_no_small_factor
 #print axioms conjecture_of_cofactor_seven
@@ -7462,5 +7835,29 @@ lemma v2_x_two_four_pow_pred (k : ℕ) :
 #print axioms remaining_prime_from_three_hundred_ninety_le_three_hundred_ninety_seven
 #print axioms remaining_prime_from_three_hundred_ninety_eight_le_four_hundred_one
 #print axioms conjecture_of_minFac_le_four_hundred_one_or_twin
+#print axioms two_dvd_mul_succ
+#print axioms not_eq_sq_of_mod_five_three
+#print axioms five_mul_sub_two_mod_five
+#print axioms not_eq_sq_five_mul_sub_two
+#print axioms not_eq_sq_of_mod_seven_five
+#print axioms seven_mul_sub_two_mod_seven
+#print axioms not_eq_sq_seven_mul_sub_two
+#print axioms eq_minFac_sq_of_odd_composite_lt
+#print axioms minFac_mul_add_two_le_of_odd_composite_ne_sq
+#print axioms five_mul_sub_two_odd
+#print axioms five_mul_sub_two_minFac_window_le
+#print axioms gcd_gt_one_of_five_mul_sub_two_composite
+#print axioms sq_mod_eight
+#print axioms not_eq_sq_of_mod_eight
+#print axioms k_le_q_of_mod_six_five
+#print axioms k_mul_sub_two_le_sq_sub_two
+#print axioms gcd_gt_one_of_odd_composite_ne_sq
+#print axioms eq_sq_of_coprime_odd_composite
+#print axioms seven_mul_sub_two_odd
+#print axioms seven_mul_sub_two_minFac_window_le
+#print axioms gcd_gt_one_of_seven_mul_sub_two_composite
+#print axioms dvd_sq_add_two_of_eq_sq
+#print axioms minFac_lt_q_of_composite_window
+#print axioms not_eq_sq_kq_sub_two_of_mod_eight
 
 end OeisA135508
