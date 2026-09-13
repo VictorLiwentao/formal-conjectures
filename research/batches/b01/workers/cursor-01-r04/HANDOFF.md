@@ -25,35 +25,18 @@ No PRs. No other branches. No subagents. No shared-control edits. No C2 / A00245
 
 ## Status
 
-In progress toward an exact C1 candidate. Not independently verified. Not a solution until the frozen statement compiles with allowlisted axioms only.
+Self-audited exact C1 candidate pending coordinator audit. Not independently verified.
 
-Proved in worker Lean (allowlisted axioms only): `n=1` case; denominator nonvanishing; Calogero kernel sums and Fourier diagonalization; `det(calogero) = (-1)^n a n`; `per(M-J) = 2^{2n}` times the unsigned derangement sum of `(1-ζ^{σi-i})⁻¹`; signed derangement sum `= (-1)^n a n / 2^{2n}`; Guo 3.1 insertion kernel, rotate-class sum, and the sum over all listings through a fixed point (`sum_cycleEdgeWeight_ncycles`); `cycleEdgeWeight` equals a support-constant times the `(1-ζ)^{-1}` product (`cycleEdgeWeight_zeta`); listings through a fixed point are N-cycles with full support; those listings biject with `{σ | σ.IsCycle ∧ σ.support = univ}`; the `(1-ζ)^{-1}` weights of all N-cycles sum to 0 (`ncycle_inv_one_sub_sum`); lifting a cycle through `ofSubtype`; replacing one long cycle while holding a disjoint remainder fixed sums to 0 (`sum_cycleEdgeWeight_replace_cycle` and the transferred `inv_one_sub_replace_cycle`); a derangement is either a product of n transpositions or has a cycle of length at least 3; those involutions have sign `(-1)^n`; unsigned involution weights equal `(-1)^n` times signed ones; remainder of a cycle factor is supported on the complement; `σ` recovers as `ofSubtype(c.subtypePerm) * (σ * c⁻¹)`; long-cycle points of a listing times a disjoint remainder are `s ∪ longPoints τ`; sums over permutations split by `longKey`; a listing times remainder has that `longKey`; conversely a long-cycle permutation with a given `longKey` is a listing times that remainder; each `longKey` fiber of unsigned and signed `(1-ζ)^{-1}` weights vanishes; the remaining derangements are fixed-point-free involutions; the unsigned derangement sum equals `a n / 2^{2n}`; therefore `per(M-J) = a n`.
+Worker `conjecture1_frozen` is the frozen statement. `sunMatrix_eq_frozen` is `rfl`. Integer exponents are `ℤ` subtraction. Original `a` is used. The admitted source theorem is not used as a proof.
 
-Identified `per M` with the Cayley-kernel expansion `∑_σ cayleyWeight (fun i => ζ^i) σ`, where the weight is the product over the support of `(x i + x(σ i))/(x i - x(σ i))`. Inverse permutations pick up `(-1)^{#support}`. Off-diagonal `sunMatrix` entries equal those Cayley factors.
+Compile (2026-09-13 UTC): `lake env lean -DwarningAsError=true` exit 0.
 
-Odd cycles of length at least 3 cancel: reversing the distinguished odd cycle (the cycle of the least odd-cycle point) is an involution that negates the Cayley weight. Hence `per M` equals the sum of Cayley weights over permutations with no odd cycle of length at least 3.
+```
+'A001818C1.conjecture1' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.conjecture1_frozen' depends on axioms: [propext, Classical.choice, Quot.sound]
+```
 
-Two-point evaluation: `1 + cayleyWeight (swap a b) = -4 xa xb / (xa-xb)^2`. On `Fin 2` this is `cayleySum`. Cayley weights and odd-cycle points restrict through `ofSubtype` (`oddLongPoints_ofSubtype_nonempty_iff`, `cayleySum_ofSubtype`) and through multiplying by a disjoint transposition.
-
-Paper Σ1/Σ2: even-cycle Cayley sums split by the cycle of a distinguished point `p`. Permutations fixing `p` match `cayleySumOn ({p}ᶜ)` (`cayleySum_sigma1`). Permutations whose cycle through `p` is a transposition equal `∑_{q ≠ p} cayleyWeight (swap p q) * cayleySumOn ({p,q}ᶜ)` (`cayleySum_sigma2`). The remainder is the sum over cycle length at least 4 (`cayleySum_eq_sigma1_add_sigma2_add`). Algebraic identity (2.4) (`cayley_triple_identity`) and Hamiltonian listing products (`cayleyWeight_formPerm`, `cayleyWeight_formPerm_cons`) are in place for Lemma 2.3.
-
-Rotate-class insertion: after clearing the skipped edge, the weight of `p :: L.rotate k` equals `-cayleyPathWeight(L.rotate k)` minus a telescoping term in `x p`. Summing over rotations cancels the telescope (`sum_cayleyWeight_cons_rotate`). Path weights ignore `p`, so the Hamiltonian listing sum through `p` is unchanged if `x` is altered only at `p`. Parking through unused complex values therefore makes the Hamiltonian sum depend only on the type, for injective assignments on a type of cardinality at least 3 (`sum_cayleyWeight_hamiltonian_eq_of_injective`). Conjugation by a type equivalence preserves Cayley weights, so the sum depends only on cardinality (`sum_cayleyWeight_hamiltonian_eq_of_card_eq`), including on subtypes (`sum_cayleyWeight_hamiltonian_subtype_eq_fin`).
-
-Paper (3.5) for `k ≥ 2`: cycles of support `T` match Hamiltonian cycles on the subtype (`cycleSupportEquiv`, `sum_cayleyWeight_cycles_support`). Those sums equal the cardinality constant `s_k` (`cayleyHamConst`). Counting subsets `T ∋ p` of size `2k` gives `\binom{N-1}{2k-1}` (`card_powersetCard_mem`). Therefore the `2k`-cycle sum through `p` is `\binom{N-1}{2k-1} s_k` (`sum_cayleyWeight_even_cycles_through`). Direct two-letter evaluation gives `s_1 = -1`. Summing over `k ≥ 2` gives the contribution of all even cycles of length at least 4 through `p` (`sum_cayleyWeight_long_even_cycles_through`). A single cycle has an odd long point if and only if its support has odd cardinality.
-
-She–Sun–Xia Lemma 3.1 is proved: `per(A_n)=0` for `n≥1` (`permanent_signMatrix`), by Laplace expansion of the permanent along column 0 and pairing minors at `t` and `Fin.rev t`.
-
-Card-2 base with a zero coordinate: `cayleySumOn {p,q} = 0` when `x p = 0` (`cayleySumOn_pair`). Conjugation by a type equivalence preserves `cayleySum` (`cayleySum_permCongr`). Even-length cycles through `p` expand as `∑_k \binom{N-1}{2k-1} s_k` when `x` is injective and `x p = 0` (`evenCycleSumThrough_eq_binom`), using `s_1 = -1` on transpositions. A permutation splits as its cycle through `p` times a disjoint remainder that fixes `p`. The even-cycle Cayley sum is `1` plus the even cycles through `p` plus complementary remainder terms (`cayleySum_eq_one_add_even_cycles_add_complementary`). On a two-point type the remainder is always `1`, so those complementary terms vanish.
-
-Complementary terms group by remainder `τ`. If `τ p ≠ p` the fibre is empty. If `τ p = p`, permutations with that remainder are `ofSubtype u * τ` for `u` on `Fix(τ)` with `u.cycleOf ⟨p⟩ = u`, and the fibre equals `cayleyWeight τ * (1 + evenCycleSumThrough ⟨p⟩)` on the complementary subtype (`cayleySum_fibre_remainder`, `cayleySum_complementary_eq_inner`). The Cayley kernel matrix has permanent equal to `cayleySum` (`permanent_cayleyMatrix_eq_cayleySum`), and `sunMatrix` is that matrix on roots of unity.
-
-The geometric assignment `cayleyPowZero` has a zero at index 0 and values `ε^{n-i}` off zero. For real `0<ε<1` it is injective. Its Cayley matrix tends pointwise to the transpose of the sign matrix, so on even size the Cayley sum tends to 0 (`tendsto_cayleySum_powZero`). Hamiltonian even-cycle sums transport along `permCongr` (`evenCycleSumThrough_permCongr`).
-
-Strong induction on even cardinality: complementary fibres vanish on strictly smaller even `Fix(τ)`, so `cayleySum = 1 + evenCycleSumThrough`. That combination is the binomial in `s_k` and equals 0 by the geometric limit (`cayleySum_eq_zero_fin`, `identity_three_nine`). The same vanishing transports to any even-card type with a zero coordinate (`cayleySum_eq_zero_of_zero`). Paper (3.9) for `k ≥ 2` is `identity_three_nine_tail`: that tail equals `n-2`.
-
-Paper (4.8): `S = ∑_{q ≠ p} (1+f((p q))) S(omit p,q)` (`cayleySum_eq_recurrence`). The omit-sum of complementary Cayley sums minus the `#Fix-2` extra recovers Σ1. Long even cycles through `p` plus complementary fibres give Σ3 as the same extra, so the extras cancel.
-
-Still needed: Theorem 1.1 matching formula, then She–Sun–Xia 1.3(i).
+Route: Guo 3.1 plus Calogero gives `per(M-J)=a n`. Odd-cycle cancellation plus She–Sun–Xia (3.9) and (4.8) give the Cayley recurrence. Matching involutions satisfy the same two-point recurrence. Induction yields Theorem 1.1. On roots of unity the matching sum is Guo's involution sum, so `per M = a n`.
 
 ## Attribution
 

@@ -116,7 +116,18 @@ which type-checks. The original `a` is used. The admitted `OeisA1818.conjecture1
 'A001818C1.cayleySum_eq_one_add_even_cycles_of_card_two' depends on axioms: [propext, Classical.choice, Quot.sound]
 ```
 
-The complementary fibres (`cayleySum_fibre_remainder`, `cayleySum_complementary_eq_inner`) are proved. Geometric Cayley matrices tend to the transposed sign matrix, so on even size `cayleySum(cayleyPowZero)` tends to 0 (`tendsto_cayleySum_powZero`). Strong induction on even cardinality gives complementary cancellation and `cayleySum = 0` whenever some coordinate is zero (`cayleySum_eq_zero_fin`). Paper identity (3.9) is `identity_three_nine` / `identity_three_nine_tail`. Recurrence (4.8) is `cayleySum_eq_recurrence`. Theorem 1.1 remains, so `per M = per(M-J)` remains.
+The complementary fibres (`cayleySum_fibre_remainder`, `cayleySum_complementary_eq_inner`) are proved. Geometric Cayley matrices tend to the transposed sign matrix, so on even size `cayleySum(cayleyPowZero)` tends to 0 (`tendsto_cayleySum_powZero`). Strong induction on even cardinality gives complementary cancellation and `cayleySum = 0` whenever some coordinate is zero (`cayleySum_eq_zero_fin`). Paper identity (3.9) is `identity_three_nine` / `identity_three_nine_tail`. Recurrence (4.8) is `cayleySum_eq_recurrence`.
+
+Theorem 1.1 is `cayleySum_eq_matching`. The root-of-unity matching evaluation is `matchingSum_zeta`. The worker theorems `conjecture1` and `conjecture1_frozen` compile with exit 0.
+
+```
+'A001818C1.cayleySum_eq_matching' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.matchingSum_zeta' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.conjecture1' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.conjecture1_frozen' depends on axioms: [propext, Classical.choice, Quot.sound]
+```
+
+No `sorryAx`, `native_decide`, or `Lean.trustCompiler`. The admitted source theorem is used only in a `#check` ascription, not as a proof. Self-review cannot mark independently verified.
 
 ## Boundary
 

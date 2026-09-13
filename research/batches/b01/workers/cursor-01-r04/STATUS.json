@@ -17,11 +17,11 @@
   "session_start_utc": "2026-09-13T02:54:27Z",
   "deadline_utc": "2026-09-13T10:54:27Z",
   "clock_reset": false,
-  "current_status": "researching_goal_active",
+  "current_status": "exact_candidate_pending_coordinator_audit",
   "novelty_status": "known_mathematics_formalization",
   "mathematical_novelty": "known_mathematics_She_Sun_Xia_2022_Thm1_3_ii",
   "formalization_novelty": "no_prior_exact_public_lean_found_in_checked_sources_audit_incomplete_until_stop",
-  "last_updated_utc": "2026-09-13T09:16:00Z",
+  "last_updated_utc": "2026-09-13T09:53:00Z",
   "proof_declarations": [
     "A001818C1.conjecture1_of_one",
     "A001818C1.zpow_sub_ne_one",
@@ -70,7 +70,7 @@
     "A001818C1.involution_unsigned_eq_neg_signed",
     "A001818C1.ofSubtype_subtypePerm_of_support_subset",
     "A001818C1.support_ofSubtype_listing",
-    "A001818C1.support_mul_listing_τ",
+    "A001818C1.support_mul_listing_\u03c4",
     "A001818C1.inv_one_sub_replace_cycle",
     "A001818C1.longPoints_nonempty_iff",
     "A001818C1.remainder_support_eq_compl",
@@ -190,13 +190,28 @@
     "A001818C1.sum_cayleySumOn_omit_pair",
     "A001818C1.cayleySum_sigma1_eq_omit_sub_extra",
     "A001818C1.cayleySum_sigma3",
-    "A001818C1.cayleySum_eq_recurrence"
+    "A001818C1.cayleySum_eq_recurrence",
+    "A001818C1.matchingWeight",
+    "A001818C1.matchingSum",
+    "A001818C1.matchingWeight_eq_prod_support",
+    "A001818C1.matchingWeight_ofSubtype",
+    "A001818C1.matchingSum_fin_two",
+    "A001818C1.cayleySum_eq_matching_fin_two",
+    "A001818C1.one_add_cayleyWeight_eq_matching",
+    "A001818C1.matchingSum_eq_recurrence",
+    "A001818C1.fpfinv_iff_cycleType",
+    "A001818C1.matchingWeight_zeta_mul",
+    "A001818C1.matchingSum_zeta",
+    "A001818C1.cayleySum_eq_matching_fin",
+    "A001818C1.cayleySum_eq_matching",
+    "A001818C1.conjecture1",
+    "A001818C1.conjecture1_frozen"
   ],
   "unresolved_gaps": [
-    "General n>=1 C1 identity still open. Have per(M-J)=a n, Sigma1/Sigma2/Sigma3, Lemma 2.3, paper (3.5)/(3.9), Lemma 3.1, complementary cancellation, and recurrence (4.8). Need Theorem 1.1 and SSX 1.3(i)."
+    "Coordinator audit. Self-review cannot mark independently_verified. Bounded literature search is not a first-formalization claim."
   ],
-  "next_step": "Prove Theorem 1.1 by induction from (4.8), then identify per M with per(M-J).",
-  "self_review": "not a candidate yet; cannot set independently_verified",
+  "next_step": "Coordinator independent audit. Do not start C2.",
+  "self_review": "self-audited exact frozen wrapper compiles with allowlisted axioms; cannot set independently_verified",
   "excluded_from_this_worker": [
     "OeisA1818.conjecture2",
     "OeisA2454.conjecture",
@@ -210,8 +225,14 @@
   ],
   "ai_assistance": "Cursor Grok 4.6 Extra High, 2026-09-13",
   "credits": {
-    "mathematics": "Yue-Feng She, Zhi-Wei Sun, Wei Xia, arXiv:2208.12167v2, Theorem 1.3(ii); Guo–Li–Tao–Wei arXiv:2206.02592 Lemma/Conj 1.1(1); Calogero–Perelomov 1979",
+    "mathematics": "Yue-Feng She, Zhi-Wei Sun, Wei Xia, arXiv:2208.12167v2, Theorem 1.3(ii); Guo\u2013Li\u2013Tao\u2013Wei arXiv:2206.02592 Lemma/Conj 1.1(1); Calogero\u2013Perelomov 1979",
     "original_lean": "The Formal Conjectures Authors",
     "new_lean_development": "Wentao Li"
-  }
+  },
+  "compile_exit": 0,
+  "allowed_axioms": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ]
 }

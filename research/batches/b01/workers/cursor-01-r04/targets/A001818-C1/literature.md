@@ -28,7 +28,7 @@ C2 (Yang–Zhang arXiv:2605.19502 Prop. 17) and A002454 (odd-size companion of T
 - `gh search` on `google-deepmind/formal-conjectures` for A001818 / `OeisA1818`: PR5568 only (plus unrelated issue 1818 / Serre).
 - Epoch `LeanOpenProblems-results`, all three `oeis_1818_conjecture_0` (C1) runs: Anthropic, OpenAI, Google, all `sorryAx`. Google wrote n=1 and n=2 finite expansions then `sorry` for the general statement. Those special-case calculations are not a general proof; n=1 is re-proved here independently. Prefix hits on A181830 are a different sequence.
 - AlphaProof Nexus `google-deepmind/alphaproof-nexus-results` `APNOutputs/OEIS` listing (38 files, 2026-09-13): no A001818 / 1818 / A002454 / A356041 file.
-- No exact public Lean theorem implying C1 was located in the checked sources. This is bounded absence evidence, not a first-formalization claim.
+- No exact public Lean theorem implying C1 was located in the checked sources. This is bounded absence evidence, not a first-formalization claim. The worker candidate is submitted for coordinator audit; it does not by itself prove public novelty.
 
 OEIS editability: not checked in a live editor session; report **unknown**. No OEIS edit attempted.
 

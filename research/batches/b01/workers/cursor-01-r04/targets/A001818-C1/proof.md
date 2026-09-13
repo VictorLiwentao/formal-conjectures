@@ -77,4 +77,11 @@ Do not import or use `OeisA1818.conjecture1` (`sorry`). Use original `a`. Prove 
 - Geometric family `cayleyPowZero`: `x_0=0` and `x_i=ε^{n-i}` for `i>0`. For `0<ε<1` this assignment is injective. Off-diagonal entries tend to the transpose of the sign matrix (`tendsto_cayleyMatrix_powZero`). Permanents are continuous, so on even size the Cayley sum tends to `per(A)=0` (`tendsto_cayleySum_powZero`).
 - Even-card induction: injective `x` with a zero coordinate has `cayleySum = 0` (`cayleySum_eq_zero_fin`, `cayleySum_eq_zero_of_zero`). Complementary fibres vanish by the inductive hypothesis on `Fix(τ)`. The remaining binomial combination is independent of `x` and equals 0 by the geometric limit. This is paper (3.8)/(3.9) (`identity_three_nine`, `identity_three_nine_tail`).
 - Paper (4.8): `cayleySum_eq_recurrence`. The omit-sum of `cayleySumOn ({p,q}ᶜ)` expands as `∑_{σ p = p} g(σ)(#Fix(σ)-1)`. Combined with (3.9) on `Fix(τ)`, the `#Fix-2` extras in Σ1 and Σ3 cancel, leaving `S = ∑_{q ≠ p} (1+f((p q))) S(omit p,q)`.
-- Still needed: Theorem 1.1 matching formula, then She–Sun–Xia 1.3(i).
+- Matching weight: on a permutation, `matchingWeight x σ = ∏_a (x a - x(σ a))⁻¹` off the fixed set, and `1` at fixed points. For a transposition this is `(xa-xb)⁻²` up to sign, so `1+f((a b)) = 4 xa xb matchingWeight(swap a b)`.
+- Matching sum: `matchingSum x` sums `matchingWeight` over fixed-point-free involutions (`support = univ` and `σ² = 1`). These are exactly the permutations of cycle type `2^n` on `2n` letters (`fpfinv_iff_cycleType`).
+- Matching recurrence: at a distinguished point `p`, every such involution is `swap p q` times a matching on the complement, so `matchingSum x = ∑_{q ≠ p} matchingWeight(swap p q) matchingSumOn({p,q}ᶜ)`.
+- Theorem 1.1: by induction on even cardinality, using (4.8) on the Cayley side and the matching recurrence on the matching side, `cayleySum x = 4^{N/2} (∏ x) matchingSum x` for injective `x` on an even-card type (`cayleySum_eq_matching`). The empty and two-point cases are the bases.
+- Roots of unity: `ζ^a - ζ^{σ a} = ζ^a (1 - ζ^{σ a - a})`, so `(∏ ζ^i) matchingWeight = ∏ (1-ζ^{σi-i})⁻¹`. Guo's unsigned involution sum then gives `4^n (∏ ζ^i) matchingSum = a n` (`matchingSum_zeta`).
+- She–Sun–Xia 1.3(i) for this assignment: `per M = cayleySum = 4^n (∏ ζ^i) matchingSum = a n = per(M-J)`. Wrapper `conjecture1_frozen` is the frozen statement.
+
+Self-review cannot mark the candidate independently verified. Coordinator audit remains.
