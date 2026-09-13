@@ -1,0 +1,7 @@
+WrittenOnTheWallII.GraphConjecture101.conjecture101.{u_1} {α : Type u_1} [Fintype α] [DecidableEq α] [Nontrivial α]
+  (G : SimpleGraph α) [DecidableRel G.Adj] (h : G.Connected) :
+  G.indepNum ≤ (Fintype.card α + (WrittenOnTheWallII.GraphConjecture101.alphaCore G).card) / 2
+theorem WrittenOnTheWallII.GraphConjecture101.conjecture101.{u_1} : ∀ {α : Type u_1} [inst : Fintype α] [DecidableEq α]
+  [Nontrivial α] (G : SimpleGraph α) [DecidableRel G.Adj],
+  G.Connected → G.indepNum ≤ (Fintype.card α + (WrittenOnTheWallII.GraphConjecture101.alphaCore G).card) / 2 :=
+fun {α} [Fintype α] [DecidableEq α] [Nontrivial α] G [DecidableRel G.Adj] h => sorry

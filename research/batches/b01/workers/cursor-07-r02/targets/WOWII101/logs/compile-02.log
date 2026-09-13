@@ -1,0 +1,129 @@
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:48:19: error: This simp argument is unused:
+  induce_adj
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [compl_adj, Subtype.ext_iff]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:65:22: error: Tactic `subst` failed: 'v' occurs at
+  (Embedding.subtype fun x => x ∈ Set.univ \ {v}) ⟨x, hx⟩
+
+α : Type u_1
+inst✝² : Fintype α
+inst✝¹ : DecidableEq α
+inst✝ : Nontrivial α
+v : α
+t : Finset { x // x ∈ Set.univ \ {v} }
+hv : v ∈ map (Embedding.subtype fun x => x ∈ Set.univ \ {v}) t
+x : α
+hx : x ∈ Set.univ \ {v}
+left✝ : ⟨x, hx⟩ ∈ t
+right✝ : (Embedding.subtype fun x => x ∈ Set.univ \ {v}) ⟨x, hx⟩ = v
+⊢ False
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:85:44: error: unsolved goals
+α : Type u_1
+inst✝² : Fintype α
+inst✝¹ : DecidableEq α
+inst✝ : Nontrivial α
+s t : Finset α
+h : s ∩ t ∪ s \ t = s
+hd : Disjoint (s ∩ t) (s \ t)
+⊢ #((s ∩ t ∪ s \ t) ∩ t) + #((s ∩ t ∪ s \ t) \ t) = #(s ∩ t) + #(s \ t)
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:93:10: error: This simp argument is unused:
+  mem_inter
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [mem_sdiff]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:93:21: error: This simp argument is unused:
+  mem_sdiff
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [mem_inter]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:105:10: error: This simp argument is unused:
+  mem_inter
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [mem_sdiff]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:105:21: error: This simp argument is unused:
+  mem_sdiff
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [mem_inter]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:156:16: error: typeclass instance problem is stuck
+  DecidableRel (Adj ?m.142)
+
+Note: Lean will not try to resolve this typeclass instance problem because the third type argument to `DecidableRel` contains metavariables. This argument must be fully determined before Lean will try to resolve the typeclass.
+
+Hint: Adding type annotations and supplying implicit arguments to functions can give Lean more information for typeclass resolution. For example, if you have a variable `x` that you intend to be a `Nat`, but Lean reports it as having an unresolved type like `?m`, replacing `x` with `(x : Nat)` can get typeclass resolution un-stuck.
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:184:49: error(lean.unknownIdentifier): Unknown identifier `hne'`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:188:6: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  ↑(?s₁ ∪ ?s₂)
+in the target expression
+  G.IsIndepSet ((F'.inf' hne' fun t => ↑t) ∪ ↑S ∩ F'.sup' hne' fun t => ↑t)
+
+α : Type u_1
+inst✝³ : Fintype α
+inst✝² : DecidableEq α
+inst✝¹ : Nontrivial α
+G : SimpleGraph α
+inst✝ : DecidableRel G.Adj
+F' : Finset (Finset α)
+hne' : F'.Nonempty
+hmax : ∀ s ∈ F', G.IsNIndepSet α(G) s
+S : Finset α
+hS : G.IsNIndepSet α(G) S
+I : Finset α := F'.inf' hne' fun t => t
+U : Finset α := F'.sup' hne' fun t => t
+hI : G.IsIndepSet ↑I
+hSU : G.IsIndepSet ↑(S ∩ U)
+⊢ G.IsIndepSet ((F'.inf' hne' fun t => ↑t) ∪ ↑S ∩ F'.sup' hne' fun t => ↑t)
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:210:25: error(lean.unknownIdentifier): Unknown identifier `hne`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:214:61: error(lean.unknownIdentifier): Unknown identifier `hne`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:219:56: error(lean.unknownIdentifier): Unknown identifier `hne`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:226:25: error(lean.unknownIdentifier): Unknown identifier `hne`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:230:72: error(lean.unknownIdentifier): Unknown identifier `hne`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:237:56: error(lean.unknownIdentifier): Unknown identifier `hne`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:245:53: error(lean.unknownIdentifier): Unknown identifier `hne'`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:246:57: error(lean.unknownIdentifier): Unknown identifier `hne'`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:248:8: error: Type mismatch: After simplification, term
+  isIndepSet_inf_union_slice (F.erase S) hne' (fun t hs => hmax t (mem_of_mem_erase hs)) (hmax S hS)
+ has type
+  G.IsIndepSet (((F.erase S).inf' hne' fun t => ↑t) ∪ ↑S ∩ (F.erase S).sup' hne' fun t => ↑t)
+but is expected to have type
+  G.IsIndepSet (↑((F.erase S).inf' hne' fun t => t) ∪ ↑S ∩ ↑((F.erase S).sup' hne' fun t => t))
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:270:38: error(lean.unknownIdentifier): Unknown identifier `hne`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:271:18: error(lean.unknownIdentifier): Unknown identifier `hne`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:271:44: error: unsolved goals
+α : Type u_1
+inst✝³ : Fintype α
+inst✝² : DecidableEq α
+inst✝¹ : Nontrivial α
+G : SimpleGraph α
+inst✝ : DecidableRel G.Adj
+F : Finset (Finset α)
+ih :
+  ∀ t ⊂ F,
+    ∀ (hne : t.Nonempty),
+      (∀ s ∈ t, G.IsNIndepSet α(G) s) → 2 * α(G) ≤ #(t.inf' hne fun s => s) + #(t.sup' hne fun s => s)
+hmax : ∀ s ∈ F, G.IsNIndepSet α(G) s
+S : Finset α
+hS : S ∈ F
+hne' : ¬(F.erase S).Nonempty
+hF : F = {S}
+hScard : #S = α(G)
+⊢ 2 * α(G) ≤ α(G) + α(G)
+'WOWII101.conjecture101' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]
+WrittenOnTheWallII.GraphConjecture101.conjecture101.{u_1} {α : Type u_1} [Fintype α] [DecidableEq α] [Nontrivial α]
+  (G : SimpleGraph α) [DecidableRel G.Adj] (h : G.Connected) :
+  α(G) ≤ (Fintype.card α + #(WrittenOnTheWallII.GraphConjecture101.alphaCore G)) / 2
+WOWII101.conjecture101.{u_1} {α : Type u_1} [Fintype α] [DecidableEq α] [Nontrivial α] {G : SimpleGraph α}
+  [DecidableRel G.Adj] (_h : G.Connected) :
+  α(G) ≤ (Fintype.card α + #(WrittenOnTheWallII.GraphConjecture101.alphaCore G)) / 2

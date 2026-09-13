@@ -1,0 +1,26 @@
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:68:8: error: Invalid projection: Projections cannot be used on functions, and
+  hx
+has function type `x = v → False`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:187:25: error(lean.invalidField): Invalid field `exists`: The environment does not contain `Exists.exists`, so it is not possible to project the field `exists` from an expression
+  hne'
+of type `∃ x, x ∈ F'`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:187:25: error(lean.invalidField): Invalid field `exists`: The environment does not contain `Exists.exists`, so it is not possible to project the field `exists` from an expression
+  hne'
+of type `∃ x, x ∈ F'`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:187:9: error: Invalid `⟨...⟩` notation: The expected type of this term could not be determined
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:188:4: error: No goals to be solved
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:215:24: error(lean.invalidField): Invalid field `exists`: The environment does not contain `Exists.exists`, so it is not possible to project the field `exists` from an expression
+  hne
+of type `∃ x, x ∈ F`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:215:24: error(lean.invalidField): Invalid field `exists`: The environment does not contain `Exists.exists`, so it is not possible to project the field `exists` from an expression
+  hne
+of type `∃ x, x ∈ F`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:215:9: error: Invalid `⟨...⟩` notation: The expected type of this term could not be determined
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:216:4: error: No goals to be solved
+'WOWII101.conjecture101' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]
+WrittenOnTheWallII.GraphConjecture101.conjecture101.{u_1} {α : Type u_1} [Fintype α] [DecidableEq α] [Nontrivial α]
+  (G : SimpleGraph α) [DecidableRel G.Adj] (h : G.Connected) :
+  α(G) ≤ (Fintype.card α + #(WrittenOnTheWallII.GraphConjecture101.alphaCore G)) / 2
+WOWII101.conjecture101.{u_1} {α : Type u_1} [Fintype α] [DecidableEq α] [Nontrivial α] (G : SimpleGraph α)
+  [DecidableRel G.Adj] (_h : G.Connected) :
+  α(G) ≤ (Fintype.card α + #(WrittenOnTheWallII.GraphConjecture101.alphaCore G)) / 2

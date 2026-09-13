@@ -6,20 +6,24 @@
   "coordination_commit": "dc6f750f34db0ca579f76bc358082157072f2083",
   "source_file": "FormalConjectures/WrittenOnTheWallII/GraphConjecture101.lean",
   "source_sha256": "870cd77d2cb8bf98fcbe4bdeee7c52620009af97368fc4358dc595af716046c6",
-  "current_status": "researching",
+  "current_status": "candidate_proof",
   "mathematical_novelty": "known_mathematics",
-  "formalization_novelty": "searching_then_implementing",
+  "formalization_novelty": "candidate_new_lean_implementation_pending_coordinator_audit",
   "novelty_status": "known_mathematics_formalization_candidate",
-  "last_updated_utc": "2026-09-13T01:23:02Z",
+  "last_updated_utc": "2026-09-13T01:42:00Z",
   "session_kickoff_utc": "2026-09-13T01:23:02Z",
   "session_limit_hours": 8,
   "session_deadline_utc": "2026-09-13T09:23:02Z",
-  "proof_declarations": [],
+  "proof_declarations": ["WOWII101.conjecture101"],
+  "proof_file": "research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean",
+  "proof_sha256": "5018f7ba7f2ec8b63d4334b606d8936db097e635f9c959c3d2877ae9dee8e34a",
+  "axioms": ["propext", "Classical.choice", "Quot.sound"],
+  "independently_verified": false,
   "unresolved_gaps": [
-    "Public exact Lean search in progress; no matching completed proof located in the first pass.",
-    "Lean candidate not yet compiled."
+    "Coordinator independent audit is pending.",
+    "No exact public Lean proof was found in the checked sources; that is not a proof of universal absence."
   ],
-  "next_step": "Finish public-Lean search notes and formalize Hajnal/Levit–Mandrescu family inequality plus alphaCore equivalence.",
+  "next_step": "Stopped after a self-audited exact candidate. Do not continue this target. Coordinator audit remaining.",
   "environment": {
     "name": "VictorLiwentao/formal-conjectures",
     "environmentPublicId": "ed88cb37-ae94-11f1-bf4b-42ffb4d10ea7",
@@ -27,6 +31,7 @@
     "lean": "leanprover/lean4:v4.33.1"
   },
   "publication_policy": "Push only this worker branch to VictorLiwentao/formal-conjectures. No PR.",
-  "independently_verified": false,
-  "timer_subscription": null
+  "timer_subscription": null,
+  "further_target_work": "stopped",
+  "classification": "known_mathematics_formalization"
 }

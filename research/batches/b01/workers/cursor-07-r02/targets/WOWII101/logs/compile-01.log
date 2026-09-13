@@ -1,0 +1,267 @@
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:45:64: error: unsolved goals
+α : Type u_1
+inst✝³ : Fintype α
+inst✝² : DecidableEq α
+inst✝¹ : Nontrivial α
+G : SimpleGraph α
+inst✝ : DecidableRel G.Adj
+s : Set α
+x y : ↑s
+⊢ ¬G.Adj ↑x ↑y → (¬x = y ↔ ¬↑x = ↑y)
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:47:19: error: This simp argument is unused:
+  induce_adj
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [compl_adj]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:56:5: error(lean.synthInstanceFailed): failed to synthesize instance of type class
+  DecidableRel G✝.Adj
+
+Hint: Type class instance resolution failures can be inspected with the `set_option trace.Meta.synthInstance true` command.
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:61:15: error(lean.unknownIdentifier): Unknown constant `SimpleGraph.Embedding.subtype`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:82:12: error(lean.dependsOnNoncomputable): failed to compile definition, consider marking it as 'noncomputable' because it depends on 'indepNum', which is 'noncomputable'
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:84:30: error(lean.invalidField): Invalid field `maxFamily`: The environment does not contain `SimpleGraph.maxFamily`, so it is not possible to project the field `maxFamily` from an expression
+  G
+of type `SimpleGraph α`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:85:20: error(lean.unknownIdentifier): Unknown identifier `G.exists_isNIndepSet_indepNum`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:85:9: error: Tactic `rcases` failed: `x✝ : Sort u_2` is not an inductive datatype
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:89:10: error(lean.invalidField): Invalid field `maxFamily`: The environment does not contain `SimpleGraph.maxFamily`, so it is not possible to project the field `maxFamily` from an expression
+  G
+of type `SimpleGraph α`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:107:12: error: `Set.mem_diff` has been deprecated: Use `Set.mem_sdiff` instead
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:120:16: error(lean.unknownIdentifier): Unknown constant `SimpleGraph.Embedding.subtype`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:120:41: error: Invalid projection: Projections cannot be used on functions, and
+  isNIndepSet_induce_iff
+has function type
+  ∀ (G : SimpleGraph ?m.215) [DecidableRel G.Adj] {s : Set ?m.215} {t : Finset ↑s} {n : ℕ},
+    (induce s G).IsNIndepSet n t ↔ G.IsNIndepSet n (map (Function.Embedding.subtype fun x => x ∈ s) t)
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:122:49: error(lean.unknownIdentifier): Unknown constant `SimpleGraph.Embedding.subtype`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:107:12: error: This simp argument is unused:
+  Set.mem_diff
+
+Hint: Omit it from the simp argument list.
+  [apply] simp
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:128:21: error(lean.invalidField): Invalid field `maxFamily`: The environment does not contain `SimpleGraph.maxFamily`, so it is not possible to project the field `maxFamily` from an expression
+  G
+of type `SimpleGraph α`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:130:39: error(lean.invalidField): Invalid field `mem_maxFamily_iff`: The environment does not contain `SimpleGraph.mem_maxFamily_iff`, so it is not possible to project the field `mem_maxFamily_iff` from an expression
+  G
+of type `SimpleGraph α`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:128:76: error: unsolved goals
+α : Type u_1
+inst✝³ : Fintype α
+inst✝² : DecidableEq α
+inst✝¹ : Nontrivial α
+G : SimpleGraph α
+inst✝ : DecidableRel G.Adj
+v : α
+⊢ (∀ (s : Finset α), G.IsNIndepSet α(G) s → v ∈ s) ↔ v ∈ sorry ()
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:130:27: error: This simp argument is unused:
+  mem_inf'
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [mem_alphaCore_iff, G.mem_maxFamily_iff]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:140:43: error: Type mismatch
+  disjoint_sdiff
+has type
+  Disjoint ?m.143 (?m.144 \ ?m.143)
+but is expected to have type
+  Disjoint (I ∩ S) (I \ S)
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:166:6: error: `simp` made no progress
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:170:12: error: Invalid projection: Projections cannot be used on functions, and
+  hx
+has function type `?m.227 ∈ x → ?m.227 ∈ S ∩ U`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:159:53: error: unsolved goals
+α : Type u_1
+inst✝² : Fintype α
+inst✝¹ : DecidableEq α
+inst✝ : Nontrivial α
+I S U : Finset α
+hIU : I ⊆ U
+hIU' : I ∩ (S ∩ U) = I ∩ S
+hunion : #(I ∪ S ∩ U) + #(I ∩ (S ∩ U)) = #I + #(S ∩ U)
+this : S ∩ U ∪ S \ U = S
+hdisj : Disjoint (S ∩ U) (S \ U)
+⊢ #((S ∩ U ∪ S \ U) ∩ U) + #((S ∩ U ∪ S \ U) \ U) = #(S ∩ U) + #(S \ U)
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:176:45: error: Type mismatch
+  disjoint_sdiff
+has type
+  Disjoint ?m.339 (?m.340 \ ?m.339)
+but is expected to have type
+  Disjoint (I ∩ S) (I \ S)
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:169:12: error: This simp argument is unused:
+  inf_eq_inter
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [mem_inter, mem_sdiff] at hx ⊢
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:169:26: error: This simp argument is unused:
+  mem_inter
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [inf_eq_inter, mem_sdiff] at hx ⊢
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:169:37: error: This simp argument is unused:
+  mem_sdiff
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [inf_eq_inter, mem_inter] at hx ⊢
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:193:40: error(lean.unknownIdentifier): Unknown identifier `hne'`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:198:2: error: Type mismatch
+  isIndepSet_union G hI hSset ?m.147
+has type
+  G.IsIndepSet (↑I ∪ ↑(S ∩ U))
+but is expected to have type
+  G.IsIndepSet ↑(I ∪ S ∩ U)
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:221:25: error(lean.unknownIdentifier): Unknown identifier `hne`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:226:26: error: Application type mismatch: The argument
+  fun t ht => hx t (mem_of_mem_erase ht)
+has type
+  ∀ t ∈ F.erase (?m.156 t), x ∈ t
+but is expected to have type
+  x ∈ I
+in the application
+  ⟨hx S hS, fun t ht => hx t (mem_of_mem_erase ht)⟩
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:231:18: error: Function expected at
+  hx.right
+but this term has type
+  x ∈ I
+
+Note: Expected a function because this term is being applied to the argument
+  t
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:232:25: error(lean.unknownIdentifier): Unknown identifier `hne`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:240:25: error: Invalid `⟨...⟩` notation: The expected type
+  Quot.lift (fun l => x ∈ l) ⋯ U.val
+is not an inductive type
+
+Note: This notation can only be used when the expected type is an inductive type with a single constructor
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:241:24: error: Tactic `rcases` failed: `h✝ : Quot.lift (fun l => x ∈ l) ⋯ U.val` is not an inductive datatype
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:247:24: error(lean.unknownIdentifier): Unknown identifier `hne'`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:247:50: error(lean.unknownIdentifier): Unknown identifier `hne'`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:262:10: error: omega could not prove the goal:
+a possible counterexample may satisfy the constraints
+  h ≥ 0
+  g ≥ 0
+  g - h ≥ 1
+  f ≥ 0
+  e ≥ 0
+  d ≥ 0
+  d - e ≥ 0
+  d - e - g ≤ 0
+  c ≥ 0
+  a ≥ 0
+  a + c - 2*g ≥ 0
+where
+ a := ↑(#I)
+ c := ↑(#U)
+ d := ↑(#(S \ U))
+ e := ↑(#(I \ S))
+ f := ↑(#(I ∩ S))
+ g := ↑(#(I ∪ S ∩ U) + #(S \ U) - #(I \ S))
+ h := ↑(#(S ∪ U))
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:267:51: error: Type mismatch
+  disjoint_sdiff
+has type
+  Disjoint ?m.582 (?m.583 \ ?m.582)
+but is expected to have type
+  Disjoint (I ∩ S) (I \ S)
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:284:12: error: `simp` made no progress
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:285:26: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  S ∪ U
+in the target expression
+  #(U ∪ S) = #U + #(S \ U)
+
+α : Type u_1
+inst✝³ : Fintype α
+inst✝² : DecidableEq α
+inst✝¹ : Nontrivial α
+G : SimpleGraph α
+inst✝ : DecidableRel G.Adj
+F : Finset (Finset α)
+ih :
+  ∀ t ⊂ F,
+    ∀ (hne : t.Nonempty),
+      (∀ s ∈ t, G.IsNIndepSet α(G) s) → 2 * α(G) ≤ #(t.inf' hne fun s => s) + #(t.sup' hne fun s => s)
+hmax : ∀ s ∈ F, G.IsNIndepSet α(G) s
+S : Finset α
+hS : S ∈ F
+F' : Finset (Finset α) := F.erase S
+hne' : F'.Nonempty
+hss : F' ⊂ F
+I : Finset α := F'.inf' hne' fun t => t
+U : Finset α := F'.sup' hne' fun t => t
+ih' : 2 * α(G) ≤ #I + #U
+hinf : (F.inf' ⋯ fun s => s) = S ∩ I
+hsup : (F.sup' ⋯ fun s => s) = S ∪ U
+hIU : I ⊆ U
+hT : G.IsIndepSet ↑((F'.inf' hne' fun t => t) ∪ S ∩ F'.sup' hne' fun t => t)
+hTle : #(I ∪ S ∩ U) ≤ α(G)
+hScard : #S = α(G)
+hid : #(I ∪ S ∩ U) + #(S \ U) = #S + #(I \ S)
+hloss : #(I \ S) ≤ #(S \ U)
+hid' : #(I ∪ S ∩ U) + #(S \ U) = #S + #(I \ S)
+hSI : #(S ∩ I) = #(I ∩ S)
+hSU : #(S ∪ U) = #(I ∪ S ∩ U) + #(S \ U) - #(I \ S)
+h1 : #(I ∩ S) + #(I \ S) = #I
+this : U ∪ S \ U = S ∪ U
+hdisj : Disjoint U (S \ U)
+⊢ #(U ∪ S) = #U + #(S \ U)
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:300:4: error: unsolved goals
+case neg
+α : Type u_1
+inst✝³ : Fintype α
+inst✝² : DecidableEq α
+inst✝¹ : Nontrivial α
+G : SimpleGraph α
+inst✝ : DecidableRel G.Adj
+F : Finset (Finset α)
+ih :
+  ∀ t ⊂ F,
+    ∀ (hne : t.Nonempty),
+      (∀ s ∈ t, G.IsNIndepSet α(G) s) → 2 * α(G) ≤ #(t.inf' hne fun s => s) + #(t.sup' hne fun s => s)
+hmax : ∀ s ∈ F, G.IsNIndepSet α(G) s
+S : Finset α
+hS : S ∈ F
+F' : Finset (Finset α) := F.erase S
+hne' : ¬F'.Nonempty
+hF' : F' = ∅
+hF : F = {S}
+hScard : #S = α(G)
+⊢ 2 * α(G) ≤ α(G) + α(G)
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:309:13: error(lean.invalidField): Invalid field `maxFamily`: The environment does not contain `SimpleGraph.maxFamily`, so it is not possible to project the field `maxFamily` from an expression
+  G
+of type `SimpleGraph α`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:310:15: error(lean.invalidField): Invalid field `maxFamily_nonempty`: The environment does not contain `SimpleGraph.maxFamily_nonempty`, so it is not possible to project the field `maxFamily_nonempty` from an expression
+  G
+of type `SimpleGraph α`
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:308:60: error: unsolved goals
+α : Type u_1
+inst✝³ : Fintype α
+inst✝² : DecidableEq α
+inst✝¹ : Nontrivial α
+G : SimpleGraph α
+inst✝ : DecidableRel G.Adj
+Ω : ?m.22 := sorry
+⊢ 2 * α(G) ≤ Fintype.card α + #(alphaCore G)
+research/batches/b01/workers/cursor-07-r02/targets/WOWII101/WOWII101.lean:323:23: error: Variable name `h` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _h
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+'WOWII101.conjecture101' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]
+WrittenOnTheWallII.GraphConjecture101.conjecture101.{u_1} {α : Type u_1} [Fintype α] [DecidableEq α] [Nontrivial α]
+  (G : SimpleGraph α) [DecidableRel G.Adj] (h : G.Connected) :
+  α(G) ≤ (Fintype.card α + #(WrittenOnTheWallII.GraphConjecture101.alphaCore G)) / 2
+WOWII101.conjecture101.{u_1} {α : Type u_1} [Fintype α] [DecidableEq α] [Nontrivial α] (G : SimpleGraph α)
+  [DecidableRel G.Adj] (h : G.Connected) :
+  α(G) ≤ (Fintype.card α + #(WrittenOnTheWallII.GraphConjecture101.alphaCore G)) / 2

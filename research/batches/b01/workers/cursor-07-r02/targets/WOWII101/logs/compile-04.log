@@ -1,0 +1,7 @@
+'WOWII101.conjecture101' depends on axioms: [propext, Classical.choice, Quot.sound]
+WrittenOnTheWallII.GraphConjecture101.conjecture101.{u_1} {α : Type u_1} [Fintype α] [DecidableEq α] [Nontrivial α]
+  (G : SimpleGraph α) [DecidableRel G.Adj] (h : G.Connected) :
+  α(G) ≤ (Fintype.card α + #(WrittenOnTheWallII.GraphConjecture101.alphaCore G)) / 2
+WOWII101.conjecture101.{u_1} {α : Type u_1} [Fintype α] [DecidableEq α] [Nontrivial α] (G : SimpleGraph α)
+  [DecidableRel G.Adj] (_h : G.Connected) :
+  α(G) ≤ (Fintype.card α + #(WrittenOnTheWallII.GraphConjecture101.alphaCore G)) / 2

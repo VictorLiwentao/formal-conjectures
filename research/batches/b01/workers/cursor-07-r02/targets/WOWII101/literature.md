@@ -49,7 +49,7 @@ Searches below found **no completed exact public Lean proof** of this frozen typ
 - Local Mathlib 4.33.1 `SimpleGraph` search: `indepNum`, `IsNIndepSet`, `indepSetFinset`, `isNIndepSet_induce`, `exists_isNIndepSet_indepNum` exist. No Hajnal collection lemma, no `alphaCore`/`core`/`corona` of maximum independent sets.
 - `FormalConjecturesForMathlib` independence helpers do not contain this inequality.
 
-Inaccessible or incomplete: GitHub code search repeatedly 429-rate-limited; some equivalent-name proofs could exist under other titles. Hajnal 1965 PDF was not re-fetched beyond the Levit–Mandrescu citation. No Lean artifact was found that would require stopping.
+Second pass immediately before the candidate claim (2026-09-13T01:41Z): issue/PR searches for `GraphConjecture101` and `Graph Conjecture 101` on DeepMind still empty; repository search `wowii-graph-conjecture-101` empty; live source SHA unchanged; Epoch `LeanOpenProblems-results` code search total_count 0; Nexus code search total_count 0 after a 429 retry. No exact public Lean proof of this frozen type was located. That is not a proof of universal absence.
 
 ## Excluded neighbour
 
