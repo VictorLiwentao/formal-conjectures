@@ -160,7 +160,17 @@ product `∏(1-p/b)` truncates after the linear term. Therefore
 `¬ p^2 ∣ oddInnerNum p` iff
 `∑_{odd r < p} C(p-1,r-1) r^{-2} ≠ 0` in `ZMod (p^2)`.
 
-The remaining gap for prime powers is this nonvanishing, equivalently
+`inv_sq_odd_eq_seven_eight`: the odd inverse-square sum is
+`(7/8) I + (p/4) S3` in `ZMod (p^2)`, where `I` is the full
+inverse-square sum over `1..p-1` and `S3` is the half-range
+inverse cubes. `odd_combo_zmod` splits the harmonic unit sum as
+`I_odd - p τ`. `inv_sq_half_cast_eq_zero` shows the half-range
+inverse squares vanish in `𝔽_p`, so they are multiples of `p`
+in `ZMod (p^2)`. `odd_inv_sq_sum_eq_mul_p` records the same for
+`I_odd`. `padicValRat_ratExpression_forty_nine` gives
+`v_7(T(49))=2` from the exact fraction.
+
+The remaining gap for prime powers is the nonvanishing
 `v_p(U0)=1`. Empirically it holds except at `p=7` where `v=2`, and
 it would fail at Wolstenholme primes (`p | B_{p-3}`).
 

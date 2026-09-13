@@ -157,6 +157,21 @@ Kernel-checked square pairing, rational Wolstenholme, and `v_7(U0)=2`, same axio
 Compile log: `/opt/cursor/artifacts/a108866_lean_wfail_pairing4.log`, exit 0, no `sorryAx`.
 This is not the frozen iff.
 
+Kernel-checked odd/even inverse-square split and `v_7(T(49))=2`, same axioms, `#print axioms` on 2026-09-13:
+
+```
+'OeisA108866.inv_sq_odd_eq_seven_eight'
+'OeisA108866.odd_combo_zmod'
+'OeisA108866.eq_mul_p_of_cast_eq_zero'
+'OeisA108866.odd_inv_sq_sum_cast_eq_zero'
+'OeisA108866.inv_sq_half_cast_eq_zero'
+'OeisA108866.odd_inv_sq_sum_eq_mul_p'
+'OeisA108866.padicValRat_ratExpression_forty_nine'
+```
+
+Compile log: `/opt/cursor/artifacts/a108866_lean_wfail_seven_eight6.log`, exit 0, no `sorryAx`.
+This is not the frozen iff.
+
 Kernel-checked exact evaluations `n=9,25,27,49` and packaging lemmas remain in the same file, same axioms.
 
 Exact type of the prime-direction theorem, from `#print OeisA108866.n_sq_dvd_num_of_prime`:
