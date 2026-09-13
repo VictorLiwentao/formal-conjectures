@@ -1,0 +1,6 @@
+*.olean
+*.ilean
+*.ilean.hash
+*.olean.hash
+*.olean.private
+compile.log

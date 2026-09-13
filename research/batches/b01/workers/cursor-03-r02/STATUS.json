@@ -1,0 +1,29 @@
+{
+  "worker_id": "cursor-03-r02",
+  "target_id": "A069004",
+  "actual_branch": "cursor/b01-cursor-03-r02-4f64",
+  "baseline_commit": "1107856a264a066e316c3cba7b5339be475f6304",
+  "frozen_source_commit": "a2f4a1bb12a28e04a969da78feefac7d1ce49565",
+  "source_file": "FormalConjectures/OEIS/69004.lean",
+  "source_sha256": "c29abb2a5c1e48761cc6d7ebb4332bd728071b6ea6059263ffcf153800282ca2",
+  "current_status": "partial",
+  "novelty_status": "known_mathematics_public_resource_limited_lean_attempts",
+  "session_start_utc": "2026-09-13T00:13:02Z",
+  "session_deadline_utc": "2026-09-13T08:13:02Z",
+  "requested_model": "Cursor Grok 4.6 Extra High",
+  "proof_declarations": [
+    "Cursor03R02.A069004.upper_bound_false",
+    "Cursor03R02.A069004.conjecture2"
+  ],
+  "unresolved_gaps": [
+    "Full 284-chunk and 26 count-block kernel compile not yet finished",
+    "Glued theorems, TypeMatch.lean, and #print axioms pending"
+  ],
+  "next_step": "Compile C0–C283 and Count* independently, then GlueCert, GlueCount, A069004.lean, TypeMatch.lean",
+  "last_updated_utc": "2026-09-13T00:34:00Z",
+  "pilot": {
+    "Pilot.lean": "one Pratt certificate, decide +kernel, 4s, success",
+    "C0.lean": "150 certificates, 22s, success",
+    "CountPilot.lean": "countRange 0 1000 = 168, 11s, success"
+  }
+}
