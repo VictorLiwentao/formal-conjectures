@@ -20,7 +20,7 @@ python3 research/batches/b01/workers/cursor-06/targets/A108866/experiments/remai
 python3 research/batches/b01/workers/cursor-06/targets/A108866/experiments/prime_power_leading.py
 ```
 
-Final math commit SHA: `db5fa3b3`.
+Final math commit SHA: `297dcab6`.
 
 ## Status
 
@@ -33,6 +33,7 @@ Partial. Kernel-checked so far:
 - exact converse at `n=9,25,27,49`
 - powers of 3: `not_n_sq_dvd_num_of_three_pow` (`v_3(T(3^e))=2-e` for `e≥2`)
 - `n=3 p^e` for primes `p≥5`: `not_n_sq_dvd_num_of_three_mul_pow` (`v_p(T(3 p^e))=-e`)
+- leading binomial product lemmas for `p^e`: `choose_pow_pred_eq_mul_rest`
 - reduction `conjecture_of_odd_composite_converse`
 
 Axioms `{propext, Classical.choice, Quot.sound}` on the printed theorems. Full odd converse open. No PR. No OEIS edit. Not the frozen iff.
