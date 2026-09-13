@@ -28,11 +28,11 @@ Command:
 LEAN_NUM_THREADS=2 lake env lean -DwarningAsError=true research/batches/b01/workers/cursor-05/targets/A063880/A063880.lean
 ```
 
-Result on 2026-09-13T01:06Z: exit code 0, no warnings, no `sorry` declaration in this file.
+Result on 2026-09-13T01:34Z: exit code 0, no warnings, no `sorry` declaration in this file.
 
 This is **not** a compile of the frozen theorems. The frozen `sorry` theorems in `FormalConjectures/OEIS/63880.lean` were not used as proof steps.
 
-New lemmas compiled in this checkpoint include `padicValNat_three_lt_two_of_A_of_val_two_ge_three`, `not_seven_sigma_of_unique_sq_prime_ge_five`, and `padicValNat_lt_two_of_twelve_thousand_le_113`.
+New lemmas compiled in this checkpoint include `sigma_usigma_ratio_strict_mono`, `not_seven_sigma_eq_ten_usigma_five_seven`, `not_seven_sigma_of_two_sq_primes`, and `seven_sigma_lt_ten_usigma_three_large`.
 
 No `#print axioms` audit of a completed target theorem exists, because those theorems are not proved.
 
@@ -58,6 +58,12 @@ python3 research/batches/b01/workers/cursor-05/targets/A063880/experiments/case_
 ```
 
 Exact `Fraction` ω=1 and ω=2 leftover classification. Only one-prime hit: `3^3` for leftover `10/7`. ω=2 empty on the listed leftovers. Explicitly unverified as a proof of emptiness for ω≥3.
+
+```text
+python3 research/batches/b01/workers/cursor-05/targets/A063880/experiments/omega3_ten_seven.py
+```
+
+Exact `Fraction` ω=3 search for leftover `10/7` with primes `≥ 5`. Output: no hits; stops at `p = 7` because `{7,11,13}` has cap below leftover. Explicitly unverified as a proof. ω=3 with a factor `5` is not a Lean exclusion yet. ω≥4 is not covered.
 
 ## Formalization audit
 

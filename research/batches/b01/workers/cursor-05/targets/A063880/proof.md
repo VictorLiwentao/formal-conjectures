@@ -32,7 +32,10 @@ In `A063880.lean`, compiled with `lake env lean -DwarningAsError=true`:
 - If `A n` and `v₂(n) ≥ 3`, then `v₃(n) < 2`. Equivalently, `9` cannot divide such an `n`. This uses `ρ(8)ρ(9) = 13/6 > 2` and monotonicity in the two exponents.
 - Leftover `6/5` cannot be a single prime power times a squarefree factor: `5^2` undershoots, `5^k` for `k ≥ 3` overshoots, primes `≥ 7` have cap `≤ 7/6 < 6/5`, and `3^k` for `k ≥ 2` overshoots.
 - Every prime `p ≥ 5` undershoots leftover `10/7`: `ρ(p^k) < p/(p-1) ≤ 5/4 < 10/7`. So leftover `10/7` cannot be a single prime power `p^k` with `p ≥ 5` times a squarefree coprime factor.
-- Caps: `{5,11}` and `{7,11}` cannot reach `10/7`. The only two-prime cap product that can reach `10/7` without `3` is `{5,7}`. Algebraically `ρ(125)ρ(343) > 10/7`. The rays `ρ(25)ρ(7^k)` and `ρ(5^k)ρ(49)` stay strictly below `10/7` (checked by cap comparison; not yet a full Lean exclusion of every `{5,7}` exponent pair).
+- Caps: `{5,11}` and `{7,11}` cannot reach `10/7`. The only two-prime cap product that can reach `10/7` without `3` is `{5,7}`. Algebraically `ρ(125)ρ(343) > 10/7`. The rays `ρ(25)ρ(7^k)` and `ρ(5^k)ρ(49)` stay strictly below `10/7`.
+- `ρ(p^a)` is strictly increasing in the exponent `a ≥ 1`. This is used to lift the `{5,7}` overshoot from exponents `(3,3)` to all `a,b ≥ 3`.
+- Leftover `10/7` cannot be two squareful primes `p < q` both at least `5` times a squarefree coprime factor. The cases are `{5,7}` (undershoot on the axes, overshoot for `a,b ≥ 3`), `{5,q}` with `q ≥ 11` (cap `5/4 · 11/10 = 11/8 < 10/7`), and `{p,q}` with `p ≥ 7` and `q ≥ 11` (cap `7/6 · 11/10 = 77/60 < 10/7`).
+- Three squareful primes all at least `7` cannot fill leftover `10/7`. The Euler-product cap is at most `7/6 · 11/10 · 13/12 = 1001/720 < 10/7`.
 
 These lemmas are infrastructure and partial case analysis. They do not decide the open statements.
 
@@ -61,13 +64,15 @@ The script `experiments/case_tree.py` classifies leftovers `10/7`, `100/91`, `6/
 
 A broader recursive search (`experiments/leftover_search.py`) was written and is explicitly unverified. A first run did not return in a bounded time and was stopped.
 
+The script `experiments/omega3_ten_seven.py` searches leftover `10/7` for three primes `≥ 5` using last-prime bounds. It reported no hits and stopped at `p = 7` because `{7,11,13}` already has cap below `10/7`. This is **not** a proof. In particular it does not cover ω≥4, and it is not the Lean ω=3-with-`5` case analysis.
+
 ## Gaps
 
 - No Lean proof that `ρ(K) = 2` forces `v₂ = 2` and `v₃ ≥ 3`.
 - No Lean proof that the only squareful kernel is 108.
 - No independent proof yet of `powerful_of_isPrimitiveTerm` or `exists_primitive_of_a`.
 - Odd kernels (`leftover 2`) and the remaining `v₂ ≥ 3` leftovers (`6/5` without `9`, `34/31`, …) are not ruled out by a complete finite case tree in Lean.
-- Leftover `10/7` without `9` still allows ω≥2 with `{5,7}` and ω≥3 with larger primes.
+- Leftover `10/7` without `9` still allows ω=3 with a factor `5` and ω≥4. A deterministic `Fraction` search (`experiments/omega3_ten_seven.py`) found no ω=3 fill with primes `≥ 5`; that search is not a proof.
 - Leftover `100/91` after `11^2` still allows ω≥2 with primes `≥ 127`. Without `11^2`, the smallest squareful prime may be `≥ 13`.
 
 A claimed completion still requires the exact frozen types, a sorry-free compile, and `#print axioms` in `{propext, Classical.choice, Quot.sound}`.

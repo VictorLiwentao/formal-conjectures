@@ -11,8 +11,8 @@ Incomplete research session. No exact proof or disproof. Do not treat this as a 
 - source baseline: `a2f4a1bb12a28e04a969da78feefac7d1ce49565`
 - source SHA-256: `b50d00e13735613cbe37bd3a25c19130874e8f036ca2a0e3c1aceb177a33c683`
 - original kickoff (UTC): 2026-09-12T23:12Z
-- this checkpoint (UTC): 2026-09-13T01:12Z
-- final commit SHA: `1548ba494e58fe4d4952de18cea4e13e0a8ac6a0`
+- this checkpoint (UTC): 2026-09-13T01:35Z
+- final commit SHA: recorded after this commit
 
 ## Reproduction
 
@@ -23,6 +23,7 @@ sha256sum FormalConjectures/OEIS/63880.lean
 LEAN_NUM_THREADS=2 lake env lean -DwarningAsError=true research/batches/b01/workers/cursor-05/targets/A063880/A063880.lean
 python3 research/batches/b01/workers/cursor-05/targets/A063880/experiments/abundancy_enum.py
 python3 research/batches/b01/workers/cursor-05/targets/A063880/experiments/case_tree.py
+python3 research/batches/b01/workers/cursor-05/targets/A063880/experiments/omega3_ten_seven.py
 ```
 
 Do not run a full `lake build`, `lake clean`, or `lake update`.
@@ -36,14 +37,14 @@ Do not run a full `lake build`, `lake clean`, or `lake update`.
 
 ## Proved this checkpoint (infrastructure only)
 
-- `A n` and `v₂(n) ≥ 3` imply `v₃(n) < 2`, so `9 ∤ n`.
-- Leftover `10/7` cannot be a single `p^k` with `p ≥ 5` times a squarefree factor.
-- Leftover `6/5` cannot be a single prime power times a squarefree factor.
-- After leftover `11^2` on `100/91`, every prime `13 ≤ p ≤ 113` has valuation `< 2`, and every `p ≥ 127` has cap below the leftover.
+- `ρ(p^a)` is strictly increasing in the exponent for `a ≥ 1`.
+- Leftover `10/7` cannot be two squareful primes `p < q` both at least `5` times a squarefree factor. This includes the `{5,7}` pair.
+- Three squareful primes all at least `7` cannot fill leftover `10/7` (cap `1001/720 < 10/7`).
+- A `Fraction` search for three primes `≥ 5` on leftover `10/7` returned no hits. That search is not a proof.
 
 ## Next step
 
-Continue the local-valuation case analysis in Lean. CRT plus `v₂ = 2` and `v₃ ≥ 3` already implies the congruence (`mod_216_of_A_of_valuations`). Remaining: force `v₂ = 2` and `v₃ = 3` (in particular leftover `100/91` with primes `≥ 127`, leftover `10/7` without `27` for ω≥2, leftover `2`, and leftovers `≤ 6/5` without `9`). Do not claim Eldar’s decomposition or the `10^18` search as a new resolution. Do not open a PR.
+Continue the local-valuation case analysis in Lean. CRT plus `v₂ = 2` and `v₃ ≥ 3` already implies the congruence (`mod_216_of_A_of_valuations`). Remaining: leftover `10/7` ω=3 with a factor `5` and ω≥4; leftover `100/91` with primes `≥ 127`; leftover `2`; leftovers `≤ 6/5` without `9`. Do not claim Eldar’s decomposition or the `10^18` search as a new resolution. Do not open a PR.
 
 ## Cross-owner notes
 
