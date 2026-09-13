@@ -213,6 +213,17 @@ Kernel-checked coefficient, cube, Fermat-lift, and Glaisher-setup lemmas, same a
 'OeisA108866.inv_sq_sum_eq_p_mul'
 ```
 
+Kernel-checked Faulhaber split and von Staudt denominator bound, same axioms, `#print axioms` on 2026-09-13, compile log `/opt/cursor/artifacts/a108866_lean_wfail_faulhaber8.log`, exit 0, no `sorryAx`:
+
+```
+'OeisA108866.sum_pow_p_sub_three_eq_faulhaber'
+'OeisA108866.faulhaber_last_term'
+'OeisA108866.sum_pow_p_sub_three_eq_p_mul_bernoulli_add_p_sq'
+'OeisA108866.pow_sub_three_sum_eq_natCast'
+'OeisA108866.sum_pow_p_sub_three_nat_eq_rat'
+'OeisA108866.not_dvd_den_bernoulli_p_sub_three'
+```
+
 This is not the frozen iff.
 
 Source module build:

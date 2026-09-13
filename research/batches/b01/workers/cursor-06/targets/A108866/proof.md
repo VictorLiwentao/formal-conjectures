@@ -193,6 +193,16 @@ summing yields `inv_sq_sum_eq_pow_sub_p`. The power sum
 in `ZMod (p^2)`. `inv_sq_sum_eq_p_mul` therefore writes
 `I = p (σ - ∑ q_k k^{p-3})`.
 
+`sum_pow_p_sub_three_eq_faulhaber` is Mathlib Faulhaber
+`sum_range_pow` at exponent `p-3`. The last Bernoulli term
+is exactly `p B_{p-3}`, and every remaining exponent is at
+least 2, so
+`∑_{k=0}^{p-1} k^{p-3} = p B_{p-3} + p^2 · (rest)` in `ℚ`.
+The same integer sum is the `ZMod (p^2)` power sum via
+`pow_sub_three_sum_eq_natCast`. von Staudt–Clausen gives
+`not_dvd_den_bernoulli_p_sub_three`: for primes `p ≥ 5`,
+`p` does not divide the denominator of `B_{p-3}`.
+
 An unverified Python scan `experiments/combo_coeff_fp.py` finds
 the `𝔽_p` coefficient congruent to `-(7/24) B_{p-3}` for primes
 `5 ≤ p ≤ 79`. That matches Sun's congruence

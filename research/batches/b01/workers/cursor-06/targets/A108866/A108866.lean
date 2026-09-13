@@ -34,6 +34,8 @@ import Mathlib.Algebra.Field.ZMod
 import Mathlib.NumberTheory.Multiplicity
 import Mathlib.FieldTheory.Finite.Basic
 import Mathlib.Algebra.BigOperators.Intervals
+import Mathlib.NumberTheory.Bernoulli
+import Mathlib.Data.Rat.Lemmas
 
 /-!
 Partial development for OEIS A108866.
@@ -78,8 +80,11 @@ that coefficient is `0` in `𝔽_p`. Cube pairing gives
 `k^{-2} = k^{p-3}(1 - p c)`. The inverse-square sum therefore
 splits as `∑ k^{p-3} - p ∑ q_k k^{p-3}` in `ZMod (p^2)`, and
 `∑ k^{p-3}` is a multiple of `p` because it reduces to
-`∑ k^{-2} = 0` in `𝔽_p`. The remaining odd-composite cases
-are not proved here.
+`∑ k^{-2} = 0` in `𝔽_p`. Faulhaber's formula writes the
+integer power sum as `p B_{p-3} + p^2 · (rest)` in `ℚ`.
+von Staudt–Clausen gives `p ∤ den(B_{p-3})` for primes
+`p ≥ 5`. The remaining odd-composite cases are not proved
+here.
 -/
 
 open Finset
@@ -5325,6 +5330,139 @@ lemma inv_sq_sum_eq_p_mul {p : ℕ} (hp : p.Prime) (h5 : 5 ≤ p) :
   rw [inv_sq_sum_eq_pow_sub_p hp h5, hσ]
   ring
 
+lemma zero_pow_p_sub_three {p : ℕ} (h5 : 5 ≤ p) :
+    ((0 : ℕ) : ℚ) ^ (p - 3) = 0 :=
+  zero_pow (Nat.pos_iff_ne_zero.mp
+    (Nat.sub_pos_of_lt (lt_of_lt_of_le (by decide : (3 : ℕ) < 5) h5)))
+
+lemma sum_pow_p_sub_three_eq_succ {p : ℕ} (hp : 0 < p) (h5 : 5 ≤ p) :
+    ∑ k ∈ range p, (k : ℚ) ^ (p - 3) =
+      ∑ i ∈ range (p - 1), ((i + 1 : ℕ) : ℚ) ^ (p - 3) := by
+  have hsucc := sum_range_succ' (fun k => (k : ℚ) ^ (p - 3)) (p - 1)
+  rw [Nat.sub_add_cancel (Nat.succ_le_of_lt hp)] at hsucc
+  rw [hsucc, zero_pow_p_sub_three h5, add_zero]
+
+lemma sum_pow_p_sub_three_eq_faulhaber {p : ℕ} :
+    ∑ k ∈ range p, (k : ℚ) ^ (p - 3) =
+      ∑ i ∈ range (p - 3 + 1),
+        _root_.bernoulli i * ((p - 3 + 1).choose i) *
+          (p : ℚ) ^ (p - 3 + 1 - i) / ((p - 3 : ℕ) + 1) :=
+  sum_range_pow p (p - 3)
+
+lemma faulhaber_last_term {p : ℕ} (h5 : 5 ≤ p) :
+    _root_.bernoulli (p - 3) * ((p - 3 + 1).choose (p - 3)) *
+      (p : ℚ) ^ (p - 3 + 1 - (p - 3)) / ((p - 3 : ℕ) + 1) =
+        (p : ℚ) * _root_.bernoulli (p - 3) := by
+  have hpe : p - 3 + 1 = p - 2 := by omega
+  have hpow : p - 3 + 1 - (p - 3) = 1 := by omega
+  have hch : (p - 3 + 1).choose (p - 3) = p - 2 := by
+    rw [hpe, show p - 2 = (p - 3) + 1 by omega, Nat.choose_succ_self_right]
+  have hden : ((p - 3 : ℕ) : ℚ) + 1 = (p - 2 : ℕ) := by
+    have : (p - 3).succ = p - 2 := by omega
+    rw [← Nat.cast_succ, this]
+  have hne : ((p - 2 : ℕ) : ℚ) ≠ 0 := by
+    exact_mod_cast
+      (Nat.sub_pos_of_lt (lt_of_lt_of_le (by decide : (2 : ℕ) < 5) h5)).ne'
+  rw [hpow, pow_one, hch, hden]
+  field_simp [hne]
+
+lemma two_le_faulhaber_rest_pow {p i : ℕ} (hi : i < p - 3) :
+    2 ≤ p - 3 + 1 - i := by omega
+
+lemma faulhaber_rest_pow_eq_p_sq_mul {p i : ℕ} (hi : i < p - 3) :
+    (p : ℚ) ^ (p - 3 + 1 - i) =
+      (p : ℚ) ^ 2 * (p : ℚ) ^ (p - 3 + 1 - i - 2) := by
+  have h2 := two_le_faulhaber_rest_pow hi
+  conv_lhs =>
+    rw [show p - 3 + 1 - i = 2 + (p - 3 + 1 - i - 2) by omega]
+  rw [pow_add]
+
+lemma sum_pow_p_sub_three_eq_p_mul_bernoulli_add {p : ℕ} (h5 : 5 ≤ p) :
+    ∑ k ∈ range p, (k : ℚ) ^ (p - 3) =
+      ∑ i ∈ range (p - 3),
+          _root_.bernoulli i * ((p - 3 + 1).choose i) *
+            (p : ℚ) ^ (p - 3 + 1 - i) / ((p - 3 : ℕ) + 1) +
+        (p : ℚ) * _root_.bernoulli (p - 3) := by
+  rw [sum_pow_p_sub_three_eq_faulhaber, sum_range_succ, faulhaber_last_term h5]
+
+lemma sum_pow_p_sub_three_eq_p_mul_bernoulli_add_p_sq {p : ℕ} (h5 : 5 ≤ p) :
+    ∑ k ∈ range p, (k : ℚ) ^ (p - 3) =
+      (p : ℚ) * _root_.bernoulli (p - 3) +
+        (p : ℚ) ^ 2 *
+          ∑ i ∈ range (p - 3),
+            _root_.bernoulli i * ((p - 3 + 1).choose i) *
+              (p : ℚ) ^ (p - 3 + 1 - i - 2) / ((p - 3 : ℕ) + 1) := by
+  rw [sum_pow_p_sub_three_eq_p_mul_bernoulli_add h5, add_comm]
+  congr 1
+  rw [mul_sum]
+  refine sum_congr rfl fun i hi => ?_
+  have hi' : i < p - 3 := mem_range.mp hi
+  rw [faulhaber_rest_pow_eq_p_sq_mul hi']
+  ring
+
+lemma pow_sub_three_sum_eq_natCast {p : ℕ} (hp : p.Prime) :
+    ∑ i ∈ range (p - 1), ((i + 1 : ℕ) : ZMod (p ^ 2)) ^ (p - 3) =
+      ((∑ i ∈ range (p - 1), (i + 1) ^ (p - 3) : ℕ) : ZMod (p ^ 2)) := by
+  have : NeZero (p ^ 2) := ⟨pow_ne_zero 2 hp.ne_zero⟩
+  simp [Nat.cast_sum, Nat.cast_pow]
+
+lemma sum_pow_p_sub_three_nat_eq_rat {p : ℕ} (hp : 0 < p) (h5 : 5 ≤ p) :
+    ((∑ i ∈ range (p - 1), (i + 1) ^ (p - 3) : ℕ) : ℚ) =
+      ∑ k ∈ range p, (k : ℚ) ^ (p - 3) := by
+  rw [Nat.cast_sum]
+  simp_rw [Nat.cast_pow]
+  exact (sum_pow_p_sub_three_eq_succ hp h5).symm
+
+lemma even_p_sub_three {p : ℕ} (hp : p.Prime) (h5 : 5 ≤ p) : Even (p - 3) := by
+  have hodd : Odd p :=
+    hp.odd_of_ne_two (ne_of_gt (lt_of_lt_of_le (by decide : (2 : ℕ) < 5) h5))
+  have hpmod : p % 2 = 1 := Nat.odd_iff.mp hodd
+  exact Nat.even_iff.mpr (by omega)
+
+lemma two_mul_div_two_p_sub_three {p : ℕ} (hp : p.Prime) (h5 : 5 ≤ p) :
+    2 * ((p - 3) / 2) = p - 3 :=
+  Nat.mul_div_cancel' (even_iff_two_dvd.mp (even_p_sub_three hp h5))
+
+lemma not_prime_dvd_den_sum {p : ℕ} (hp : p.Prime) (s : Finset ℕ) (f : ℕ → ℚ)
+    (hf : ∀ i ∈ s, ¬ p ∣ (f i).den) :
+    ¬ p ∣ (∑ i ∈ s, f i).den := by
+  revert hf
+  refine Finset.induction_on s ?_ ?_
+  · intro _hf
+    simp [hp.ne_one]
+  · intro a s ha ih hf
+    rw [sum_insert ha]
+    intro hd
+    have hmul : p ∣ (f a).den * (∑ i ∈ s, f i).den :=
+      hd.trans (Rat.add_den_dvd (f a) (∑ i ∈ s, f i))
+    rcases (Nat.Prime.dvd_mul hp).mp hmul with h | h
+    · exact hf a (mem_insert_self a s) h
+    · exact ih (fun i hi => hf i (mem_insert_of_mem hi)) h
+
+lemma not_dvd_den_bernoulli_p_sub_three {p : ℕ} (hp : p.Prime) (h5 : 5 ≤ p) :
+    ¬ p ∣ (_root_.bernoulli (p - 3)).den := by
+  obtain ⟨T, hT⟩ := Bernoulli.vonStaudt_clausen ((p - 3) / 2)
+  rw [two_mul_div_two_p_sub_three hp h5] at hT
+  have hB : _root_.bernoulli (p - 3) =
+      (T : ℚ) +
+        -(∑ q ∈ range (p - 3 + 2) with q.Prime ∧ (q - 1) ∣ (p - 3), (1 : ℚ) / q) := by
+    rw [← sub_eq_add_neg, eq_sub_of_add_eq hT.symm]
+  have hdenEq : (_root_.bernoulli (p - 3)).den =
+      (∑ q ∈ range (p - 3 + 2) with q.Prime ∧ (q - 1) ∣ (p - 3), (1 : ℚ) / q).den := by
+    rw [hB, Rat.intCast_add_den, Rat.neg_den]
+  rw [hdenEq]
+  refine not_prime_dvd_den_sum hp _ (fun q => (1 : ℚ) / q) ?_
+  intro q hq
+  have hqf := mem_filter.mp hq
+  have hqP : q.Prime := hqf.2.1
+  have hqlt : q < p := by
+    have : q < p - 3 + 2 := mem_range.mp hqf.1
+    omega
+  have hdenq : ((1 : ℚ) / q).den = q := by
+    rw [div_eq_mul_inv, one_mul, Rat.inv_natCast_den_of_pos hqP.pos]
+  rw [hdenq]
+  exact Nat.not_dvd_of_pos_of_lt hqP.pos hqlt
+
 lemma inv_sq_even_sum {p : ℕ} (hp : p.Prime) (h5 : 5 ≤ p) :
     ∑ i ∈ range (p / 2), (((2 * (i + 1) : ℕ) : ZMod (p ^ 2))⁻¹) ^ 2 =
       ((2 : ZMod (p ^ 2))⁻¹) ^ 2 *
@@ -6101,6 +6239,12 @@ lemma not_n_sq_dvd_num_of_thirty_one_pow {e : ℕ} (he : 2 ≤ e) :
 #print axioms OeisA108866.cast_pow_sub_three_eq_inv_sq
 #print axioms OeisA108866.pow_sub_three_sum_eq_mul_p
 #print axioms OeisA108866.inv_sq_sum_eq_p_mul
+#print axioms OeisA108866.sum_pow_p_sub_three_eq_faulhaber
+#print axioms OeisA108866.faulhaber_last_term
+#print axioms OeisA108866.sum_pow_p_sub_three_eq_p_mul_bernoulli_add_p_sq
+#print axioms OeisA108866.pow_sub_three_sum_eq_natCast
+#print axioms OeisA108866.sum_pow_p_sub_three_nat_eq_rat
+#print axioms OeisA108866.not_dvd_den_bernoulli_p_sub_three
 
 end OeisA108866
 
