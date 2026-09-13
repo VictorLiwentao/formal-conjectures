@@ -173,9 +173,26 @@ in `ZMod (p^2)`. `odd_inv_sq_sum_eq_mul_p` records the same for
 `odd_combo_eq_p_mul_coeff`: after writing the half-range inverse
 squares as `p c`, the harmonic unit sum is
 `p (7·4^{-1}(c+S3) + 4^{-1} S3 - τ)` in `ZMod (p^2)`.
-Nonvanishing of that coefficient in `𝔽_p` is equivalent to
-`v_p(U0)=1`. Empirically the coefficient is a unit except at `p=7`
-(and would fail at Wolstenholme primes).
+`odd_combo_coeff_eq` rewrites that coefficient as
+`(7/4)c + 2 S3 - τ`. `cast_eq_zero_iff_mul_p` identifies
+`p x = 0` in `ZMod (p^2)` with vanishing in `𝔽_p`, so
+`not_pow_dvd_oddInnerNum_of_coeff_cast` reduces `v_p(U0)=1`
+to that coefficient being nonzero in `𝔽_p`.
+
+`inv_cube_pair_zmod`: `k^{-3}+(p-k)^{-3} = -3p k^{-4}` in
+`ZMod (p^2)`. Summing pairs gives
+`inv_cube_sum_eq_neg_three_p`.
+
+`cast_pow_pred_eq_one` / `pow_pred_eq_one_add_mul_p`: Fermat
+lifts to `k^{p-1} = 1 + p c` in `ZMod (p^2)`. Then
+`inv_one_add_mul_p` and `inv_sq_eq_pow_mul_one_sub` give
+`k^{-2} = k^{p-3}(1 - p c)`.
+
+An unverified Python scan `experiments/combo_coeff_fp.py` finds
+the `𝔽_p` coefficient congruent to `-(7/24) B_{p-3}` for primes
+`5 ≤ p ≤ 79`. That matches Sun's congruence
+`T(p) ≡ -(7/12) p^2 B_{p-3} (mod p^3)` and is `0` precisely at
+`p=7` in this range. This is not kernel-checked.
 
 ## Odd composite converse
 

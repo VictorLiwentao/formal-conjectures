@@ -190,6 +190,24 @@ theorem OeisA108866.not_n_sq_dvd_num_of_even : ∀ {n : ℕ},
 
 The file does not import or use `OeisA108866.conjecture` as a proof.
 
+Kernel-checked coefficient, cube, and Fermat-lift lemmas, same axioms, `#print axioms` on 2026-09-13, compile log `/opt/cursor/artifacts/a108866_lean_wfail_fermat3.log`, exit 0, no `sorryAx`:
+
+```
+'OeisA108866.cast_eq_zero_iff_mul_p'
+'OeisA108866.odd_combo_ne_iff_coeff_cast'
+'OeisA108866.not_pow_dvd_oddInnerNum_of_coeff_cast'
+'OeisA108866.inv_cube_pair_zmod'
+'OeisA108866.inv_cube_sum_eq_neg_three_p'
+'OeisA108866.odd_combo_coeff_eq'
+'OeisA108866.odd_combo_eq_p_mul_simple'
+'OeisA108866.cast_pow_pred_eq_one'
+'OeisA108866.pow_pred_eq_one_add_mul_p'
+'OeisA108866.inv_one_add_mul_p'
+'OeisA108866.inv_sq_eq_pow_mul_one_sub'
+```
+
+This is not the frozen iff.
+
 Source module build:
 
 ```
@@ -206,4 +224,4 @@ PASS.
 
 ## Experiments
 
-c5-k4 already scanned `n=4..4000` (do not repeat as novelty). Scripts: `experiments/scan_beyond_c5k4.py`, `experiments/padic_converse.py`, `experiments/remaining_odd.py`, and `experiments/prime_power_leading.py` (leading binomial sum `U` for `T(p^e)`; experimental only).
+c5-k4 already scanned `n=4..4000` (do not repeat as novelty). Scripts: `experiments/scan_beyond_c5k4.py`, `experiments/padic_converse.py`, `experiments/remaining_odd.py`, `experiments/prime_power_leading.py`, and `experiments/combo_coeff_fp.py` (F_p coefficient vs Bernoulli; experimental only).

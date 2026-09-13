@@ -70,8 +70,13 @@ sum equals `(7/8)` times the full inverse-square sum plus
 `(p/4)` times the half-range inverse cubes in `ZMod (p^2)`.
 That odd sum is a multiple of `p` in `ZMod (p^2)`, and the
 half-range inverse squares vanish in `𝔽_p`. Exact unfolding
-gives `v_7(T(49))=2`. The remaining odd-composite cases are not
-proved here.
+gives `v_7(T(49))=2`. The harmonic unit sum is `p` times
+`(7/4)c + 2 S3 - τ` in `ZMod (p^2)`, and this vanishes iff
+that coefficient is `0` in `𝔽_p`. Cube pairing gives
+`k^{-3}+(p-k)^{-3} = -3p k^{-4}`. Fermat lifting gives
+`k^{p-1} = 1 + p c` in `ZMod (p^2)` and
+`k^{-2} = k^{p-3}(1 - p c)`. The remaining odd-composite cases
+are not proved here.
 -/
 
 open Finset
@@ -4632,6 +4637,27 @@ lemma eq_mul_p_of_cast_eq_zero {p : ℕ} [NeZero p] [NeZero (p ^ 2)]
   have hxval : x = (x.val : ZMod (p ^ 2)) := (ZMod.natCast_zmod_val x).symm
   rw [hxval, hk, Nat.cast_mul]
 
+lemma cast_eq_zero_iff_mul_p {p : ℕ} [NeZero p] [NeZero (p ^ 2)]
+    (x : ZMod (p ^ 2)) :
+    ZMod.cast x = (0 : ZMod p) ↔ (p : ZMod (p ^ 2)) * x = 0 := by
+  constructor
+  · exact mul_p_of_cast_eq_zero x
+  · intro hx
+    have hxval : (p : ZMod (p ^ 2)) * (x.val : ZMod (p ^ 2)) = 0 := by
+      rwa [ZMod.natCast_zmod_val]
+    have hcast : ((p * x.val : ℕ) : ZMod (p ^ 2)) = 0 := by
+      rw [Nat.cast_mul]
+      exact hxval
+    have hdvd : p ^ 2 ∣ p * x.val :=
+      (ZMod.natCast_eq_zero_iff (p * x.val) (p ^ 2)).1 hcast
+    have hp0 : 0 < p := NeZero.pos p
+    have hmul : p * p ∣ p * x.val := by
+      simpa [pow_two] using hdvd
+    have : p ∣ x.val := (Nat.mul_dvd_mul_iff_left hp0).mp hmul
+    have : (x.val : ZMod p) = 0 :=
+      (ZMod.natCast_eq_zero_iff x.val p).2 this
+    rwa [← ZMod.natCast_val]
+
 lemma odd_inv_sq_sum_cast_eq_zero {p : ℕ} (hp : p.Prime) (h5 : 5 ≤ p) :
     ZMod.cast
         (∑ r ∈ (range p).filter Odd, ((r : ZMod (p ^ 2))⁻¹) ^ 2 : ZMod (p ^ 2)) =
@@ -4765,6 +4791,44 @@ lemma inv_sq_pair_zmod {p k : ℕ} (hp : p.Prime) (hk : 0 < k) (hkp : k < p) :
         ((p : ZMod (p ^ 2)) * p) * (a ^ 2 * a ^ 2) := by ring
     rw [this, hp2, zero_mul]
   rw [hbin, hmid, hlast]
+  ring
+
+lemma inv_cube_pair_zmod {p k : ℕ} (hp : p.Prime) (hk : 0 < k) (hkp : k < p) :
+    ((k : ZMod (p ^ 2))⁻¹) ^ 3 + (((p - k : ℕ) : ZMod (p ^ 2))⁻¹) ^ 3 =
+      -((3 : ZMod (p ^ 2)) * (p : ZMod (p ^ 2)) *
+        ((k : ZMod (p ^ 2))⁻¹) ^ 4) := by
+  have hpk := inv_sub_eq hp hk hkp
+  rw [hpk]
+  set a := (k : ZMod (p ^ 2))⁻¹
+  have hp2 : (p : ZMod (p ^ 2)) * p = 0 := n_mul_self_eq_zero p
+  have hneg :
+      -a - (p : ZMod (p ^ 2)) * a ^ 2 = -(a + (p : ZMod (p ^ 2)) * a ^ 2) := by
+    ring
+  have hcube :
+      (-a - (p : ZMod (p ^ 2)) * a ^ 2) ^ 3 =
+        -((a + (p : ZMod (p ^ 2)) * a ^ 2) ^ 3) := by
+    rw [hneg, Odd.neg_pow (by decide : Odd 3)]
+  have hexp :
+      (a + (p : ZMod (p ^ 2)) * a ^ 2) ^ 3 =
+        a ^ 3 + 3 * a ^ 2 * ((p : ZMod (p ^ 2)) * a ^ 2) +
+          3 * a * ((p : ZMod (p ^ 2)) * a ^ 2) ^ 2 +
+          ((p : ZMod (p ^ 2)) * a ^ 2) ^ 3 := by
+    ring
+  have hmid : 3 * a ^ 2 * ((p : ZMod (p ^ 2)) * a ^ 2) =
+      3 * (p : ZMod (p ^ 2)) * a ^ 4 := by
+    ring
+  have hsq : ((p : ZMod (p ^ 2)) * a ^ 2) ^ 2 = 0 := by
+    have : ((p : ZMod (p ^ 2)) * a ^ 2) ^ 2 =
+        ((p : ZMod (p ^ 2)) * p) * (a ^ 2 * a ^ 2) := by ring
+    rw [this, hp2, zero_mul]
+  have hlast : ((p : ZMod (p ^ 2)) * a ^ 2) ^ 3 = 0 := by
+    have : ((p : ZMod (p ^ 2)) * a ^ 2) ^ 3 =
+        ((p : ZMod (p ^ 2)) * a ^ 2) * ((p : ZMod (p ^ 2)) * a ^ 2) ^ 2 := by
+      ring
+    rw [this, hsq, mul_zero]
+  have h3a : 3 * a * ((p : ZMod (p ^ 2)) * a ^ 2) ^ 2 = 0 := by
+    rw [hsq, mul_zero]
+  rw [hcube, hexp, hmid, h3a, hlast]
   ring
 
 lemma nat_div_cast_zmod_sq {p k D : ℕ} (hp : p.Prime) (hk : 0 < k) (hkp : k < p)
@@ -4947,6 +5011,159 @@ lemma inv_sq_sum_eq_two_half_add_p {p : ℕ} (hp : p.Prime) (h5 : 5 ≤ p) :
     exact inv_sq_pair_zmod hp hk hkp
   rw [hpair, sum_congr rfl hterm, sum_add_distrib]
   simp [mul_sum]
+
+lemma inv_cube_sum_eq_pair_sum {p : ℕ} (hp : p.Prime) (h5 : 5 ≤ p) :
+    ∑ i ∈ range (p - 1), (((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹) ^ 3 =
+      ∑ i ∈ range (p / 2),
+        ((((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹) ^ 3 +
+          (((p - (i + 1) : ℕ) : ZMod (p ^ 2))⁻¹) ^ 3) := by
+  have hsplit : p / 2 + p / 2 = p - 1 := by
+    rw [← two_mul, two_mul_div_two_pred hp h5]
+  have hdisj := disjoint_range_addLeftEmbedding (p / 2) (range (p / 2))
+  have hsum :
+      ∑ i ∈ range (p - 1), (((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹) ^ 3 =
+        ∑ i ∈ range (p / 2), (((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹) ^ 3 +
+          ∑ i ∈ range (p / 2),
+            ((((p / 2 + i) + 1 : ℕ) : ZMod (p ^ 2))⁻¹) ^ 3 := by
+    rw [← hsplit, range_add, sum_union hdisj, sum_map]
+    rfl
+  have href :
+      ∑ i ∈ range (p / 2),
+          ((((p / 2 + i) + 1 : ℕ) : ZMod (p ^ 2))⁻¹) ^ 3 =
+        ∑ i ∈ range (p / 2),
+          (((p - (i + 1) : ℕ) : ZMod (p ^ 2))⁻¹) ^ 3 := by
+    have hrefl :=
+      sum_range_reflect
+        (fun i => ((((p / 2 + i) + 1 : ℕ) : ZMod (p ^ 2))⁻¹) ^ 3) (p / 2)
+    trans ∑ i ∈ range (p / 2),
+        ((((p / 2 + (p / 2 - 1 - i)) + 1 : ℕ) : ZMod (p ^ 2))⁻¹) ^ 3
+    · exact hrefl.symm
+    refine sum_congr rfl fun i hi => ?_
+    have hi' : i < p / 2 := mem_range.mp hi
+    have h2 := two_mul_div_two_pred hp h5
+    have hidx : p / 2 + (p / 2 - 1 - i) + 1 = p - (i + 1) := by omega
+    rw [hidx]
+  rw [hsum, href, sum_add_distrib]
+
+lemma inv_cube_sum_eq_neg_three_p {p : ℕ} (hp : p.Prime) (h5 : 5 ≤ p) :
+    ∑ i ∈ range (p - 1), (((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹) ^ 3 =
+      -((3 : ZMod (p ^ 2)) * (p : ZMod (p ^ 2)) *
+        ∑ i ∈ range (p / 2), (((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹) ^ 4) := by
+  have hpair := inv_cube_sum_eq_pair_sum hp h5
+  have hterm : ∀ i ∈ range (p / 2),
+      ((((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹) ^ 3 +
+          (((p - (i + 1) : ℕ) : ZMod (p ^ 2))⁻¹) ^ 3) =
+        -((3 : ZMod (p ^ 2)) * (p : ZMod (p ^ 2)) *
+          (((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹) ^ 4) := by
+    intro i hi
+    have hk : 0 < i + 1 := Nat.succ_pos i
+    have hkp : i + 1 < p := by
+      have : i < p / 2 := mem_range.mp hi
+      have : p / 2 < p := Nat.div_lt_self hp.pos (by decide : 1 < 2)
+      omega
+    exact inv_cube_pair_zmod hp hk hkp
+  rw [hpair, sum_congr rfl hterm]
+  simp [sum_neg_distrib, mul_sum]
+
+lemma cast_pow_pred_eq_one {p k : ℕ} (hp : p.Prime) (hk : 0 < k) (hkp : k < p) :
+    ZMod.cast ((k : ZMod (p ^ 2)) ^ (p - 1)) = (1 : ZMod p) := by
+  have : Fact p.Prime := ⟨hp⟩
+  have hdiv := dvd_pow_self_two p
+  have hmap :=
+    (ZMod.castHom hdiv (ZMod p)).map_pow (k : ZMod (p ^ 2)) (p - 1)
+  rw [ZMod.castHom_apply] at hmap
+  have hkcast : ZMod.castHom hdiv (ZMod p) (k : ZMod (p ^ 2)) = (k : ZMod p) :=
+    map_natCast _ k
+  rw [hmap, hkcast]
+  have hk0 : (k : ZMod p) ≠ 0 := by
+    have : NeZero p := ⟨hp.ne_zero⟩
+    intro h0
+    exact Nat.not_dvd_of_pos_of_lt hk hkp ((ZMod.natCast_eq_zero_iff k p).1 h0)
+  exact ZMod.pow_card_sub_one_eq_one hk0
+
+lemma pow_pred_eq_one_add_mul_p {p k : ℕ} (hp : p.Prime) (hk : 0 < k) (hkp : k < p) :
+    ∃ c, (k : ZMod (p ^ 2)) ^ (p - 1) =
+      1 + (p : ZMod (p ^ 2)) * c := by
+  have : NeZero p := ⟨hp.ne_zero⟩
+  have : NeZero (p ^ 2) := ⟨pow_ne_zero 2 hp.ne_zero⟩
+  have hdiv := dvd_pow_self_two p
+  have hcast : ZMod.cast ((k : ZMod (p ^ 2)) ^ (p - 1) - 1) = (0 : ZMod p) := by
+    have hsub :=
+      (ZMod.castHom hdiv (ZMod p)).map_sub
+        ((k : ZMod (p ^ 2)) ^ (p - 1)) 1
+    rw [ZMod.castHom_apply, map_one] at hsub
+    have h1 : ZMod.castHom hdiv (ZMod p) ((k : ZMod (p ^ 2)) ^ (p - 1)) =
+        (1 : ZMod p) := by
+      rw [ZMod.castHom_apply]
+      exact cast_pow_pred_eq_one hp hk hkp
+    rw [hsub, h1, sub_self]
+  obtain ⟨c, hc⟩ := eq_mul_p_of_cast_eq_zero _ hcast
+  refine ⟨c, ?_⟩
+  calc
+    (k : ZMod (p ^ 2)) ^ (p - 1) =
+        ((k : ZMod (p ^ 2)) ^ (p - 1) - 1) + 1 := by ring
+    _ = (p : ZMod (p ^ 2)) * c + 1 := by rw [hc]
+    _ = 1 + (p : ZMod (p ^ 2)) * c := by rw [add_comm]
+
+lemma inv_one_add_mul_p {p : ℕ} (c : ZMod (p ^ 2)) :
+    (1 + (p : ZMod (p ^ 2)) * c)⁻¹ =
+      1 - (p : ZMod (p ^ 2)) * c := by
+  have hx : ∃ d, (p : ZMod (p ^ 2)) * c = (p : ZMod (p ^ 2)) * d :=
+    ⟨c, rfl⟩
+  have hmul := one_sub_mul_one_add_of_mul_p hx
+  have : (1 + (p : ZMod (p ^ 2)) * c) *
+      (1 - (p : ZMod (p ^ 2)) * c) = 1 := by
+    rw [mul_comm]
+    exact hmul
+  exact ZMod.inv_eq_of_mul_eq_one (p ^ 2) _ _ this
+
+lemma inv_sq_eq_pow_mul_one_sub {p k : ℕ} (hp : p.Prime) (h5 : 5 ≤ p)
+    (hk : 0 < k) (hkp : k < p)
+    {c : ZMod (p ^ 2)}
+    (hc : (k : ZMod (p ^ 2)) ^ (p - 1) =
+      1 + (p : ZMod (p ^ 2)) * c) :
+    ((k : ZMod (p ^ 2))⁻¹) ^ 2 =
+      (k : ZMod (p ^ 2)) ^ (p - 3) *
+        (1 - (p : ZMod (p ^ 2)) * c) := by
+  have hcop := coprime_sq_of_lt_prime hp hk hkp
+  have hk1 : (k : ZMod (p ^ 2)) * (k : ZMod (p ^ 2))⁻¹ = 1 :=
+    ZMod.coe_mul_inv_eq_one k hcop
+  have hpe : p - 1 = 2 + (p - 3) := by omega
+  have hpow : (k : ZMod (p ^ 2)) ^ (p - 1) =
+      (k : ZMod (p ^ 2)) ^ 2 * (k : ZMod (p ^ 2)) ^ (p - 3) := by
+    rw [hpe, pow_add]
+  have hinvpow :
+      ((k : ZMod (p ^ 2))⁻¹) ^ 2 * (k : ZMod (p ^ 2)) ^ (p - 1) =
+        (k : ZMod (p ^ 2)) ^ (p - 3) := by
+    rw [hpow]
+    have hsq :
+        ((k : ZMod (p ^ 2))⁻¹) ^ 2 * (k : ZMod (p ^ 2)) ^ 2 = 1 := by
+      rw [← mul_pow, mul_comm, hk1, one_pow]
+    rw [← mul_assoc, hsq, one_mul]
+  have hR :
+      ((k : ZMod (p ^ 2))⁻¹) ^ 2 =
+        (k : ZMod (p ^ 2)) ^ (p - 3) *
+          ((k : ZMod (p ^ 2)) ^ (p - 1))⁻¹ := by
+    have hmul := congrArg
+        (fun z => z * ((k : ZMod (p ^ 2)) ^ (p - 1))⁻¹) hinvpow
+    have hkk :
+        (k : ZMod (p ^ 2)) ^ (p - 1) *
+          ((k : ZMod (p ^ 2)) ^ (p - 1))⁻¹ = 1 := by
+      rw [hc]
+      have hx : ∃ d, (p : ZMod (p ^ 2)) * c = (p : ZMod (p ^ 2)) * d :=
+        ⟨c, rfl⟩
+      have hprod := one_sub_mul_one_add_of_mul_p hx
+      rw [inv_one_add_mul_p, mul_comm]
+      exact hprod
+    have :
+        ((k : ZMod (p ^ 2))⁻¹) ^ 2 *
+            ((k : ZMod (p ^ 2)) ^ (p - 1) *
+              ((k : ZMod (p ^ 2)) ^ (p - 1))⁻¹) =
+          (k : ZMod (p ^ 2)) ^ (p - 3) *
+            ((k : ZMod (p ^ 2)) ^ (p - 1))⁻¹ := by
+      simpa [mul_assoc] using hmul
+    rwa [hkk, mul_one] at this
+  rw [hR, hc, inv_one_add_mul_p]
 
 lemma inv_sq_even_sum {p : ℕ} (hp : p.Prime) (h5 : 5 ≤ p) :
     ∑ i ∈ range (p / 2), (((2 * (i + 1) : ℕ) : ZMod (p ^ 2))⁻¹) ^ 2 =
@@ -5423,6 +5640,79 @@ lemma odd_combo_eq_p_mul_coeff {p : ℕ} (hp : p.Prime) (h5 : 5 ≤ p)
   rw [h7]
   ring
 
+lemma odd_combo_coeff_eq {p : ℕ} (hp : p.Prime) (h5 : 5 ≤ p)
+    (c S3 tau : ZMod (p ^ 2)) :
+    (7 : ZMod (p ^ 2)) * ((2 : ZMod (p ^ 2))⁻¹) ^ 2 * (c + S3) +
+      ((2 : ZMod (p ^ 2))⁻¹) ^ 2 * S3 - tau =
+      (7 : ZMod (p ^ 2)) * ((2 : ZMod (p ^ 2))⁻¹) ^ 2 * c +
+        (2 : ZMod (p ^ 2)) * S3 - tau := by
+  have hx2 := eight_mul_inv_two_pow_two hp h5
+  have hsplit :
+      (7 : ZMod (p ^ 2)) * ((2 : ZMod (p ^ 2))⁻¹) ^ 2 * (c + S3) +
+        ((2 : ZMod (p ^ 2))⁻¹) ^ 2 * S3 =
+        (7 : ZMod (p ^ 2)) * ((2 : ZMod (p ^ 2))⁻¹) ^ 2 * c +
+          ((8 : ZMod (p ^ 2)) * ((2 : ZMod (p ^ 2))⁻¹) ^ 2) * S3 := by
+    ring
+  rw [hsplit, hx2]
+
+lemma odd_combo_eq_p_mul_simple {p : ℕ} (hp : p.Prime) (h5 : 5 ≤ p)
+    {c : ZMod (p ^ 2)}
+    (hc : ∑ i ∈ range (p / 2), (((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹) ^ 2 =
+      (p : ZMod (p ^ 2)) * c) :
+    ∑ r ∈ (range p).filter Odd,
+        (1 - (p : ZMod (p ^ 2)) *
+          ∑ b ∈ Icc 1 (r - 1), (b : ZMod (p ^ 2))⁻¹) *
+          ((r : ZMod (p ^ 2))⁻¹) ^ 2 =
+      (p : ZMod (p ^ 2)) *
+        ((7 : ZMod (p ^ 2)) * ((2 : ZMod (p ^ 2))⁻¹) ^ 2 * c +
+          (2 : ZMod (p ^ 2)) *
+            ∑ i ∈ range (p / 2), (((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹) ^ 3 -
+          ∑ r ∈ (range p).filter Odd,
+            (∑ b ∈ Icc 1 (r - 1), (b : ZMod (p ^ 2))⁻¹) *
+              ((r : ZMod (p ^ 2))⁻¹) ^ 2) := by
+  rw [odd_combo_eq_p_mul_coeff hp h5 hc]
+  congr 1
+  exact odd_combo_coeff_eq hp h5 _ _ _
+
+lemma odd_combo_ne_iff_coeff_cast {p : ℕ} (hp : p.Prime) (h5 : 5 ≤ p)
+    {c : ZMod (p ^ 2)}
+    (hc : ∑ i ∈ range (p / 2), (((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹) ^ 2 =
+      (p : ZMod (p ^ 2)) * c) :
+    ∑ r ∈ (range p).filter Odd,
+          (1 - (p : ZMod (p ^ 2)) *
+            ∑ b ∈ Icc 1 (r - 1), (b : ZMod (p ^ 2))⁻¹) *
+            ((r : ZMod (p ^ 2))⁻¹) ^ 2 ≠ 0 ↔
+      ZMod.cast
+          ((7 : ZMod (p ^ 2)) * ((2 : ZMod (p ^ 2))⁻¹) ^ 2 *
+              (c + ∑ i ∈ range (p / 2), (((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹) ^ 3) +
+            ((2 : ZMod (p ^ 2))⁻¹) ^ 2 *
+              ∑ i ∈ range (p / 2), (((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹) ^ 3 -
+            ∑ r ∈ (range p).filter Odd,
+              (∑ b ∈ Icc 1 (r - 1), (b : ZMod (p ^ 2))⁻¹) *
+                ((r : ZMod (p ^ 2))⁻¹) ^ 2) ≠
+        (0 : ZMod p) := by
+  have : NeZero p := ⟨hp.ne_zero⟩
+  have : NeZero (p ^ 2) := ⟨pow_ne_zero 2 hp.ne_zero⟩
+  rw [odd_combo_eq_p_mul_coeff hp h5 hc]
+  exact Iff.not (Iff.symm (cast_eq_zero_iff_mul_p _))
+
+lemma not_pow_dvd_oddInnerNum_of_coeff_cast {p : ℕ} (hp : p.Prime) (h5 : 5 ≤ p)
+    {c : ZMod (p ^ 2)}
+    (hc : ∑ i ∈ range (p / 2), (((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹) ^ 2 =
+      (p : ZMod (p ^ 2)) * c)
+    (hcast : ZMod.cast
+          ((7 : ZMod (p ^ 2)) * ((2 : ZMod (p ^ 2))⁻¹) ^ 2 *
+              (c + ∑ i ∈ range (p / 2), (((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹) ^ 3) +
+            ((2 : ZMod (p ^ 2))⁻¹) ^ 2 *
+              ∑ i ∈ range (p / 2), (((i + 1 : ℕ) : ZMod (p ^ 2))⁻¹) ^ 3 -
+            ∑ r ∈ (range p).filter Odd,
+              (∑ b ∈ Icc 1 (r - 1), (b : ZMod (p ^ 2))⁻¹) *
+                ((r : ZMod (p ^ 2))⁻¹) ^ 2) ≠
+        (0 : ZMod p)) :
+    ¬ p ^ 2 ∣ oddInnerNum p :=
+  (not_pow_dvd_oddInnerNum_iff_combo hp h5).2
+    ((odd_combo_ne_iff_coeff_cast hp h5 hc).2 hcast)
+
 lemma oddInnerNum_seven : oddInnerNum 7 = 1693440 := by
   unfold oddInnerNum oddDenom
   rw [show Nat.factorial 6 = 720 by decide]
@@ -5633,6 +5923,17 @@ lemma not_n_sq_dvd_num_of_thirty_one_pow {e : ℕ} (he : 2 ≤ e) :
 #print axioms OeisA108866.odd_combo_eq_mul_p
 #print axioms OeisA108866.odd_combo_eq_p_mul_coeff
 #print axioms OeisA108866.inv_sq_sum_eq_two_mul_p_add
+#print axioms OeisA108866.cast_eq_zero_iff_mul_p
+#print axioms OeisA108866.odd_combo_ne_iff_coeff_cast
+#print axioms OeisA108866.not_pow_dvd_oddInnerNum_of_coeff_cast
+#print axioms OeisA108866.inv_cube_pair_zmod
+#print axioms OeisA108866.inv_cube_sum_eq_neg_three_p
+#print axioms OeisA108866.odd_combo_coeff_eq
+#print axioms OeisA108866.odd_combo_eq_p_mul_simple
+#print axioms OeisA108866.cast_pow_pred_eq_one
+#print axioms OeisA108866.pow_pred_eq_one_add_mul_p
+#print axioms OeisA108866.inv_one_add_mul_p
+#print axioms OeisA108866.inv_sq_eq_pow_mul_one_sub
 
 end OeisA108866
 
