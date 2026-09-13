@@ -11,7 +11,7 @@
   "novelty_status": "no_exact_public_solution_found_in_checked_sources",
   "statement_audit": "matches_intended_mceachen_statement",
   "oeis_editability": "unknown",
-  "last_updated_utc": "2026-09-13T00:01:00Z",
+  "last_updated_utc": "2026-09-13T00:03:06Z",
   "session_kickoff_utc": "2026-09-12T23:12:00Z",
   "session_hard_stop_utc": "2026-09-13T07:12:00Z",
   "proof_declarations": [
@@ -32,10 +32,11 @@
   ],
   "unresolved_gaps": [
     "Frozen OeisA135508.conjecture is still sorry.",
-    "Remaining class: primes p ≡ 1 (mod 3) with p-2 composite and not divisible by an already-injected prime (3,5,7,11,13,19,...).",
-    "Need some prime q | (p-2) with q | x(p-3). For q ≡ 2 (mod 3), q ≥ 11, this is a later injection r ≡ -2 (mod q).",
-    "Existence of a prime r ≡ -2 (mod q), r ≡ 2 (mod 3), r ≤ q(q+2)-1 is experimental for q ≤ 5000, not a Linnik-free proof.",
+    "Remaining class: primes p \u2261 1 (mod 3) with p-2 composite and not divisible by an already-injected prime (3,5,7,11,13,19,...).",
+    "Need some prime q | (p-2) with q | x(p-3). For q \u2261 2 (mod 3), q \u2265 11, this is a later injection r \u2261 -2 (mod q).",
+    "Existence of a prime r \u2261 -2 (mod q), r \u2261 2 (mod 3), r \u2264 q(q+2)-1 is experimental for q \u2264 5000, not a Linnik-free proof.",
     "Cloitre C1 and Cor. 6.6 are not used and are not an unconditional solution."
   ],
-  "next_step": "Prove an unconditional first-entry bound q | x(q(q+2)-1) for primes q ≡ 2 (mod 3), or find a different invariant. Do not claim completion. Continue until an exact candidate, a verified prior solution, a defective-target report, or the original 8-hour kickoff limit."
+  "next_step": "Prove an unconditional first-entry bound q | x(q(q+2)-1) for primes q \u2261 2 (mod 3), or find a different invariant. Do not claim completion. Continue until an exact candidate, a verified prior solution, a defective-target report, or the original 8-hour kickoff limit.",
+  "handoff_research_commit": "b407cc93665d8b44c0d43fcb651b38857cf839a2"
 }

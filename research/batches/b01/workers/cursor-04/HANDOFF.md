@@ -37,4 +37,5 @@ See `proof.md`. Remaining McEachen primes need a first-entry bound for some fact
 
 ## Commit SHA
 
-Recorded after the commit that added this handoff.
+Research commit: `b407cc93665d8b44c0d43fcb651b38857cf839a2`
+Branch: `cursor/a135508-lcm-primes-770d`
