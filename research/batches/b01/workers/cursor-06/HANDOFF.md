@@ -18,7 +18,7 @@ python3 research/batches/b01/workers/cursor-06/targets/A108866/experiments/scan_
 python3 research/batches/b01/workers/cursor-06/targets/A108866/experiments/padic_converse.py
 ```
 
-Final commit SHA: `687cd5c01bed1e1095c1d448f0e08cbf8608e5b8`.
+Final math commit SHA: update after git commit.
 
 ## Status
 
@@ -29,9 +29,11 @@ Partial. Kernel-checked so far:
 - prime direction `n_sq_dvd_num_of_prime`
 - odd valuation formula `padicValRat_ratExpression_of_odd_prime`
 - converse criteria `not_n_sq_dvd_num_of_odd_inner_lt`, `not_n_sq_dvd_num_of_inner_le_denom`
-- Fermat congruence `q_dvd_two_pow_mul_sub` and `q T(pq) - T(p)` identity
+- Fermat split `q_mul_ratExpression_sub_eq_fermat_add`
+- `not_dvd_den_ratExpression_of_lt`
+- `padicValRat_ratExpression_mul_eq_neg_one` and `not_n_sq_dvd_num_of_mul_odd_primes` (`n=pq`, primes `p<q`, `q ∤ T(p).num`)
 - reduction `conjecture_of_odd_composite_converse`
 
-Axioms `{propext, Classical.choice, Quot.sound}` on the printed theorems. Odd converse open. No PR. No OEIS edit.
+Axioms `{propext, Classical.choice, Quot.sound}` on the printed theorems. Full odd converse open. No PR. No OEIS edit. Not the frozen iff.
 
 Run URL: https://cursor.com/agents/bc-c701d4c6-5791-456d-bec8-130a051cefe4

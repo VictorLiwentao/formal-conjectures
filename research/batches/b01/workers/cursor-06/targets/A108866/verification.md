@@ -35,7 +35,16 @@ Exit code 0, no warnings.
 'OeisA108866.not_n_sq_dvd_num_of_inner_le_denom' depends on axioms: [propext, Classical.choice, Quot.sound]
 ```
 
-Additional converse helpers compiled in the same file: `oddInnerNum_ne_zero`, `four_le_padicValNat_oddDenom`, `q_mul_ratExpression_sub_eq_sum`, `q_dvd_two_pow_mul_sub`, `one_le_padicValRat_two_pow_mul_sub`. The file still does not prove the frozen iff.
+Additional converse helpers compiled in the same file: `oddInnerNum_ne_zero`, `four_le_padicValNat_oddDenom`, `q_mul_ratExpression_sub_eq_sum`, `q_mul_ratExpression_sub_eq_fermat_add`, `q_dvd_two_pow_mul_sub`, `one_le_padicValRat_two_pow_mul_sub`, `not_dvd_den_ratExpression_of_lt`.
+
+Kernel-checked square-free fragment, axioms `{propext, Classical.choice, Quot.sound}`:
+
+```
+'OeisA108866.padicValRat_ratExpression_mul_eq_neg_one'
+'OeisA108866.not_n_sq_dvd_num_of_mul_odd_primes'
+```
+
+These cover `n = pq` for primes `p < q` with `q ∤ T(p).num` only. The file still does not prove the frozen iff.
 
 Exact type of the prime-direction theorem, from `#print OeisA108866.n_sq_dvd_num_of_prime`:
 
