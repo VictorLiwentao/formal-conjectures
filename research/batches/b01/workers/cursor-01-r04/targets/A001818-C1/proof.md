@@ -47,3 +47,12 @@ A circulant permanent is not a product of eigenvalues. Eigenvalues are used only
 ## Lean route
 
 Do not import or use `OeisA1818.conjecture1` (`sorry`). Use original `a`. Prove a wrapper whose type is definitionally the frozen statement. Allowed axioms: `propext`, `Classical.choice`, `Quot.sound`.
+
+## Formalized so far
+
+- Denominators and `n=1`.
+- Calogero kernel sums via the finite geometric identity `1/(1-ζ^k) = -N⁻¹ ∑_{j=1}^{N-1} j (ζ^k)^j`.
+- Fourier Vandermonde diagonalization: `calogero * F = F * diag(N-1-2r)`.
+- `det calogero = (-1)^n a n`.
+- Signed derangement sum of `(1-ζ^{σi-i})⁻¹` equals that determinant over `2^{2n}`.
+- `per(M-J) = 2^{2n}` times the corresponding unsigned derangement sum, using `∏ ζ^{σi-i}=1`.

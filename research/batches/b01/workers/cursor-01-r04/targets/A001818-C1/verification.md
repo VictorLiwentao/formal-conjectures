@@ -22,13 +22,17 @@ which type-checks. The original `a` is used. The admitted `OeisA1818.conjecture1
 
 ## Current kernel-checked lemmas (not a C1 solution)
 
-`lake env lean -DwarningAsError=true` exit 0. Axioms of the proved lemmas:
+`lake env lean -DwarningAsError=true` exit 0. Axioms of the proved lemmas are a subset of `propext`, `Classical.choice`, `Quot.sound`. Including:
 
 ```
 'A001818C1.conjecture1_of_one' depends on axioms: [propext, Classical.choice, Quot.sound]
-'A001818C1.zpow_sub_ne_one' depends on axioms: [propext, Classical.choice, Quot.sound]
-'A001818C1.inv_one_sub_eq_sum' depends on axioms: [propext, Classical.choice, Quot.sound]
-'A001818C1.denom_ne_zero' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.calogero_kernel_sum' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.det_calogero' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.prod_zeta_perm' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.sunMatrix_sub_ones_off' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.det_calogero_eq_signed_sum' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.permanent_sunMatrix_sub_ones' depends on axioms: [propext, Classical.choice, Quot.sound]
+'A001818C1.signed_derangement_inv_sum' depends on axioms: [propext, Classical.choice, Quot.sound]
 ```
 
 No `sorryAx`, `native_decide`, or `Lean.trustCompiler` in those lemmas. The general `n ≥ 1` identity is not yet proved.
@@ -37,3 +41,5 @@ No `sorryAx`, `native_decide`, or `Lean.trustCompiler` in those lemmas. The gene
 
 - `n = 1`: primitive 2nd root is `-1`; matrix is `I_2`; permanent `1 = a 1`.
 - Off-diagonal denominators: `ζ^{i-j} ≠ 1` for `i ≠ j` on `Fin N`.
+- Calogero circulant eigenvalues `{N-1,N-3,…,1-N}`; product `(-1)^n a n`.
+- `per(M-J)` expands over derangements only; `∏_i ζ^{σi-i} = 1`.
