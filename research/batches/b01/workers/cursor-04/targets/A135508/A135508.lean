@@ -60,7 +60,9 @@ prime cofactor `(p-2)/lpf`, first-entry of `157`, `173`, `191` and
 is a larger twin, remaining Type A McEachen if the least factor is
 `≡ 1 (mod 3)` and `5r-2` is prime, first-entry of `211`, `223`, `233`
 and `239`, remaining McEachen when `lpf(p-2) ≤ 239` or that least factor
-is a larger twin, and that the frozen statement follows from first-entry
+is a larger twin, first-entry of `257`, remaining McEachen when
+`lpf(p-2) ≤ 257` or that least factor is a larger twin, and that the
+frozen statement follows from first-entry
 of every prime `q ≥ 5` by the square-window index `q(q+2)-1`. Existence
 of a window injector for every leftover least factor is not proved.
 -/
@@ -2218,6 +2220,19 @@ theorem conjecture_of_two_hundred_thirty_nine_dvd {p : ℕ} (hp : p.Prime)
     (by decide : 1 < 239) h239
     (two_hundred_thirty_nine_dvd_x (Nat.sub_le_sub_right hp1196 3))
 
+lemma two_hundred_fifty_seven_dvd_x_1283 : 257 ∣ x 1283 :=
+  q_dvd_x_of_prime_index (k := 5) (q := 257)
+    (by norm_num) (by decide) (by decide)
+
+lemma two_hundred_fifty_seven_dvd_x {n : ℕ} (hn : 1283 ≤ n) : 257 ∣ x n :=
+  two_hundred_fifty_seven_dvd_x_1283.trans (x_dvd_of_le (by decide : 0 < 1283) hn)
+
+theorem conjecture_of_two_hundred_fifty_seven_dvd {p : ℕ} (hp : p.Prime)
+    (hp1286 : 1286 ≤ p) (h257 : 257 ∣ p - 2) : a (p - 1) = p :=
+  conjecture_of_factor_dvd_x hp (le_trans (by decide : 5 ≤ 1286) hp1286)
+    (by decide : 1 < 257) h257
+    (two_hundred_fifty_seven_dvd_x (Nat.sub_le_sub_right hp1286 3))
+
 lemma remaining_minFac_ge_five {p : ℕ} (hp : p.Prime) (hp7 : 7 ≤ p)
     (hmod : p % 3 = 1) : 5 ≤ Nat.minFac (p - 2) := by
   have hn : 1 < p - 2 := by omega
@@ -2874,8 +2889,8 @@ theorem conjecture_of_remaining_type_B_k_le {p k : ℕ} (hp : p.Prime)
     hq1 (Nat.minFac_dvd _) hpr h7 hrmod hk'
 
 /-- Type B remaining primes satisfy `lpf(p-2)^3 + 2 ≤ p`. After the
-`lpf ≤ 239` family, any Type B leftover therefore has
-`p ≥ 257^3 + 2`. -/
+`lpf ≤ 257` family, any Type B leftover therefore has
+`p ≥ 263^3 + 2`. -/
 lemma remaining_type_B_p_ge {p : ℕ} (hp : p.Prime) (hp7 : 7 ≤ p)
     (hmod : p % 3 = 1) (hcomp : ¬ (p - 2).Prime)
     (hall : ∀ r, r.Prime → r ∣ p - 2 → r % 3 = 2) :
@@ -3453,6 +3468,27 @@ theorem conjecture_of_minFac_two_hundred_thirty_nine {p : ℕ}
   conjecture_of_two_hundred_thirty_nine_dvd hp
     (remaining_p_ge_two_hundred_thirty_nine hp hp7 hmod hcomp h239)
     (h239 ▸ Nat.minFac_dvd (p - 2))
+
+lemma remaining_p_ge_two_hundred_fifty_seven {p : ℕ}
+    (hp : p.Prime) (hp7 : 7 ≤ p) (hmod : p % 3 = 1)
+    (hcomp : ¬ (p - 2).Prime)
+    (h257 : Nat.minFac (p - 2) = 257) : 1286 ≤ p := by
+  have hbound := remaining_minFac_mul_add_two_le hp hp7 hmod hcomp
+  rw [h257] at hbound
+  have h2le : 2 ≤ p := le_trans (by decide : 2 ≤ 7) hp7
+  have hnum : 257 * (257 + 2) + 2 = 66565 := by decide
+  have : 257 * (257 + 2) + 2 ≤ p - 2 + 2 := Nat.add_le_add_right hbound 2
+  rw [hnum, Nat.sub_add_cancel h2le] at this
+  exact le_trans (by decide : 1286 ≤ 66565) this
+
+/-- Remaining McEachen if `lpf(p-2) = 257`. The injector is `k = 5`. -/
+theorem conjecture_of_minFac_two_hundred_fifty_seven {p : ℕ}
+    (hp : p.Prime) (hp7 : 7 ≤ p) (hmod : p % 3 = 1)
+    (hcomp : ¬ (p - 2).Prime)
+    (h257 : Nat.minFac (p - 2) = 257) : a (p - 1) = p :=
+  conjecture_of_two_hundred_fifty_seven_dvd hp
+    (remaining_p_ge_two_hundred_fifty_seven hp hp7 hmod hcomp h257)
+    (h257 ▸ Nat.minFac_dvd (p - 2))
 
 /-- Remaining McEachen if `5·lpf(p-2)-2` is prime. For `lpf ≡ 2 (mod 3)`
 this is the first remaining injector and always fits in the square window.
@@ -4580,6 +4616,66 @@ theorem conjecture_of_minFac_le_two_hundred_thirty_nine_or_twin {p : ℕ}
       exact conjecture_of_minFac_le_twenty_nine hp hp7 hmod hcomp
         (le_trans h12 (by decide : 12 ≤ 29))
 
+lemma remaining_prime_from_two_hundred_forty_le_two_hundred_fifty_seven
+    {q : ℕ} (hq : q.Prime) (h240 : 240 ≤ q) (h257 : q ≤ 257)
+    (hnotwin : ¬ (q - 2).Prime) : q = 251 ∨ q = 257 := by
+  interval_cases q
+  · exact ((by norm_num : ¬ Nat.Prime 240) hq).elim
+  · exact (hnotwin (by norm_num : Nat.Prime 239)).elim
+  · exact ((by norm_num : ¬ Nat.Prime 242) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 243) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 244) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 245) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 246) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 247) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 248) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 249) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 250) hq).elim
+  · exact Or.inl rfl
+  · exact ((by norm_num : ¬ Nat.Prime 252) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 253) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 254) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 255) hq).elim
+  · exact ((by norm_num : ¬ Nat.Prime 256) hq).elim
+  · exact Or.inr rfl
+
+/-- Remaining McEachen if `lpf(p-2) ≤ 257` or that least factor is a larger twin.
+After this cutoff the leftover least factor is at least `263`. -/
+theorem conjecture_of_minFac_le_two_hundred_fifty_seven_or_twin {p : ℕ}
+    (hp : p.Prime) (hp7 : 7 ≤ p) (hmod : p % 3 = 1)
+    (hcomp : ¬ (p - 2).Prime)
+    (h : Nat.minFac (p - 2) ≤ 257 ∨ (Nat.minFac (p - 2) - 2).Prime) :
+    a (p - 1) = p := by
+  have hpr : (Nat.minFac (p - 2)).Prime :=
+    Nat.minFac_prime (ne_of_gt (remaining_p_sub_two_gt_one hp7))
+  have hd : Nat.minFac (p - 2) ∣ p - 2 := Nat.minFac_dvd _
+  rcases h with h257 | htwin
+  · by_cases h239 : Nat.minFac (p - 2) ≤ 239
+    · exact conjecture_of_minFac_le_two_hundred_thirty_nine_or_twin hp hp7
+        hmod hcomp (Or.inl h239)
+    · by_cases ht : (Nat.minFac (p - 2) - 2).Prime
+      · have h13 : 13 ≤ Nat.minFac (p - 2) :=
+          le_trans (by decide : 13 ≤ 240)
+            (Nat.succ_le_of_lt (lt_of_not_ge h239))
+        exact conjecture_of_larger_twin_dvd hp (five_le_of_seven_le hp7)
+          hcomp hpr h13 ht hd
+      · have h240 : 240 ≤ Nat.minFac (p - 2) :=
+          Nat.succ_le_of_lt (lt_of_not_ge h239)
+        have hcases :=
+          remaining_prime_from_two_hundred_forty_le_two_hundred_fifty_seven
+            hpr h240 h257 ht
+        rcases hcases with h251 | h257eq
+        · exact conjecture_of_minFac_two_hundred_fifty_one hp hp7 hmod hcomp
+            h251
+        · exact conjecture_of_minFac_two_hundred_fifty_seven hp hp7 hmod
+            hcomp h257eq
+  · by_cases h13 : 13 ≤ Nat.minFac (p - 2)
+    · exact conjecture_of_larger_twin_dvd hp (five_le_of_seven_le hp7) hcomp
+        hpr h13 htwin hd
+    · have h12 : Nat.minFac (p - 2) ≤ 12 := Nat.lt_succ_iff.mp (lt_of_not_ge h13)
+      exact conjecture_of_minFac_le_twenty_nine hp hp7 hmod hcomp
+        (le_trans h12 (by decide : 12 ≤ 29))
+
 private instance : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
 
 private instance : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
@@ -5537,5 +5633,11 @@ lemma v2_x_two_four_pow_pred (k : ℕ) :
 #print axioms remaining_prime_from_two_hundred_twenty_eight_le_two_hundred_thirty_nine
 #print axioms remaining_prime_from_one_hundred_ninety_eight_le_two_hundred_thirty_nine
 #print axioms conjecture_of_minFac_le_two_hundred_thirty_nine_or_twin
+#print axioms two_hundred_fifty_seven_dvd_x_1283
+#print axioms conjecture_of_two_hundred_fifty_seven_dvd
+#print axioms remaining_p_ge_two_hundred_fifty_seven
+#print axioms conjecture_of_minFac_two_hundred_fifty_seven
+#print axioms remaining_prime_from_two_hundred_forty_le_two_hundred_fifty_seven
+#print axioms conjecture_of_minFac_le_two_hundred_fifty_seven_or_twin
 
 end OeisA135508

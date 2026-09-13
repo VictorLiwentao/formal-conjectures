@@ -323,3 +323,13 @@
 'OeisA135508.conjecture_of_minFac_le_two_hundred_thirty_nine_or_twin' depends on axioms: [propext,
  Classical.choice,
  Quot.sound]
+'OeisA135508.two_hundred_fifty_seven_dvd_x_1283' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.conjecture_of_two_hundred_fifty_seven_dvd' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.remaining_p_ge_two_hundred_fifty_seven' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.conjecture_of_minFac_two_hundred_fifty_seven' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OeisA135508.remaining_prime_from_two_hundred_forty_le_two_hundred_fifty_seven' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'OeisA135508.conjecture_of_minFac_le_two_hundred_fifty_seven_or_twin' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
